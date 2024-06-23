@@ -1,0 +1,37 @@
+{
+  "name": "Satonomics",
+  "short_name": "Satonomics",
+  "description": "Satoshi Economics",
+  "start_url": "/",
+  "display": "standalone",
+  "theme_color": "#0c0a09",
+  "background_color": "#0c0a09",
+  "lang": "en",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "/assets/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/manifest-icon-192.maskable.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/assets/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/assets/manifest-icon-512.maskable.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ]
+}

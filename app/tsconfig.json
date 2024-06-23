@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "node",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "jsx": "preserve",
+    "skipLibCheck": true,
+    "jsxImportSource": "solid-js",
+    "types": [
+      "vite/client",
+      "vite-plugin-pwa/client",
+      "vite-plugin-pwa/pwa-assets",
+      "vite-plugin-pwa/solid"
+    ],
+    "noEmit": true,
+    "isolatedModules": true,
+    "baseUrl": "./",
+    "resolveJsonModule": true,
+    "paths": {
+      "/src/*": ["src/*"]
+    }
+  },
+  "exclude": ["dist", "node_modules"]
+}

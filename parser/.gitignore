@@ -1,0 +1,15 @@
+.DS_Store
+/target
+/.vscode
+/.zed
+
+flamegraph/
+flamegraph.svg
+/profile.json
+
+/inputs*/
+/outputs*/
+/snapshots*/
+/exports*/
+/imports*/
+benches
