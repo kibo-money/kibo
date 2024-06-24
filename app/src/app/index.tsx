@@ -6,7 +6,6 @@ import { chartState } from "../scripts/lightweightCharts/chart/state";
 import { setTimeScale } from "../scripts/lightweightCharts/chart/time";
 import { createPresets } from "../scripts/presets";
 import { priceToUSLocale } from "../scripts/utils/locale";
-import { run } from "../scripts/utils/run";
 import { sleep } from "../scripts/utils/sleep";
 import {
   readBooleanFromStorage,
@@ -101,8 +100,6 @@ export function App() {
     equals: false,
   });
 
-  // Can't put datasets inside a signal as it breaks lazy memo
-
   const datasets = createDatasets({
     setActiveResources: activeResources.set,
   });
@@ -193,12 +190,12 @@ export function App() {
         <Qrcode qrcode={qrcode} />
         <Update />
 
-        <div class="flex size-full flex-col md:flex-row md:p-3">
+        <div class="md:short:p-0 flex size-full flex-col md:flex-row md:p-3">
           <Show when={!windowSizeIsAtLeastMedium() || !fullscreen()}>
             <div
               class={classPropToString([
                 env.standalone && "border-t",
-                "flex h-full flex-col overflow-hidden border-white/10 bg-gradient-to-b from-orange-500/10 to-orange-950/10 md:flex-row md:rounded-2xl md:border",
+                "md:short:hidden flex h-full flex-col overflow-hidden border-white/10 bg-gradient-to-b from-orange-500/10 to-orange-950/10 md:flex-row md:rounded-2xl md:border",
               ])}
             >
               <div class="hidden flex-col gap-2 border-r border-white/10 bg-black/30 p-3 backdrop-blur-sm md:flex">
@@ -246,7 +243,7 @@ export function App() {
               <div
                 class={classPropToString([
                   env.standalone && "pb-6",
-                  "flex justify-between gap-3 border-t border-white/10 bg-black/30 p-2 backdrop-blur-sm md:hidden",
+                  "short:hidden flex justify-between gap-3 border-t border-white/10 bg-black/30 p-2 backdrop-blur-sm md:hidden",
                 ])}
               >
                 <StripMobile
@@ -259,7 +256,7 @@ export function App() {
 
           <Show when={!fullscreen()}>
             <div
-              class="mx-[3px] my-8 hidden w-[6px] cursor-col-resize items-center justify-center rounded-full bg-orange-100 opacity-0 hover:opacity-50 md:block"
+              class="short:hidden mx-[3px] my-8 hidden w-[6px] cursor-col-resize items-center justify-center rounded-full bg-orange-100 opacity-0 hover:opacity-50 md:block"
               onMouseDown={(event) => {
                 resizeInitialRange.set(chartState.range);
 

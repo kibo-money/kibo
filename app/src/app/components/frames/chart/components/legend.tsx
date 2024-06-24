@@ -47,6 +47,7 @@ export function Legend({
                   hovering.set(legend);
                 }}
                 onMouseLeave={() => hovering.set(undefined)}
+                onTouchEnd={() => hovering.set(undefined)}
                 onClick={() => {
                   const currentClickValueOf = new Date().valueOf();
 

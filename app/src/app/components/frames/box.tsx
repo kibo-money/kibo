@@ -10,12 +10,14 @@ export function Box({
   children,
   dark,
   overflowY,
+  classes,
 }: {
   flex?: boolean;
   absolute?: "top" | "bottom";
   padded?: boolean;
   dark?: boolean;
   overflowY?: boolean;
+  classes?: string;
 } & ParentProps) {
   const maybeScrollable = createRWS<HTMLDivElement | undefined>(undefined);
   const scrollable = createRWS(false);
@@ -58,6 +60,7 @@ export function Box({
                 : "pointer-events-none bottom-0 bg-gradient-to-b from-transparent to-black",
             ]
           : "relative",
+        classes,
       ])}
     >
       <div

@@ -38,7 +38,7 @@ export function ChartFrame({
         display: (hide ? !hide() : true) ? undefined : "none",
       }}
     >
-      <Box flex={false} dark>
+      <Box flex={false} dark classes="short:hidden">
         <Title presets={presets} />
 
         <div class="-mx-2 border-t border-orange-200/15" />

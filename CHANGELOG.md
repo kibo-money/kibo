@@ -1,5 +1,22 @@
 # Changelog
 
+## v. 0.1.2 | WIP
+
+### Parser
+
+-
+
+### App
+
+- Chart
+  - Fix legend hovering on mobile not resetting on touch end
+- Misc
+  - Support mini window size, could be useful for embedded views
+
+### Server
+
+-
+
 ## v. 0.1.1 | 849240 - 2024/06/24
 
 ### Parser
