@@ -3,7 +3,7 @@ import { colors } from "/src/scripts/utils/colors";
 
 import { applyMultipleSeries } from "../../templates/multiple";
 
-export function createPresets(datasets: Datasets): PartialPresetFolder {
+export function createPresets(): PartialPresetFolder {
   const scale: ResourceScale = "date";
 
   return {
@@ -28,7 +28,6 @@ export function createPresets(datasets: Datasets): PartialPresetFolder {
       },
       ...averages.map(({ name, key }) =>
         createPresetFolder({
-          datasets,
           scale,
           color: colors[`_${key}`],
           name,
@@ -41,12 +40,10 @@ export function createPresets(datasets: Datasets): PartialPresetFolder {
 
 function createPresetFolder({
   scale,
-  datasets,
   color,
   name,
   key,
 }: {
-  datasets: Datasets;
   scale: ResourceScale;
   color: string;
   name: string;
@@ -69,7 +66,7 @@ function createPresetFolder({
           {
             title: `SMA`,
             color,
-            dataset: datasets.date[`price_${key}_sma`],
+            dataset: params.datasets.date[`price_${key}_sma`],
           },
         ],
       });

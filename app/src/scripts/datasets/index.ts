@@ -1,3 +1,5 @@
+import groupedKeysToURLPath from "/src/../../datasets/grouped_keys_to_url_path.json";
+
 import { createDateDatasets } from "./date";
 import { createHeightDatasets } from "./height";
 
@@ -10,8 +12,18 @@ export function createDatasets({
 }: {
   setActiveResources: Setter<Set<ResourceDataset<any, any>>>;
 }) {
+  const date = createDateDatasets({
+    setActiveResources,
+    groupedKeysToURLPath: groupedKeysToURLPath.date,
+  });
+
+  const height = createHeightDatasets({
+    setActiveResources,
+    groupedKeysToURLPath: groupedKeysToURLPath.height,
+  });
+
   return {
-    date: createDateDatasets({ setActiveResources }),
-    height: createHeightDatasets({ setActiveResources }),
+    date,
+    height,
   } satisfies Record<ResourceScale, any>;
 }

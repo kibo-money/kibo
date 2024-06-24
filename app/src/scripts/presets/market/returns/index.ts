@@ -5,7 +5,7 @@ import {
 
 import { applyMultipleSeries, SeriesType } from "../../templates/multiple";
 
-export function createPresets(datasets: Datasets) {
+export function createPresets() {
   return {
     name: "Returns",
     tree: [
@@ -15,7 +15,6 @@ export function createPresets(datasets: Datasets) {
           ...totalReturns.map(({ name, key }) =>
             createPreset({
               scale: "date",
-              datasets,
               name,
               title: `${name} Total`,
               key: `${key}_total`,
@@ -29,7 +28,6 @@ export function createPresets(datasets: Datasets) {
           ...compoundReturns.map(({ name, key }) =>
             createPreset({
               scale: "date",
-              datasets,
               name,
               title: `${name} Compound`,
               key: `${key}_compound`,
@@ -43,13 +41,11 @@ export function createPresets(datasets: Datasets) {
 
 function createPreset({
   scale,
-  datasets,
   name,
   title,
   key,
 }: {
   scale: ResourceScale;
-  datasets: Datasets;
   name: string;
   title: string;
   key: `${TotalReturnKey}_total` | `${CompoundReturnKey}_compound`;
@@ -70,7 +66,7 @@ function createPreset({
           {
             title: `Return (%)`,
             seriesType: SeriesType.Based,
-            dataset: datasets.date[`price_${key}_return`],
+            dataset: params.datasets.date[`price_${key}_return`],
           },
         ],
       });

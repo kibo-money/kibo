@@ -18,8 +18,12 @@ export function Clickable({
     <Dynamic
       component={onClick ? "button" : href ? "a" : "span"}
       class={classPropToString([
-        selected?.() ? "bg-orange-200/10" : "opacity-50 hover:bg-orange-200/10",
-        "select-none rounded-lg p-3.5 hover:text-orange-400 hover:opacity-100 active:scale-90",
+        !href
+          ? selected?.()
+            ? "bg-orange-200/10"
+            : "text-orange-100/50"
+          : "text-orange-300/70",
+        "select-none rounded-lg p-3.5 hover:bg-orange-200/10 hover:text-orange-400 hover:opacity-100 active:scale-90",
       ])}
       title={title}
       onClick={onClick}

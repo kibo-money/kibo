@@ -2,7 +2,7 @@
 
 ## Description
 
-TLDR: FOSS [glassnode](https://glassnode.com).
+TLDR: Free, open source, verifiable and self-hostable Bitcoin on-chain data generator and visualizer
 
 Satonomics is an open-source suite of tools that computes, distributes, and displays on-chain data, making it freely available for anyone to use.
 

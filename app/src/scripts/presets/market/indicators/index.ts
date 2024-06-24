@@ -1,4 +1,4 @@
-export function createPresets(datasets: Datasets) {
+export function createPresets() {
   return {
     name: "Indicators",
     tree: [],

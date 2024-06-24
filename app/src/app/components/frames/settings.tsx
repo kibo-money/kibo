@@ -1,3 +1,5 @@
+import { version } from "/src/../package.json";
+
 import { Header } from "./header";
 
 export function SettingsFrame({
@@ -30,6 +32,8 @@ export function SettingsFrame({
               <span class="slider"></span>
             </label>
           </div>
+          <hr class="border-t border-orange-200/20" />
+          <p>Version: {version}</p>
         </div>
       </div>
     </div>

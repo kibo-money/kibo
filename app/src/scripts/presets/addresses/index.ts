@@ -9,10 +9,8 @@ import { applyMultipleSeries, SeriesType } from "../templates/multiple";
 
 export function createPresets({
   scale,
-  datasets,
 }: {
   scale: ResourceScale;
-  datasets: Datasets;
 }): PartialPresetFolder {
   return {
     name: "Addresses",
@@ -112,7 +110,6 @@ export function createPresets({
         name: "By Size",
         tree: addressCohortsBySize.map(({ key, name }) =>
           createAddressPresetFolder({
-            datasets,
             scale,
             color: colors[key],
             name,
@@ -125,7 +122,6 @@ export function createPresets({
         name: "By Type",
         tree: addressCohortsByType.map(({ key, name }) =>
           createAddressPresetFolder({
-            datasets,
             scale,
             color: colors[key],
             name,
@@ -138,13 +134,11 @@ export function createPresets({
 }
 
 function createAddressPresetFolder<Scale extends ResourceScale>({
-  datasets,
   scale,
   color,
   name,
   datasetKey,
 }: {
-  datasets: Datasets;
   scale: Scale;
   name: string;
   datasetKey: AddressCohortKey;
@@ -156,7 +150,6 @@ function createAddressPresetFolder<Scale extends ResourceScale>({
       createAddressCountPreset({ scale, name, datasetKey, color }),
       ...createCohortPresetList({
         title: name,
-        datasets,
         scale,
         name,
         color,
@@ -170,7 +163,6 @@ function createAddressPresetFolder<Scale extends ResourceScale>({
             tree: createCohortPresetList({
               title: `${liquidity.name} ${name}`,
               name: `${liquidity.name} ${name}`,
-              datasets,
               scale,
               color,
               datasetKey: `${liquidity.key}_${datasetKey}`,

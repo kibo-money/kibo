@@ -1,7 +1,7 @@
 export function AnchorLogo() {
   return (
     <a
-      class="inline-flex justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-800 p-4"
+      class="inline-flex justify-center rounded-lg bg-gradient-to-br from-orange-500 to-orange-800 p-4 text-white"
       href="https://app.satonomics.xyz"
       title="Reload"
     >

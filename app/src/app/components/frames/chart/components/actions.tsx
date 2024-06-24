@@ -1,4 +1,4 @@
-import type { Generate } from "lean-qr";
+import { generate } from "lean-qr";
 
 import { chartState } from "/src/scripts/lightweightCharts/chart/state";
 import { setTimeScale } from "/src/scripts/lightweightCharts/chart/time";
@@ -14,45 +14,43 @@ export function Actions({
   qrcode: RWS<string>;
   fullscreen?: RWS<boolean>;
 }) {
-  const leanQRGenerate = createRWS<Generate | undefined>(undefined);
-
-  onMount(() => {
-    import("lean-qr").then((leanQR) => {
-      leanQRGenerate.set(() => leanQR.generate);
-    });
-  });
-
   return (
     <div class="flex space-x-1">
-      <Button
-        icon={() => IconTablerMaximize}
-        onClick={() => {
-          const range = chartState.range;
+      <Show when={fullscreen}>
+        {(fullscreen) => (
+          <Button
+            title="Toggle fullscreen"
+            icon={() =>
+              fullscreen()()
+                ? IconTablerLayoutSidebarLeftExpand
+                : IconTablerLayoutSidebarRightExpand
+            }
+            onClick={() => {
+              const range = chartState.range;
 
-          fullscreen?.set((b) => !b);
+              fullscreen().set((b) => !b);
 
-          setTimeScale(range);
-        }}
-        classes="hidden md:block"
-      />
+              setTimeScale(range);
+            }}
+            classes="hidden md:block"
+          />
+        )}
+      </Show>
+
       <Button
+        title="Share"
         icon={() => IconTablerShare}
-        disabled={() => !leanQRGenerate()}
         onClick={() => {
-          let generate = leanQRGenerate();
-
-          if (generate) {
-            qrcode.set(() =>
-              generate(document.location.href).toDataURL({
-                on: [0xff, 0xff, 0xff, 0xff],
-                off: [0x00, 0x00, 0x00, 0x00],
-              }),
-            );
-          }
+          qrcode.set(() =>
+            generate(document.location.href).toDataURL({
+              on: [0xff, 0xff, 0xff, 0xff],
+              off: [0x00, 0x00, 0x00, 0x00],
+            }),
+          );
         }}
-        classes="hidden md:block"
       />
       <Button
+        title="Favorite"
         colors={() =>
           presets.selected().isFavorite()
             ? "text-amber-500 bg-amber-500/15 hover:bg-amber-500/30"
@@ -70,12 +68,14 @@ export function Actions({
 }
 
 function Button({
+  title,
   icon,
   colors,
   onClick,
   disabled,
   classes,
 }: {
+  title: string;
   icon: () => ValidComponent;
   colors?: () => string;
   onClick: VoidFunction;
@@ -84,6 +84,7 @@ function Button({
 }) {
   return (
     <button
+      title={title}
       disabled={disabled?.()}
       class={classPropToString([
         colors?.() || (disabled?.() ? "" : "hover:bg-orange-200/15"),

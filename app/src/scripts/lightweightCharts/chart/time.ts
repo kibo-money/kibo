@@ -17,7 +17,7 @@ const debouncedUpdateURLParams = debounce((range: TimeRange | null) => {
   writeURLParam(URL_PARAMS_RANGE_TO_KEY, String(range.to));
 
   localStorage.setItem(LOCAL_STORAGE_RANGE_KEY, JSON.stringify(range));
-}, 1000);
+}, 500);
 
 export function initTimeScale({
   activeResources,
@@ -101,8 +101,6 @@ export function getInitialRange(): TimeRange {
 
 export function setTimeScale(range: TimeRange | null) {
   if (range) {
-    console.log(range);
-
     setTimeout(() => {
       chartState.chart?.timeScale().setVisibleRange(range);
     }, 1);

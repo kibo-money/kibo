@@ -96,3 +96,6 @@ interface OHLC {
   low: number;
   close: number;
 }
+
+type GroupedKeysToURLPath =
+  typeof import("/src/../../datasets/grouped_keys_to_url_path.json");

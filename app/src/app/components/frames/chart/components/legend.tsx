@@ -105,6 +105,7 @@ export function Legend({
                 <Show when={legend.url}>
                   {(url) => (
                     <a
+                      title="Dataset"
                       class="-my-0.5 !-mr-1 inline-flex size-6 flex-col overflow-hidden rounded-full border border-orange-200/5 bg-orange-200 bg-opacity-5 p-1 pl-0.5 hover:bg-opacity-30"
                       style={{
                         opacity: legend.visible() ? 1 : 0.5,

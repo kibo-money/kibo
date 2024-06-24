@@ -17,7 +17,7 @@ pub struct Route {
 #[derive(Clone, Default, Deref, DerefMut)]
 pub struct Routes(pub Grouped<HashMap<String, Route>>);
 
-const DATASETS_PATH: &str = "../datasets_bkp";
+const DATASETS_PATH: &str = "../datasets";
 
 impl Routes {
     pub fn build() -> Self {

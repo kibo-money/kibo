@@ -1,27 +1,33 @@
-import groupedKeysToPath from "/src/../../datasets/grouped_keys_to_url_path.json";
-
 import { createResourceDataset } from "./resource";
 
 export function createHeightDatasets({
   setActiveResources,
+  groupedKeysToURLPath,
 }: {
   setActiveResources: Setter<Set<ResourceDataset<any, any>>>;
+  groupedKeysToURLPath: GroupedKeysToURLPath["height"];
 }) {
-  type Key = keyof typeof groupedKeysToPath.height;
+  type Key = keyof typeof groupedKeysToURLPath;
   type ResourceData = ReturnType<typeof createResourceDataset<"height">>;
 
-  const resourceDatasets = {} as Record<Exclude<Key, "ohlc">, ResourceData>;
+  type ResourceDatasets = Record<Exclude<Key, "ohlc">, ResourceData>;
 
-  Object.keys(groupedKeysToPath.height).forEach(([_key, path]) => {
+  for (const _key in groupedKeysToURLPath) {
     const key = _key as Key;
+
     if (key !== "ohlc") {
-      resourceDatasets[key] = createResourceDataset<"height">({
-        scale: "height",
-        path,
-        setActiveResources,
-      });
+      const path = groupedKeysToURLPath[key];
+
+      (groupedKeysToURLPath as any as ResourceDatasets)[key] =
+        createResourceDataset<"height">({
+          scale: "height",
+          path,
+          setActiveResources,
+        });
     }
-  });
+  }
+
+  const resourceDatasets = groupedKeysToURLPath as any as ResourceDatasets;
 
   const price = createResourceDataset<"height", OHLC>({
     scale: "height",

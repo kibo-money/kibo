@@ -3,6 +3,7 @@ import { createRWS } from "/src/solid/rws";
 
 import { Box } from "../box";
 import { Actions } from "./components/actions";
+import { Chart } from "./components/chart";
 import { Legend } from "./components/legend";
 import { TimeScale } from "./components/timeScale";
 import { Title } from "./components/title";
@@ -25,12 +26,6 @@ export function ChartFrame({
   standalone: boolean;
 }) {
   const legend = createRWS<PresetLegend>([]);
-
-  const Chart = lazy(() =>
-    import("./components/chart").then((d) => ({
-      default: d.Chart,
-    })),
-  );
 
   return (
     <div
@@ -61,6 +56,7 @@ export function ChartFrame({
         <Chart
           activeResources={activeResources}
           datasets={datasets}
+          // fetchedDatasets={fetchedDatasets}
           legendSetter={legend.set}
           presets={presets}
         />

@@ -22,9 +22,10 @@ export function createResourceDataset<
   setActiveResources: Setter<Set<ResourceDataset<any, any>>>;
 }) {
   const baseURL = `${
-    location.hostname === "localhost"
-      ? "http://localhost:3110"
-      : "https://api.satonomics.xyz"
+    // location.hostname === "localhost"
+    //   ? "http://localhost:3110"
+    //   : "https://api.satonomics.xyz"
+    "https://api.satonomics.xyz"
   }${path}`;
 
   type Dataset = Scale extends "date"
@@ -36,8 +37,8 @@ export function createResourceDataset<
   >;
 
   const fetchedJSONs = new Array(
-    (new Date().getFullYear() - new Date("2009-01-01").getFullYear()) *
-      (scale === "date" ? 2 : 8),
+    (new Date().getFullYear() - new Date("2009-01-01").getFullYear() + 2) *
+      (scale === "date" ? 1 : 6),
   )
     .fill(null)
     .map((): FetchedResult<Scale, Type> => {

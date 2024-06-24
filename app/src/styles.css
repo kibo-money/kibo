@@ -21,6 +21,10 @@
   }
 }
 
+a {
+  @apply text-orange-300 hover:underline;
+}
+
 mark {
   @apply bg-transparent p-0 text-orange-400;
 }

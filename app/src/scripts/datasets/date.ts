@@ -1,30 +1,35 @@
-import groupedKeysToPath from "/src/../../datasets/grouped_keys_to_url_path.json";
-
 import { createResourceDataset } from "./resource";
 
 export { averages } from "./consts/averages";
 
 export function createDateDatasets({
   setActiveResources,
+  groupedKeysToURLPath,
 }: {
   setActiveResources: Setter<Set<ResourceDataset<any, any>>>;
+  groupedKeysToURLPath: GroupedKeysToURLPath["date"];
 }) {
-  type Key = keyof typeof groupedKeysToPath.date;
+  type Key = keyof typeof groupedKeysToURLPath;
   type ResourceData = ReturnType<typeof createResourceDataset<"date">>;
 
-  const resourceDatasets = {} as Record<Exclude<Key, "ohlc">, ResourceData>;
+  type ResourceDatasets = Record<Exclude<Key, "ohlc">, ResourceData>;
 
-  Object.entries(groupedKeysToPath.date).forEach(([_key, path]) => {
+  for (const _key in groupedKeysToURLPath) {
     const key = _key as Key;
 
     if (key !== "ohlc") {
-      resourceDatasets[key] = createResourceDataset<"date">({
-        scale: "date",
-        path,
-        setActiveResources,
-      });
+      const path = groupedKeysToURLPath[key];
+
+      (groupedKeysToURLPath as any as ResourceDatasets)[key] =
+        createResourceDataset<"date">({
+          scale: "date",
+          path,
+          setActiveResources,
+        });
     }
-  });
+  }
+
+  const resourceDatasets = groupedKeysToURLPath as any as ResourceDatasets;
 
   const price = createResourceDataset<"date", OHLC>({
     scale: "date",

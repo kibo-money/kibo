@@ -3,6 +3,8 @@ import { render } from "solid-js/web";
 
 import "./styles.css";
 
+import { App } from "./app";
+
 const root = document.getElementById("root");
 
 if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
@@ -11,8 +13,4 @@ if (import.meta.env.DEV && !(root instanceof HTMLElement)) {
   );
 }
 
-render(() => {
-  const App = lazy(() => import("./app").then((d) => ({ default: d.App })));
-
-  return <App />;
-}, root!);
+render(App, root!);

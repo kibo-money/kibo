@@ -3,14 +3,12 @@ import { colors } from "../../utils/colors";
 import { applyMultipleSeries, SeriesType } from "./multiple";
 
 export function createCohortPresetFolder<Scale extends ResourceScale>({
-  datasets,
   scale,
   color,
   name,
   datasetKey,
   title,
 }: {
-  datasets: Datasets;
   scale: Scale;
   name: string;
   datasetKey: AnyPossibleCohortKey;
@@ -21,7 +19,6 @@ export function createCohortPresetFolder<Scale extends ResourceScale>({
     name,
     tree: createCohortPresetList({
       title,
-      datasets,
       name,
       scale,
       color,
@@ -32,14 +29,12 @@ export function createCohortPresetFolder<Scale extends ResourceScale>({
 
 export function createCohortPresetList<Scale extends ResourceScale>({
   name,
-  datasets,
   scale,
   color,
   datasetKey,
   title,
 }: {
   name: string;
-  datasets: Datasets;
   scale: Scale;
   datasetKey: AnyPossibleCohortKey;
   title: string;

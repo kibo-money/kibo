@@ -6,6 +6,7 @@ import { chartState } from "../scripts/lightweightCharts/chart/state";
 import { setTimeScale } from "../scripts/lightweightCharts/chart/time";
 import { createPresets } from "../scripts/presets";
 import { priceToUSLocale } from "../scripts/utils/locale";
+import { run } from "../scripts/utils/run";
 import { sleep } from "../scripts/utils/sleep";
 import {
   readBooleanFromStorage,
@@ -16,9 +17,14 @@ import { webSockets } from "../scripts/ws";
 import { classPropToString } from "../solid/classes";
 import { Background, LOCAL_STORAGE_MARQUEE_KEY } from "./components/background";
 import { ChartFrame } from "./components/frames/chart";
+import { FavoritesFrame } from "./components/frames/favorites";
+import { HistoryFrame } from "./components/frames/history";
+import { SearchFrame } from "./components/frames/search";
+import { SettingsFrame } from "./components/frames/settings";
 import { TreeFrame } from "./components/frames/tree";
+import { Qrcode } from "./components/qrcode";
 import { StripDesktop, StripMobile } from "./components/strip";
-import { registerServiceWorker } from "./scripts/register";
+import { Update } from "./components/update";
 
 const LOCAL_STORAGE_BAR_KEY = "bar-width";
 const LOCAL_STORAGE_FULLSCREEN = "fullscrenn";
@@ -26,8 +32,6 @@ const LOCAL_STORAGE_FULLSCREEN = "fullscrenn";
 export const INPUT_PRESET_SEARCH_ID = "input-search-preset";
 
 export function App() {
-  const needRefresh = registerServiceWorker().needRefresh[0];
-
   const tabFocused = createRWS(true);
 
   const qrcode = createRWS("");
@@ -38,15 +42,8 @@ export function App() {
       false,
   );
 
-  const activeResources = createRWS<Set<ResourceDataset<any, any>>>(new Set(), {
-    equals: false,
-  });
-
-  const datasets = createDatasets({
-    setActiveResources: activeResources.set,
-  });
-
   const windowWidth = createRWS(window.innerWidth);
+  const windowWidth60p = createMemo(() => windowWidth() * 0.6);
   const windowResizeCallback = () => {
     windowWidth.set(window.innerWidth);
   };
@@ -55,8 +52,9 @@ export function App() {
 
   const windowSizeIsAtLeastMedium = createMemo(() => windowWidth() >= 720);
 
+  const minBarWidth = 384;
   const barWidth = createRWS(
-    Number(localStorage.getItem(LOCAL_STORAGE_BAR_KEY)),
+    Number(localStorage.getItem(LOCAL_STORAGE_BAR_KEY)) || minBarWidth,
   );
 
   createEffect(() => {
@@ -81,11 +79,12 @@ export function App() {
       : _selectedFrame(),
   );
 
-  const presets = createPresets(datasets);
+  const presets = createPresets();
 
   const marquee = createRWS(!localStorage.getItem(LOCAL_STORAGE_MARQUEE_KEY));
 
   const resizingBarStart = createRWS<number | undefined>(undefined);
+  const resizingBarWidth = createRWS<number>(0);
 
   createEffect(
     () => {
@@ -97,6 +96,16 @@ export function App() {
       deffer: true,
     },
   );
+
+  const activeResources = createRWS<Set<ResourceDataset<any, any>>>(new Set(), {
+    equals: false,
+  });
+
+  // Can't put datasets inside a signal as it breaks lazy memo
+
+  const datasets = createDatasets({
+    setActiveResources: activeResources.set,
+  });
 
   onMount(() => {
     webSockets.openAll();
@@ -113,32 +122,6 @@ export function App() {
       }
     });
   });
-
-  const FavoritesFrame = lazy(() =>
-    import("./components/frames/favorites").then((d) => ({
-      default: d.FavoritesFrame,
-    })),
-  );
-  const HistoryFrame = lazy(() =>
-    import("./components/frames/history").then((d) => ({
-      default: d.HistoryFrame,
-    })),
-  );
-  const SearchFrame = lazy(() =>
-    import("./components/frames/search").then((d) => ({
-      default: d.SearchFrame,
-    })),
-  );
-  const SettingsFrame = lazy(() =>
-    import("./components/frames/settings").then((d) => ({
-      default: d.SettingsFrame,
-    })),
-  );
-  const Qrcode = lazy(() =>
-    import("./components/qrcode").then((d) => ({
-      default: d.Qrcode,
-    })),
-  );
 
   const documentVisibilityChange = () =>
     tabFocused.set(document.visibilityState === "visible");
@@ -186,10 +169,18 @@ export function App() {
           "user-select": resizingBarStart() !== undefined ? "none" : undefined,
         }}
         onMouseMove={(event) => {
-          const start = resizingBarStart();
+          const startingClientX = resizingBarStart();
 
-          if (start !== undefined) {
-            barWidth.set(event.x - start + 384);
+          if (startingClientX !== undefined) {
+            barWidth.set(
+              Math.min(
+                Math.max(
+                  resizingBarWidth() + event.clientX - startingClientX,
+                  minBarWidth,
+                ),
+                windowWidth60p(),
+              ),
+            );
 
             setTimeScale(resizeInitialRange());
           }
@@ -200,6 +191,7 @@ export function App() {
         onTouchCancel={() => resizingBarStart.set(undefined)}
       >
         <Qrcode qrcode={qrcode} />
+        <Update />
 
         <div class="flex size-full flex-col md:flex-row md:p-3">
           <Show when={!windowSizeIsAtLeastMedium() || !fullscreen()}>
@@ -213,15 +205,16 @@ export function App() {
                 <StripDesktop
                   selected={selectedFrame}
                   setSelected={_selectedFrame.set}
-                  needsRefresh={needRefresh}
                 />
               </div>
               <div
-                class="flex h-full min-h-0 md:min-w-[384px]"
+                class="flex h-full min-h-0"
                 style={{
                   ...(windowSizeIsAtLeastMedium()
                     ? {
-                        width: `min(${barWidth()}px, 75dvw)`,
+                        "min-width": `${minBarWidth}px`,
+                        width: `${barWidth()}px`,
+                        "max-width": `${windowWidth60p()}px`,
                       }
                     : {}),
                 }}
@@ -270,21 +263,22 @@ export function App() {
               onMouseDown={(event) => {
                 resizeInitialRange.set(chartState.range);
 
-                resizingBarStart() === undefined &&
-                  // TODO: set size of bar instead
+                if (resizingBarStart() === undefined) {
                   resizingBarStart.set(event.clientX);
+                  resizingBarWidth.set(barWidth());
+                }
               }}
               onTouchStart={(event) => {
                 resizeInitialRange.set(chartState.range);
 
-                resizingBarStart() === undefined &&
+                if (resizingBarStart() === undefined) {
                   resizingBarStart.set(event.touches[0].clientX);
+                  resizingBarWidth.set(barWidth());
+                }
               }}
               onDblClick={() => {
                 resizeInitialRange.set(chartState.range);
-
                 barWidth.set(0);
-
                 setTimeScale(resizeInitialRange());
               }}
             />

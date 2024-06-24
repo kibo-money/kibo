@@ -9,13 +9,7 @@ import { colors } from "../../utils/colors";
 import { createCohortPresetFolder } from "../templates/cohort";
 import { applyMultipleSeries } from "../templates/multiple";
 
-export function createPresets({
-  scale,
-  datasets,
-}: {
-  scale: ResourceScale;
-  datasets: Datasets;
-}) {
+export function createPresets({ scale }: { scale: ResourceScale }) {
   return {
     name: "Hodlers",
     tree: [
@@ -62,7 +56,6 @@ export function createPresets({
       },
       ...xthCohorts.map(({ key, name, legend }) =>
         createCohortPresetFolder({
-          datasets,
           scale,
           color: colors[key],
           name: legend,
@@ -74,7 +67,6 @@ export function createPresets({
         name: "Up To X",
         tree: upToCohorts.map(({ key, name }) =>
           createCohortPresetFolder({
-            datasets,
             scale,
             color: colors[key],
             name,
@@ -87,7 +79,6 @@ export function createPresets({
         name: "From X To Y",
         tree: fromXToYCohorts.map(({ key, name }) =>
           createCohortPresetFolder({
-            datasets,
             scale,
             color: colors[key],
             name,
@@ -100,7 +91,6 @@ export function createPresets({
         name: "From X",
         tree: fromXCohorts.map(({ key, name }) =>
           createCohortPresetFolder({
-            datasets,
             scale,
             color: colors[key],
             name,
@@ -113,7 +103,6 @@ export function createPresets({
         name: "Years",
         tree: yearCohorts.map(({ key, name }) =>
           createCohortPresetFolder({
-            datasets,
             scale,
             color: colors[key],
             name,

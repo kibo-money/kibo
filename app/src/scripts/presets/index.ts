@@ -19,7 +19,7 @@ export const LOCAL_STORAGE_HISTORY_KEY = "history";
 export const LOCAL_STORAGE_SELECTED_KEY = "preset";
 export const LOCAL_STORAGE_VISITED_KEY = "visited";
 
-export function createPresets(datasets: Datasets): Presets {
+export function createPresets(): Presets {
   const partialTree = [
     {
       name: "Dashboards (Coming soon)",
@@ -31,21 +31,20 @@ export function createPresets(datasets: Datasets): Presets {
         {
           name: "By Date",
           tree: [
-            createMarketPresets({ scale: "date", datasets }),
+            createMarketPresets({ scale: "date" }),
             createBlocksPresets(),
             createMinersPresets("date"),
             createTransactionsPresets("date"),
             ...createCohortPresetList({
-              datasets,
               scale: "date",
               color: colors.bitcoin,
               datasetKey: "",
               name: "",
               title: "",
             }),
-            createHodlersPresets({ scale: "date", datasets }),
-            createAddressesPresets({ scale: "date", datasets }),
-            createCoinblocksPresets({ scale: "date", datasets }),
+            createHodlersPresets({ scale: "date" }),
+            createAddressesPresets({ scale: "date" }),
+            createCoinblocksPresets({ scale: "date" }),
           ],
         } satisfies PartialPresetFolder,
         {

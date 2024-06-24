@@ -3,13 +3,9 @@ import { applyMultipleSeries, SeriesType } from "../templates/multiple";
 
 export function createPresets<Scale extends ResourceScale>({
   scale,
-  datasets: _datasets,
 }: {
   scale: Scale;
-  datasets: Datasets;
 }) {
-  const datasets = _datasets[scale];
-
   return {
     name: "Cointime Economics",
     tree: [
@@ -29,27 +25,27 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Vaulted Price",
                     color: colors.vaultedness,
-                    dataset: datasets.vaulted_price,
+                    dataset: params.datasets[scale].vaulted_price,
                   },
                   {
                     title: "Active Price",
                     color: colors.liveliness,
-                    dataset: datasets.active_price,
+                    dataset: params.datasets[scale].active_price,
                   },
                   {
                     title: "True Market Mean",
                     color: colors.trueMarketMeanPrice,
-                    dataset: datasets.true_market_mean,
+                    dataset: params.datasets[scale].true_market_mean,
                   },
                   {
                     title: "Realized Price",
                     color: colors.bitcoin,
-                    dataset: datasets.realized_price,
+                    dataset: params.datasets[scale].realized_price,
                   },
                   {
                     title: "Cointime",
                     color: colors.cointimePrice,
-                    dataset: datasets.cointime_price,
+                    dataset: params.datasets[scale].cointime_price,
                   },
                 ],
               });
@@ -71,7 +67,7 @@ export function createPresets<Scale extends ResourceScale>({
                       {
                         title: "Active Price",
                         color: colors.liveliness,
-                        dataset: datasets.active_price,
+                        dataset: params.datasets[scale].active_price,
                       },
                     ],
                   });
@@ -95,7 +91,7 @@ export function createPresets<Scale extends ResourceScale>({
                       {
                         title: "Vaulted Price",
                         color: colors.vaultedness,
-                        dataset: datasets.vaulted_price,
+                        dataset: params.datasets[scale].vaulted_price,
                       },
                     ],
                   });
@@ -119,7 +115,7 @@ export function createPresets<Scale extends ResourceScale>({
                       {
                         title: "True Market Mean",
                         color: colors.trueMarketMeanPrice,
-                        dataset: datasets.true_market_mean,
+                        dataset: params.datasets[scale].true_market_mean,
                       },
                     ],
                   });
@@ -143,7 +139,7 @@ export function createPresets<Scale extends ResourceScale>({
                       {
                         title: "Cointime",
                         color: colors.cointimePrice,
-                        dataset: datasets.cointime_price,
+                        dataset: params.datasets[scale].cointime_price,
                       },
                     ],
                   });
@@ -174,22 +170,22 @@ export function createPresets<Scale extends ResourceScale>({
                     title: "Market Cap",
 
                     color: colors.white,
-                    dataset: datasets.market_cap,
+                    dataset: params.datasets[scale].market_cap,
                   },
                   {
                     title: "Realized Cap",
                     color: colors.realizedCap,
-                    dataset: datasets.realized_cap,
+                    dataset: params.datasets[scale].realized_cap,
                   },
                   {
                     title: "Investor Cap",
                     color: colors.investorCap,
-                    dataset: datasets.investor_cap,
+                    dataset: params.datasets[scale].investor_cap,
                   },
                   {
                     title: "Thermo Cap",
                     color: colors.thermoCap,
-                    dataset: datasets.thermo_cap,
+                    dataset: params.datasets[scale].thermo_cap,
                   },
                 ],
               });
@@ -212,7 +208,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Thermo Cap",
                     color: colors.thermoCap,
-                    dataset: datasets.thermo_cap,
+                    dataset: params.datasets[scale].thermo_cap,
                   },
                 ],
               });
@@ -235,7 +231,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Investor Cap",
                     color: colors.investorCap,
-                    dataset: datasets.investor_cap,
+                    dataset: params.datasets[scale].investor_cap,
                   },
                 ],
               });
@@ -257,7 +253,8 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Ratio",
                     color: colors.bitcoin,
-                    dataset: datasets.thermo_cap_to_investor_cap_ratio,
+                    dataset:
+                      params.datasets[scale].thermo_cap_to_investor_cap_ratio,
                   },
                 ],
               });
@@ -284,17 +281,17 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Coinblocks Created",
                     color: colors.coinblocksCreated,
-                    dataset: datasets.coinblocks_created,
+                    dataset: params.datasets[scale].coinblocks_created,
                   },
                   {
                     title: "Coinblocks Destroyed",
                     color: colors.coinblocksDestroyed,
-                    dataset: datasets.coinblocks_destroyed,
+                    dataset: params.datasets[scale].coinblocks_destroyed,
                   },
                   {
                     title: "Coinblocks Stored",
                     color: colors.coinblocksStored,
-                    dataset: datasets.coinblocks_stored,
+                    dataset: params.datasets[scale].coinblocks_stored,
                   },
                 ],
               });
@@ -316,7 +313,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Coinblocks Created",
                     color: colors.coinblocksCreated,
-                    dataset: datasets.coinblocks_created,
+                    dataset: params.datasets[scale].coinblocks_created,
                   },
                 ],
               });
@@ -338,7 +335,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Coinblocks Destroyed",
                     color: colors.coinblocksDestroyed,
-                    dataset: datasets.coinblocks_destroyed,
+                    dataset: params.datasets[scale].coinblocks_destroyed,
                   },
                 ],
               });
@@ -360,7 +357,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Coinblocks Stored",
                     color: colors.coinblocksStored,
-                    dataset: datasets.coinblocks_stored,
+                    dataset: params.datasets[scale].coinblocks_stored,
                   },
                 ],
               });
@@ -387,17 +384,20 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Cumulative Coinblocks Created",
                     color: colors.coinblocksCreated,
-                    dataset: datasets.cumulative_coinblocks_created,
+                    dataset:
+                      params.datasets[scale].cumulative_coinblocks_created,
                   },
                   {
                     title: "Cumulative Coinblocks Destroyed",
                     color: colors.coinblocksDestroyed,
-                    dataset: datasets.cumulative_coinblocks_destroyed,
+                    dataset:
+                      params.datasets[scale].cumulative_coinblocks_destroyed,
                   },
                   {
                     title: "Cumulative Coinblocks Stored",
                     color: colors.coinblocksStored,
-                    dataset: datasets.cumulative_coinblocks_stored,
+                    dataset:
+                      params.datasets[scale].cumulative_coinblocks_stored,
                   },
                 ],
               });
@@ -419,7 +419,8 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Cumulative Coinblocks Created",
                     color: colors.coinblocksCreated,
-                    dataset: datasets.cumulative_coinblocks_created,
+                    dataset:
+                      params.datasets[scale].cumulative_coinblocks_created,
                   },
                 ],
               });
@@ -441,7 +442,8 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Cumulative Coinblocks Destroyed",
                     color: colors.coinblocksDestroyed,
-                    dataset: datasets.cumulative_coinblocks_destroyed,
+                    dataset:
+                      params.datasets[scale].cumulative_coinblocks_destroyed,
                   },
                 ],
               });
@@ -463,7 +465,8 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Cumulative Coinblocks Stored",
                     color: colors.coinblocksStored,
-                    dataset: datasets.cumulative_coinblocks_stored,
+                    dataset:
+                      params.datasets[scale].cumulative_coinblocks_stored,
                   },
                 ],
               });
@@ -490,7 +493,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Liveliness",
                     color: colors.liveliness,
-                    dataset: datasets.liveliness,
+                    dataset: params.datasets[scale].liveliness,
                   },
                 ],
               });
@@ -512,7 +515,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Vaultedness",
                     color: colors.vaultedness,
-                    dataset: datasets.vaultedness,
+                    dataset: params.datasets[scale].vaultedness,
                   },
                 ],
               });
@@ -534,12 +537,12 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Liveliness",
                     color: colors.liveliness,
-                    dataset: datasets.liveliness,
+                    dataset: params.datasets[scale].liveliness,
                   },
                   {
                     title: "Vaultedness",
                     color: colors.vaultedness,
-                    dataset: datasets.vaultedness,
+                    dataset: params.datasets[scale].vaultedness,
                   },
                 ],
               });
@@ -561,7 +564,8 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Activity To Vaultedness Ratio",
                     color: colors.activityToVaultednessRatio,
-                    dataset: datasets.activity_to_vaultedness_ratio,
+                    dataset:
+                      params.datasets[scale].activity_to_vaultedness_ratio,
                   },
                 ],
               });
@@ -583,12 +587,13 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Concurrent Liveliness 14d Median",
                     color: `${colors.liveliness}66`,
-                    dataset: datasets.concurrent_liveliness_2w_median,
+                    dataset:
+                      params.datasets[scale].concurrent_liveliness_2w_median,
                   },
                   {
                     title: "Concurrent Liveliness",
                     color: colors.liveliness,
-                    dataset: datasets.concurrent_liveliness,
+                    dataset: params.datasets[scale].concurrent_liveliness,
                   },
                 ],
               });
@@ -611,13 +616,14 @@ export function createPresets<Scale extends ResourceScale>({
                     title: "Liveliness Incremental Change",
                     color: colors.darkLiveliness,
                     seriesType: SeriesType.Based,
-                    dataset: datasets.liveliness_net_change,
+                    dataset: params.datasets[scale].liveliness_net_change,
                   },
                   {
                     title: "Liveliness Incremental Change 14 Day Median",
                     color: colors.liveliness,
                     seriesType: SeriesType.Based,
-                    dataset: datasets.liveliness_net_change_2w_median,
+                    dataset:
+                      params.datasets[scale].liveliness_net_change_2w_median,
                   },
                 ],
               });
@@ -644,7 +650,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Vaulted Supply",
                     color: colors.vaultedness,
-                    dataset: datasets.vaulted_supply,
+                    dataset: params.datasets[scale].vaulted_supply,
                   },
                 ],
               });
@@ -666,7 +672,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Active Supply",
                     color: colors.liveliness,
-                    dataset: datasets.active_supply,
+                    dataset: params.datasets[scale].active_supply,
                   },
                 ],
               });
@@ -688,17 +694,17 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Circulating Supply",
                     color: colors.coinblocksCreated,
-                    dataset: datasets.supply,
+                    dataset: params.datasets[scale].supply,
                   },
                   {
                     title: "Vaulted Supply",
                     color: colors.vaultedness,
-                    dataset: datasets.vaulted_supply,
+                    dataset: params.datasets[scale].vaulted_supply,
                   },
                   {
                     title: "Active Supply",
                     color: colors.liveliness,
-                    dataset: datasets.active_supply,
+                    dataset: params.datasets[scale].active_supply,
                   },
                 ],
               });
@@ -722,13 +728,13 @@ export function createPresets<Scale extends ResourceScale>({
           //           id: 'min-vaulted',
           //           title: 'Min Vaulted Supply',
           //           color: colors.vaultedness,
-          //           dataset: params.datasets.dateToMinVaultedSupply,
+          //           dataset: params.params.datasets[scale].dateToMinVaultedSupply,
           //         },
           //         {
           //           id: 'max-active',
           //           title: 'Max Active Supply',
           //           color: colors.liveliness,
-          //           dataset: params.datasets.dateToMaxActiveSupply,
+          //           dataset: params.params.datasets[scale].dateToMaxActiveSupply,
           //         },
           //       ],
           //     })
@@ -750,7 +756,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Vaulted Supply Net Change",
                     color: colors.vaultedness,
-                    dataset: datasets.vaulted_supply,
+                    dataset: params.datasets[scale].vaulted_supply,
                   },
                 ],
               });
@@ -772,7 +778,7 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Active Supply Net Change",
                     color: colors.liveliness,
-                    dataset: datasets.active_supply_net_change,
+                    dataset: params.datasets[scale].active_supply_net_change,
                   },
                 ],
               });
@@ -794,14 +800,15 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Active Supply Net Change",
                     color: `${colors.liveliness}80`,
-                    dataset: datasets.active_supply_3m_net_change,
+                    dataset: params.datasets[scale].active_supply_3m_net_change,
                     seriesType: SeriesType.Based,
                   },
                   {
                     title: "Vaulted Supply Net Change",
                     color: `${colors.vaultedPrice}80`,
                     seriesType: SeriesType.Based,
-                    dataset: datasets.vaulted_supply_3m_net_change,
+                    dataset:
+                      params.datasets[scale].vaulted_supply_3m_net_change,
                   },
                 ],
               });
@@ -826,7 +833,7 @@ export function createPresets<Scale extends ResourceScale>({
           //           title: 'Vaulted Supply Annualized Net Change',
           //           color: colors.vaultedness,
           //           dataset:
-          //             datasets.vaultedAnnualizedSupplyNetChange,
+          //             params.datasets[scale].vaultedAnnualizedSupplyNetChange,
           //         },
           //       ],
           //     })
@@ -851,13 +858,13 @@ export function createPresets<Scale extends ResourceScale>({
           //           id: 'vaulting-rate',
           //           title: 'Vaulting Rate',
           //           color: colors.vaultedness,
-          //           dataset: datasets.vaultingRate,
+          //           dataset: params.datasets[scale].vaultingRate,
           //         },
           //         {
           //           id: 'nominal-inflation-rate',
           //           title: 'Nominal Inflation Rate',
           //           color: colors.orange,
-          //           dataset: params.datasets.dateToYearlyInflationRate,
+          //           dataset: params.params.datasets[scale].dateToYearlyInflationRate,
           //         },
           //       ],
           //     })
@@ -883,7 +890,7 @@ export function createPresets<Scale extends ResourceScale>({
           //           title: 'Change From Issuance',
           //           color: colors.emerald,
           //           dataset:
-          //             params.datasets
+          //             params.params.datasets[scale]
           //               [scale].activeSupplyChangeFromIssuance90dChange,
           //         },
           //         {
@@ -891,14 +898,14 @@ export function createPresets<Scale extends ResourceScale>({
           //           title: 'Change From Transactions',
           //           color: colors.rose,
           //           dataset:
-          //             params.datasets
+          //             params.params.datasets[scale]
           //               [scale].activeSupplyChangeFromTransactions90dChange,
           //         },
           //         // {
           //         //   id: 'active',
           //         //   title: 'Active Supply',
           //         //   color: colors.liveliness,
-          //         //   dataset: datasets.activeSupply,
+          //         //   dataset: params.datasets[scale].activeSupply,
           //         // },
           //       ],
           //     })
@@ -921,17 +928,17 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Circulating Supply",
                     color: colors.coinblocksCreated,
-                    dataset: datasets.supply,
+                    dataset: params.datasets[scale].supply,
                   },
                   {
                     title: "Vaulted Supply",
                     color: colors.vaultedness,
-                    dataset: datasets.vaulted_supply,
+                    dataset: params.datasets[scale].vaulted_supply,
                   },
                   {
                     title: "Supply in profit",
                     color: colors.bitcoin,
-                    dataset: datasets.supply_in_profit,
+                    dataset: params.datasets[scale].supply_in_profit,
                   },
                 ],
               });
@@ -953,17 +960,17 @@ export function createPresets<Scale extends ResourceScale>({
                   {
                     title: "Circulating Supply",
                     color: colors.coinblocksCreated,
-                    dataset: datasets.supply,
+                    dataset: params.datasets[scale].supply,
                   },
                   {
                     title: "Active Supply",
                     color: colors.liveliness,
-                    dataset: datasets.active_supply,
+                    dataset: params.datasets[scale].active_supply,
                   },
                   {
                     title: "Supply in Loss",
                     color: colors.bitcoin,
-                    dataset: datasets.supply_in_loss,
+                    dataset: params.datasets[scale].supply_in_loss,
                   },
                 ],
               });
@@ -988,12 +995,14 @@ export function createPresets<Scale extends ResourceScale>({
               {
                 title: "Cointime Adjusted",
                 color: colors.coinblocksCreated,
-                dataset: datasets.cointime_adjusted_yearly_inflation_rate,
+                dataset:
+                  params.datasets[scale]
+                    .cointime_adjusted_yearly_inflation_rate,
               },
               {
                 title: "Nominal",
                 color: colors.bitcoin,
-                dataset: datasets.yearly_inflation_rate,
+                dataset: params.datasets[scale].yearly_inflation_rate,
               },
             ],
           });
@@ -1016,12 +1025,12 @@ export function createPresets<Scale extends ResourceScale>({
               {
                 title: "Cointime Adjusted",
                 color: colors.coinblocksCreated,
-                dataset: datasets.cointime_adjusted_velocity,
+                dataset: params.datasets[scale].cointime_adjusted_velocity,
               },
               {
                 title: "Nominal",
                 color: colors.bitcoin,
-                dataset: datasets.transaction_velocity,
+                dataset: params.datasets[scale].transaction_velocity,
               },
             ],
           });
