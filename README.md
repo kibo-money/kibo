@@ -10,11 +10,11 @@ While [mempool.space](https://mempool.space) gives a very micro view of the netw
 
 To promote even more transparency and trust in the network, this project is committed to making on-chain data accessible and verifiable to all, no matter their situation or intentions. This is why, the whole project is completely free, from code to services, including a real-time API with thousands and thousands routes which can be used at will.
 
-**Having anyone be able to do a healthcheck of the network is incredibly important and should be wanted by everyone.**
+**Having anyone be able to do a health-check of the network is incredibly important and should be wanted by everyone.**
 
 ## Warning
 
-This project is in a very early stage, expect this to break and the data the be false.
+This project is in a very early stage. The web app will have bugs, the API might break and the data can definitely to be be false or slightly false.
 
 ## Instances
 
