@@ -4,13 +4,17 @@
 
 ## Description
 
-TLDR: Free, open source, verifiable and self-hostable Bitcoin on-chain data generator and visualizer
+Satonomics is a Bitcoin only on-chain data generator and visualizer that is fully free, open source, verifiable, local-first and self-hostable.
 
-Satonomics is an open-source suite of tools that computes, distributes, and displays on-chain data, making it freely available for anyone to use.
+While [mempool.space](https://mempool.space) gives a very micro view of the network where you can follow the journey of any sats, this tool is the exact opposite and very complimentary by giving you a much more global/macro view of the flow and various dynamics of the network.
 
-The generated datasets are incredibly diverse and can be used for a wide range of purposes. Whether you're looking to conduct a health check on the network, gain insights into its current or past state, or leverage the data for trading purposes, these tools offer various charts, dashboards (Soon TM), and an extensive API to help you achieve your goals.
+To promote even more transparency and trust in the network, this project is committed to making on-chain data accessible and verifiable to all, no matter their situation or intentions. This is why, the whole project is completely free, from code to services, including a real-time API with thousands and thousands routes which can be used at will.
 
-To promote transparency and trust in the network, this project is committed to making on-chain data accessible and verifiable to all, without discrimination and is a great complimentary tool to [mempool.space](https://mempool.space).
+**Having anyone be able to do a healthcheck of the network is incredibly important and should be wanted by everyone.**
+
+## Warning
+
+This project is in a very early stage, expect this to break and the data the be false.
 
 ## Instances
 
