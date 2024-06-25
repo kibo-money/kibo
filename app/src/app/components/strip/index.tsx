@@ -1,4 +1,5 @@
 import { AnchorAPI } from "./components/anchorAPI";
+import { AnchorGeyser } from "./components/anchorGeyser";
 import { AnchorGit } from "./components/anchorGit";
 import { AnchorLogo } from "./components/anchorLogo";
 import { AnchorNostr } from "./components/anchorNostr";
@@ -32,6 +33,7 @@ export function StripDesktop({
       <AnchorAPI />
       <AnchorGit />
       <AnchorNostr />
+      <AnchorGeyser />
       {/* <AnchorHome /> */}
     </>
   );
