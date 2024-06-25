@@ -46,6 +46,11 @@ API:
   - By not relying on any third-party dependencies besides price APIs (which are and should be very common and easy to update)
   - By **NOT** doing address labelling/tagging (which means **NO** exchange or any other individual address tracking), for that please use [mempool.space](https://mempool.space) or any other tool
 
+## Brand
+
+- Name: Willing to change if someone thinks of something better !
+- Logo: Most likely a placeholder
+
 ## Proof of Work
 
 Aka: Previous iterations
