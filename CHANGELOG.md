@@ -2,22 +2,25 @@
 
 ## v. 0.1.2 | WIP
 
-### Parser
-
--
+![Image of the Satonomics Web App version 0.1.2](./assets/v0.1.2.jpg)
 
 ### App
 
+- Performance
+  - Improved app's reactivity
+  - Added some chunk splitting for a faster initial load
+  - Global improvements that increased the Lighthouse's performance score from the low 30s to the high 70s
 - Chart
-  - Fix legend hovering on mobile not resetting on touch end
+  - Fixed legend hovering on mobile not resetting on touch end
+  - Updated legend padding so that the scrollbar, if visible, is less in the way
+  - Added yearly time scale setters (from year 2009 to today)
 - Misc
   - Support mini window size, could be useful for embedded views
-
-### Server
-
--
+  - Hopefully made scrollbars a little more subtle on WIndows and Linux, can't test
 
 ## v. 0.1.1 | 849240 - 2024/06/24
+
+![Image of the Satonomics Web App version 0.1.1](./assets/v0.1.1.jpg)
 
 ### Parser
 
@@ -26,7 +29,7 @@
 
 ### Server
 
-- Added the chunk, date and time in the terminal logs
+- Added the chunk, date and time of the request to the terminal logs
 
 ### App
 
@@ -53,7 +56,7 @@
 - Strip
   - Temporarily removed the Home button on the strip bar on desktop as there is no landing page yet
 - Settings
-  - Add version
+  - Added version
 - PWA
   - Fixed background update
   - Changed update check frequency to 1 minute (~1kb to fetch every minute which is very reasonable)
@@ -64,3 +67,7 @@
 ### Price
 
 - Deleted old price datasets and their backups
+
+## v. 0.1.0 | 848642 - 2024/06/19
+
+![Image of the Satonomics Web App version 0.1.0](./assets/v0.1.0.jpg)

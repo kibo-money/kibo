@@ -12,9 +12,14 @@ export function SettingsFrame({
   const value = marquee();
 
   return (
-    <div class="flex-1 overflow-y-auto" hidden={selectedFrame() !== "Settings"}>
+    <div
+      class="flex-1 overflow-y-auto"
+      style={{
+        display: selectedFrame() !== "Settings" ? "none" : undefined,
+      }}
+    >
       <div class="space-y-4 p-4">
-        <Header title="Settings" />
+        <Header title="Settings">And other stuff.</Header>
 
         <div class="-mx-4 border-t border-orange-200/10" />
 

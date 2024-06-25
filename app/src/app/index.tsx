@@ -1,6 +1,6 @@
 import { createRWS } from "/src/solid/rws";
 
-import { env } from "../env";
+import { standalone } from "../env";
 import { createDatasets } from "../scripts/datasets";
 import { chartState } from "../scripts/lightweightCharts/chart/state";
 import { setTimeScale } from "../scripts/lightweightCharts/chart/time";
@@ -18,7 +18,6 @@ import { Background, LOCAL_STORAGE_MARQUEE_KEY } from "./components/background";
 import { ChartFrame } from "./components/frames/chart";
 import { FavoritesFrame } from "./components/frames/favorites";
 import { HistoryFrame } from "./components/frames/history";
-import { SearchFrame } from "./components/frames/search";
 import { SettingsFrame } from "./components/frames/settings";
 import { TreeFrame } from "./components/frames/tree";
 import { Qrcode } from "./components/qrcode";
@@ -156,6 +155,12 @@ export function App() {
 
   const resizeInitialRange = createRWS<TimeRange | null>(null);
 
+  const SearchFrame = lazy(() =>
+    import("./components/frames/search").then((d) => ({
+      default: d.SearchFrame,
+    })),
+  );
+
   return (
     <>
       <Background marquee={marquee} focused={tabFocused} />
@@ -194,7 +199,7 @@ export function App() {
           <Show when={!windowSizeIsAtLeastMedium() || !fullscreen()}>
             <div
               class={classPropToString([
-                env.standalone && "border-t",
+                standalone && "border-t",
                 "md:short:hidden flex h-full flex-col overflow-hidden border-white/10 bg-gradient-to-b from-orange-500/10 to-orange-950/10 md:flex-row md:rounded-2xl md:border",
               ])}
             >
@@ -242,7 +247,7 @@ export function App() {
 
               <div
                 class={classPropToString([
-                  env.standalone && "pb-6",
+                  standalone && "pb-6",
                   "short:hidden flex justify-between gap-3 border-t border-white/10 bg-black/30 p-2 backdrop-blur-sm md:hidden",
                 ])}
               >

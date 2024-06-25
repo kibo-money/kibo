@@ -12,7 +12,9 @@ export function FavoritesFrame({
   return (
     <div
       class="flex-1 overflow-y-auto"
-      hidden={selectedFrame() !== "Favorites"}
+      style={{
+        display: selectedFrame() !== "Favorites" ? "none" : undefined,
+      }}
     >
       <div class="flex max-h-full min-h-0 flex-1 flex-col gap-4 p-4">
         <Header title="Favorites">

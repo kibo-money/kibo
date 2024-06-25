@@ -21,13 +21,6 @@ export function createResourceDataset<
   path: string;
   setActiveResources: Setter<Set<ResourceDataset<any, any>>>;
 }) {
-  const baseURL = `${
-    // location.hostname === "localhost"
-    //   ? "http://localhost:3110"
-    //   : "https://api.satonomics.xyz"
-    "https://api.satonomics.xyz"
-  }${path}`;
-
   type Dataset = Scale extends "date"
     ? FetchedDateDataset<Type>
     : FetchedHeightDataset<Type>;
@@ -35,6 +28,13 @@ export function createResourceDataset<
   type Value = DatasetValue<
     Type extends number ? SingleValueData : CandlestickData
   >;
+
+  const baseURL = `${
+    // location.hostname === "localhost"
+    //   ? "http://localhost:3110"
+    //   : "https://api.satonomics.xyz"
+    "https://api.satonomics.xyz"
+  }${path}`;
 
   const fetchedJSONs = new Array(
     (new Date().getFullYear() - new Date("2009-01-01").getFullYear() + 2) *
@@ -51,11 +51,11 @@ export function createResourceDataset<
         vec: createMemo(() => {
           const map = json()?.dataset.map || null;
 
-          const chunkId = json()?.chunk.id!;
-
           if (!map) {
             return null;
           }
+
+          const chunkId = json()?.chunk.id!;
 
           if (Array.isArray(map)) {
             return map.map(

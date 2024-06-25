@@ -12,7 +12,7 @@ export function Legend({
   let toggle = false;
 
   return (
-    <div class="flex flex-1 items-center gap-1 overflow-y-auto">
+    <div class="-my-1.5 -ml-1.5 flex flex-1 items-center gap-1 overflow-y-auto p-1.5">
       <For each={legendList()}>
         {(legend) => {
           const initialColors = {} as any;

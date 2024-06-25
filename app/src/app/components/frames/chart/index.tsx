@@ -27,6 +27,10 @@ export function ChartFrame({
 }) {
   const legend = createRWS<PresetLegend>([]);
 
+  const Chart = lazy(() =>
+    import("./components/chart").then((d) => ({ default: d.Chart })),
+  );
+
   return (
     <div
       class={classPropToString([
@@ -35,7 +39,7 @@ export function ChartFrame({
         "flex size-full min-h-0 flex-1 flex-col overflow-hidden",
       ])}
       style={{
-        display: (hide ? !hide() : true) ? undefined : "none",
+        display: (hide ? hide() : false) ? "none" : undefined,
       }}
     >
       <Box flex={false} dark classes="short:hidden">
@@ -56,7 +60,6 @@ export function ChartFrame({
         <Chart
           activeResources={activeResources}
           datasets={datasets}
-          // fetchedDatasets={fetchedDatasets}
           legendSetter={legend.set}
           presets={presets}
         />

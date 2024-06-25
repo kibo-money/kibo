@@ -40,6 +40,9 @@ export function createChart(scale: ResourceScale) {
       shiftVisibleRangeOnNewBar: false,
       allowShiftVisibleRangeOnWhitespaceReplacement: false,
     },
+    handleScale: {
+      axisDoubleClickReset: false,
+    },
     crosshair: {
       mode: CrosshairMode.Normal,
       horzLine: {

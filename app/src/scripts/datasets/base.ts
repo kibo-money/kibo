@@ -2,15 +2,17 @@ import { createResourceDataset } from "./resource";
 
 export { averages } from "./consts/averages";
 
-export function createDateDatasets({
+export function createScaleDatasets<Scale extends ResourceScale>({
+  scale,
   setActiveResources,
   groupedKeysToURLPath,
 }: {
+  scale: Scale;
   setActiveResources: Setter<Set<ResourceDataset<any, any>>>;
-  groupedKeysToURLPath: GroupedKeysToURLPath["date"];
+  groupedKeysToURLPath: GroupedKeysToURLPath[Scale];
 }) {
   type Key = keyof typeof groupedKeysToURLPath;
-  type ResourceData = ReturnType<typeof createResourceDataset<"date">>;
+  type ResourceData = ReturnType<typeof createResourceDataset<Scale>>;
 
   type ResourceDatasets = Record<Exclude<Key, "ohlc">, ResourceData>;
 
@@ -18,23 +20,21 @@ export function createDateDatasets({
 
   for (const key in groupedKeysToURLPath) {
     if ((key as Key) !== "ohlc") {
-      datasets[key as Exclude<Key, "ohlc">] = createResourceDataset<"date">({
-        scale: "date",
-        path: groupedKeysToURLPath[key as Key],
+      datasets[key as unknown as Exclude<Key, "ohlc">] = createResourceDataset({
+        scale,
+        path: groupedKeysToURLPath[key as Key] as any,
         setActiveResources,
       });
     }
   }
 
-  const price = createResourceDataset<"date", OHLC>({
-    scale: "date",
-    path: "/date-to-ohlc",
+  const price = createResourceDataset<Scale, OHLC>({
+    scale,
+    path: `/${scale}-to-ohlc`,
     setActiveResources,
   });
 
   Object.assign(datasets, { price });
 
-  return datasets as ResourceDatasets & {
-    price: ResourceDataset<"date", OHLC>;
-  };
+  return datasets;
 }

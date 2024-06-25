@@ -11,7 +11,12 @@ export function HistoryFrame({
   selectedFrame: Accessor<FrameName>;
 }) {
   return (
-    <div class="flex-1 overflow-y-auto" hidden={selectedFrame() !== "History"}>
+    <div
+      class="flex-1 overflow-y-auto"
+      style={{
+        display: selectedFrame() !== "History" ? "none" : undefined,
+      }}
+    >
       <div class="flex max-h-full min-h-0 flex-1 flex-col p-4">
         <Header title="History">List of previously visited presets.</Header>
 

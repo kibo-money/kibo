@@ -4,6 +4,7 @@ const texts = [
   "satonomics",
   "satonomics",
   "satonomics",
+  "satonomics",
 
   "stay humble, stack sats",
   "21 million",
@@ -29,6 +30,14 @@ const texts = [
   "be your own bank",
   "resistance money",
   "foss",
+  "permissionless",
+  "great reset",
+  "orange pill",
+  "borderless",
+  "anonymous",
+  "nyknyc",
+  "low time preference",
+  "absolute scarcity",
 ];
 
 export const LOCAL_STORAGE_MARQUEE_KEY = "bg-marquee";

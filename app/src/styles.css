@@ -21,6 +21,12 @@
   }
 }
 
+html {
+  /* Foreground, Background */
+  scrollbar-color: #ffffff66 #00000066;
+  scrollbar-width: thin;
+}
+
 a {
   @apply text-orange-300 hover:underline;
 }

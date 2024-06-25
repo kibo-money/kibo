@@ -1,5 +1,7 @@
 # SATONOMICS
 
+![Image of the Satonomics Web App](./assets/latest.jpg)
+
 ## Description
 
 TLDR: Free, open source, verifiable and self-hostable Bitcoin on-chain data generator and visualizer

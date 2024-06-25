@@ -34,9 +34,9 @@ export const applyPriceSeries = <
   const id = options?.id || "price";
   const title = options?.title || "Price";
 
-  const dataset = createMemo(() => _dataset || datasets[preset.scale].price);
+  const dataset = _dataset || datasets[preset.scale].price;
 
-  const url = "url" in dataset() ? (dataset() as any).url : undefined;
+  const url = "url" in dataset ? (dataset as any).url : undefined;
 
   const priceScaleOptions: DeepPartial<PriceScaleOptions> = {
     ...(options?.halved
@@ -51,7 +51,6 @@ export const applyPriceSeries = <
       ? {}
       : {
           mode: 1,
-          // mode: PriceScaleMode.Logarithmic,
         }),
     ...options?.priceScaleOptions,
   };
@@ -139,9 +138,12 @@ export const applyPriceSeries = <
   });
 
   createEffect(() => {
-    const d = dataset();
-    lineSeries.setData(d.values());
-    ohlcSeries.setData(d.values());
+    const values = dataset.values();
+
+    if (values) {
+      lineSeries.setData(values);
+      ohlcSeries.setData(values);
+    }
   });
 
   createEffect(() => {

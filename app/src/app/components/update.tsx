@@ -62,12 +62,12 @@ export function Update() {
     <Show when={needRefresh()}>
       <div class="absolute inset-x-1.5 top-1.5 z-[99999] flex items-center justify-between rounded-lg bg-orange-700/75 p-1.5 shadow backdrop-blur-sm">
         <div>
-          <span class="truncate px-1">New version available, please</span>
+          <span class="truncate px-1">New version available,</span>
           <button
             class="mr-2 rounded-md bg-orange-50 bg-opacity-60 px-1.5 py-0.5 font-medium text-orange-950 hover:bg-opacity-100"
             onClick={async () => await updateServiceWorker()}
           >
-            install
+            Install
           </button>
         </div>
         <button
