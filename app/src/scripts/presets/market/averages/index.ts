@@ -1,7 +1,7 @@
 import { averages } from "/src/scripts/datasets/date";
 import { colors } from "/src/scripts/utils/colors";
 
-import { applyMultipleSeries } from "../../templates/multiple";
+import { applySeriesList } from "../../apply";
 
 export function createPresets(): PartialPresetFolder {
   const scale: ResourceScale = "date";
@@ -15,9 +15,9 @@ export function createPresets(): PartialPresetFolder {
         name: "All",
         title: "All Averages",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            list: averages.map((average) => ({
+            top: averages.map((average) => ({
               title: average.key.toUpperCase(),
               color: colors[`_${average.key}`],
               dataset: params.datasets.date[`price_${average.key}_sma`],
@@ -60,9 +60,9 @@ function createPresetFolder({
     icon: IconTablerMathAvg,
     title: `${name} Moving Average`,
     applyPreset(params) {
-      return applyMultipleSeries({
+      return applySeriesList({
         ...params,
-        list: [
+        top: [
           {
             title: `SMA`,
             color,

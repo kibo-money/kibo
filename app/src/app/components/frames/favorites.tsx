@@ -22,7 +22,7 @@ export function FavoritesFrame({
           favorites.
         </Header>
 
-        <div class="-mx-4 border-t border-orange-200/10" />
+        <div class="border-lighter -mx-4 border-t" />
 
         <div
           class="space-y-0.5 py-1"

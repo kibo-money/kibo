@@ -36,8 +36,8 @@ export function HistoryFrame({
                       presets.history()[index() - 1].date.toJSON().split("T")[0]
                   }
                 >
-                  <div class="sticky top-[-0.5rem] z-10 -mx-4 py-2">
-                    <div class="border-y border-orange-200/10 bg-[rgb(25,15,15)] p-2">
+                  <div class="sticky top-[calc(-0.5rem-1px)] z-10 -mx-4 py-2">
+                    <div class="border-lighter border-y bg-[#F4EAE3] p-2 dark:bg-[rgb(25,15,15)]">
                       <p class="ml-2">
                         <Switch fallback={date.toLocaleDateString()}>
                           <Match

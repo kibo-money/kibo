@@ -20,13 +20,13 @@ type FilePath = {
 }[];
 
 type ApplyPreset = (params: {
-  chart: IChartApi;
+  charts: RWS<IChartApi[]>;
+  parentDiv: HTMLDivElement;
   datasets: Datasets;
   preset: Preset;
   activeResources: Accessor<Set<ResourceDataset<any, any>>>;
-}) => ApplyPresetReturn;
-
-type ApplyPresetReturn = PresetLegend;
+  legendSetter: Setter<PresetLegend>;
+}) => void;
 
 interface PartialPresetFolder {
   name: string;

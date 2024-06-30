@@ -8,7 +8,7 @@ import { Header } from "../header";
 import { Number } from "../number";
 import { Tree } from "./components/tree";
 
-export function TreeFrame({
+export function FoldersFrame({
   presets,
   selectedFrame,
 }: {
@@ -25,7 +25,7 @@ export function TreeFrame({
     <div
       class="relative flex size-full flex-1 flex-col"
       style={{
-        display: selectedFrame() !== "Tree" ? "none" : undefined,
+        display: selectedFrame() !== "Folders" ? "none" : undefined,
       }}
     >
       <div class="flex-1 overflow-y-auto">
@@ -35,7 +35,7 @@ export function TreeFrame({
             tree like structure.
           </Header>
 
-          <div class="-mx-4 border-t border-orange-200/10" />
+          <div class="border-lighter -mx-4 border-t" />
 
           <Tree
             tree={presets.tree}

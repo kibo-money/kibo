@@ -1,5 +1,5 @@
 import { colors } from "../../utils/colors";
-import { applyMultipleSeries, SeriesType } from "../templates/multiple";
+import { applySeriesList, SeriesType } from "../apply";
 
 export function createPresets<Scale extends ResourceScale>({
   scale,
@@ -19,9 +19,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "All Cointime Prices",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                list: [
+                top: [
                   {
                     title: "Vaulted Price",
                     color: colors.vaultedness,
@@ -61,9 +61,9 @@ export function createPresets<Scale extends ResourceScale>({
                 title: "Active Price",
                 description: "",
                 applyPreset(params) {
-                  return applyMultipleSeries({
+                  return applySeriesList({
                     ...params,
-                    list: [
+                    top: [
                       {
                         title: "Active Price",
                         color: colors.liveliness,
@@ -85,9 +85,9 @@ export function createPresets<Scale extends ResourceScale>({
                 title: "Vaulted Price",
                 description: "",
                 applyPreset(params) {
-                  return applyMultipleSeries({
+                  return applySeriesList({
                     ...params,
-                    list: [
+                    top: [
                       {
                         title: "Vaulted Price",
                         color: colors.vaultedness,
@@ -109,9 +109,9 @@ export function createPresets<Scale extends ResourceScale>({
                 title: "True Market Mean",
                 description: "",
                 applyPreset(params) {
-                  return applyMultipleSeries({
+                  return applySeriesList({
                     ...params,
-                    list: [
+                    top: [
                       {
                         title: "True Market Mean",
                         color: colors.trueMarketMeanPrice,
@@ -133,9 +133,9 @@ export function createPresets<Scale extends ResourceScale>({
                 title: "Cointime Price",
                 description: "",
                 applyPreset(params) {
-                  return applyMultipleSeries({
+                  return applySeriesList({
                     ...params,
-                    list: [
+                    top: [
                       {
                         title: "Cointime",
                         color: colors.cointimePrice,
@@ -159,16 +159,14 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Cointime Capitalizations",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
                 priceScaleOptions: {
-                  halved: true,
                   mode: 1,
                 },
-                list: [
+                bottom: [
                   {
                     title: "Market Cap",
-
                     color: colors.white,
                     dataset: params.datasets[scale].market_cap,
                   },
@@ -198,13 +196,12 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Thermo Cap",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
                 priceScaleOptions: {
-                  halved: true,
                   mode: 1,
                 },
-                list: [
+                bottom: [
                   {
                     title: "Thermo Cap",
                     color: colors.thermoCap,
@@ -221,13 +218,12 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Investor Cap",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
                 priceScaleOptions: {
-                  halved: true,
                   mode: 1,
                 },
-                list: [
+                bottom: [
                   {
                     title: "Investor Cap",
                     color: colors.investorCap,
@@ -244,12 +240,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Thermo Cap To Investor Cap Ratio (%)",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Ratio",
                     color: colors.bitcoin,
@@ -272,12 +265,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "All Coinblocks",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Coinblocks Created",
                     color: colors.coinblocksCreated,
@@ -304,12 +294,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Coinblocks Created",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Coinblocks Created",
                     color: colors.coinblocksCreated,
@@ -326,12 +313,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Coinblocks Destroyed",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Coinblocks Destroyed",
                     color: colors.coinblocksDestroyed,
@@ -348,12 +332,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Coinblocks Stored",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Coinblocks Stored",
                     color: colors.coinblocksStored,
@@ -375,12 +356,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "All Cumulative Coinblocks",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Cumulative Coinblocks Created",
                     color: colors.coinblocksCreated,
@@ -410,12 +388,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Cumulative Coinblocks Created",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Cumulative Coinblocks Created",
                     color: colors.coinblocksCreated,
@@ -433,12 +408,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Cumulative Coinblocks Destroyed",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Cumulative Coinblocks Destroyed",
                     color: colors.coinblocksDestroyed,
@@ -456,12 +428,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Cumulative Coinblocks Stored",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Cumulative Coinblocks Stored",
                     color: colors.coinblocksStored,
@@ -484,12 +453,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Liveliness (Activity)",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Liveliness",
                     color: colors.liveliness,
@@ -506,12 +472,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Vaultedness",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Vaultedness",
                     color: colors.vaultedness,
@@ -528,12 +491,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Liveliness V. Vaultedness",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Liveliness",
                     color: colors.liveliness,
@@ -555,12 +515,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Activity To Vaultedness Ratio",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Activity To Vaultedness Ratio",
                     color: colors.activityToVaultednessRatio,
@@ -578,12 +535,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Concurrent Liveliness - Supply Adjusted Coindays Destroyed",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Concurrent Liveliness 14d Median",
                     color: `${colors.liveliness}66`,
@@ -606,12 +560,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Liveliness Incremental Change",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Liveliness Incremental Change",
                     color: colors.darkLiveliness,
@@ -641,12 +592,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Vaulted Supply",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Vaulted Supply",
                     color: colors.vaultedness,
@@ -663,12 +611,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Active Supply",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Active Supply",
                     color: colors.liveliness,
@@ -685,12 +630,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Vaulted V. Active",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Circulating Supply",
                     color: colors.coinblocksCreated,
@@ -747,12 +689,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Vaulted Supply Net Change",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Vaulted Supply Net Change",
                     color: colors.vaultedness,
@@ -769,12 +708,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Active Supply Net Change",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Active Supply Net Change",
                     color: colors.liveliness,
@@ -791,12 +727,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Active VS. Vaulted 90 Day Supply Net Change",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Active Supply Net Change",
                     color: `${colors.liveliness}80`,
@@ -919,12 +852,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Cointime Supply In Profit",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Circulating Supply",
                     color: colors.coinblocksCreated,
@@ -951,12 +881,9 @@ export function createPresets<Scale extends ResourceScale>({
             title: "Cointime Supply In Loss",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Circulating Supply",
                     color: colors.coinblocksCreated,
@@ -985,13 +912,12 @@ export function createPresets<Scale extends ResourceScale>({
         title: "Cointime-Adjusted Yearly Inflation Rate (%)",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
             priceScaleOptions: {
-              halved: true,
               mode: 1,
             },
-            list: [
+            bottom: [
               {
                 title: "Cointime Adjusted",
                 color: colors.coinblocksCreated,
@@ -1015,13 +941,12 @@ export function createPresets<Scale extends ResourceScale>({
         title: "Cointime-Adjusted Transactions Velocity",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
             priceScaleOptions: {
-              halved: true,
               mode: 1,
             },
-            list: [
+            bottom: [
               {
                 title: "Cointime Adjusted",
                 color: colors.coinblocksCreated,

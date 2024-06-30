@@ -8,9 +8,6 @@ import {
 } from "/src/scripts/utils/urlParams";
 import { createRWS } from "/src/solid/rws";
 
-import { chartState } from "../../chart/state";
-import { setTimeScale } from "../../chart/time";
-
 export function createSeriesLegend({
   id,
   presetId,
@@ -44,15 +41,20 @@ export function createSeriesLegend({
 
   const disabled = createMemo(_disabled || (() => false));
 
+  const drawn = createMemo(() => visible() && !disabled());
+
   createEffect(() => {
-    const v = visible();
-    const d = disabled();
-
     series.applyOptions({
-      visible: !d && v,
+      visible: drawn(),
     });
+  });
 
-    setTimeScale(chartState.range);
+  createEffect(() => {
+    if (disabled()) {
+      return;
+    }
+
+    const v = visible();
 
     if (v !== defaultVisible) {
       writeURLParam(id, v);
@@ -70,6 +72,7 @@ export function createSeriesLegend({
     color,
     visible,
     disabled,
+    drawn,
     url,
   };
 }

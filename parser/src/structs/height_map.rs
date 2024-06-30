@@ -273,20 +273,30 @@ where
         std::any::type_name::<T>()
     }
 
-    // fn reset(&mut self) -> color_eyre::Result<()> {
-    //     fs::remove_dir(&self.path_all)?;
-
-    //     self.initial_last_height = None;
-    //     self.initial_first_unsafe_height = None;
-
-    //     self.imported.clear();
-    //     self.to_insert.clear();
-
-    //     Ok(())
-    // }
-
     fn pre_export(&mut self) {
-        self.to_insert.iter_mut().for_each(|(chunk_start, map)| {
+        let to_insert = &mut self.to_insert;
+
+        to_insert.iter_mut().for_each(|(chunk_start, map)| {
+            if let Some((key, _)) = map.first_key_value() {
+                if *key > 0 && !self.imported.contains_key(chunk_start) {
+                    // Had to copy paste many lines from functions as calling a function from self isn't allowed because of the &mut
+
+                    let dir_content = Self::_read_dir(&self.path_all, &self.serialization);
+
+                    let path = dir_content.get(chunk_start).unwrap_or_else(|| {
+                        dbg!(&self.path_all, chunk_start, &dir_content);
+                        panic!();
+                    });
+
+                    let serialized = self
+                        .serialization
+                        .import::<SerializedHeightMap<T>>(path.to_str().unwrap())
+                        .unwrap();
+
+                    self.imported.insert(*chunk_start, serialized);
+                }
+            }
+
             let serialized = self
                 .imported
                 .entry(*chunk_start)
@@ -301,7 +311,10 @@ where
                     |(chunk_height, value)| match serialized.map.len().cmp(&chunk_height) {
                         Ordering::Greater => serialized.map[chunk_height] = value,
                         Ordering::Equal => serialized.map.push(value),
-                        Ordering::Less => panic!(),
+                        Ordering::Less => {
+                            dbg!(&self.path_all, &serialized.map, chunk_height, value);
+                            panic!()
+                        }
                     },
                 );
         });

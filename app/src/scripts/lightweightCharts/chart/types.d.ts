@@ -1,8 +1,7 @@
 interface PriceSeriesOptions {
-  halved?: boolean;
+  placement?: "top" | "bottom";
   title?: string;
   id?: string;
-  lowerOpacity?: boolean;
   inverseColors?: boolean;
   seriesOptions?: DeepPartial<SeriesOptionsCommon>;
   priceScaleOptions?: DeepPartial<PriceScaleOptions>;

@@ -1,6 +1,6 @@
 type FrameName =
   | "Chart"
-  | "Tree"
+  | "Folders"
   | "Favorites"
   | "Search"
   | "History"

@@ -14,7 +14,6 @@ export default {
         sans: ["Lexend", ...defaultTheme.fontFamily.sans],
       },
       screens: {
-        md: "720px",
         "2xl": "1600px",
         short: { raw: "(max-height: 350px)" },
       },

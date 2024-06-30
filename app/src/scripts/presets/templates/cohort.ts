@@ -1,6 +1,6 @@
 import { percentiles } from "../../datasets/consts/percentiles";
 import { colors } from "../../utils/colors";
-import { applyMultipleSeries, SeriesType } from "./multiple";
+import { applySeriesList, SeriesType } from "../apply";
 
 export function createCohortPresetFolder<Scale extends ResourceScale>({
   scale,
@@ -54,12 +54,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Unspent Transaction Outputs Count`,
           icon: () => IconTablerTicket,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Count",
                   color,
@@ -83,9 +80,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           description: "",
           icon: () => IconTablerTag,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              list: [
+              top: [
                 {
                   title: "Realized Price",
                   color,
@@ -102,12 +99,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Realized Capitalization`,
           icon: () => IconTablerPigMoney,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: `${name} Realized Cap.`,
                   color,
@@ -136,12 +130,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Realized Capitalization 1 Month Net Change`,
           icon: () => IconTablerStatusChange,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: `Net Change`,
                   seriesType: SeriesType.Based,
@@ -161,12 +152,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Realized Profit`,
           icon: () => IconTablerCash,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Realized Profit",
                   dataset:
@@ -185,12 +173,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Realized Loss`,
           icon: () => IconTablerCoffin,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Realized Loss",
                   dataset:
@@ -209,12 +194,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Realized Profit And Loss`,
           icon: () => IconTablerArrowsVertical,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Profit",
                   color: colors.profit,
@@ -242,12 +224,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Net Realized Profit And Loss`,
           icon: () => IconTablerScale,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Net PNL",
                   seriesType: SeriesType.Based,
@@ -267,12 +246,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Net Realized Profit And Loss Relative To Market Capitalization`,
           icon: () => IconTablerDivide,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Net",
                   seriesType: SeriesType.Based,
@@ -292,12 +268,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Cumulative Realized Profit`,
           icon: () => IconTablerSum,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Cumulative Realized Profit",
                   color: colors.profit,
@@ -318,12 +291,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Cumulative Realized Loss`,
           icon: () => IconTablerSum,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Cumulative Realized Loss",
                   color: colors.loss,
@@ -344,12 +314,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Cumulative Net Realized Profit And Loss`,
           icon: () => IconTablerSum,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Cumulative Net Realized PNL",
                   seriesType: SeriesType.Based,
@@ -369,12 +336,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Cumulative Net Realized Profit And Loss 30 Day Change`,
           icon: () => IconTablerTimeDuration30,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Cumulative Net Realized PNL 30d Change",
                   dataset:
@@ -399,12 +363,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Unrealized Profit`,
           icon: () => IconTablerMoodDollar,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Profit",
                   dataset:
@@ -424,12 +385,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Unrealized Loss`,
           icon: () => IconTablerMoodSadDizzy,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Loss",
                   dataset:
@@ -448,12 +406,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Unrealized Profit And Loss`,
           icon: () => IconTablerArrowsVertical,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Profit",
                   color: colors.profit,
@@ -481,12 +436,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Net Unrealized Profit And Loss`,
           icon: () => IconTablerScale,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Net Unrealized PNL",
                   dataset:
@@ -506,12 +458,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Net Unrealized Profit And Loss Relative To Total Market Capitalization`,
           icon: () => IconTablerDivide,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              priceScaleOptions: {
-                halved: true,
-              },
-              list: [
+              bottom: [
                 {
                   title: "Relative Net Unrealized PNL",
                   dataset:
@@ -540,12 +489,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               icon: () => IconTablerArrowsCross,
               description: "",
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "In Profit",
                       color: colors.profit,
@@ -587,12 +533,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               icon: () => IconTablerSum,
               description: "",
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Supply",
                       color,
@@ -609,12 +552,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               title: `${title} Supply In Profit`,
               icon: () => IconTablerTrendingUp,
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Supply",
                       color: colors.profit,
@@ -635,12 +575,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               title: `${title} Supply In Loss`,
               icon: () => IconTablerTrendingDown,
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Supply",
                       color: colors.loss,
@@ -667,12 +604,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               icon: () => IconTablerArrowsCross,
               description: "",
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "In Profit",
                       color: colors.profit,
@@ -718,12 +652,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               title: `${title} Total supply Relative To Circulating Supply`,
               icon: () => IconTablerSum,
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Supply",
                       color,
@@ -744,12 +675,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               title: `${title} Supply In Profit Relative To Circulating Supply`,
               icon: () => IconTablerTrendingUp,
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Supply",
                       color: colors.profit,
@@ -770,12 +698,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               title: `${title} Supply In Loss Relative To Circulating Supply`,
               icon: () => IconTablerTrendingDown,
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Supply",
                       seriesType: SeriesType.Area,
@@ -801,14 +726,11 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               title: `${title} Supply In Profit And Loss Relative To Own Supply`,
               icon: () => IconTablerArrowsCross,
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
-                      title: "In profit",
+                      title: "In Profit",
                       dataset:
                         params.datasets[scale][
                           `${datasetPrefix}supply_in_profit_to_own_supply_ratio`
@@ -816,7 +738,7 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                       color: colors.profit,
                     },
                     {
-                      title: "In loss",
+                      title: "In Loss",
                       color: colors.loss,
                       dataset:
                         params.datasets[scale][
@@ -851,12 +773,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               title: `${title} Supply In Profit Relative To Own Supply`,
               icon: () => IconTablerTrendingUp,
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Supply",
                       color: colors.profit,
@@ -877,12 +796,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
               title: `${title} Supply In Loss Relative To Own Supply`,
               icon: () => IconTablerTrendingDown,
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Supply",
                       seriesType: SeriesType.Area,
@@ -917,9 +833,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} Average Price Paid - Realized Price`,
           icon: () => IconTablerMathAvg,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              list: [
+              top: [
                 {
                   title: "Average",
                   color,
@@ -937,9 +853,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
           title: `${title} deciles`,
           icon: () => IconTablerSquareHalf,
           applyPreset(params) {
-            return applyMultipleSeries({
+            return applySeriesList({
               ...params,
-              list: percentiles
+              top: percentiles
                 .filter(({ value }) => Number(value) % 10 === 0)
                 .map(({ name, key }) => ({
                   dataset: params.datasets[scale][`${datasetPrefix}${key}`],
@@ -957,9 +873,9 @@ export function createCohortPresetList<Scale extends ResourceScale>({
             title: `${title} ${percentile.title}`,
             icon: () => IconTablerSquareHalf,
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                list: [
+                top: [
                   {
                     title: percentile.name,
                     color,

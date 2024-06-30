@@ -6,8 +6,8 @@ import {
   yearCohorts,
 } from "../../datasets/consts/age";
 import { colors } from "../../utils/colors";
+import { applySeriesList } from "../apply";
 import { createCohortPresetFolder } from "../templates/cohort";
-import { applyMultipleSeries } from "../templates/multiple";
 
 export function createPresets({ scale }: { scale: ResourceScale }) {
   return {
@@ -20,12 +20,9 @@ export function createPresets({ scale }: { scale: ResourceScale }) {
         description: "",
         icon: IconTablerRipple,
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: `24h`,
                 color: colors.up_to_1d,

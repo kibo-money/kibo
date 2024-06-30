@@ -34,6 +34,9 @@ interface ResourceDataset<
   drop: VoidFunction;
 }
 
+type AnyDataset<Scale extends ResourceScale> = Dataset<Scale> &
+  Partial<ResourceDataset<Scale>>;
+
 interface FetchedResult<
   Scale extends ResourceScale,
   Type extends number | OHLC,

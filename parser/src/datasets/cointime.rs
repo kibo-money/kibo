@@ -70,7 +70,7 @@ impl CointimeDataset {
             active_supply: BiMap::new_bin(1, &f("active_supply")),
             active_supply_3m_net_change: BiMap::new_bin(1, &f("active_supply_3m_net_change")),
             active_supply_net_change: BiMap::new_bin(1, &f("active_supply_net_change")),
-            activity_to_vaultedness_ratio: BiMap::new_bin(1, &f("activity_to_vaultedness_ratio")),
+            activity_to_vaultedness_ratio: BiMap::new_bin(2, &f("activity_to_vaultedness_ratio")),
             coinblocks_created: BiMap::new_bin(1, &f("coinblocks_created")),
             coinblocks_destroyed: BiMap::new_bin(1, &f("coinblocks_destroyed")),
             coinblocks_stored: BiMap::new_bin(1, &f("coinblocks_stored")),
@@ -106,7 +106,7 @@ impl CointimeDataset {
             producerness: BiMap::new_bin(1, &f("producerness")),
             thermo_cap: BiMap::new_bin(1, &f("thermo_cap")),
             thermo_cap_to_investor_cap_ratio: BiMap::new_bin(
-                1,
+                2,
                 &f("thermo_cap_to_investor_cap_ratio"),
             ),
             total_cointime_value_created: BiMap::new_bin(1, &f("total_cointime_value_created")),
@@ -215,7 +215,7 @@ impl CointimeDataset {
             &|liveliness| 1.0 - liveliness,
         );
 
-        self.activity_to_vaultedness_ratio.multi_insert_divide(
+        self.activity_to_vaultedness_ratio.multi_insert_percentage(
             heights,
             dates,
             &mut self.liveliness,
@@ -332,12 +332,8 @@ impl CointimeDataset {
         self.investor_cap
             .multi_insert_subtract(heights, dates, realized_cap, &mut self.thermo_cap);
 
-        self.thermo_cap_to_investor_cap_ratio.multi_insert_divide(
-            heights,
-            dates,
-            &mut self.thermo_cap,
-            &mut self.investor_cap,
-        );
+        self.thermo_cap_to_investor_cap_ratio
+            .multi_insert_percentage(heights, dates, &mut self.thermo_cap, &mut self.investor_cap);
 
         // TODO:
         // const activeSupplyChangeFromIssuance90dChange = createNetChangeLazyDataset(

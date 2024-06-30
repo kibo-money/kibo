@@ -45,9 +45,7 @@ export function Line({
       title={name}
     >
       <For each={new Array(depth)}>
-        {() => (
-          <span class="ml-1 h-8 w-3 flex-none border-l border-orange-200/10" />
-        )}
+        {() => <span class="border-lighter ml-1 h-8 w-3 flex-none border-l" />}
       </For>
       <Show when={icon}>
         {(icon) => (
@@ -68,10 +66,7 @@ export function Line({
         ])}
       >
         <Show when={header}>
-          <span
-            class="truncate text-xs text-white text-opacity-50"
-            innerHTML={header}
-          />
+          <span class="truncate text-xs opacity-50" innerHTML={header} />
         </Show>
         <span class="space-x-1 truncate">
           <span innerHTML={name} />

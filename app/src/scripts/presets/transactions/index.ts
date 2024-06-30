@@ -1,5 +1,5 @@
 import { colors } from "../../utils/colors";
-import { applyMultipleSeries } from "../templates/multiple";
+import { applySeriesList } from "../apply";
 
 export function createPresets(scale: ResourceScale) {
   return {
@@ -12,12 +12,9 @@ export function createPresets(scale: ResourceScale) {
         title: "Transaction Count",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: "1M SMA",
                 color: colors.momentumYellow,
@@ -48,12 +45,9 @@ export function createPresets(scale: ResourceScale) {
             title: "Transaction Volume",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "1M SMA",
                     color: colors.momentumYellow,
@@ -80,13 +74,12 @@ export function createPresets(scale: ResourceScale) {
             title: "Transaction Volume In Dollars",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
                 priceScaleOptions: {
-                  halved: true,
                   mode: 1,
                 },
-                list: [
+                bottom: [
                   {
                     title: "1M SMA",
                     color: colors.lightDollars,
@@ -124,12 +117,9 @@ export function createPresets(scale: ResourceScale) {
             title: "Annualized Transaction Volume",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Volume",
                     color: colors.bitcoin,
@@ -147,12 +137,9 @@ export function createPresets(scale: ResourceScale) {
             title: "Annualized Transaction Volume In Dollars",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Volume",
                     color: colors.dollars,
@@ -173,12 +160,9 @@ export function createPresets(scale: ResourceScale) {
         title: "Transactions Velocity",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: "Transactions Velocity",
                 color: colors.bitcoin,
@@ -195,12 +179,9 @@ export function createPresets(scale: ResourceScale) {
         title: "Transactions Per Second",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: "1M SMA",
                 color: colors.lightBitcoin,

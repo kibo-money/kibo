@@ -6,6 +6,8 @@
 
 ### App
 
+- General
+  - Added a light theme !
 - Performance
   - Improved app's reactivity
   - Added some chunk splitting for a faster initial load
@@ -13,10 +15,18 @@
 - Chart
   - Fixed legend hovering on mobile not resetting on touch end
   - Updated legend padding so that the scrollbar, if visible, is less in the way
-  - Added yearly time scale setters (from year 2009 to today)
+  - Added "3 months" and yearly time scale setters (from year 2009 to today)
+  - Hide scrollbar of timescale setters
+  - Changed scroll buttons visibility by screen type (touchscreen or not) instead of screen size
+  - Added scroll buttons to the legend
+  - Tweaked scroll buttons background and gradient color from black to stone gray
+  - Improved Share/QR Code screen
+- Settings
+  - Finally made a proper component where you can chose the app's theme, between a moving or static background and its text opacity
 - Misc
   - Support mini window size, could be useful for embedded views
   - Hopefully made scrollbars a little more subtle on WIndows and Linux, can't test
+  - Generale style updates
 
 ## v. 0.1.1 | 849240 - 2024/06/24
 

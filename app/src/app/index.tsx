@@ -5,7 +5,7 @@ import { createDatasets } from "../scripts/datasets";
 import { chartState } from "../scripts/lightweightCharts/chart/state";
 import { setTimeScale } from "../scripts/lightweightCharts/chart/time";
 import { createPresets } from "../scripts/presets";
-import { priceToUSLocale } from "../scripts/utils/locale";
+import { createSL } from "../scripts/utils/selectableList/static";
 import { sleep } from "../scripts/utils/sleep";
 import {
   readBooleanFromStorage,
@@ -14,12 +14,12 @@ import {
 import { readBooleanURLParam, writeURLParam } from "../scripts/utils/urlParams";
 import { webSockets } from "../scripts/ws";
 import { classPropToString } from "../solid/classes";
-import { Background, LOCAL_STORAGE_MARQUEE_KEY } from "./components/background";
+import { Background } from "./components/background";
 import { ChartFrame } from "./components/frames/chart";
 import { FavoritesFrame } from "./components/frames/favorites";
+import { FoldersFrame } from "./components/frames/folders";
 import { HistoryFrame } from "./components/frames/history";
 import { SettingsFrame } from "./components/frames/settings";
-import { TreeFrame } from "./components/frames/tree";
 import { Qrcode } from "./components/qrcode";
 import { StripDesktop, StripMobile } from "./components/strip";
 import { Update } from "./components/update";
@@ -31,8 +31,51 @@ export const INPUT_PRESET_SEARCH_ID = "input-search-preset";
 
 export function App() {
   const tabFocused = createRWS(true);
-
   const qrcode = createRWS("");
+
+  const appTheme = createSL(["System", "Dark", "Light"] as const, {
+    saveable: {
+      key: "app-theme",
+      mode: "localStorage",
+    },
+    defaultIndex: 0,
+  });
+
+  const backgroundMode = createSL(["Scroll", "Static"] as const, {
+    saveable: {
+      key: "bg-mode",
+      mode: "localStorage",
+    },
+    defaultIndex: 0,
+  });
+
+  const backgroundOpacity = createSL(
+    [
+      {
+        text: "Strong",
+        value: 0.0444,
+      },
+      {
+        text: "Normal",
+        value: 0.0333,
+      },
+      {
+        text: "Light",
+        value: 0.0222,
+      },
+      {
+        text: "Subtle",
+        value: 0.0111,
+      },
+    ] as const,
+    {
+      saveable: {
+        key: "bg-text-opacity",
+        mode: "localStorage",
+      },
+      defaultIndex: 2,
+    },
+  );
 
   const fullscreen = createRWS(
     readBooleanURLParam(LOCAL_STORAGE_FULLSCREEN) ||
@@ -48,7 +91,7 @@ export function App() {
   window.addEventListener("resize", windowResizeCallback);
   onCleanup(() => window.removeEventListener("resize", windowResizeCallback));
 
-  const windowSizeIsAtLeastMedium = createMemo(() => windowWidth() >= 720);
+  const windowSizeIsAtLeastMedium = createMemo(() => windowWidth() >= 768);
 
   const minBarWidth = 384;
   const barWidth = createRWS(
@@ -73,13 +116,11 @@ export function App() {
 
   const selectedFrame = createMemo(() =>
     windowSizeIsAtLeastMedium() && _selectedFrame() === "Chart"
-      ? "Tree"
+      ? "Folders"
       : _selectedFrame(),
   );
 
   const presets = createPresets();
-
-  const marquee = createRWS(!localStorage.getItem(LOCAL_STORAGE_MARQUEE_KEY));
 
   const resizingBarStart = createRWS<number | undefined>(undefined);
   const resizingBarWidth = createRWS<number>(0);
@@ -114,7 +155,7 @@ export function App() {
 
         console.log("close:", close);
 
-        document.title = `${priceToUSLocale(latest.close, false)} | Satonomics`;
+        document.title = `${latest.close.toLocaleString("en-us")} | Satonomics`;
       }
     });
   });
@@ -163,7 +204,11 @@ export function App() {
 
   return (
     <>
-      <Background marquee={marquee} focused={tabFocused} />
+      <Background
+        focused={tabFocused}
+        mode={backgroundMode}
+        opacity={backgroundOpacity}
+      />
 
       <div
         class="relative h-dvh selection:bg-orange-800"
@@ -195,15 +240,15 @@ export function App() {
         <Qrcode qrcode={qrcode} />
         <Update />
 
-        <div class="md:short:p-0 flex size-full flex-col md:flex-row md:p-3">
+        <div class="flex size-full flex-col md:flex-row md:p-3 md:short:p-0">
           <Show when={!windowSizeIsAtLeastMedium() || !fullscreen()}>
             <div
               class={classPropToString([
-                standalone && "border-t",
-                "md:short:hidden flex h-full flex-col overflow-hidden border-white/10 bg-gradient-to-b from-orange-500/10 to-orange-950/10 md:flex-row md:rounded-2xl md:border",
+                standalone && "border-t md:border-t-0",
+                "border-lighter flex h-full flex-col overflow-hidden bg-gradient-to-b from-orange-300/15 to-orange-400/15 dark:from-orange-500/10 dark:to-orange-950/10 md:flex-row md:rounded-2xl md:border md:shadow-md md:short:hidden",
               ])}
             >
-              <div class="hidden flex-col gap-2 border-r border-white/10 bg-black/30 p-3 backdrop-blur-sm md:flex">
+              <div class="border-lighter hidden flex-col gap-2 border-r bg-orange-300/30 p-3 backdrop-blur-sm dark:bg-black/30 md:flex">
                 <StripDesktop
                   selected={selectedFrame}
                   setSelected={_selectedFrame.set}
@@ -232,7 +277,7 @@ export function App() {
                   />
                 </Show>
 
-                <TreeFrame presets={presets} selectedFrame={selectedFrame} />
+                <FoldersFrame presets={presets} selectedFrame={selectedFrame} />
                 <FavoritesFrame
                   presets={presets}
                   selectedFrame={selectedFrame}
@@ -240,15 +285,17 @@ export function App() {
                 <SearchFrame presets={presets} selectedFrame={selectedFrame} />
                 <HistoryFrame presets={presets} selectedFrame={selectedFrame} />
                 <SettingsFrame
-                  marquee={marquee}
                   selectedFrame={selectedFrame}
+                  appTheme={appTheme}
+                  backgroundMode={backgroundMode}
+                  backgroundOpacity={backgroundOpacity}
                 />
               </div>
 
               <div
                 class={classPropToString([
                   standalone && "pb-6",
-                  "short:hidden flex justify-between gap-3 border-t border-white/10 bg-black/30 p-2 backdrop-blur-sm md:hidden",
+                  "border-lighter flex justify-between gap-3 border-t bg-black/30 p-2 backdrop-blur-sm sm:justify-around md:hidden short:hidden",
                 ])}
               >
                 <StripMobile
@@ -261,7 +308,7 @@ export function App() {
 
           <Show when={!fullscreen()}>
             <div
-              class="short:hidden mx-[3px] my-8 hidden w-[6px] cursor-col-resize items-center justify-center rounded-full bg-orange-100 opacity-0 hover:opacity-50 md:block"
+              class="mx-[3px] my-8 hidden w-[6px] cursor-col-resize items-center justify-center rounded-full bg-orange-900 opacity-0 hover:opacity-50 dark:bg-orange-100 md:block short:hidden"
               onMouseDown={(event) => {
                 resizeInitialRange.set(chartState.range);
 
@@ -279,8 +326,8 @@ export function App() {
                 }
               }}
               onDblClick={() => {
-                resizeInitialRange.set(chartState.range);
                 barWidth.set(0);
+
                 setTimeScale(resizeInitialRange());
               }}
             />

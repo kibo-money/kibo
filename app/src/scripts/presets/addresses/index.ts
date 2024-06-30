@@ -4,8 +4,8 @@ import {
 } from "../../datasets/consts/address";
 import { liquidities } from "../../datasets/consts/liquidities";
 import { colors } from "../../utils/colors";
+import { applySeriesList, SeriesType } from "../apply";
 import { createCohortPresetList } from "../templates/cohort";
-import { applyMultipleSeries, SeriesType } from "../templates/multiple";
 
 export function createPresets({
   scale,
@@ -22,12 +22,9 @@ export function createPresets({
         description: "",
         icon: IconTablerWallet,
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: `Total Non Empty Address`,
                 color: colors.bitcoin,
@@ -45,12 +42,9 @@ export function createPresets({
         description: "",
         icon: IconTablerSparkles,
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: `New Addresses`,
                 color: colors.white,
@@ -67,12 +61,9 @@ export function createPresets({
         description: "",
         icon: IconTablerArchive,
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: `Total Addresses Created`,
                 color: colors.bitcoin,
@@ -90,12 +81,9 @@ export function createPresets({
         description: "",
         icon: IconTablerTrash,
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: `Total Empty Addresses`,
                 color: colors.darkWhite,
@@ -191,12 +179,9 @@ export function createAddressCountPreset<Scale extends ResourceScale>({
     title: `${name} Address Count`,
     icon: IconTablerAddressBook,
     applyPreset(params) {
-      return applyMultipleSeries({
+      return applySeriesList({
         ...params,
-        priceScaleOptions: {
-          halved: true,
-        },
-        list: [
+        bottom: [
           {
             title: "Address Count",
             color,

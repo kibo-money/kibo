@@ -17,7 +17,7 @@ export function Actions({
   );
 
   return (
-    <div class="flex space-x-1">
+    <div class="flex space-x-1 p-1.5">
       <Show when={fullscreen}>
         {(fullscreen) => (
           <Button

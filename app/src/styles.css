@@ -28,9 +28,39 @@ html {
 }
 
 a {
-  @apply text-orange-300 hover:underline;
+  @apply text-orange-700 hover:underline dark:text-orange-300;
 }
 
 mark {
-  @apply bg-transparent p-0 text-orange-400;
+  @apply bg-transparent p-0 text-orange-600 dark:text-orange-400;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.no-scrollbar {
+  -ms-overflow-style: none; /* IE and Edge */
+  scrollbar-width: none; /* Firefox */
+}
+
+.border-light {
+  @apply border-orange-800/25 dark:border-orange-200/25;
+}
+
+.border-lighter {
+  @apply border-orange-800/[0.125] dark:border-orange-200/[0.125];
+}
+
+.border-superlight {
+  @apply border-orange-800/5 dark:border-orange-200/[0.0625];
+}
+
+.text-high-contrast {
+  @apply text-orange-950 dark:text-orange-50;
+}
+.decoration-high-contrast {
+  @apply decoration-orange-950 dark:decoration-orange-50;
 }

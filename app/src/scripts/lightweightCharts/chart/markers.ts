@@ -1,5 +1,4 @@
 import { colors } from "/src/scripts/utils/colors";
-import { priceToUSLocale } from "/src/scripts/utils/locale";
 import { ONE_DAY_IN_MS } from "/src/scripts/utils/time";
 
 import { chartState } from "./state";
@@ -101,12 +100,11 @@ export const setMinMaxMarkers = ({
           candle &&
           markers.push({
             ...markerOptions,
-            // date: candle.date,
             number: candle.number,
             time: candle.time,
             color: lowerOpacity ? colors.darkWhite : colors.white,
             size: 0,
-            text: priceToUSLocale(value),
+            text: value.toLocaleString("en-us"),
           })
         );
       },

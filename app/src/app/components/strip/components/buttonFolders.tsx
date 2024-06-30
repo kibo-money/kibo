@@ -1,13 +1,13 @@
 import { Button } from "./button";
 
-export function ButtonTree({
+export function ButtonFolders({
   selected,
   setSelected,
 }: {
   selected: Accessor<FrameName>;
   setSelected: Setter<FrameName>;
 }) {
-  const frameName: FrameName = "Tree";
+  const frameName: FrameName = "Folders";
 
   return (
     <Button

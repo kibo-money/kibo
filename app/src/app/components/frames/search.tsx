@@ -135,7 +135,7 @@ export function SearchFrame({
         </p>
 
         <Show when={search()}>
-          <div class="-mx-4 border-t border-orange-200/10" />
+          <div class="border-lighter -mx-4 border-t" />
 
           <div
             class="py-1"
@@ -176,7 +176,7 @@ export function SearchFrame({
             value={search()}
             onInput={(event) => search.set(event.target.value)}
           />
-          <span class="-mx-1 flex size-5 flex-none items-center justify-center rounded-md border border-white text-xs font-bold">
+          <span class="-mx-1 flex size-5 flex-none items-center justify-center rounded-md border border-current text-xs font-bold">
             <IconTablerSlash />
           </span>
         </div>

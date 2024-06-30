@@ -5,14 +5,14 @@ import {
 } from "lightweight-charts";
 
 import { colors } from "../../utils/colors";
-import { priceToUSLocale } from "../../utils/locale";
-import { cleanChart } from "./clean";
+import { valueToString } from "../../utils/locale";
 import { HorzScaleBehaviorHeight } from "./horzScaleBehavior";
-import { chartState } from "./state";
 
-export function createChart(scale: ResourceScale) {
-  cleanChart();
-
+export function createChart(
+  scale: ResourceScale,
+  element: HTMLElement,
+  priceScaleOptions?: DeepPartialPriceScaleOptions,
+) {
   console.log(`chart: create (scale: ${scale})`);
 
   const { white } = colors;
@@ -29,19 +29,19 @@ export function createChart(scale: ResourceScale) {
       vertLines: { visible: false },
       horzLines: { visible: false },
     },
-    leftPriceScale: {
-      // borderColor: white,
-    },
     rightPriceScale: {
-      // borderColor: white,
+      borderColor: "#332F24",
     },
     timeScale: {
+      borderColor: "#332F24",
       minBarSpacing: scale === "date" ? 0.05 : 0.005,
       shiftVisibleRangeOnNewBar: false,
       allowShiftVisibleRangeOnWhitespaceReplacement: false,
     },
     handleScale: {
-      axisDoubleClickReset: false,
+      axisDoubleClickReset: {
+        time: false,
+      },
     },
     crosshair: {
       mode: CrosshairMode.Normal,
@@ -55,17 +55,31 @@ export function createChart(scale: ResourceScale) {
       },
     },
     localization: {
-      priceFormatter: priceToUSLocale,
+      priceFormatter: valueToString,
       locale: "en-us",
     },
   };
 
+  let chart: IChartApi;
+
   if (scale === "date") {
-    chartState.chart = createClassicChart("chart", options);
+    chart = createClassicChart(element, options);
   } else {
     const horzScaleBehavior = new HorzScaleBehaviorHeight();
 
     // @ts-ignore
-    chartState.chart = createCustomChart("chart", horzScaleBehavior, options);
+    chart = createCustomChart(element, horzScaleBehavior, options);
   }
+
+  chart.priceScale("right").applyOptions({
+    ...priceScaleOptions,
+    scaleMargins: {
+      top: 0.05,
+      bottom: 0.05,
+      ...priceScaleOptions?.scaleMargins,
+    },
+    minimumWidth: 78,
+  });
+
+  return chart;
 }

@@ -63,3 +63,5 @@ type DeepPartialBaselineOptions = DeepPartial<
 >;
 
 type DeepPartialChartOptions = DeepPartial<ChartOptions>;
+
+type DeepPartialPriceScaleOptions = DeepPartial<PriceScaleOptions>;

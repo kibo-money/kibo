@@ -3,7 +3,7 @@ import {
   totalReturns,
 } from "/src/scripts/datasets/consts/returns";
 
-import { applyMultipleSeries, SeriesType } from "../../templates/multiple";
+import { applySeriesList, SeriesType } from "../../apply";
 
 export function createPresets() {
   return {
@@ -57,12 +57,9 @@ function createPreset({
     icon: IconTablerReceiptTax,
     title: `${title} Return`,
     applyPreset(params) {
-      return applyMultipleSeries({
+      return applySeriesList({
         ...params,
-        priceScaleOptions: {
-          halved: true,
-        },
-        list: [
+        bottom: [
           {
             title: `Return (%)`,
             seriesType: SeriesType.Based,

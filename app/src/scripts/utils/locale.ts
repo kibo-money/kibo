@@ -1,31 +1,52 @@
-export const priceToUSLocale = (price: number, compact = true) => {
-  const absolutePrice = Math.abs(price);
-  const lessThan100 = absolutePrice < 100;
-  const lessThan1000 = absolutePrice < 1_000;
-  const biggerThanMillion = absolutePrice >= 1_000_000;
+const suffices = ["M", "B", "T", "Q"];
 
-  return numberToUSLocale(
-    price,
-    lessThan1000 ? (lessThan100 ? 2 : 1) : biggerThanMillion ? 3 : 0,
-    biggerThanMillion && compact
-      ? {
-          notation: "compact",
-          compactDisplay: "short",
-        }
-      : undefined,
-  );
-};
+export function valueToString(value: number) {
+  const absoluteValue = Math.abs(value);
 
-export const percentageToUSLocale = (percentage: number) =>
-  numberToUSLocale(percentage, 1);
+  // value = absoluteValue;
 
-const numberToUSLocale = (
+  if (isNaN(value)) {
+    return "";
+    // } else if (value === 0) {
+    //   return "0";
+  } else if (absoluteValue < 10) {
+    return numberToUSLocale(value, 3);
+  } else if (absoluteValue < 100) {
+    return numberToUSLocale(value, 2);
+  } else if (absoluteValue < 1_000) {
+    return numberToUSLocale(value, 1);
+  } else if (absoluteValue < 100_000) {
+    return numberToUSLocale(value, 0);
+  } else if (absoluteValue < 1_000_000) {
+    return `${numberToUSLocale(value / 1_000, 1)}K`;
+  } else if (absoluteValue >= 1_000_000_000_000_000_000) {
+    return "Inf.";
+  }
+
+  const log = Math.floor(Math.log10(absoluteValue) - 6);
+
+  const letterIndex = Math.floor(log / 3);
+  const letter = suffices[letterIndex];
+
+  const modulused = log % 3;
+
+  if (modulused === 0) {
+    return `${numberToUSLocale(value / (1_000_000 * 1_000 ** letterIndex), 3)}${letter}`;
+  } else if (modulused === 1) {
+    return `${numberToUSLocale(value / (1_000_000 * 1_000 ** letterIndex), 2)}${letter}`;
+  } else {
+    return `${numberToUSLocale(value / (1_000_000 * 1_000 ** letterIndex), 1)}${letter}`;
+  }
+}
+
+function numberToUSLocale(
   value: number,
-  digits: number,
+  digits?: number,
   options?: Intl.NumberFormatOptions | undefined,
-) =>
-  value.toLocaleString("en-us", {
+) {
+  return value.toLocaleString("en-us", {
     ...options,
     minimumFractionDigits: digits,
     maximumFractionDigits: digits,
   });
+}

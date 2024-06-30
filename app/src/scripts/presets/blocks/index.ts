@@ -1,5 +1,5 @@
 import { colors } from "../../utils/colors";
-import { applyMultipleSeries, SeriesType } from "../templates/multiple";
+import { applySeriesList, SeriesType } from "../apply";
 
 export function createPresets() {
   const scale: ResourceScale = "date";
@@ -14,12 +14,9 @@ export function createPresets() {
         title: "Block Height",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: "Height",
                 color: colors.bitcoin,
@@ -40,19 +37,15 @@ export function createPresets() {
             title: "Daily Sum Of Blocks Mined",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Target",
                     color: colors.white,
                     dataset: params.datasets.date.blocks_mined_1d_target,
                     options: {
                       lineStyle: 3,
-                      // lineStyle: LineStyle.LargeDashed,
                     },
                   },
                   {
@@ -82,19 +75,15 @@ export function createPresets() {
             title: "Weekly Sum Of Blocks Mined",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Target",
                     color: colors.white,
                     dataset: params.datasets.date.blocks_mined_1w_target,
                     options: {
                       lineStyle: 3,
-                      // lineStyle: LineStyle.LargeDashed,
                     },
                   },
                   {
@@ -113,18 +102,14 @@ export function createPresets() {
             title: "Monthly Sum Of Blocks Mined",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Target",
                     color: colors.white,
                     dataset: params.datasets.date.blocks_mined_1m_target,
                     options: {
-                      // lineStyle: LineStyle.LargeDashed,
                       lineStyle: 3,
                     },
                   },
@@ -144,19 +129,15 @@ export function createPresets() {
             title: "Yearly Sum Of Blocks Mined",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Target",
                     color: colors.white,
                     dataset: params.datasets.date.blocks_mined_1y_target,
                     options: {
                       lineStyle: 3,
-                      // lineStyle: LineStyle.LargeDashed,
                     },
                   },
                   {
@@ -175,12 +156,9 @@ export function createPresets() {
             title: "Total Blocks Mined",
             description: "",
             applyPreset(params) {
-              return applyMultipleSeries({
+              return applySeriesList({
                 ...params,
-                priceScaleOptions: {
-                  halved: true,
-                },
-                list: [
+                bottom: [
                   {
                     title: "Mined",
                     color: colors.bitcoin,
@@ -200,12 +178,9 @@ export function createPresets() {
         title: "Cumulative Block Size",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: "Size (MB)",
                 color: colors.darkWhite,

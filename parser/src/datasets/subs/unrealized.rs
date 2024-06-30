@@ -40,7 +40,7 @@ impl UnrealizedSubDataset {
             negative_unrealized_loss: BiMap::new_bin(1, &f("negative_unrealized_loss")),
             net_unrealized_profit_and_loss: BiMap::new_bin(1, &f("net_unrealized_profit_and_loss")),
             net_unrealized_profit_and_loss_to_market_cap_ratio: BiMap::new_bin(
-                1,
+                2,
                 &f("net_unrealized_profit_and_loss_to_market_cap_ratio"),
             ),
             supply_in_profit_to_own_supply_ratio: BiMap::new_bin(
@@ -136,7 +136,7 @@ impl UnrealizedSubDataset {
         );
 
         self.net_unrealized_profit_and_loss_to_market_cap_ratio
-            .multi_insert_divide(
+            .multi_insert_percentage(
                 heights,
                 dates,
                 &mut self.net_unrealized_profit_and_loss,

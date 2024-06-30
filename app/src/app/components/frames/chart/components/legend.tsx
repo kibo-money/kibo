@@ -1,6 +1,8 @@
 import { createRWS } from "/src/solid/rws";
 
-const transparency = "66";
+import { Scrollable } from "../../scrollable";
+
+const transparency = "44";
 
 export function Legend({
   legend: legendList,
@@ -12,7 +14,7 @@ export function Legend({
   let toggle = false;
 
   return (
-    <div class="-my-1.5 -ml-1.5 flex flex-1 items-center gap-1 overflow-y-auto p-1.5">
+    <Scrollable classes="flex flex-1 items-center gap-1 p-1.5">
       <For each={legendList()}>
         {(legend) => {
           const initialColors = {} as any;
@@ -44,7 +46,9 @@ export function Legend({
             <Show when={!legend.disabled()}>
               <button
                 onMouseEnter={() => {
-                  hovering.set(legend);
+                  if (legend.visible()) {
+                    hovering.set(legend);
+                  }
                 }}
                 onMouseLeave={() => hovering.set(undefined)}
                 onTouchEnd={() => hovering.set(undefined)}
@@ -66,8 +70,14 @@ export function Legend({
                   }
 
                   previousClickValueOf = currentClickValueOf;
+
+                  if (legend.visible()) {
+                    hovering.set(legend);
+                  } else {
+                    hovering.set(undefined);
+                  }
                 }}
-                class="flex flex-none items-center space-x-1.5 rounded-full py-1.5 pl-2 pr-2.5 hover:bg-orange-200/20 active:scale-[0.975]"
+                class="flex flex-none items-center space-x-1.5 rounded-full py-1.5 pl-2 pr-2.5 hover:bg-orange-800/20 active:scale-[0.975] dark:hover:bg-orange-200/20"
               >
                 <span
                   class="flex size-4 flex-col overflow-hidden rounded-full"
@@ -93,7 +103,7 @@ export function Legend({
                   </For>
                 </span>
                 <span
-                  class="text-white decoration-white decoration-wavy decoration-[1.5px]"
+                  class="text-high-contrast decoration-high-contrast decoration-wavy decoration-[1.5px]"
                   style={{
                     "text-decoration-line": !legend.visible()
                       ? "line-through"
@@ -107,10 +117,7 @@ export function Legend({
                   {(url) => (
                     <a
                       title="Dataset"
-                      class="-my-0.5 !-mr-1 inline-flex size-6 flex-col overflow-hidden rounded-full border border-orange-200/5 bg-orange-200 bg-opacity-5 p-1 pl-0.5 hover:bg-opacity-30"
-                      style={{
-                        opacity: legend.visible() ? 1 : 0.5,
-                      }}
+                      class="border-superlight -my-0.5 !-mr-1 inline-flex size-6 flex-col overflow-hidden rounded-full border bg-white bg-opacity-5 p-1 pl-0.5 hover:bg-opacity-50 dark:bg-orange-200 dark:bg-opacity-5 dark:hover:bg-opacity-25"
                       onClick={(event) => {
                         event.stopPropagation();
                         // event.preventDefault();
@@ -131,6 +138,6 @@ export function Legend({
           );
         }}
       </For>
-    </div>
+    </Scrollable>
   );
 }

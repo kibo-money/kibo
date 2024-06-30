@@ -1,5 +1,5 @@
 import { colors } from "../../utils/colors";
-import { applyMultipleSeries, SeriesType } from "../templates/multiple";
+import { applySeriesList, SeriesType } from "../apply";
 
 export function createPresets(scale: ResourceScale) {
   return {
@@ -20,12 +20,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Last Coinbase (In Bitcoin)",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Last",
                               color: colors.bitcoin,
@@ -42,12 +39,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Last Coinbase (In Dollars)",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Last",
                               color: colors.dollars,
@@ -71,12 +65,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Daily Sum Of Bitcoin Coinbases",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Coinbases (Bitcoin)",
                               color: colors.bitcoin,
@@ -93,12 +84,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Daily Sum Of Dollar Coinbases",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Coinbases (Dollars)",
                               color: colors.dollars,
@@ -122,12 +110,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Yearly Sum Of Bitcoin Coinbases",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Coinbases (Bitcoin)",
                               color: colors.bitcoin,
@@ -144,12 +129,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Yearly Sum Of Dollar Coinbases",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Coinbases (Dollars)",
                               color: colors.dollars,
@@ -174,12 +156,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Cumulative Bitcoin Coinbases",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Coinbases (Bitcoin)",
                               color: colors.bitcoin,
@@ -197,12 +176,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Cumulative Dollar Coinbases",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Coinbases (Dollars)",
                               color: colors.dollars,
@@ -236,12 +212,10 @@ export function createPresets(scale: ResourceScale) {
                       title: "Last Subsidy (In Bitcoin)",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+
+                          bottom: [
                             {
                               title: "Last",
                               color: colors.bitcoin,
@@ -258,12 +232,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Last Subsidy (In Dollars)",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Last",
                               color: colors.dollars,
@@ -287,12 +258,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Daily Sum Of Bitcoin Subsidies",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Subsidies (Bitcoin)",
                               color: colors.bitcoin,
@@ -309,12 +277,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Daily Sum Of Dollar Subsidies",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Subsidies (Dollars)",
                               color: colors.dollars,
@@ -338,12 +303,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Yearly Sum Of Bitcoin Subsidies",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Subsidies (Bitcoin)",
                               color: colors.bitcoin,
@@ -360,12 +322,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Yearly Sum Of Dollar Subsidies",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Subsidies (Dollars)",
                               color: colors.dollars,
@@ -390,12 +349,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Cumulative Bitcoin Subsidies",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Subsidies (Bitcoin)",
                               color: colors.bitcoin,
@@ -413,12 +369,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Cumulative Dollar Subsidies",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Subsidies (Dollars)",
                               color: colors.dollars,
@@ -452,12 +405,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Last Fees (In Bitcoin)",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Last",
                               color: colors.bitcoin,
@@ -474,12 +424,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Last Fees (In Dollars)",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Last",
                               color: colors.dollars,
@@ -503,12 +450,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Daily Sum Of Bitcoin Fees",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Fees (Bitcoin)",
                               color: colors.bitcoin,
@@ -525,12 +469,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Daily Sum Of Dollar Fees",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Fees (Dollars)",
                               color: colors.dollars,
@@ -553,12 +494,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Yearly Sum Of Bitcoin Fees",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Fees (Bitcoin)",
                               color: colors.bitcoin,
@@ -575,12 +513,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Yearly Sum Of Dollar Fees",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Fees (Dollars)",
                               color: colors.dollars,
@@ -604,12 +539,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Cumulative Bitcoin Fees",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Fees (Bitcoin)",
                               color: colors.bitcoin,
@@ -626,12 +558,9 @@ export function createPresets(scale: ResourceScale) {
                       title: "Cumulative Dollar Fees",
                       description: "",
                       applyPreset(params) {
-                        return applyMultipleSeries({
+                        return applySeriesList({
                           ...params,
-                          priceScaleOptions: {
-                            halved: true,
-                          },
-                          list: [
+                          bottom: [
                             {
                               title: "Fees (Dollars)",
                               color: colors.dollars,
@@ -657,12 +586,9 @@ export function createPresets(scale: ResourceScale) {
         title: "Subsidy V. Fees",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: "Subsidy (%)",
                 color: colors.bitcoin,
@@ -687,13 +613,12 @@ export function createPresets(scale: ResourceScale) {
               title: "Puell Multiple",
               description: "",
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
                   priceScaleOptions: {
-                    halved: true,
                     mode: 1,
                   },
-                  list: [
+                  bottom: [
                     {
                       title: "Multiple",
                       color: colors.bitcoin,
@@ -711,13 +636,12 @@ export function createPresets(scale: ResourceScale) {
               title: "Hash Rate (EH/s)",
               description: "",
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
                   priceScaleOptions: {
-                    halved: true,
                     mode: 1,
                   },
-                  list: [
+                  bottom: [
                     {
                       title: "1M SMA",
                       color: colors.momentumYellow,
@@ -745,13 +669,12 @@ export function createPresets(scale: ResourceScale) {
               title: "Hash Ribbon (EH/s)",
               description: "",
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
                   priceScaleOptions: {
-                    halved: true,
                     mode: 1,
                   },
-                  list: [
+                  bottom: [
                     {
                       title: "1M SMA",
                       color: colors.profit,
@@ -774,12 +697,9 @@ export function createPresets(scale: ResourceScale) {
               title: "Hash Price",
               description: "",
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Price ($/PH/s)",
                       color: colors.dollars,
@@ -799,13 +719,12 @@ export function createPresets(scale: ResourceScale) {
         title: "Difficulty",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
             priceScaleOptions: {
-              halved: true,
               mode: 1,
             },
-            list: [
+            bottom: [
               {
                 title: "Difficulty",
                 color: colors.bitcoin,
@@ -825,15 +744,11 @@ export function createPresets(scale: ResourceScale) {
               title: "Difficulty Adjustment",
               description: "",
               applyPreset(params) {
-                return applyMultipleSeries({
+                return applySeriesList({
                   ...params,
-                  priceScaleOptions: {
-                    halved: true,
-                  },
-                  list: [
+                  bottom: [
                     {
                       title: "Adjustment (%)",
-                      // color: colors.bitcoin,
                       seriesType: SeriesType.Based,
                       dataset: params.datasets[scale].difficulty_adjustment,
                     },
@@ -851,13 +766,12 @@ export function createPresets(scale: ResourceScale) {
         title: "Annualized Issuance",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
             priceScaleOptions: {
-              halved: true,
               mode: 1,
             },
-            list: [
+            bottom: [
               {
                 title: "Issuance",
                 color: colors.bitcoin,
@@ -875,13 +789,12 @@ export function createPresets(scale: ResourceScale) {
         title: "Yearly Inflation Rate",
         description: "",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
             priceScaleOptions: {
-              halved: true,
               mode: 1,
             },
-            list: [
+            bottom: [
               {
                 title: "Rate (%)",
                 color: colors.bitcoin,

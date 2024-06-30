@@ -38,7 +38,7 @@ impl RealizedSubDataset {
             negative_realized_loss: BiMap::new_bin(2, &f("negative_realized_loss")),
             net_realized_profit_and_loss: BiMap::new_bin(1, &f("net_realized_profit_and_loss")),
             net_realized_profit_and_loss_to_market_cap_ratio: BiMap::new_bin(
-                1,
+                2,
                 &f("net_realized_profit_and_loss_to_market_cap_ratio"),
             ),
             cumulative_realized_profit: BiMap::new_bin(1, &f("cumulative_realized_profit")),
@@ -107,7 +107,7 @@ impl RealizedSubDataset {
         );
 
         self.net_realized_profit_and_loss_to_market_cap_ratio
-            .multi_insert_divide(
+            .multi_insert_percentage(
                 heights,
                 dates,
                 &mut self.net_realized_profit_and_loss,

@@ -40,50 +40,47 @@ const texts = [
   "absolute scarcity",
 ];
 
-export const LOCAL_STORAGE_MARQUEE_KEY = "bg-marquee";
-
 export function Background({
-  marquee: on,
+  mode,
+  opacity,
   focused,
 }: {
-  marquee: Accessor<boolean>;
+  mode: SL<"Scroll" | "Static">;
+  opacity: SL<{ text: string; value: number }>;
   focused: Accessor<boolean>;
 }) {
-  createEffect(() => {
-    if (on()) {
-      localStorage.removeItem(LOCAL_STORAGE_MARQUEE_KEY);
-    } else {
-      localStorage.setItem(LOCAL_STORAGE_MARQUEE_KEY, "false");
-    }
-  });
-
   return (
     <>
-      <div class="absolute h-full w-full overflow-hidden opacity-[0.0333] will-change-auto">
+      <div
+        class="absolute h-full w-full overflow-hidden will-change-auto"
+        style={{
+          opacity: opacity.selected().value,
+        }}
+      >
         <div class="-m-[2rem] -space-y-1 overflow-hidden md:-m-[1rem]">
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
-          <Line on={on} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
         </div>
       </div>
       <div class="absolute h-full w-full opacity-10 mix-blend-multiply">
@@ -97,10 +94,10 @@ export function Background({
 }
 
 function Line({
-  on,
+  mode,
   focused,
 }: {
-  on: Accessor<boolean>;
+  mode: SL<"Scroll" | "Static">;
   focused: Accessor<boolean>;
 }) {
   const shuffled = shuffle([...texts]);
@@ -109,17 +106,17 @@ function Line({
 
   return (
     <div class="select-none whitespace-nowrap">
-      <TextWrapper on={on} focused={focused} joined={joined} />
+      <TextWrapper mode={mode} focused={focused} joined={joined} />
     </div>
   );
 }
 
 function TextWrapper({
   joined,
-  on,
+  mode,
   focused,
 }: {
-  on: Accessor<boolean>;
+  mode: SL<"Scroll" | "Static">;
   focused: Accessor<boolean>;
   joined: string;
 }) {
@@ -128,7 +125,7 @@ function TextWrapper({
   const wasOnceOn = createRWS(false);
 
   createEffect(() => {
-    if (!wasOnceOn() && on()) {
+    if (!wasOnceOn() && mode.selected() === "Scroll") {
       wasOnceOn.set(true);
     }
   });
@@ -140,7 +137,10 @@ function TextWrapper({
         ...(wasOnceOn()
           ? {
               animation: `marquee ${seconds}s linear infinite`,
-              "animation-play-state": focused() && on() ? "running" : "paused",
+              "animation-play-state":
+                focused() && mode.selected() === "Scroll"
+                  ? "running"
+                  : "paused",
             }
           : {}),
       }}

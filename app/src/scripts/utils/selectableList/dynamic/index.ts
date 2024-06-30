@@ -1,7 +1,7 @@
 import { createRWS } from "/src/solid/rws";
 
-export const createSelectableList = <T, L extends T[] = T[]>(
-  list: L,
+export const createDynamicList = <T, L extends T[] = T[]>(
+  l: L,
   parameters?: {
     selected?: L[number];
     selectedIndex?: number | null;
@@ -10,10 +10,10 @@ export const createSelectableList = <T, L extends T[] = T[]>(
   const selected = createRWS<L[number] | null>(null);
   const selectedIndex = createRWS<number | null>(null);
 
-  const selectableList: SelectableList<L[number], L> = {
+  const list: DynamicList<L[number], L> = {
     selected,
     selectedIndex,
-    list: createRWS(list, {
+    list: createRWS(l, {
       equals: false,
     }),
     select(s) {
@@ -83,10 +83,10 @@ export const createSelectableList = <T, L extends T[] = T[]>(
     toJSON<TJSON, LJSON extends TJSON[] = TJSON[]>(
       transform: (value: T) => TJSON,
       filter?: (value: T) => boolean,
-    ): JSONSelectableList<TJSON, LJSON> {
+    ): JSONDynamicList<TJSON, LJSON> {
       return {
         version: 1,
-        selectedIndex: getIndexOfSelectedInSelectableList(this),
+        selectedIndex: getIndexOfSelectedInDynamicList(this),
         list: (filter ? this.list().filter(filter) : this.list()).map((value) =>
           transform(value),
         ) as LJSON,
@@ -95,18 +95,18 @@ export const createSelectableList = <T, L extends T[] = T[]>(
   };
 
   if (parameters?.selected !== undefined) {
-    selectableList.select(parameters.selected);
+    list.select(parameters.selected);
   } else if (parameters?.selectedIndex !== undefined) {
-    selectableList.selectIndex(parameters.selectedIndex);
+    list.selectIndex(parameters.selectedIndex);
   }
 
-  return selectableList;
+  return list;
 };
 
-export const createSL = createSelectableList;
+export const createDSL = createDynamicList;
 
-export const getIndexOfSelectedInSelectableList = <T, L extends T[] = T[]>(
-  sl: SelectableList<L[number], L>,
+export const getIndexOfSelectedInDynamicList = <T, L extends T[] = T[]>(
+  sl: DynamicList<L[number], L>,
 ) => {
   const selected = sl.selected();
 

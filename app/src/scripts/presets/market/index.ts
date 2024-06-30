@@ -1,5 +1,5 @@
 import { colors } from "../../utils/colors";
-import { applyMultipleSeries } from "../templates/multiple";
+import { applySeriesList } from "../apply";
 import { createPresets as createAveragesPresets } from "./averages";
 import { createPresets as createIndicatorsPresets } from "./indicators";
 import { createPresets as createReturnsPresets } from "./returns";
@@ -14,7 +14,7 @@ export function createPresets({ scale }: { scale: ResourceScale }) {
         name: "Price",
         title: "Market Price",
         applyPreset(params) {
-          return applyMultipleSeries({ ...params });
+          return applySeriesList(params);
         },
         description: "",
       },
@@ -24,7 +24,7 @@ export function createPresets({ scale }: { scale: ResourceScale }) {
         name: "Performance",
         title: "Market Performance",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
             priceOptions: {
               id: "performance",
@@ -43,12 +43,9 @@ export function createPresets({ scale }: { scale: ResourceScale }) {
         name: "Capitalization",
         title: "Market Capitalization",
         applyPreset(params) {
-          return applyMultipleSeries({
+          return applySeriesList({
             ...params,
-            priceScaleOptions: {
-              halved: true,
-            },
-            list: [
+            bottom: [
               {
                 title: "Market Cap.",
                 dataset: params.datasets[scale].market_cap,

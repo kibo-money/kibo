@@ -2,7 +2,7 @@
 // JSON
 // ---
 
-interface JSONSelectableList<T, L extends T[] = T[]> {
+interface JSONDynamicList<T, L extends T[] = T[]> {
   readonly version: 1;
   selectedIndex: number | null;
   readonly list: L;
@@ -12,7 +12,7 @@ interface JSONSelectableList<T, L extends T[] = T[]> {
 // Object
 // ---
 
-interface SelectableList<T, L extends T[] = T[]> {
+interface DynamicList<T, L extends T[] = T[]> {
   readonly selected: Accessor<T | null>;
   readonly selectedIndex: Accessor<number | null>;
   readonly list: RWS<L>;
@@ -29,5 +29,5 @@ interface SelectableList<T, L extends T[] = T[]> {
   readonly toJSON: <TJSON, LJSON extends TJSON[] = TJSON[]>(
     transform: (value: T) => LJSON[number],
     filter?: (value: T) => boolean,
-  ) => JSONSelectableList<TJSON, LJSON>;
+  ) => JSONDynamicList<TJSON, LJSON>;
 }
