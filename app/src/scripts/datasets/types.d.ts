@@ -8,14 +8,6 @@ type ResourceScale = (typeof import("./index").scales)[index];
 
 type DatasetValue<T> = T & Numbered & Valued;
 
-interface Dataset<
-  Scale extends ResourceScale,
-  Value extends SingleValueData | CandlestickData = SingleValueData,
-> {
-  scale: Scale;
-  values: Accessor<DatasetValue<Value>[]>;
-}
-
 interface ResourceDataset<
   Scale extends ResourceScale,
   Type extends OHLC | number = number,
@@ -27,15 +19,14 @@ interface ResourceDataset<
   Value extends SingleValueData | CandlestickData = Type extends number
     ? SingleValueData
     : CandlestickData,
-> extends Dataset<Scale, Value> {
+> {
+  scale: Scale;
   url: string;
   fetch: (id: number) => void;
   fetchedJSONs: FetchedResult<Scale, Type>[];
+  values: Accessor<DatasetValue<Value>[]>;
   drop: VoidFunction;
 }
-
-type AnyDataset<Scale extends ResourceScale> = Dataset<Scale> &
-  Partial<ResourceDataset<Scale>>;
 
 interface FetchedResult<
   Scale extends ResourceScale,

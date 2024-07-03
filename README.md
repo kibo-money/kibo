@@ -4,7 +4,7 @@
 
 ## Description
 
-Satonomics is a Bitcoin only on-chain data generator and visualizer that is fully free, open source, verifiable, local-first and self-hostable.
+Satonomics is a better, FOSS, Bitcoin-only, self-hostable Glassnode.
 
 While [mempool.space](https://mempool.space) gives a very micro view of the network where you can follow the journey of any address, this tool on the other hand, is the exact opposite and very complimentary by giving you a much more global/macro view of the flow and various dynamics of the network.
 
@@ -19,9 +19,11 @@ This project is in a very early stage. The web app will have bugs, the API might
 ## Instances
 
 Web App:
+
 - [app.satonomics.xyz](https://app.satonomics.xyz)
 
 API:
+
 - [api.satonomics.xyz](https://api.satonomics.xyz)
 
 ## Structure

@@ -27,17 +27,16 @@ const whitespaceDateDataset: (SingleValueData & Numbered)[] = new Array(
     };
   });
 
-const whitespaceHeightDataset: (WhitespaceData & Numbered)[] = new Array(
-  840_000,
+const heightStart = -100_000;
+const whitespaceHeightDataset: (SingleValueData & Numbered)[] = new Array(
+  1_200_000,
 )
   .fill(0)
-  .map(
-    (_, index) =>
-      ({
-        time: index,
-        number: index,
-      }) as any,
-  );
+  .map((_, index) => ({
+    time: (heightStart + index) as any,
+    number: heightStart + index,
+    value: NaN,
+  }));
 
 export function setWhitespace(chart: IChartApi, scale: ResourceScale) {
   const whitespaceSeries = createLineSeries(chart);

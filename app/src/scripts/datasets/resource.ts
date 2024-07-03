@@ -1,5 +1,3 @@
-import { createLazyMemo } from "@solid-primitives/memo";
-
 import {
   ONE_DAY_IN_MS,
   ONE_HOUR_IN_MS,
@@ -8,19 +6,12 @@ import {
 import { createRWS } from "/src/solid/rws";
 
 import { HEIGHT_CHUNK_SIZE } from ".";
+import { debounce } from "../utils/debounce";
 
 export function createResourceDataset<
   Scale extends ResourceScale,
   Type extends OHLC | number = number,
->({
-  scale,
-  path,
-  setActiveResources,
-}: {
-  scale: Scale;
-  path: string;
-  setActiveResources: Setter<Set<ResourceDataset<any, any>>>;
-}) {
+>({ scale, path }: { scale: Scale; path: string }) {
   type Dataset = Scale extends "date"
     ? FetchedDateDataset<Type>
     : FetchedHeightDataset<Type>;
@@ -85,8 +76,7 @@ export function createResourceDataset<
     }) as FetchedResult<Scale, Type>[];
 
   const _fetch = async (id: number) => {
-    const index =
-      scale === "date" ? id - 2009 : Math.floor(id / HEIGHT_CHUNK_SIZE);
+    const index = chunkIdToIndex(scale, id);
 
     if (
       index < 0 ||
@@ -205,25 +195,43 @@ export function createResourceDataset<
     fetched.loading = false;
   };
 
+  const valuesCallback = (vecs: Value[][]) => {
+    let length = 0;
+    for (let i = 0; i < vecs.length; i++) {
+      length += vecs[i].length;
+    }
+
+    if (!length) return;
+
+    const array = new Array(length);
+    let k = 0;
+    for (let i = 0; i < vecs.length; i++) {
+      let vec = vecs[i];
+      for (let j = 0; j < vec.length; j++) {
+        array[k++] = vec[j];
+      }
+    }
+
+    if (k !== length) throw Error("e");
+
+    values.set(array);
+  };
+
+  const debouncedValuesCallback = debounce(valuesCallback, 100);
+
+  const values = createRWS<Value[]>([]);
+
+  createEffect(() => {
+    const vecs = fetchedJSONs.map((fetched) => fetched.vec() || []);
+    debouncedValuesCallback(vecs);
+  });
+
   const resource: ResourceDataset<Scale, Type> = {
     scale,
     url: baseURL,
     fetch: _fetch,
     fetchedJSONs,
-    values: createLazyMemo(() => {
-      setActiveResources((resources) => resources.add(resource));
-
-      onCleanup(() =>
-        setActiveResources((resources) => {
-          resources.delete(resource);
-          return resources;
-        }),
-      );
-
-      const flat = fetchedJSONs.flatMap((fetched) => fetched.vec() || []);
-
-      return flat;
-    }),
+    values,
     drop() {
       fetchedJSONs.forEach((fetched) => {
         fetched.at = null;
@@ -244,4 +252,8 @@ async function convertResponseToJSON<
   } catch (_) {
     return null;
   }
+}
+
+function chunkIdToIndex(scale: ResourceScale, id: number) {
+  return scale === "date" ? id - 2009 : Math.floor(id / HEIGHT_CHUNK_SIZE);
 }

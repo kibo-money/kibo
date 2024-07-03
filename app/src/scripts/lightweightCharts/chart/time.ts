@@ -1,7 +1,6 @@
 import { HEIGHT_CHUNK_SIZE } from "../../datasets";
 import { debounce } from "../../utils/debounce";
 import { writeURLParam } from "../../utils/urlParams";
-import { setMinMaxMarkers } from "./markers";
 import {
   chartState,
   LOCAL_STORAGE_RANGE_KEY,
@@ -20,9 +19,9 @@ const debouncedUpdateURLParams = debounce((range: TimeRange | null) => {
 }, 500);
 
 export function initTimeScale({
-  activeResources,
+  activeDatasets,
 }: {
-  activeResources: Accessor<Set<ResourceDataset<any, any>>>;
+  activeDatasets: Set<ResourceDataset<any, any>>;
 }) {
   setTimeScale(chartState.range);
 
@@ -46,7 +45,7 @@ export function initTimeScale({
     }
 
     ids.forEach((id) => {
-      activeResources().forEach((resource) => resource.fetch(id));
+      activeDatasets.forEach((dataset) => dataset.fetch(id));
     });
   }, 100);
 
@@ -63,6 +62,7 @@ export function initTimeScale({
       chartState.range = range;
     });
   }, 50);
+
   onCleanup(() => clearTimeout(timeout));
 }
 

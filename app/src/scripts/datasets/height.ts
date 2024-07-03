@@ -1,10 +1,8 @@
 import { createResourceDataset } from "./resource";
 
 export function createHeightDatasets({
-  setActiveResources,
   groupedKeysToURLPath,
 }: {
-  setActiveResources: Setter<Set<ResourceDataset<any, any>>>;
   groupedKeysToURLPath: GroupedKeysToURLPath["height"];
 }) {
   type Key = keyof typeof groupedKeysToURLPath;
@@ -19,7 +17,6 @@ export function createHeightDatasets({
       datasets[key as Exclude<Key, "ohlc">] = createResourceDataset<"height">({
         scale: "height",
         path: groupedKeysToURLPath[key as Key],
-        setActiveResources,
       });
     }
   }
@@ -27,7 +24,6 @@ export function createHeightDatasets({
   const price = createResourceDataset<"height", OHLC>({
     scale: "height",
     path: "/height-to-ohlc",
-    setActiveResources,
   });
 
   Object.assign(datasets, { price });

@@ -24,7 +24,6 @@ type ApplyPreset = (params: {
   parentDiv: HTMLDivElement;
   datasets: Datasets;
   preset: Preset;
-  activeResources: Accessor<Set<ResourceDataset<any, any>>>;
   legendSetter: Setter<PresetLegend>;
 }) => void;
 

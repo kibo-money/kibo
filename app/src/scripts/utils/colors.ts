@@ -110,6 +110,7 @@ export const convertCandleToVolumeColor = (
 
 export const colors = {
   white,
+  black,
   darkWhite,
   gray,
   lightBitcoin: yellow,

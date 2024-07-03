@@ -1,9 +1,10 @@
-import { PRICE_SCALE_MOMENTUM_ID } from "../../chart/price";
 import { defaultSeriesOptions } from "./options";
 
 type HistogramOptions = DeepPartial<
   HistogramStyleOptions & SeriesOptionsCommon
 >;
+
+export const PRICE_SCALE_MOMENTUM_ID = "momentum";
 
 export const createHistogramSeries = (
   chart: IChartApi,

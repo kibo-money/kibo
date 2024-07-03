@@ -7,12 +7,12 @@ edition = "2021"
 axum = "0.7.5"
 color-eyre = "0.6.3"
 itertools = "0.12.1"
-regex = "1.10.4"
+regex = "1.10.5"
 bincode = { git = "https://github.com/bincode-org/bincode.git" }
-reqwest = { version = "0.12.4", features = ["json"] }
-serde = { version = "1.0.199", features = ["derive"] }
-serde_json = { version = "1.0.116" }
-tokio = { version = "1.37.0", features = ["full"] }
+reqwest = { version = "0.12.5", features = ["json"] }
+serde = { version = "1.0.203", features = ["derive"] }
+serde_json = { version = "1.0.120" }
+tokio = { version = "1.38.0", features = ["full"] }
 tower-http = { version = "0.5.2", features = ["compression-full"] }
 parser = { path = "../parser" }
 derive_deref = "1.1.1"

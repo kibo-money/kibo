@@ -11,7 +11,6 @@ import { Title } from "./components/title";
 export function ChartFrame({
   presets,
   datasets,
-  activeResources,
   hide,
   qrcode,
   standalone,
@@ -20,7 +19,6 @@ export function ChartFrame({
   presets: Presets;
   hide?: Accessor<boolean>;
   qrcode: RWS<string>;
-  activeResources: Accessor<Set<ResourceDataset<any, any>>>;
   datasets: Datasets;
   fullscreen?: RWS<boolean>;
   standalone: boolean;
@@ -64,7 +62,6 @@ export function ChartFrame({
         <Chart
           parentDiv={div}
           charts={charts}
-          activeResources={activeResources}
           datasets={datasets}
           legendSetter={legend.set}
           presets={presets}

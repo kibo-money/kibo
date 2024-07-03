@@ -9,10 +9,11 @@
 - General
   - Added a light theme !
 - Performance
+  - Added height datasets and many optimizations to make them usable
+  - Added split panes in order to always have the vertical axis visible
   - Improved app's reactivity
   - Added some chunk splitting for a faster initial load
-  - Global improvements that increased the Lighthouse's performance score from the low 30s to the high 70s
-- Chart
+  - Global improvements that increased the Lighthouse's performance score
   - Fixed legend hovering on mobile not resetting on touch end
   - Updated legend padding so that the scrollbar, if visible, is less in the way
   - Added "3 months" and yearly time scale setters (from year 2009 to today)

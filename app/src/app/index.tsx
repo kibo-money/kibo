@@ -136,13 +136,7 @@ export function App() {
     },
   );
 
-  const activeResources = createRWS<Set<ResourceDataset<any, any>>>(new Set(), {
-    equals: false,
-  });
-
-  const datasets = createDatasets({
-    setActiveResources: activeResources.set,
-  });
+  const datasets = createDatasets();
 
   onMount(() => {
     webSockets.openAll();
@@ -273,7 +267,6 @@ export function App() {
                     qrcode={qrcode}
                     standalone={false}
                     datasets={datasets}
-                    activeResources={activeResources}
                   />
                 </Show>
 
@@ -340,7 +333,6 @@ export function App() {
                 presets={presets}
                 qrcode={qrcode}
                 fullscreen={fullscreen}
-                activeResources={activeResources}
                 datasets={datasets}
               />
             </div>

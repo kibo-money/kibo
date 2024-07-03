@@ -4,14 +4,12 @@ export function Chart({
   presets,
   datasets,
   legendSetter,
-  activeResources,
 }: {
   charts: RWS<IChartApi[]>;
   parentDiv: RWS<HTMLDivElement | undefined>;
   presets: Presets;
   datasets: Datasets;
   legendSetter: Setter<PresetLegend>;
-  activeResources: Accessor<Set<ResourceDataset<any, any>>>;
 }) {
   onMount(() => {
     createEffect(() => {
@@ -28,7 +26,6 @@ export function Chart({
             parentDiv: div,
             datasets,
             preset,
-            activeResources,
             legendSetter,
           });
         } catch (error) {

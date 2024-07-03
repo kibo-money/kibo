@@ -3,10 +3,8 @@ import { createResourceDataset } from "./resource";
 export { averages } from "./consts/averages";
 
 export function createDateDatasets({
-  setActiveResources,
   groupedKeysToURLPath,
 }: {
-  setActiveResources: Setter<Set<ResourceDataset<any, any>>>;
   groupedKeysToURLPath: GroupedKeysToURLPath["date"];
 }) {
   type Key = keyof typeof groupedKeysToURLPath;
@@ -21,7 +19,6 @@ export function createDateDatasets({
       datasets[key as Exclude<Key, "ohlc">] = createResourceDataset<"date">({
         scale: "date",
         path: groupedKeysToURLPath[key as Key],
-        setActiveResources,
       });
     }
   }
@@ -29,7 +26,6 @@ export function createDateDatasets({
   const price = createResourceDataset<"date", OHLC>({
     scale: "date",
     path: "/date-to-ohlc",
-    setActiveResources,
   });
 
   Object.assign(datasets, { price });
