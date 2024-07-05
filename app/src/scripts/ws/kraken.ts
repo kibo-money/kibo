@@ -30,14 +30,12 @@ export const krakenAPI = {
       const dateStr = dateToString(new Date(Number(timestamp) * 1000));
 
       const candle: DatasetCandlestickData = {
-        // date: dateStr,
         time: dateStr,
         open: Number(open),
         high: Number(high),
         low: Number(low),
         close: Number(close),
         value: Number(close),
-        // volume: Number(volume),
       };
 
       candle && callback({ ...candle });
