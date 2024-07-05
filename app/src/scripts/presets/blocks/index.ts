@@ -162,7 +162,6 @@ export function createPresets() {
                   {
                     title: "Mined",
                     color: colors.bitcoin,
-                    seriesType: SeriesType.Area,
                     dataset: params.datasets.date.total_blocks_mined,
                   },
                 ],
@@ -184,7 +183,6 @@ export function createPresets() {
               {
                 title: "Size (MB)",
                 color: colors.darkWhite,
-                seriesType: SeriesType.Area,
                 dataset: params.datasets.date.cumulative_block_size,
               },
             ],

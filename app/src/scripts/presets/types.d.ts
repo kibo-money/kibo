@@ -24,7 +24,9 @@ type ApplyPreset = (params: {
   parentDiv: HTMLDivElement;
   datasets: Datasets;
   preset: Preset;
-  legendSetter: Setter<PresetLegend>;
+  legendSetter: Setter<SeriesLegend[]>;
+  dark: boolean;
+  activeRange: RWS<number[]>;
 }) => void;
 
 interface PartialPresetFolder {
@@ -58,4 +60,13 @@ interface Presets {
   select(preset: Preset): void;
 }
 
-type PresetLegend = SeriesLegend[];
+type PriceSeriesType = "Candlestick" | "Line";
+
+interface ChartObject {
+  scale: ResourceScale;
+  div: HTMLDivElement;
+  chart: IChartApi;
+  whitespace: ISeriesApi<"Line">;
+  legendList: SeriesLegend[];
+  debouncedSetMinMaxMarkers: VoidFunction;
+}

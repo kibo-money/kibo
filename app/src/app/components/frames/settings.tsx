@@ -14,18 +14,6 @@ export function SettingsFrame({
   backgroundMode: SL<"Scroll" | "Static">;
   backgroundOpacity: SL<{ text: string; value: number }>;
 }) {
-  createEffect(() => {
-    if (
-      appTheme.selected() === "Dark" ||
-      (appTheme.selected() === "System" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
-    ) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  });
-
   return (
     <div
       class="flex-1 overflow-y-auto"
@@ -34,10 +22,7 @@ export function SettingsFrame({
       }}
     >
       <div class="space-y-4 p-4">
-        <Header title="Settings">
-          And other stuff <strong class="italic">NOT</strong> transmitted by
-          relays.
-        </Header>
+        <Header title="Settings">And other stuff</Header>
 
         <div class="border-lighter -mx-4 border-t" />
 
@@ -74,7 +59,13 @@ export function SettingsFrame({
 
         <hr class="border-lighter -mx-4 border-t" />
         <p class="text-center">
-          <span class="opacity-50">Version:</span> {version}
+          <span class="opacity-50">Version:</span>{" "}
+          <a
+            href="https://codeberg.org/satonomics/satonomics/src/branch/main/CHANGELOG.md"
+            target="_blank"
+          >
+            {version}
+          </a>
         </p>
       </div>
     </div>

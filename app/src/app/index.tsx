@@ -2,8 +2,6 @@ import { createRWS } from "/src/solid/rws";
 
 import { standalone } from "../env";
 import { createDatasets } from "../scripts/datasets";
-import { chartState } from "../scripts/lightweightCharts/chart/state";
-import { setTimeScale } from "../scripts/lightweightCharts/chart/time";
 import { createPresets } from "../scripts/presets";
 import { createSL } from "../scripts/utils/selectableList/static";
 import { sleep } from "../scripts/utils/sleep";
@@ -39,6 +37,22 @@ export function App() {
       mode: "localStorage",
     },
     defaultIndex: 0,
+  });
+
+  const dark = createRWS(false);
+
+  createEffect(() => {
+    if (
+      appTheme.selected() === "Dark" ||
+      (appTheme.selected() === "System" &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches)
+    ) {
+      dark.set(true);
+      document.documentElement.classList.add("dark");
+    } else {
+      dark.set(false);
+      document.documentElement.classList.remove("dark");
+    }
   });
 
   const backgroundMode = createSL(["Scroll", "Static"] as const, {
@@ -222,8 +236,6 @@ export function App() {
                 windowWidth60p(),
               ),
             );
-
-            setTimeScale(resizeInitialRange());
           }
         }}
         onMouseUp={() => resizingBarStart.set(undefined)}
@@ -267,6 +279,7 @@ export function App() {
                     qrcode={qrcode}
                     standalone={false}
                     datasets={datasets}
+                    dark={dark}
                   />
                 </Show>
 
@@ -303,16 +316,12 @@ export function App() {
             <div
               class="mx-[3px] my-8 hidden w-[6px] cursor-col-resize items-center justify-center rounded-full bg-orange-900 opacity-0 hover:opacity-50 dark:bg-orange-100 md:block short:hidden"
               onMouseDown={(event) => {
-                resizeInitialRange.set(chartState.range);
-
                 if (resizingBarStart() === undefined) {
                   resizingBarStart.set(event.clientX);
                   resizingBarWidth.set(barWidth());
                 }
               }}
               onTouchStart={(event) => {
-                resizeInitialRange.set(chartState.range);
-
                 if (resizingBarStart() === undefined) {
                   resizingBarStart.set(event.touches[0].clientX);
                   resizingBarWidth.set(barWidth());
@@ -320,8 +329,6 @@ export function App() {
               }}
               onDblClick={() => {
                 barWidth.set(0);
-
-                setTimeScale(resizeInitialRange());
               }}
             />
           </Show>
@@ -334,6 +341,7 @@ export function App() {
                 qrcode={qrcode}
                 fullscreen={fullscreen}
                 datasets={datasets}
+                dark={dark}
               />
             </div>
           </Show>

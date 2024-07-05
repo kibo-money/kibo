@@ -4,7 +4,7 @@ import { createPresets as createAveragesPresets } from "./averages";
 import { createPresets as createIndicatorsPresets } from "./indicators";
 import { createPresets as createReturnsPresets } from "./returns";
 
-export function createPresets({ scale }: { scale: ResourceScale }) {
+export function createPresets(scale: ResourceScale) {
   return {
     name: "Market",
     tree: [
@@ -15,25 +15,6 @@ export function createPresets({ scale }: { scale: ResourceScale }) {
         title: "Market Price",
         applyPreset(params) {
           return applySeriesList(params);
-        },
-        description: "",
-      },
-      {
-        scale,
-        icon: IconTablerPercentage,
-        name: "Performance",
-        title: "Market Performance",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            priceOptions: {
-              id: "performance",
-              title: "Performance",
-              priceScaleOptions: {
-                mode: 2,
-              },
-            },
-          });
         },
         description: "",
       },

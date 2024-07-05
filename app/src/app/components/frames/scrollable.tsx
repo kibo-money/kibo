@@ -21,11 +21,19 @@ export function Scrollable({
         return;
       }
 
-      scrollable.set(() => el.scrollWidth > el.clientWidth);
-
-      checkArrows();
+      checkScrollable();
     });
   });
+
+  function checkScrollable() {
+    const div = maybeScrollable();
+
+    if (div) {
+      scrollable.set(() => div.scrollWidth > div.clientWidth);
+    }
+
+    checkArrows();
+  }
 
   function checkArrows() {
     const target = maybeScrollable()!;
@@ -37,6 +45,9 @@ export function Scrollable({
     showLeftArrow.set(() => left > 0);
     showRightArrow.set(() => right > 0);
   }
+
+  // @ts-ignore
+  createEffect(on(children, checkScrollable));
 
   return (
     <div class="relative min-w-0 flex-1">

@@ -4,7 +4,10 @@ import { colors } from "../utils/colors";
 import { replaceHistory } from "../utils/history";
 import { stringToId } from "../utils/id";
 import { resetURLParams } from "../utils/urlParams";
-import { createPresets as createAddressesPresets } from "./addresses";
+import {
+  createPresets as createAddressesPresets,
+  createLiquidityFolder,
+} from "./addresses";
 import { createPresets as createBlocksPresets } from "./blocks";
 import { createPresets as createCoinblocksPresets } from "./coinblocks";
 import { createPresets as createHodlersPresets } from "./hodlers";
@@ -31,7 +34,7 @@ export function createPresets(): Presets {
         {
           name: "By Date",
           tree: [
-            createMarketPresets({ scale: "date" }),
+            createMarketPresets("date"),
             createBlocksPresets(),
             createMinersPresets("date"),
             createTransactionsPresets("date"),
@@ -42,6 +45,12 @@ export function createPresets(): Presets {
               name: "",
               title: "",
             }),
+            createLiquidityFolder({
+              scale: "date",
+              color: colors.bitcoin,
+              datasetKey: "",
+              name: "",
+            }),
             createHodlersPresets({ scale: "date" }),
             createAddressesPresets({ scale: "date" }),
             createCoinblocksPresets({ scale: "date" }),
@@ -50,7 +59,7 @@ export function createPresets(): Presets {
         {
           name: "By Height",
           tree: [
-            createMarketPresets({ scale: "height" }),
+            createMarketPresets("height"),
             createMinersPresets("height"),
             createTransactionsPresets("height"),
             ...createCohortPresetList({
@@ -59,6 +68,12 @@ export function createPresets(): Presets {
               name: "",
               datasetKey: "",
               title: "",
+            }),
+            createLiquidityFolder({
+              scale: "height",
+              color: colors.bitcoin,
+              datasetKey: "",
+              name: "",
             }),
             createHodlersPresets({ scale: "height" }),
             createAddressesPresets({ scale: "height" }),
@@ -101,7 +116,7 @@ export function createPresets(): Presets {
     const serializedHistory: SerializedPresetsHistory = history().map(
       ({ preset, date }) => ({
         p: preset.id,
-        d: date.valueOf(),
+        d: date.getTime(),
       }),
     );
 

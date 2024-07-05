@@ -31,7 +31,6 @@ export const krakenAPI = {
 
       const candle: DatasetCandlestickData = {
         // date: dateStr,
-        number: new Date(dateStr).valueOf() / ONE_DAY_IN_MS,
         time: dateStr,
         open: Number(open),
         high: Number(high),

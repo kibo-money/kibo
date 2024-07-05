@@ -14,7 +14,7 @@ const texts = [
   "hodl",
   `don't trust, verify`,
   "zap",
-  "bitcoin",
+  "₿itcoin",
   "lightning",
   "nostr",
   "freedom tech",

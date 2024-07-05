@@ -6,7 +6,7 @@ type AnyDatasets = DateDatasets | HeightDatasets;
 
 type ResourceScale = (typeof import("./index").scales)[index];
 
-type DatasetValue<T> = T & Numbered & Valued;
+type DatasetValue<T> = T & Valued;
 
 interface ResourceDataset<
   Scale extends ResourceScale,
@@ -24,7 +24,6 @@ interface ResourceDataset<
   url: string;
   fetch: (id: number) => void;
   fetchedJSONs: FetchedResult<Scale, Type>[];
-  values: Accessor<DatasetValue<Value>[]>;
   drop: VoidFunction;
 }
 

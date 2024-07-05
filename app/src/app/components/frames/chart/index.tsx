@@ -3,7 +3,6 @@ import { createRWS } from "/src/solid/rws";
 
 import { Box } from "../box";
 import { Actions } from "./components/actions";
-import { Chart } from "./components/chart";
 import { Legend } from "./components/legend";
 import { TimeScale } from "./components/timeScale";
 import { Title } from "./components/title";
@@ -15,19 +14,25 @@ export function ChartFrame({
   qrcode,
   standalone,
   fullscreen,
+  dark,
 }: {
   presets: Presets;
   hide?: Accessor<boolean>;
   qrcode: RWS<string>;
   datasets: Datasets;
   fullscreen?: RWS<boolean>;
+  dark: Accessor<boolean>;
   standalone: boolean;
 }) {
-  const legend = createRWS<PresetLegend>([]);
+  const legend = createRWS<SeriesLegend[]>([]);
 
   const charts = createRWS<IChartApi[]>([]);
 
   const div = createRWS<HTMLDivElement | undefined>(undefined);
+
+  const scale = createMemo(() => presets.selected().scale);
+
+  const activeRange = createRWS([] as number[], { equals: false });
 
   const Chart = lazy(() =>
     import("./components/chart").then((d) => ({ default: d.Chart })),
@@ -50,7 +55,7 @@ export function ChartFrame({
         <div class="border-lighter border-t" />
 
         <div class="flex">
-          <Legend legend={legend} />
+          <Legend legend={legend} scale={scale} activeRange={activeRange} />
 
           <div class="border-lighter border-l" />
 
@@ -65,10 +70,12 @@ export function ChartFrame({
           datasets={datasets}
           legendSetter={legend.set}
           presets={presets}
+          dark={dark}
+          activeRange={activeRange}
         />
       </div>
 
-      <TimeScale charts={charts} />
+      <TimeScale charts={charts} scale={scale} />
     </div>
   );
 }

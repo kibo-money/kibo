@@ -9,7 +9,10 @@ type AddressCohortKeySplitByLiquidity = `${LiquidityKey}_${AddressCohortKey}`;
 
 type AnyCohortKey = AgeCohortKey | AddressCohortKey;
 
-type AnyPossibleCohortKey = AnyCohortKey | AddressCohortKeySplitByLiquidity;
+type AnyPossibleCohortKey =
+  | AnyCohortKey
+  | AddressCohortKeySplitByLiquidity
+  | LiquidityKey;
 
 type AverageName = (typeof import("./averages").averages)[number]["key"];
 

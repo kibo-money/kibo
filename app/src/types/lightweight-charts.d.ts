@@ -54,6 +54,10 @@ type DeepPartialLineOptions = DeepPartial<
   LineStyleOptions & SeriesOptionsCommon
 >;
 
+type DeepPartialCandlestickOptions = DeepPartial<
+  CandlestickStyleOptions & SeriesOptionsCommon
+>;
+
 type DeepPartialHistogramOptions = DeepPartial<
   HistogramStyleOptions & SeriesOptionsCommon
 >;

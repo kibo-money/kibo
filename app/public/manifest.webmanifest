@@ -1,7 +1,7 @@
 {
   "name": "Satonomics",
   "short_name": "Satonomics",
-  "description": "Satoshi Economics",
+  "description": "A better, FOSS, Bitcoin-only, self-hostable Glassnode",
   "start_url": "/",
   "display": "standalone",
   "theme_color": "#0c0a09",

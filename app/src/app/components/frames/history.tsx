@@ -18,7 +18,7 @@ export function HistoryFrame({
       }}
     >
       <div class="flex max-h-full min-h-0 flex-1 flex-col p-4">
-        <Header title="History">List of previously visited presets.</Header>
+        <Header title="History">List of previously visited charts.</Header>
 
         <div
           class="space-y-0.5 pt-4"

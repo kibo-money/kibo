@@ -28,7 +28,6 @@ export function createPresets({
               {
                 title: `Total Non Empty Address`,
                 color: colors.bitcoin,
-                seriesType: SeriesType.Area,
                 dataset: params.datasets[scale].address_count,
               },
             ],
@@ -67,7 +66,6 @@ export function createPresets({
               {
                 title: `Total Addresses Created`,
                 color: colors.bitcoin,
-                seriesType: SeriesType.Area,
                 dataset: params.datasets[scale].created_addresses,
               },
             ],
@@ -87,7 +85,6 @@ export function createPresets({
               {
                 title: `Total Empty Addresses`,
                 color: colors.darkWhite,
-                seriesType: SeriesType.Area,
                 dataset: params.datasets[scale].empty_addresses,
               },
             ],
@@ -143,22 +140,43 @@ function createAddressPresetFolder<Scale extends ResourceScale>({
         color,
         datasetKey,
       }),
-      {
-        name: `Split By Liquidity`,
-        tree: liquidities.map(
-          (liquidity): PartialPresetFolder => ({
-            name: liquidity.name,
-            tree: createCohortPresetList({
-              title: `${liquidity.name} ${name}`,
-              name: `${liquidity.name} ${name}`,
-              scale,
-              color,
-              datasetKey: `${liquidity.key}_${datasetKey}`,
-            }),
-          }),
-        ),
-      },
+      createLiquidityFolder({
+        scale,
+        name,
+        datasetKey,
+        color,
+      }),
     ],
+  };
+}
+
+export function createLiquidityFolder<Scale extends ResourceScale>({
+  scale,
+  color,
+  name,
+  datasetKey,
+}: {
+  scale: Scale;
+  name: string;
+  datasetKey: AddressCohortKey | "";
+  color: string;
+}): PartialPresetFolder {
+  return {
+    name: `Split By Liquidity`,
+    tree: liquidities.map(
+      (liquidity): PartialPresetFolder => ({
+        name: liquidity.name,
+        tree: createCohortPresetList({
+          title: `${liquidity.name} ${name}`,
+          name: `${liquidity.name} ${name}`,
+          scale,
+          color,
+          datasetKey: !datasetKey
+            ? liquidity.key
+            : `${liquidity.key}_${datasetKey}`,
+        }),
+      }),
+    ),
   };
 }
 

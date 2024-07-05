@@ -60,7 +60,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                 {
                   title: "Count",
                   color,
-                  seriesType: SeriesType.Area,
                   dataset: params.datasets[scale][`${datasetPrefix}utxo_count`],
                 },
               ],
@@ -105,7 +104,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                 {
                   title: `${name} Realized Cap.`,
                   color,
-                  seriesType: SeriesType.Area,
                   dataset:
                     params.datasets[scale][`${datasetPrefix}realized_cap`],
                 },
@@ -160,7 +158,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                   dataset:
                     params.datasets[scale][`${datasetPrefix}realized_profit`],
                   color: colors.profit,
-                  seriesType: SeriesType.Area,
                 },
               ],
             });
@@ -181,7 +178,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                   dataset:
                     params.datasets[scale][`${datasetPrefix}realized_loss`],
                   color: colors.loss,
-                  seriesType: SeriesType.Area,
                 },
               ],
             });
@@ -274,7 +270,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                 {
                   title: "Cumulative Realized Profit",
                   color: colors.profit,
-                  seriesType: SeriesType.Area,
                   dataset:
                     params.datasets[scale][
                       `${datasetPrefix}cumulative_realized_profit`
@@ -297,7 +292,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                 {
                   title: "Cumulative Realized Loss",
                   color: colors.loss,
-                  seriesType: SeriesType.Area,
                   dataset:
                     params.datasets[scale][
                       `${datasetPrefix}cumulative_realized_loss`
@@ -371,7 +365,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                   dataset:
                     params.datasets[scale][`${datasetPrefix}unrealized_profit`],
                   color: colors.profit,
-                  seriesType: SeriesType.Area,
                 },
               ],
             });
@@ -393,7 +386,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                   dataset:
                     params.datasets[scale][`${datasetPrefix}unrealized_loss`],
                   color: colors.loss,
-                  seriesType: SeriesType.Area,
                 },
               ],
             });
@@ -539,7 +531,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                     {
                       title: "Supply",
                       color,
-                      seriesType: SeriesType.Area,
                       dataset: params.datasets[scale][`${datasetPrefix}supply`],
                     },
                   ],
@@ -558,7 +549,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                     {
                       title: "Supply",
                       color: colors.profit,
-                      seriesType: SeriesType.Area,
                       dataset:
                         params.datasets[scale][
                           `${datasetPrefix}supply_in_profit`
@@ -581,7 +571,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                     {
                       title: "Supply",
                       color: colors.loss,
-                      seriesType: SeriesType.Area,
                       dataset:
                         params.datasets[scale][
                           `${datasetPrefix}supply_in_loss`
@@ -658,7 +647,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                     {
                       title: "Supply",
                       color,
-                      seriesType: SeriesType.Area,
                       dataset:
                         params.datasets[scale][
                           `${datasetPrefix}supply_to_circulating_supply_ratio`
@@ -681,7 +669,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                     {
                       title: "Supply",
                       color: colors.profit,
-                      seriesType: SeriesType.Area,
                       dataset:
                         params.datasets[scale][
                           `${datasetPrefix}supply_in_profit_to_circulating_supply_ratio`
@@ -703,7 +690,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                   bottom: [
                     {
                       title: "Supply",
-                      seriesType: SeriesType.Area,
                       color: colors.loss,
                       dataset:
                         params.datasets[scale][
@@ -779,7 +765,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                     {
                       title: "Supply",
                       color: colors.profit,
-                      seriesType: SeriesType.Area,
                       dataset:
                         params.datasets[scale][
                           `${datasetPrefix}supply_in_profit_to_own_supply_ratio`
@@ -801,7 +786,6 @@ export function createCohortPresetList<Scale extends ResourceScale>({
                   bottom: [
                     {
                       title: "Supply",
-                      seriesType: SeriesType.Area,
                       color: colors.loss,
                       dataset:
                         params.datasets[scale][

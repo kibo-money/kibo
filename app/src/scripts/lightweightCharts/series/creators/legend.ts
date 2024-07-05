@@ -8,26 +8,26 @@ import {
 } from "/src/scripts/utils/urlParams";
 import { createRWS } from "/src/solid/rws";
 
-export function createSeriesLegend({
+export function createSeriesLegend<Scale extends ResourceScale>({
   id,
   presetId,
   title,
   color,
-  series,
+  seriesList,
   defaultVisible = true,
   disabled: _disabled,
   visible: _visible,
-  url,
+  dataset,
 }: {
   id: string;
   presetId: string;
   title: string;
   color: Accessor<string | string[]>;
-  series: ISeriesApi<SeriesType>;
+  seriesList: Accessor<ISeriesApi<SeriesType> | undefined>[];
   defaultVisible?: boolean;
   disabled?: Accessor<boolean>;
   visible?: RWS<boolean>;
-  url?: string;
+  dataset: ResourceDataset<Scale>;
 }) {
   const storageID = `${presetId}-${id}`;
 
@@ -42,12 +42,6 @@ export function createSeriesLegend({
   const disabled = createMemo(_disabled || (() => false));
 
   const drawn = createMemo(() => visible() && !disabled());
-
-  createEffect(() => {
-    series.applyOptions({
-      visible: drawn(),
-    });
-  });
 
   createEffect(() => {
     if (disabled()) {
@@ -68,11 +62,11 @@ export function createSeriesLegend({
   return {
     id,
     title,
-    series,
+    seriesList,
     color,
     visible,
     disabled,
     drawn,
-    url,
+    dataset,
   };
 }

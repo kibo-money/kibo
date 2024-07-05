@@ -1,5 +1,4 @@
 import { dateToString, getNumberOfDaysBetweenTwoDates } from "../../utils/date";
-import { ONE_DAY_IN_MS } from "../../utils/time";
 import { createLineSeries } from "../series/creators/line";
 
 export const DAY_BEFORE_GENESIS_DAY = "2009-01-02";
@@ -9,41 +8,58 @@ export const GENESIS_DAY = "2009-01-03";
 
 const whitespaceStartDate = "1970-01-01";
 const whitespaceEndDate = "2100-01-01";
-const whitespaceDateDataset: (SingleValueData & Numbered)[] = new Array(
+const whitespaceDateDataset: (WhitespaceData | SingleValueData)[] = new Array(
   getNumberOfDaysBetweenTwoDates(
     new Date(whitespaceStartDate),
     new Date(whitespaceEndDate),
   ),
-)
-  .fill(0)
-  .map((_, index) => {
-    const date = new Date(whitespaceStartDate);
-    date.setUTCDate(date.getUTCDay() + index);
+);
+// Hack to be able to scroll freely
+// Setting them all to NaN is much slower
+for (let i = 0; i < whitespaceDateDataset.length; i++) {
+  const date = new Date(whitespaceStartDate);
+  date.setUTCDate(date.getUTCDay() + i);
 
-    return {
-      number: date.valueOf() / ONE_DAY_IN_MS,
-      time: dateToString(date),
+  const time = dateToString(date);
+
+  if (i === whitespaceDateDataset.length - 1) {
+    whitespaceDateDataset[i] = {
+      time,
       value: NaN,
     };
-  });
+  } else {
+    whitespaceDateDataset[i] = {
+      time,
+    };
+  }
+}
 
-const heightStart = -100_000;
-const whitespaceHeightDataset: (SingleValueData & Numbered)[] = new Array(
-  1_200_000,
-)
-  .fill(0)
-  .map((_, index) => ({
-    time: (heightStart + index) as any,
-    number: heightStart + index,
-    value: NaN,
-  }));
+const heightStart = -50_000;
+const whitespaceHeightDataset: WhitespaceData[] = new Array(
+  (new Date().getUTCFullYear() - 2009 + 1) * 60_000,
+);
+for (let i = 0; i < whitespaceHeightDataset.length; i++) {
+  const height = heightStart + i;
+
+  whitespaceHeightDataset[i] = {
+    time: height as any,
+  };
+}
 
 export function setWhitespace(chart: IChartApi, scale: ResourceScale) {
-  const whitespaceSeries = createLineSeries(chart);
+  const whitespace = createLineSeries(chart);
 
   if (scale === "date") {
-    whitespaceSeries.setData(whitespaceDateDataset);
+    whitespace.setData(whitespaceDateDataset);
   } else {
-    whitespaceSeries.setData(whitespaceHeightDataset);
+    whitespace.setData(whitespaceHeightDataset);
+
+    const time = whitespaceHeightDataset.length;
+    whitespace.update({
+      time: time as Time,
+      value: NaN,
+    });
   }
+
+  return whitespace;
 }

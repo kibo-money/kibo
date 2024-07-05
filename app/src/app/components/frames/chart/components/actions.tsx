@@ -1,6 +1,3 @@
-import { chartState } from "/src/scripts/lightweightCharts/chart/state";
-import { setTimeScale } from "/src/scripts/lightweightCharts/chart/time";
-
 import { Button } from "./button";
 
 export function Actions({
@@ -28,11 +25,7 @@ export function Actions({
                 : IconTablerLayoutSidebarRightExpand
             }
             onClick={() => {
-              const range = chartState.range;
-
               fullscreen().set((b) => !b);
-
-              setTimeScale(range);
             }}
             classes="hidden md:block"
           />

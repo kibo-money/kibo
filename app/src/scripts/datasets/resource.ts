@@ -1,12 +1,7 @@
-import {
-  ONE_DAY_IN_MS,
-  ONE_HOUR_IN_MS,
-  ONE_MINUTE_IN_MS,
-} from "/src/scripts/utils/time";
+import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "/src/scripts/utils/time";
 import { createRWS } from "/src/solid/rws";
 
 import { HEIGHT_CHUNK_SIZE } from ".";
-import { debounce } from "../utils/debounce";
 
 export function createResourceDataset<
   Scale extends ResourceScale,
@@ -49,21 +44,24 @@ export function createResourceDataset<
           const chunkId = json()?.chunk.id!;
 
           if (Array.isArray(map)) {
-            return map.map(
-              (value, index) =>
-                ({
-                  number: chunkId + index,
-                  time: (chunkId + index) as Time,
-                  ...(typeof value !== "number" && value !== null
-                    ? { ...(value as OHLC), value: value.close }
-                    : { value: value === null ? NaN : (value as number) }),
-                }) as any as Value,
-            );
+            const values = new Array(map.length);
+
+            for (let i = 0; i < map.length; i++) {
+              const value = map[i];
+
+              values[i] = {
+                time: (chunkId + i) as Time,
+                ...(typeof value !== "number" && value !== null
+                  ? { ...(value as OHLC), value: value.close }
+                  : { value: value === null ? NaN : (value as number) }),
+              } as any as Value;
+            }
+
+            return values;
           } else {
             return Object.entries(map).map(
               ([date, value]) =>
                 ({
-                  number: new Date(date).valueOf() / ONE_DAY_IN_MS,
                   time: date,
                   ...(typeof value !== "number" && value !== null
                     ? { ...(value as OHLC), value: value.close }
@@ -89,10 +87,18 @@ export function createResourceDataset<
 
     const fetched = fetchedJSONs.at(index);
 
+    if (scale === "height" && index > 0) {
+      const length = fetchedJSONs.at(index - 1)?.vec()?.length;
+
+      if (length !== undefined && length < HEIGHT_CHUNK_SIZE) {
+        return;
+      }
+    }
+
     if (!fetched || fetched.loading) {
       return;
     } else if (fetched.at) {
-      const diff = new Date().valueOf() - fetched.at.valueOf();
+      const diff = new Date().getTime() - fetched.at.getTime();
 
       if (
         diff < ONE_MINUTE_IN_MS ||
@@ -127,6 +133,11 @@ export function createResourceDataset<
       } catch {}
     }
 
+    if (!navigator.onLine) {
+      fetched.loading = false;
+      return;
+    }
+
     try {
       const fetchedResponse = await fetch(urlWithQuery);
 
@@ -153,7 +164,7 @@ export function createResourceDataset<
           return;
         }
 
-        if (previousLength && previousLength <= newLength) {
+        if (previousLength && previousLength === newLength) {
           const previousLastValue = Object.values(previousMap || []).at(-1);
           const newLastValue = Object.values(newMap).at(-1);
 
@@ -195,43 +206,11 @@ export function createResourceDataset<
     fetched.loading = false;
   };
 
-  const valuesCallback = (vecs: Value[][]) => {
-    let length = 0;
-    for (let i = 0; i < vecs.length; i++) {
-      length += vecs[i].length;
-    }
-
-    if (!length) return;
-
-    const array = new Array(length);
-    let k = 0;
-    for (let i = 0; i < vecs.length; i++) {
-      let vec = vecs[i];
-      for (let j = 0; j < vec.length; j++) {
-        array[k++] = vec[j];
-      }
-    }
-
-    if (k !== length) throw Error("e");
-
-    values.set(array);
-  };
-
-  const debouncedValuesCallback = debounce(valuesCallback, 100);
-
-  const values = createRWS<Value[]>([]);
-
-  createEffect(() => {
-    const vecs = fetchedJSONs.map((fetched) => fetched.vec() || []);
-    debouncedValuesCallback(vecs);
-  });
-
   const resource: ResourceDataset<Scale, Type> = {
     scale,
     url: baseURL,
     fetch: _fetch,
     fetchedJSONs,
-    values,
     drop() {
       fetchedJSONs.forEach((fetched) => {
         fetched.at = null;
@@ -254,6 +233,6 @@ async function convertResponseToJSON<
   }
 }
 
-function chunkIdToIndex(scale: ResourceScale, id: number) {
+export function chunkIdToIndex(scale: ResourceScale, id: number) {
   return scale === "date" ? id - 2009 : Math.floor(id / HEIGHT_CHUNK_SIZE);
 }

@@ -11,11 +11,20 @@ import { HorzScaleBehaviorHeight } from "./horzScaleBehavior";
 export function createChart(
   scale: ResourceScale,
   element: HTMLElement,
-  priceScaleOptions?: DeepPartialPriceScaleOptions,
+  {
+    dark,
+    priceScaleOptions,
+  }: {
+    dark: boolean;
+    priceScaleOptions: DeepPartialPriceScaleOptions;
+  },
 ) {
   console.log(`chart: create (scale: ${scale})`);
 
-  const { white } = colors;
+  const { white, black } = colors;
+
+  const textColor = dark ? white : black;
+  const borderColor = dark ? "#332F24" : "#F1E4E0";
 
   const options: DeepPartialChartOptions = {
     autoSize: true,
@@ -23,18 +32,18 @@ export function createChart(
       fontFamily: "Lexend",
       background: { color: "transparent" },
       fontSize: 14,
-      textColor: white,
+      textColor,
     },
     grid: {
       vertLines: { visible: false },
       horzLines: { visible: false },
     },
     rightPriceScale: {
-      borderColor: "#332F24",
+      borderColor,
     },
     timeScale: {
-      borderColor: "#332F24",
-      minBarSpacing: scale === "date" ? 0.05 : 0.005,
+      borderColor,
+      minBarSpacing: 0.05,
       shiftVisibleRangeOnNewBar: false,
       allowShiftVisibleRangeOnWhitespaceReplacement: false,
     },
@@ -46,12 +55,12 @@ export function createChart(
     crosshair: {
       mode: CrosshairMode.Normal,
       horzLine: {
-        color: white,
-        labelBackgroundColor: white,
+        color: textColor,
+        labelBackgroundColor: textColor,
       },
       vertLine: {
-        color: white,
-        labelBackgroundColor: white,
+        color: textColor,
+        labelBackgroundColor: textColor,
       },
     },
     localization: {
