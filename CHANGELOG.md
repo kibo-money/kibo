@@ -7,9 +7,9 @@
 ### App
 
 - General
+  - Added height datasets and many optimizations to make them usable
   - Added a light theme
 - Charts
-  - Added height datasets and many optimizations to make them usable
   - Added split panes in order to have the vertical axis visible for all datasets
   - Added min and max values on the charts
   - Fixed legend hovering on mobile not resetting on touch end
