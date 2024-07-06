@@ -34,14 +34,15 @@ API:
 
 ## Goals / Philosophy
 
-Adjectives that describe what this project is or strives to be:
+Adjectives that describe what this project is or strives to be, in no particular order:
 
 - **Best**: Be the go to and replace Glassnode
 - **Diverse**: Have as many charts/datasets as possible and something for everyone
+- **Transparent**: You can verify and see exactly how each dataset is computed
 - **Free**: Is and always will be completely free
 - **Independent**: Only one, easily swappable, dependency (Price API)
+- **Timeless**: Be relevant and usable 10 years from now by being independent and not do address tagging
 - **Sovereign**: Be self-hostable on accessible hardware
-- **Timeless**: Be relevant and usable 10 years from now
 - **Versatile**: Many many different datasets which can be viewed in chart, dashbards or raw values
 - **Accessible**: Huge free API with all the datasets
 
@@ -54,6 +55,7 @@ Big features that are planned, in no particular order:
 - **Dashboards**: For a quick and real-time view of the latest data of all the datasets
 - **NOSTR integration**: First to save preferences, later to add some social functionnality
 - **Datasets by block timestamp**: In addition to having datasets by block date and block height
+- **Descriptions**: Add text to describe all charts and what they mean
 
 _Maybe_:
 

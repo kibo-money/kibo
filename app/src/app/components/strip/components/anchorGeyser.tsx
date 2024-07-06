@@ -3,7 +3,7 @@ import { Anchor } from "./anchor";
 export function AnchorGeyser() {
   return (
     <Anchor
-      title="Donate - Geyser"
+      title="Geyser"
       icon={() => (props: { class?: string }) => (
         <svg
           viewBox="0 0 365 365"
