@@ -157,17 +157,6 @@ export function applySeriesList<Scale extends ResourceScale>({
 
       const whitespace = setWhitespace(chart, scale);
 
-      // return [
-      //   {
-      //     scale,
-      //     div,
-      //     chart,
-      //     whitespace,
-      //     legendList: [],
-      //     debouncedSetMinMaxMarkers: () => {},
-      //   },
-      // ];
-
       const chartLegend: SeriesLegend[] = [];
 
       const debouncedSetMinMaxMarkers = debounce(() => {
@@ -177,7 +166,7 @@ export function applySeriesList<Scale extends ResourceScale>({
           legendList: chartLegend,
           activeRange,
         });
-      }, 20);
+      }, 50);
 
       if (index === 0) {
         const dataset =

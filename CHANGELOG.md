@@ -29,6 +29,10 @@
   - Hopefully made scrollbars a little more subtle on WIndows and Linux, can't test
   - Generale style updates
 
+### Parser
+
+- Fixed ulimit only being run in Mac OS instead of whenever the program is detected
+
 ## v. 0.1.1 | 849240 - 2024/06/24
 
 ![Image of the Satonomics Web App version 0.1.1](./assets/v0.1.1.jpg)
