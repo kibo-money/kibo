@@ -42,16 +42,18 @@ Adjectives that describe what this project is or strives to be:
 - **Independent**: Only one, easily swappable, dependency (Price API)
 - **Sovereign**: Be self-hostable on accessible hardware
 - **Timeless**: Be relevant and usable 10 years from now
+- **Versatile**: Many many different datasets which can be viewed in chart, dashbards or raw values
+- **Accessible**: Huge free API with all the datasets
 
 ## Milestones
 
 Big features that are planned, in no particular order:
 
+- **Homepage**: A landing page to explains the project and what it does
 - **More Datasets/Charts**: If a dataset can be computed, it should exist and have its related charts
 - **Dashboards**: For a quick and real-time view of the latest data of all the datasets
 - **NOSTR integration**: First to save preferences, later to add some social functionnality
 - **Datasets by block timestamp**: In addition to having datasets by block date and block height
-- **Homepage**: A landing page to explain the project and what it does
 
 _Maybe_:
 
@@ -63,7 +65,7 @@ _Maybe_:
 - **Name**: Willing to change if someone thinks of something better !
 - **Logo**: Most likely a placeholder
 
-## Git
+## Collaboration
 
 - Repositories:
   - [Github](https://github.com/satonomics-org/satonomics)

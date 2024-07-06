@@ -4,8 +4,8 @@ export function AnchorGit() {
   return (
     <Anchor
       title="Git"
-      icon={() => IconTablerGitMerge}
-      href="https://codeberg.org/satonomics/satonomics"
+      icon={() => IconTablerBrandGithubFilled}
+      href="https://github.com/satonomics-org/satonomics"
     />
   );
 }
