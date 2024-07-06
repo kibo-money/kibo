@@ -1,7 +1,7 @@
-import { GENESIS_DAY } from "/src/scripts/lightweightCharts/chart/whitespace";
 import { ONE_DAY_IN_MS } from "/src/scripts/utils/time";
 import { classPropToString } from "/src/solid/classes";
 
+import { GENESIS_DAY } from "../../../../../scripts/lightweightCharts/whitespace";
 import { Box } from "../../box";
 import { Scrollable } from "../../scrollable";
 

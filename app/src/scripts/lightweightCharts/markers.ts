@@ -1,6 +1,6 @@
 import { colors } from "/src/scripts/utils/colors";
 
-import { chunkIdToIndex } from "../../datasets/resource";
+import { chunkIdToIndex } from "../datasets/resource";
 
 export function setMinMaxMarkers({
   scale,

@@ -1,6 +1,6 @@
-import { HEIGHT_CHUNK_SIZE } from "../../datasets";
-import { debounce } from "../../utils/debounce";
-import { writeURLParam } from "../../utils/urlParams";
+import { HEIGHT_CHUNK_SIZE } from "../datasets";
+import { debounce } from "../utils/debounce";
+import { writeURLParam } from "../utils/urlParams";
 
 const LOCAL_STORAGE_RANGE_KEY = "chart-range";
 const URL_PARAMS_RANGE_FROM_KEY = "from";

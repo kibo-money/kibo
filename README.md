@@ -36,15 +36,16 @@ API:
 
 Adjectives that describe what this project is or strives to be, in no particular order:
 
-- **Best**: Be the go to and replace Glassnode
+- **Best**: Replace Glassnode as the go to
 - **Diverse**: Have as many charts/datasets as possible and something for everyone
-- **Transparent**: You can verify and see exactly how each dataset is computed
 - **Free**: Is and always will be completely free
+- **Open**: With a very permissive license
+- **Transparent**: You can verify and see exactly how each dataset is computed
 - **Independent**: Only one, easily swappable, dependency (Price API)
 - **Timeless**: Be relevant and usable 10 years from now by being independent and not do address tagging
 - **Sovereign**: Be self-hostable on accessible hardware
 - **Versatile**: Many many different datasets which can be viewed in chart, dashbards or raw values
-- **Accessible**: Huge free API with all the datasets
+- **Accessible**: Free Website and API with all the datasets for everyone
 
 ## Milestones
 

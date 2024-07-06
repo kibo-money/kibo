@@ -1,18 +1,18 @@
 import { createRWS } from "/src/solid/rws";
 
 import { chunkIdToIndex } from "../datasets/resource";
-import { createChart } from "../lightweightCharts/chart/create";
-import { setMinMaxMarkers } from "../lightweightCharts/chart/markers";
-import { initTimeScale } from "../lightweightCharts/chart/time";
-import { setWhitespace } from "../lightweightCharts/chart/whitespace";
 import {
   createBaseLineSeries,
   DEFAULT_BASELINE_COLORS,
-} from "../lightweightCharts/series/creators/baseLine";
-import { createCandlesticksSeries } from "../lightweightCharts/series/creators/candlesticks";
-import { createHistogramSeries } from "../lightweightCharts/series/creators/histogram";
-import { createSeriesLegend } from "../lightweightCharts/series/creators/legend";
-import { createLineSeries } from "../lightweightCharts/series/creators/line";
+} from "../lightweightCharts/baseLine";
+import { createCandlesticksSeries } from "../lightweightCharts/candlesticks";
+import { createChart } from "../lightweightCharts/create";
+import { createHistogramSeries } from "../lightweightCharts/histogram";
+import { createSeriesLegend } from "../lightweightCharts/legend";
+import { createLineSeries } from "../lightweightCharts/line";
+import { setMinMaxMarkers } from "../lightweightCharts/markers";
+import { initTimeScale } from "../lightweightCharts/time";
+import { setWhitespace } from "../lightweightCharts/whitespace";
 import { colors } from "../utils/colors";
 import { debounce } from "../utils/debounce";
 import { stringToId } from "../utils/id";

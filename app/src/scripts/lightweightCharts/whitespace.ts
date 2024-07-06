@@ -1,5 +1,5 @@
-import { dateToString, getNumberOfDaysBetweenTwoDates } from "../../utils/date";
-import { createLineSeries } from "../series/creators/line";
+import { dateToString, getNumberOfDaysBetweenTwoDates } from "../utils/date";
+import { createLineSeries } from "./line";
 
 export const GENESIS_DAY = "2009-01-03";
 

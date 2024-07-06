@@ -4,8 +4,8 @@ import {
   CrosshairMode,
 } from "lightweight-charts";
 
-import { colors } from "../../utils/colors";
-import { valueToString } from "../../utils/locale";
+import { colors } from "../utils/colors";
+import { valueToString } from "../utils/locale";
 import { HorzScaleBehaviorHeight } from "./horzScaleBehavior";
 
 export function createChart(
