@@ -1,6 +1,6 @@
 # Changelog
 
-## v. 0.2.0 | WIP
+## v. 0.2.0 | 851286 - 2024/07/08
 
 ![Image of the Satonomics Web App version 0.2.0](./assets/v0.2.0.jpg)
 
