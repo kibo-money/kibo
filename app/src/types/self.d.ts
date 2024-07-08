@@ -10,4 +10,4 @@ interface Valued {
   value: number;
 }
 
-type DatasetCandlestickData = DatasetValue<CandlestickData>;
+type DatasetCandlestickData = DatasetValue<CandlestickData> & { year: number };

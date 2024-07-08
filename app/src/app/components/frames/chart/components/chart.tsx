@@ -1,3 +1,4 @@
+import { requestIdleCallbackPossible } from "/src/env";
 import { createRWS } from "/src/solid/rws";
 
 export function Chart({
@@ -19,7 +20,7 @@ export function Chart({
 }) {
   const wasIdle = createRWS(false);
 
-  if ("requestIdleCallback" in window) {
+  if (requestIdleCallbackPossible) {
     const idleCallback = requestIdleCallback(() => {
       console.log("idle");
       wasIdle.set(true);

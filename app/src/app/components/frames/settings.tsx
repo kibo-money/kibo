@@ -1,5 +1,5 @@
 import { version } from "/src/../package.json";
-import { chrome, ipad, iphone, macOS, safari, standalone } from "/src/env";
+import { ipad, iphone, macOS, safariOnly, standalone } from "/src/env";
 import { classPropToString } from "/src/solid/classes";
 
 import { AnchorAPI } from "../strip/components/anchorAPI";
@@ -156,9 +156,7 @@ export function SettingsFrame({
           </ol>
         </div>
 
-        <Show
-          when={!standalone && !chrome && safari && (macOS || ipad || iphone)}
-        >
+        <Show when={!standalone && safariOnly && (macOS || ipad || iphone)}>
           <hr class="border-lighter -mx-4 border-t" />
 
           <div class="space-y-4">

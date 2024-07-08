@@ -225,8 +225,6 @@ export function App() {
   document.addEventListener("keydown", documentOnKeyDown);
   onCleanup(() => document.removeEventListener("keydown", documentOnKeyDown));
 
-  const resizeInitialRange = createRWS<TimeRange | null>(null);
-
   const SearchFrame = lazy(() =>
     import("./components/frames/search").then((d) => ({
       default: d.SearchFrame,

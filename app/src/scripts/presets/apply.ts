@@ -1,3 +1,4 @@
+import { requestIdleCallbackPossible } from "/src/env";
 import { createRWS } from "/src/solid/rws";
 
 import { chunkIdToIndex } from "../datasets/resource";
@@ -20,6 +21,7 @@ import { setWhitespace } from "../lightweightCharts/whitespace";
 import { colors } from "../utils/colors";
 import { debounce } from "../utils/debounce";
 import { stringToId } from "../utils/id";
+import { webSockets } from "../ws";
 
 export enum SeriesType {
   Line,
@@ -150,7 +152,7 @@ export function applySeriesList<Scale extends ResourceScale>({
 
       const div = document.createElement("div");
 
-      div.className = "w-full cursor-crosshair min-h-0 border-orange-200/10";
+      div.className = "w-full cursor-crosshair min-h-0 border-lighter";
 
       parentDiv.appendChild(div);
 
@@ -221,21 +223,23 @@ export function applySeriesList<Scale extends ResourceScale>({
 
       const chartLegend: SeriesLegend[] = [];
 
-      function _setMinMaxMarkers() {
+      const markerCallback = () =>
         setMinMaxMarkers({
           scale,
           visibleRange: exactRange(),
           legendList: chartLegend,
+          dark,
           activeIds: activeIds,
         });
-      }
 
-      const debouncedSetMinMaxMarkers = debounce(
-        _setMinMaxMarkers,
-        seriesNumber * 10,
-      );
+      const debouncedSetMinMaxMarkers = requestIdleCallbackPossible
+        ? () => requestIdleCallback(markerCallback)
+        : debounce(
+            markerCallback,
+            seriesNumber * 10 + scale === "date" ? 50 : 100,
+          );
 
-      createEffect(on(exactRange, debouncedSetMinMaxMarkers));
+      createEffect(on([exactRange, dark], debouncedSetMinMaxMarkers));
 
       if (index === 0) {
         const dataset =
@@ -274,7 +278,8 @@ export function applySeriesList<Scale extends ResourceScale>({
             };
           }
 
-          return createSeriesGroup({
+          const priceSeries = createSeriesGroup({
+            index: -1,
             activeIds,
             seriesConfig,
             chart,
@@ -285,6 +290,20 @@ export function applySeriesList<Scale extends ResourceScale>({
             debouncedSetMinMaxMarkers,
             dark,
           });
+
+          createEffect(() => {
+            const latest = webSockets.liveKrakenCandle.latest();
+
+            if (!latest) return;
+
+            const index = chunkIdToIndex(scale, latest.year);
+
+            const series = priceSeries.seriesList.at(index)?.();
+
+            series?.update(latest);
+          });
+
+          return priceSeries;
         }
 
         const priceCandlestickLegend = createPriceSeries("Candlestick");
@@ -299,11 +318,12 @@ export function applySeriesList<Scale extends ResourceScale>({
         });
       }
 
-      seriesConfigList.reverse().forEach((seriesConfig) => {
+      seriesConfigList.reverse().forEach((seriesConfig, index) => {
         activeDatasets.push(seriesConfig.dataset);
 
         createSeriesGroup({
           activeIds: activeIds,
+          index,
           seriesConfig,
           chartLegend,
           chart,
@@ -351,6 +371,7 @@ export function applySeriesList<Scale extends ResourceScale>({
 
       div.style.height = last ? "100%" : "calc(100% - 62px)";
       div.style.borderBottomWidth = last ? "none" : "1px";
+      div.style.marginBottom = last ? "" : "-2px";
 
       chart.timeScale().applyOptions({
         visible: last,
@@ -457,6 +478,7 @@ function createSeriesGroup<Scale extends ResourceScale>({
   preset,
   chartLegend,
   chart,
+  index: seriesIndex,
   disabled,
   lastActiveIndex,
   debouncedSetMinMaxMarkers,
@@ -466,6 +488,7 @@ function createSeriesGroup<Scale extends ResourceScale>({
   seriesConfig: SeriesConfig<Scale>;
   preset: Preset;
   chart: IChartApi;
+  index: number;
   chartLegend: SeriesLegend[];
   lastActiveIndex: Accessor<number | undefined>;
   disabled?: Accessor<boolean>;
@@ -510,6 +533,12 @@ function createSeriesGroup<Scale extends ResourceScale>({
     createEffect(() => {
       const values = json.vec();
       if (!values) return;
+
+      if (seriesIndex > 0) {
+        let previous = chartLegend.at(seriesIndex - 1)?.seriesList[index];
+
+        if (!previous?.()) return;
+      }
 
       untrack(() => {
         let s = series();

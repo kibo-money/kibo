@@ -1,128 +1,135 @@
 import { colors } from "/src/scripts/utils/colors";
 
 import { chunkIdToIndex } from "../datasets/resource";
+import { valueToString } from "../utils/locale";
 
 export function setMinMaxMarkers({
   scale,
   visibleRange,
   legendList,
   activeIds,
+  dark,
 }: {
   scale: ResourceScale;
   visibleRange: TimeRange | undefined;
   legendList: SeriesLegend[];
   activeIds: Accessor<number[]>;
+  dark: Accessor<boolean>;
 }) {
-  if (!visibleRange) return;
+  try {
+    if (!visibleRange) return;
 
-  const { from, to } = visibleRange;
+    const { from, to } = visibleRange;
 
-  const dateFrom = new Date(from as string);
-  const dateTo = new Date(to as string);
+    const dateFrom = new Date(from as string);
+    const dateTo = new Date(to as string);
 
-  let max = undefined as [number, Time, number, ISeriesApi<any>] | undefined;
-  let min = undefined as [number, Time, number, ISeriesApi<any>] | undefined;
+    let max = undefined as [number, Time, number, ISeriesApi<any>] | undefined;
+    let min = undefined as [number, Time, number, ISeriesApi<any>] | undefined;
 
-  legendList.forEach(({ seriesList, dataset }) => {
-    activeIds().forEach((id) => {
-      const seriesIndex = chunkIdToIndex(scale, id);
+    const ids = activeIds();
 
-      const series = seriesList.at(seriesIndex)?.();
+    for (let i = 0; i < legendList.length; i++) {
+      const { seriesList, dataset } = legendList[i];
 
-      if (!series || !series?.options().visible) return;
+      for (let j = 0; j < ids.length; j++) {
+        const id = ids[j];
 
-      series.setMarkers([]);
+        const seriesIndex = chunkIdToIndex(scale, id);
 
-      const isCandlestick = series.seriesType() === "Candlestick";
+        const series = seriesList.at(seriesIndex)?.();
 
-      const vec = dataset.fetchedJSONs.at(seriesIndex)?.vec();
+        if (!series || !series?.options().visible) continue;
 
-      if (!vec) return;
+        series.setMarkers([]);
 
-      for (let i = 0; i < vec.length; i++) {
-        const data = vec[i];
+        const isCandlestick = series.seriesType() === "Candlestick";
 
-        let number;
+        const vec = dataset.fetchedJSONs.at(seriesIndex)?.vec();
 
-        if (scale === "date") {
-          const date = new Date(
-            typeof data.time === "string"
-              ? data.time
-              : // @ts-ignore
-                `${data.time.year}-${data.time.month}-${data.time.day}`,
-          );
+        if (!vec) return;
 
-          number = date.getTime();
+        for (let k = 0; k < vec.length; k++) {
+          const data = vec[k];
 
-          if (date <= dateFrom || date >= dateTo) {
-            continue;
+          let number;
+
+          if (scale === "date") {
+            const date =
+              typeof data.time === "string"
+                ? new Date(data.time)
+                : // @ts-ignore
+                  new Date(data.time.year, data.time.month, data.time.day);
+
+            number = date.getTime();
+
+            if (date <= dateFrom || date >= dateTo) {
+              continue;
+            }
+          } else {
+            const height = data.time;
+
+            number = height as number;
+
+            if (height <= from || height >= to) {
+              continue;
+            }
           }
-        } else {
-          const height = data.time;
 
-          number = height as number;
+          // @ts-ignore
+          const high = isCandlestick ? data["high"] : data.value;
+          // @ts-ignore
+          const low = isCandlestick ? data["low"] : data.value;
 
-          if (height <= from || height >= to) {
-            continue;
+          if (!max || high > max[2]) {
+            max = [number, data.time, high, series];
           }
-        }
-
-        // @ts-ignore
-        const high = isCandlestick ? data["high"] : data.value;
-        // @ts-ignore
-        const low = isCandlestick ? data["low"] : data.value;
-
-        if (!max || high > max[2]) {
-          max = [number, data.time, high, series];
-        }
-        if (!min || low < min[2]) {
-          min = [number, data.time, low, series];
+          if (!min || low < min[2]) {
+            min = [number, data.time, low, series];
+          }
         }
       }
-    });
-  });
-
-  let minMarker: (SeriesMarker<Time> & { weight: number }) | undefined;
-  let maxMarker: (SeriesMarker<Time> & { weight: number }) | undefined;
-
-  if (min) {
-    minMarker = {
-      weight: min[0],
-      time: min[1],
-      color: colors.white,
-      position: "belowBar" as const,
-      shape: "arrowUp" as const,
-      size: 0,
-      text: min[2].toLocaleString("en-us"),
-    };
-  }
-
-  if (max) {
-    maxMarker = {
-      weight: max[0],
-      time: max[1],
-      color: colors.white,
-      position: "aboveBar" as const,
-      shape: "arrowDown" as const,
-      size: 0,
-      text: max[2].toLocaleString("en-us"),
-    };
-  }
-
-  if (min && max && min[3] === max[3] && minMarker && maxMarker) {
-    const series = min[3];
-    series.setMarkers(
-      [minMarker, maxMarker].sort((a, b) => a.weight - b.weight),
-    );
-  } else {
-    if (min && minMarker) {
-      const series = min[3];
-      series.setMarkers([minMarker]);
     }
 
-    if (max && maxMarker) {
-      const series = max[3];
-      series.setMarkers([maxMarker]);
+    let minMarker: (SeriesMarker<Time> & { weight: number }) | undefined;
+    let maxMarker: (SeriesMarker<Time> & { weight: number }) | undefined;
+
+    if (min) {
+      minMarker = {
+        weight: min[0],
+        time: min[1],
+        color: colors.white(dark),
+        position: "belowBar" as const,
+        shape: "arrowUp" as const,
+        size: 0,
+        text: valueToString(min[2]),
+      };
     }
-  }
+
+    if (max) {
+      maxMarker = {
+        weight: max[0],
+        time: max[1],
+        color: colors.white(dark),
+        position: "aboveBar" as const,
+        shape: "arrowDown" as const,
+        size: 0,
+        text: valueToString(max[2]),
+      };
+    }
+
+    if (min && max && min[3] === max[3] && minMarker && maxMarker) {
+      min[3].setMarkers(
+        [minMarker, maxMarker].sort((a, b) => a.weight - b.weight),
+      );
+    } else {
+      if (min && minMarker) {
+        min[3].setMarkers([minMarker]);
+      }
+
+      if (max && maxMarker) {
+        max[3].setMarkers([maxMarker]);
+      }
+    }
+  } catch (e) {}
 }

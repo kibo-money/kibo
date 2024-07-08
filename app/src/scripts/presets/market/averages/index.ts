@@ -50,10 +50,6 @@ function createPresetFolder({
   key: AverageName;
 }) {
   return {
-    // id,
-    // name,
-    // tree: [
-    //   {
     scale,
     name,
     description: "",

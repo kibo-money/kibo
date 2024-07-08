@@ -1,5 +1,6 @@
 import { HEIGHT_CHUNK_SIZE } from "../datasets";
 import { debounce } from "../utils/debounce";
+import { run } from "../utils/run";
 import { tick } from "../utils/tick";
 import { writeURLParam } from "../utils/urlParams";
 
@@ -84,14 +85,14 @@ export function initTimeScale({
     debouncedSaveTimeRange({ scale, range });
   });
 
-  setTimeScale(firstChart, exactRange());
-}
+  const range = exactRange();
 
-async function setTimeScale(chart: IChartApi, range: TimeRange | null) {
-  if (range) {
-    await tick();
-    chart.timeScale().setVisibleRange(range);
-  }
+  run(async () => {
+    if (range) {
+      await tick();
+      firstChart.timeScale().setVisibleRange(range);
+    }
+  });
 }
 
 function getLocalStorageKey(scale: ResourceScale) {
