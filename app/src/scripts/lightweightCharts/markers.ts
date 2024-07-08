@@ -6,12 +6,12 @@ export function setMinMaxMarkers({
   scale,
   visibleRange,
   legendList,
-  activeRange,
+  activeIds,
 }: {
   scale: ResourceScale;
   visibleRange: TimeRange | undefined;
   legendList: SeriesLegend[];
-  activeRange: Accessor<number[]>;
+  activeIds: Accessor<number[]>;
 }) {
   if (!visibleRange) return;
 
@@ -24,7 +24,7 @@ export function setMinMaxMarkers({
   let min = undefined as [number, Time, number, ISeriesApi<any>] | undefined;
 
   legendList.forEach(({ seriesList, dataset }) => {
-    activeRange().forEach((id) => {
+    activeIds().forEach((id) => {
       const seriesIndex = chunkIdToIndex(scale, id);
 
       const series = seriesList.at(seriesIndex)?.();

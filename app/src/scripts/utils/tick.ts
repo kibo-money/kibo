@@ -1,5 +1,5 @@
+import { sleep } from "./sleep";
+
 export function tick() {
-  return new Promise((resolve) => {
-    setTimeout(resolve, 0);
-  });
+  return sleep(0);
 }

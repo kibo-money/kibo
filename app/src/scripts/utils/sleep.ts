@@ -3,7 +3,3 @@ export function sleep(ms: number) {
     setTimeout(resolve, ms);
   });
 }
-
-export function tick() {
-  return sleep(1);
-}

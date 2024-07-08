@@ -38,6 +38,7 @@ const texts = [
   "nyknyc",
   "low time preference",
   "absolute scarcity",
+  "time is scarce",
 ];
 
 export function Background({

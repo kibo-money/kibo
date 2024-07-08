@@ -6,8 +6,8 @@ export function Chart({
   presets,
   datasets,
   legendSetter,
-  dark: _dark,
-  activeRange,
+  dark,
+  activeIds,
 }: {
   charts: RWS<IChartApi[]>;
   parentDiv: RWS<HTMLDivElement | undefined>;
@@ -15,7 +15,7 @@ export function Chart({
   datasets: Datasets;
   legendSetter: Setter<SeriesLegend[]>;
   dark: Accessor<boolean>;
-  activeRange: RWS<number[]>;
+  activeIds: RWS<number[]>;
 }) {
   const wasIdle = createRWS(false);
 
@@ -44,7 +44,6 @@ export function Chart({
     createEffect(() => {
       const preset = presets.selected();
       const div = parentDiv();
-      const dark = _dark();
 
       if (!wasIdle() || !div) return;
 
@@ -58,7 +57,7 @@ export function Chart({
             preset,
             legendSetter,
             dark,
-            activeRange,
+            activeIds,
           });
         } catch (error) {
           console.error("chart: render: failed", error);

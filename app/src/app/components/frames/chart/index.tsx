@@ -32,7 +32,7 @@ export function ChartFrame({
 
   const scale = createMemo(() => presets.selected().scale);
 
-  const activeRange = createRWS([] as number[], { equals: false });
+  const activeIds = createRWS([] as number[], { equals: false });
 
   const Chart = lazy(() =>
     import("./components/chart").then((d) => ({ default: d.Chart })),
@@ -55,7 +55,12 @@ export function ChartFrame({
         <div class="border-lighter border-t" />
 
         <div class="flex">
-          <Legend legend={legend} scale={scale} activeRange={activeRange} />
+          <Legend
+            legend={legend}
+            scale={scale}
+            activeIds={activeIds}
+            dark={dark}
+          />
 
           <div class="border-lighter border-l" />
 
@@ -71,7 +76,7 @@ export function ChartFrame({
           legendSetter={legend.set}
           presets={presets}
           dark={dark}
-          activeRange={activeRange}
+          activeIds={activeIds}
         />
       </div>
 

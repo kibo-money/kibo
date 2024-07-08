@@ -25,8 +25,8 @@ type ApplyPreset = (params: {
   datasets: Datasets;
   preset: Preset;
   legendSetter: Setter<SeriesLegend[]>;
-  dark: boolean;
-  activeRange: RWS<number[]>;
+  dark: Accessor<boolean>;
+  activeIds: RWS<number[]>;
 }) => void;
 
 interface PartialPresetFolder {

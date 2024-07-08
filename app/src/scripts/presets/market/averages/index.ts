@@ -45,7 +45,7 @@ function createPresetFolder({
   key,
 }: {
   scale: ResourceScale;
-  color: string;
+  color: Color;
   name: string;
   key: AverageName;
 }) {

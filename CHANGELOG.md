@@ -7,7 +7,7 @@
 ### App
 
 - General
-  - Added height datasets and many optimizations to make them usable
+  - Added height datasets and many optimizations to make them usable but only available on desktop and tablets for now
   - Added a light theme
 - Charts
   - Added split panes in order to have the vertical axis visible for all datasets
@@ -24,6 +24,9 @@
   - Global improvements that increased the Lighthouse's performance score
 - Settings
   - Finally made a proper component where you can chose the app's theme, between a moving or static background and its text opacity
+  - Added donations section with a leaderboard
+  - Added various links that are visible on the bottom side of the strip on desktop to mobile users
+  - Added install instructions when not installed for Apple users
 - Misc
   - Support mini window size, could be useful for embedded views
   - Hopefully made scrollbars a little more subtle on WIndows and Linux, can't test

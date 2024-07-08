@@ -9,6 +9,7 @@ export class HorzScaleBehaviorHeight implements IHorzScaleBehavior<number> {
   setOptions() {}
   preprocessData() {}
   updateFormatter() {}
+
   createConverterToInternalObj() {
     return (price) => price;
   }

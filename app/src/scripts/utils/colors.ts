@@ -41,48 +41,129 @@ import {
 // DO NOT USE TRANSPARENCY HERE
 // ---
 
-const lightRed = redTailwind[300];
-const red = redTailwind[500];
-const darkRed = redTailwind[900];
-const orange = orangeTailwind[500];
-const darkOrange = orangeTailwind[900];
-const amber = amberTailwind[500];
-const darkAmber = amberTailwind[900];
-const yellow = yellowTailwind[500];
-const darkYellow = yellowTailwind[500];
-const lime = limeTailwind[500];
-const darkLime = limeTailwind[900];
-const green = greenTailwind[500];
-const darkGreen = greenTailwind[900];
-const lightEmerald = emeraldTailwind[300];
-const emerald = emeraldTailwind[500];
-const darkEmerald = emeraldTailwind[900];
-const teal = tealTailwind[500];
-const darkTeal = tealTailwind[900];
-const cyan = cyanTailwind[500];
-const darkCyan = cyanTailwind[900];
-const sky = skyTailwind[500];
-const darkSky = skyTailwind[900];
-const blue = blueTailwind[500];
-const darkBlue = blueTailwind[900];
-const indigo = indigoTailwind[500];
-const darkIndigo = indigoTailwind[900];
-const violet = violetTailwind[500];
-const darkViolet = violetTailwind[900];
-const purple = purpleTailwind[500];
-const darkPurple = purpleTailwind[900];
-const fuchsia = fuchsiaTailwind[500];
-const darkFuchsia = fuchsiaTailwind[900];
-const pink = pinkTailwind[500];
-const darkPink = pinkTailwind[900];
-const rose = roseTailwind[500];
-const darkRose = roseTailwind[900];
+function lightRed(dark: Accessor<boolean>) {
+  return dark() ? redTailwind[300] : redTailwind[800];
+}
+function red(dark: Accessor<boolean>) {
+  return dark() ? redTailwind[500] : redTailwind[600];
+}
+function darkRed(dark: Accessor<boolean>) {
+  return dark() ? redTailwind[900] : redTailwind[100];
+}
+function orange(dark: Accessor<boolean>) {
+  return dark() ? orangeTailwind[500] : orangeTailwind[600];
+}
+function darkOrange(dark: Accessor<boolean>) {
+  return dark() ? orangeTailwind[900] : orangeTailwind[100];
+}
+function amber(dark: Accessor<boolean>) {
+  return dark() ? amberTailwind[500] : amberTailwind[600];
+}
+function darkAmber(dark: Accessor<boolean>) {
+  return dark() ? amberTailwind[900] : amberTailwind[100];
+}
+function yellow(dark: Accessor<boolean>) {
+  return dark() ? yellowTailwind[500] : yellowTailwind[600];
+}
+function darkYellow(dark: Accessor<boolean>) {
+  return dark() ? yellowTailwind[500] : yellowTailwind[600];
+}
+function lime(dark: Accessor<boolean>) {
+  return dark() ? limeTailwind[500] : limeTailwind[600];
+}
+function darkLime(dark: Accessor<boolean>) {
+  return dark() ? limeTailwind[900] : limeTailwind[100];
+}
+function green(dark: Accessor<boolean>) {
+  return dark() ? greenTailwind[500] : greenTailwind[600];
+}
+function darkGreen(dark: Accessor<boolean>) {
+  return dark() ? greenTailwind[900] : greenTailwind[100];
+}
+function lightEmerald(dark: Accessor<boolean>) {
+  return dark() ? emeraldTailwind[300] : emeraldTailwind[800];
+}
+function emerald(dark: Accessor<boolean>) {
+  return dark() ? emeraldTailwind[500] : emeraldTailwind[600];
+}
+function darkEmerald(dark: Accessor<boolean>) {
+  return dark() ? emeraldTailwind[900] : emeraldTailwind[100];
+}
+function teal(dark: Accessor<boolean>) {
+  return dark() ? tealTailwind[500] : tealTailwind[600];
+}
+function darkTeal(dark: Accessor<boolean>) {
+  return dark() ? tealTailwind[900] : tealTailwind[100];
+}
+function cyan(dark: Accessor<boolean>) {
+  return dark() ? cyanTailwind[500] : cyanTailwind[600];
+}
+function darkCyan(dark: Accessor<boolean>) {
+  return dark() ? cyanTailwind[900] : cyanTailwind[100];
+}
+function sky(dark: Accessor<boolean>) {
+  return dark() ? skyTailwind[500] : skyTailwind[600];
+}
+function darkSky(dark: Accessor<boolean>) {
+  return dark() ? skyTailwind[900] : skyTailwind[100];
+}
+function blue(dark: Accessor<boolean>) {
+  return dark() ? blueTailwind[500] : blueTailwind[600];
+}
+function darkBlue(dark: Accessor<boolean>) {
+  return dark() ? blueTailwind[900] : blueTailwind[100];
+}
+function indigo(dark: Accessor<boolean>) {
+  return dark() ? indigoTailwind[500] : indigoTailwind[600];
+}
+function darkIndigo(dark: Accessor<boolean>) {
+  return dark() ? indigoTailwind[900] : indigoTailwind[100];
+}
+function violet(dark: Accessor<boolean>) {
+  return dark() ? violetTailwind[500] : violetTailwind[600];
+}
+function darkViolet(dark: Accessor<boolean>) {
+  return dark() ? violetTailwind[900] : violetTailwind[100];
+}
+function purple(dark: Accessor<boolean>) {
+  return dark() ? purpleTailwind[500] : purpleTailwind[600];
+}
+function darkPurple(dark: Accessor<boolean>) {
+  return dark() ? purpleTailwind[900] : purpleTailwind[100];
+}
+function fuchsia(dark: Accessor<boolean>) {
+  return dark() ? fuchsiaTailwind[500] : fuchsiaTailwind[600];
+}
+function darkFuchsia(dark: Accessor<boolean>) {
+  return dark() ? fuchsiaTailwind[900] : fuchsiaTailwind[100];
+}
+function pink(dark: Accessor<boolean>) {
+  return dark() ? pinkTailwind[500] : pinkTailwind[600];
+}
+function darkPink(dark: Accessor<boolean>) {
+  return dark() ? pinkTailwind[900] : pinkTailwind[100];
+}
+function rose(dark: Accessor<boolean>) {
+  return dark() ? roseTailwind[500] : roseTailwind[600];
+}
+function darkRose(dark: Accessor<boolean>) {
+  return dark() ? roseTailwind[900] : roseTailwind[100];
+}
 
-const darkWhite = grayTailwind[400];
-const gray = grayTailwind[600];
+function darkWhite(dark: Accessor<boolean>) {
+  return dark() ? grayTailwind[400] : grayTailwind[400];
+}
+function gray(dark: Accessor<boolean>) {
+  return dark() ? grayTailwind[600] : grayTailwind[400];
+}
 
-const black = "#000000";
-const white = "#ffffff";
+function white(dark: Accessor<boolean>) {
+  return dark() ? "#ffffff" : "#000000";
+}
+
+function black(dark: Accessor<boolean>) {
+  return dark() ? "#000000" : "#ffffff";
+}
 
 export const convertCandleToCandleColor = (
   candle: { close: number; open: number },

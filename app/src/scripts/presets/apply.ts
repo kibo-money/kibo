@@ -11,7 +11,11 @@ import { createHistogramSeries } from "../lightweightCharts/histogram";
 import { createSeriesLegend } from "../lightweightCharts/legend";
 import { createLineSeries } from "../lightweightCharts/line";
 import { setMinMaxMarkers } from "../lightweightCharts/markers";
-import { initTimeScale } from "../lightweightCharts/time";
+import {
+  getInitialTimeRange,
+  initTimeScale,
+  setActiveIds,
+} from "../lightweightCharts/time";
 import { setWhitespace } from "../lightweightCharts/whitespace";
 import { colors } from "../utils/colors";
 import { debounce } from "../utils/debounce";
@@ -27,7 +31,9 @@ export enum SeriesType {
 type SeriesConfig<Scale extends ResourceScale> =
   | {
       dataset: ResourceDataset<Scale>;
-      color?: string;
+      color?: Color;
+      topColor?: Color;
+      bottomColor?: Color;
       colors?: undefined;
       seriesType: SeriesType.Based;
       title: string;
@@ -37,8 +43,8 @@ type SeriesConfig<Scale extends ResourceScale> =
     }
   | {
       dataset: ResourceDataset<Scale>;
-      color?: string;
-      colors?: string[];
+      color?: Color;
+      colors?: Color[];
       seriesType: SeriesType.Histogram;
       title: string;
       options?: DeepPartialHistogramOptions;
@@ -57,7 +63,7 @@ type SeriesConfig<Scale extends ResourceScale> =
     }
   | {
       dataset: ResourceDataset<Scale>;
-      color: string;
+      color: Color;
       colors?: undefined;
       seriesType?: SeriesType.Line;
       title: string;
@@ -78,7 +84,7 @@ export function applySeriesList<Scale extends ResourceScale>({
   priceOptions,
   legendSetter,
   dark,
-  activeRange,
+  activeIds,
 }: {
   charts: RWS<IChartApi[]>;
   parentDiv: HTMLDivElement;
@@ -90,8 +96,8 @@ export function applySeriesList<Scale extends ResourceScale>({
   top?: SeriesConfig<Scale>[];
   bottom?: SeriesConfig<Scale>[];
   datasets: Datasets;
-  dark: boolean;
-  activeRange: RWS<number[]>;
+  dark: Accessor<boolean>;
+  activeIds: RWS<number[]>;
 }) {
   // ---
   // Reset states
@@ -106,8 +112,6 @@ export function applySeriesList<Scale extends ResourceScale>({
 
     return [];
   });
-
-  activeRange.set([]);
 
   parentDiv.replaceChildren();
 
@@ -124,11 +128,18 @@ export function applySeriesList<Scale extends ResourceScale>({
   const activeDatasets: ResourceDataset<any, any>[] = [];
 
   const lastActiveIndex = createMemo(() => {
-    const last = activeRange().at(-1);
+    const last = activeIds().at(-1);
     return last !== undefined ? chunkIdToIndex(scale, last) : undefined;
   });
 
-  const exactRange = createRWS(undefined as TimeRange | undefined);
+  const exactRange = createRWS(getInitialTimeRange(scale));
+
+  setActiveIds({
+    exactRange: exactRange(),
+    activeIds: activeIds,
+  });
+
+  const seriesNumber = 1 + (top || []).length + (bottom || []).length;
 
   const charts = [top || [], bottom]
     .flatMap((list) => (list ? [list] : []))
@@ -157,16 +168,74 @@ export function applySeriesList<Scale extends ResourceScale>({
 
       const whitespace = setWhitespace(chart, scale);
 
+      if (exactRange()) {
+        chart.timeScale().setVisibleRange(exactRange());
+      }
+
+      // const whitespace = new Array<ISeriesApi<"Line"> | undefined>(
+      //   scale === "date"
+      //     ? whitespaceDateDatasets.length
+      //     : whitespaceHeightDatasets.length,
+      // ).fill(undefined);
+
+      // function createWhitespaceSeriesIfNeeded(index: number) {
+      //   console.log(index);
+      //   if (index >= 0 && index < whitespace.length && !whitespace[index]) {
+      //     const series = createLineSeries(chart);
+      //     whitespace[index] = series;
+
+      //     if (scale === "date") {
+      //       series.setData(whitespaceDateDatasets[index]);
+      //     } else {
+      //       series.setData(whitespaceHeightDatasets[index]);
+      //     }
+      //   }
+      // }
+
+      // createEffect(() => {
+      //   const ids = activeIds();
+      //   console.log(ids);
+
+      //   const idsLength = ids.length;
+      //   for (let i = 0; i < idsLength; i++) {
+      //     const id = ids[i];
+
+      //     const whitespaceIndex = chunkIdToIndex(
+      //       scale,
+      //       scale === "date"
+      //         ? id - whitespaceStartDateYear
+      //         : id - whitespaceHeightStart,
+      //     );
+
+      //     if (i === 0) {
+      //       createWhitespaceSeriesIfNeeded(whitespaceIndex - 1);
+      //     }
+
+      //     createWhitespaceSeriesIfNeeded(whitespaceIndex);
+
+      //     if (i === idsLength - 1) {
+      //       createWhitespaceSeriesIfNeeded(whitespaceIndex + 1);
+      //     }
+      //   }
+      // });
+
       const chartLegend: SeriesLegend[] = [];
 
-      const debouncedSetMinMaxMarkers = debounce(() => {
+      function _setMinMaxMarkers() {
         setMinMaxMarkers({
           scale,
           visibleRange: exactRange(),
           legendList: chartLegend,
-          activeRange,
+          activeIds: activeIds,
         });
-      }, 50);
+      }
+
+      const debouncedSetMinMaxMarkers = debounce(
+        _setMinMaxMarkers,
+        seriesNumber * 10,
+      );
+
+      createEffect(on(exactRange, debouncedSetMinMaxMarkers));
 
       if (index === 0) {
         const dataset =
@@ -206,7 +275,7 @@ export function applySeriesList<Scale extends ResourceScale>({
           }
 
           return createSeriesGroup({
-            activeRange,
+            activeIds,
             seriesConfig,
             chart,
             chartLegend,
@@ -214,6 +283,7 @@ export function applySeriesList<Scale extends ResourceScale>({
             preset,
             disabled: () => priceSeriesType() !== seriesType,
             debouncedSetMinMaxMarkers,
+            dark,
           });
         }
 
@@ -233,13 +303,14 @@ export function applySeriesList<Scale extends ResourceScale>({
         activeDatasets.push(seriesConfig.dataset);
 
         createSeriesGroup({
-          activeRange,
+          activeIds: activeIds,
           seriesConfig,
           chartLegend,
           chart,
           preset,
           lastActiveIndex,
           debouncedSetMinMaxMarkers,
+          dark,
         });
       });
 
@@ -248,8 +319,6 @@ export function applySeriesList<Scale extends ResourceScale>({
 
         createEffect(on(legend.visible, debouncedSetMinMaxMarkers));
       });
-
-      createEffect(on(exactRange, debouncedSetMinMaxMarkers));
 
       return [
         {
@@ -271,7 +340,8 @@ export function applySeriesList<Scale extends ResourceScale>({
         chart.div.style.border = "";
         visibleCharts.push(chart);
       } else {
-        chart.div.style.height = "0px";
+        chart.div.style.height = "100%";
+        // chart.div.style.height = "0px";
         chart.div.style.border = "none";
       }
     });
@@ -296,13 +366,13 @@ export function applySeriesList<Scale extends ResourceScale>({
   initTimeScale({
     scale,
     charts,
-    activeRange,
+    activeIds: activeIds,
     exactRange,
   });
 
   const activeDatasetsLength = activeDatasets.length;
   createEffect(() => {
-    const range = activeRange();
+    const range = activeIds();
 
     untrack(() => {
       for (let i = 0; i < range.length; i++) {
@@ -382,7 +452,7 @@ function updateVisiblePriceSeriesType(
 }
 
 function createSeriesGroup<Scale extends ResourceScale>({
-  activeRange,
+  activeIds,
   seriesConfig,
   preset,
   chartLegend,
@@ -390,8 +460,9 @@ function createSeriesGroup<Scale extends ResourceScale>({
   disabled,
   lastActiveIndex,
   debouncedSetMinMaxMarkers,
+  dark,
 }: {
-  activeRange: Accessor<number[]>;
+  activeIds: Accessor<number[]>;
   seriesConfig: SeriesConfig<Scale>;
   preset: Preset;
   chart: IChartApi;
@@ -399,6 +470,7 @@ function createSeriesGroup<Scale extends ResourceScale>({
   lastActiveIndex: Accessor<number | undefined>;
   disabled?: Accessor<boolean>;
   debouncedSetMinMaxMarkers: VoidFunction;
+  dark: Accessor<boolean>;
 }) {
   const {
     dataset,
@@ -417,15 +489,12 @@ function createSeriesGroup<Scale extends ResourceScale>({
     ISeriesApi<"Baseline" | "Line" | "Histogram" | "Candlestick"> | undefined
   >[] = new Array(dataset.fetchedJSONs.length);
 
-  let defaultSeriesColor: string | string[] | undefined = undefined;
-
   const legend = createSeriesLegend({
     id: stringToId(title),
     presetId: preset.id,
     title,
     seriesList,
-    color: () =>
-      colors || color || defaultSeriesColor || DEFAULT_BASELINE_COLORS,
+    color: colors || color || DEFAULT_BASELINE_COLORS,
     defaultVisible,
     disabled,
     dataset,
@@ -448,37 +517,47 @@ function createSeriesGroup<Scale extends ResourceScale>({
         if (!s) {
           switch (type) {
             case SeriesType.Based: {
-              s = createBaseLineSeries(chart, {
+              s = createBaseLineSeries({
+                chart,
+                dark,
                 color,
-                ...options,
+                topColor: seriesConfig.topColor,
+                bottomColor: seriesConfig.bottomColor,
+                options,
               });
 
               break;
             }
             case SeriesType.Candlestick: {
-              const candlestickSeries = createCandlesticksSeries(
+              const candlestickSeries = createCandlesticksSeries({
                 chart,
                 options,
-              );
+                dark,
+              });
 
               s = candlestickSeries[0];
-              defaultSeriesColor = candlestickSeries[1];
+
+              if (!colors && !color) {
+                legend.color = candlestickSeries[1];
+              }
 
               break;
             }
             case SeriesType.Histogram: {
-              s = createHistogramSeries(chart, {
-                color,
-                ...options,
+              s = createHistogramSeries({
+                chart,
+                options,
               });
 
               break;
             }
             default:
             case SeriesType.Line: {
-              s = createLineSeries(chart, {
+              s = createLineSeries({
+                chart,
                 color,
-                ...options,
+                dark,
+                options,
               });
 
               break;
@@ -494,9 +573,7 @@ function createSeriesGroup<Scale extends ResourceScale>({
 
         s.setData(values);
 
-        untrack(() => {
-          debouncedSetMinMaxMarkers();
-        });
+        debouncedSetMinMaxMarkers();
       });
     });
 
@@ -522,7 +599,7 @@ function createSeriesGroup<Scale extends ResourceScale>({
     });
 
     const inRange = createMemo(() => {
-      const range = activeRange();
+      const range = activeIds();
 
       if (range.length) {
         const start = chunkIdToIndex(scale, range.at(0)!);

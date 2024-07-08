@@ -6,10 +6,17 @@ type HistogramOptions = DeepPartial<
 
 export const PRICE_SCALE_MOMENTUM_ID = "momentum";
 
-export const createHistogramSeries = (
-  chart: IChartApi,
-  options?: HistogramOptions,
-) => {
+export const createHistogramSeries = ({
+  chart,
+  // dark,
+  // color,
+  options,
+}: {
+  chart: IChartApi;
+  // dark: Accessor<boolean>;
+  // color: Color;
+  options?: HistogramOptions;
+}) => {
   const seriesOptions: HistogramOptions = {
     priceScaleId: "left",
     ...defaultSeriesOptions,

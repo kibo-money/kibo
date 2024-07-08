@@ -8,11 +8,13 @@ const transparency = "44";
 export function Legend({
   scale,
   legend: legendList,
-  activeRange,
+  dark,
+  activeIds,
 }: {
   scale: Accessor<ResourceScale>;
   legend: Accessor<SeriesLegend[]>;
-  activeRange: Accessor<number[]>;
+  dark: Accessor<boolean>;
+  activeIds: Accessor<number[]>;
 }) {
   const hovered = createRWS<SeriesLegend | undefined>(undefined);
 
@@ -23,7 +25,7 @@ export function Legend({
       <For each={legendList()}>
         {(legend) => {
           createEffect(() => {
-            const range = activeRange();
+            const range = activeIds();
 
             for (let i = 0; i < range.length; i++) {
               const id = range[i];
@@ -121,9 +123,9 @@ export function Legend({
                 >
                   <For
                     each={
-                      Array.isArray(legend.color())
-                        ? (legend.color() as string[])
-                        : [legend.color() as string]
+                      Array.isArray(legend.color)
+                        ? legend.color.map((c) => c(dark))
+                        : [legend.color(dark)]
                     }
                   >
                     {(color) => (

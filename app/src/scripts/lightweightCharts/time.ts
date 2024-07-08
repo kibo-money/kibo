@@ -1,48 +1,13 @@
 import { HEIGHT_CHUNK_SIZE } from "../datasets";
 import { debounce } from "../utils/debounce";
+import { tick } from "../utils/tick";
 import { writeURLParam } from "../utils/urlParams";
 
 const LOCAL_STORAGE_RANGE_KEY = "chart-range";
 const URL_PARAMS_RANGE_FROM_KEY = "from";
 const URL_PARAMS_RANGE_TO_KEY = "to";
 
-export function initTimeScale({
-  scale,
-  activeRange,
-  exactRange,
-  charts,
-}: {
-  scale: ResourceScale;
-  activeRange: RWS<number[]>;
-  exactRange: RWS<TimeRange | undefined>;
-  charts: ChartObject[];
-}) {
-  const firstChart = charts.at(0)?.chart;
-
-  if (!firstChart) return;
-
-  firstChart.timeScale().subscribeVisibleTimeRangeChange((range) => {
-    if (!range) return;
-
-    exactRange.set(range);
-
-    debouncedSetActiveRange({ range, activeRange });
-
-    debouncedSaveTimeRange({ scale, range });
-  });
-
-  setTimeScale(firstChart, getInitialRange(scale));
-}
-
-function setTimeScale(chart: IChartApi, range: TimeRange | null) {
-  if (range) {
-    setTimeout(() => {
-      chart.timeScale().setVisibleRange(range);
-    }, 1);
-  }
-}
-
-function getInitialRange(scale: ResourceScale): TimeRange {
+export function getInitialTimeRange(scale: ResourceScale): TimeRange {
   const urlParams = new URLSearchParams(window.location.search);
 
   const urlFrom = urlParams.get(URL_PARAMS_RANGE_FROM_KEY);
@@ -94,38 +59,76 @@ function getInitialRange(scale: ResourceScale): TimeRange {
   }
 }
 
+export function initTimeScale({
+  scale,
+  activeIds,
+  exactRange,
+  charts,
+}: {
+  scale: ResourceScale;
+  activeIds: RWS<number[]>;
+  exactRange: RWS<TimeRange>;
+  charts: ChartObject[];
+}) {
+  const firstChart = charts.at(0)?.chart;
+
+  if (!firstChart) return;
+
+  firstChart.timeScale().subscribeVisibleTimeRangeChange((range) => {
+    if (!range) return;
+
+    exactRange.set(range);
+
+    debouncedsetActiveIds({ exactRange: range, activeIds: activeIds });
+
+    debouncedSaveTimeRange({ scale, range });
+  });
+
+  setTimeScale(firstChart, exactRange());
+}
+
+async function setTimeScale(chart: IChartApi, range: TimeRange | null) {
+  if (range) {
+    await tick();
+    chart.timeScale().setVisibleRange(range);
+  }
+}
+
 function getLocalStorageKey(scale: ResourceScale) {
   return `${LOCAL_STORAGE_RANGE_KEY}-${scale}`;
 }
 
-function setActiveRange({
-  range,
-  activeRange,
+export function setActiveIds({
+  exactRange,
+  activeIds,
 }: {
-  range: TimeRange;
-  activeRange: RWS<number[]>;
+  exactRange: TimeRange;
+  activeIds: RWS<number[]>;
 }) {
   let ids: number[] = [];
 
   const today = new Date();
 
-  if (typeof range.from === "string" && typeof range.to === "string") {
-    const from = new Date(range.from).getUTCFullYear();
-    const to = new Date(range.to).getUTCFullYear();
+  if (
+    typeof exactRange.from === "string" &&
+    typeof exactRange.to === "string"
+  ) {
+    const from = new Date(exactRange.from).getUTCFullYear();
+    const to = new Date(exactRange.to).getUTCFullYear();
 
     ids = Array.from({ length: to - from + 1 }, (_, i) => i + from).filter(
       (year) => year >= 2009 && year <= today.getUTCFullYear(),
     );
   } else {
-    const from = Math.floor(Number(range.from) / HEIGHT_CHUNK_SIZE);
-    const to = Math.floor(Number(range.to) / HEIGHT_CHUNK_SIZE);
+    const from = Math.floor(Number(exactRange.from) / HEIGHT_CHUNK_SIZE);
+    const to = Math.floor(Number(exactRange.to) / HEIGHT_CHUNK_SIZE);
 
     const length = to - from + 1;
 
     ids = Array.from({ length }, (_, i) => (from + i) * HEIGHT_CHUNK_SIZE);
   }
 
-  const old = activeRange();
+  const old = activeIds();
 
   if (
     old.length !== ids.length ||
@@ -134,11 +137,11 @@ function setActiveRange({
   ) {
     console.log("range:", ids);
 
-    activeRange.set(ids);
+    activeIds.set(ids);
   }
 }
 
-const debouncedSetActiveRange = debounce(setActiveRange, 100);
+const debouncedsetActiveIds = debounce(setActiveIds, 100);
 
 function saveTimeRange({
   scale,

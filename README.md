@@ -40,11 +40,12 @@ Adjectives that describe what this project is or strives to be, in no particular
 - **Diverse**: Have as many charts/datasets as possible and something for everyone
 - **Free**: Is and always will be completely free
 - **Open**: With a very permissive license
-- **Transparent**: You can verify and see exactly how each dataset is computed
+- **Trustless**: You can verify and see exactly how each dataset is computed
 - **Independent**: Only one, easily swappable, dependency (Price API)
+- **Educational**: By providing many datasets that can be used to describe how Bitcoin works and why
 - **Timeless**: Be relevant and usable 10 years from now by being independent and not do address tagging
 - **Sovereign**: Be self-hostable on accessible hardware
-- **Versatile**: Many many different datasets which can be viewed in chart, dashbards or raw values
+- **Versatile**: You can view the data in charts, you can download the data, you can fetch the data via an API
 - **Accessible**: Free Website and API with all the datasets for everyone
 
 ## Milestones
@@ -57,6 +58,7 @@ Big features that are planned, in no particular order:
 - **NOSTR integration**: First to save preferences, later to add some social functionnality
 - **Datasets by block timestamp**: In addition to having datasets by block date and block height
 - **Descriptions**: Add text to describe all charts and what they mean
+- **Start9 Add-on**: By making the whole suite much easier to self-host, it's quite rough right now
 
 _Maybe_:
 

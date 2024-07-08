@@ -127,7 +127,7 @@ function createAddressPresetFolder<Scale extends ResourceScale>({
   scale: Scale;
   name: string;
   datasetKey: AddressCohortKey;
-  color: string;
+  color: Color;
 }): PartialPresetFolder {
   return {
     name,
@@ -159,7 +159,7 @@ export function createLiquidityFolder<Scale extends ResourceScale>({
   scale: Scale;
   name: string;
   datasetKey: AddressCohortKey | "";
-  color: string;
+  color: Color;
 }): PartialPresetFolder {
   return {
     name: `Split By Liquidity`,
@@ -189,7 +189,7 @@ export function createAddressCountPreset<Scale extends ResourceScale>({
   scale: Scale;
   name: string;
   datasetKey: AddressCohortKey;
-  color: string;
+  color: Color;
 }): PartialPreset {
   return {
     scale,

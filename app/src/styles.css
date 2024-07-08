@@ -35,6 +35,10 @@ mark {
   @apply bg-transparent p-0 text-orange-600 dark:text-orange-400;
 }
 
+strong {
+  @apply text-orange-600 dark:text-orange-400;
+}
+
 /* Hide scrollbar for Chrome, Safari and Opera */
 .no-scrollbar::-webkit-scrollbar {
   display: none;

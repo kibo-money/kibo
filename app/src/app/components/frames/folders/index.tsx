@@ -1,5 +1,6 @@
 import { scrollIntoView } from "/src/scripts/utils/scroll";
-import { sleep, tick } from "/src/scripts/utils/sleep";
+import { sleep } from "/src/scripts/utils/sleep";
+import { tick } from "/src/scripts/utils/tick";
 import { createRWS } from "/src/solid/rws";
 
 import { Box } from "../box";

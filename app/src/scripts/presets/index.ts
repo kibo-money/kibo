@@ -1,3 +1,4 @@
+import { phone } from "/src/env";
 import { createRWS } from "/src/solid/rws";
 
 import { colors } from "../utils/colors";
@@ -32,7 +33,7 @@ export function createPresets(): Presets {
       name: "Charts",
       tree: [
         {
-          name: "By Date",
+          name: "By Block Date",
           tree: [
             createMarketPresets("date"),
             createBlocksPresets(),
@@ -57,28 +58,30 @@ export function createPresets(): Presets {
           ],
         } satisfies PartialPresetFolder,
         {
-          name: "By Height",
-          tree: [
-            createMarketPresets("height"),
-            createMinersPresets("height"),
-            createTransactionsPresets("height"),
-            ...createCohortPresetList({
-              scale: "height",
-              color: colors.bitcoin,
-              name: "",
-              datasetKey: "",
-              title: "",
-            }),
-            createLiquidityFolder({
-              scale: "height",
-              color: colors.bitcoin,
-              datasetKey: "",
-              name: "",
-            }),
-            createHodlersPresets({ scale: "height" }),
-            createAddressesPresets({ scale: "height" }),
-            createCoinblocksPresets({ scale: "height" }),
-          ],
+          name: "By Block Height - Desktop/Tablet Only",
+          tree: !phone
+            ? [
+                createMarketPresets("height"),
+                createMinersPresets("height"),
+                createTransactionsPresets("height"),
+                ...createCohortPresetList({
+                  scale: "height",
+                  color: colors.bitcoin,
+                  name: "",
+                  datasetKey: "",
+                  title: "",
+                }),
+                createLiquidityFolder({
+                  scale: "height",
+                  color: colors.bitcoin,
+                  datasetKey: "",
+                  name: "",
+                }),
+                createHodlersPresets({ scale: "height" }),
+                createAddressesPresets({ scale: "height" }),
+                createCoinblocksPresets({ scale: "height" }),
+              ]
+            : [],
         } satisfies PartialPresetFolder,
       ],
     },
@@ -263,7 +266,14 @@ function checkIfDuplicateIds(ids: string[]) {
 }
 
 function findInitialPreset(presets: Preset[]): Preset {
-  const urlPreset = document.location.pathname.substring(1);
+  let urlPreset = document.location.pathname.substring(1);
+
+  if (phone && urlPreset.startsWith("height" satisfies ResourceScale)) {
+    urlPreset = urlPreset.replace(
+      "height" satisfies ResourceScale,
+      "date" satisfies ResourceScale,
+    );
+  }
 
   return (
     (urlPreset &&

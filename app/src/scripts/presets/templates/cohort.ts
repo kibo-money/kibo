@@ -12,7 +12,7 @@ export function createCohortPresetFolder<Scale extends ResourceScale>({
   scale: Scale;
   name: string;
   datasetKey: AnyPossibleCohortKey;
-  color: string;
+  color: Color;
   title: string;
 }) {
   return {
@@ -38,7 +38,7 @@ export function createCohortPresetList<Scale extends ResourceScale>({
   scale: Scale;
   datasetKey: AnyPossibleCohortKey;
   title: string;
-  color: string;
+  color: Color;
 }) {
   const datasetPrefix = datasetKey
     ? (`${datasetKey}_` as const)

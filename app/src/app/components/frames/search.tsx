@@ -44,10 +44,16 @@ export function SearchFrame({
     ...config,
   });
 
-  const haystack = presets.list.map(
-    (preset) =>
-      `${preset.title}\t/ ${[...preset.path.map(({ name }) => name), preset.name].join(" / ")}`,
-  );
+  let haystack = [] as string[];
+
+  function initHaystackIfNeeded() {
+    if (haystack.length) return;
+
+    haystack = presets.list.map(
+      (preset) =>
+        `${preset.title}\t/ ${[...preset.path.map(({ name }) => name), preset.name].join(" / ")}`,
+    );
+  }
 
   const searchResult = createMemo(() => {
     scrollIntoView(counterRef());
@@ -174,6 +180,7 @@ export function SearchFrame({
             class="w-full bg-transparent p-1 caret-orange-500 placeholder:text-orange-200/50 focus:outline-none"
             placeholder="Search by name or path"
             value={search()}
+            onFocus={initHaystackIfNeeded}
             onInput={(event) => search.set(event.target.value)}
           />
           <span class="-mx-1 flex size-5 flex-none items-center justify-center rounded-md border border-current text-xs font-bold">

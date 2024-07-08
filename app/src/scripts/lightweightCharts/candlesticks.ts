@@ -1,21 +1,18 @@
 import { colors } from "/src/scripts/utils/colors";
 
-export const createCandlesticksSeries = (
-  chart: IChartApi,
-  options: PriceSeriesOptions = {},
-): [ISeriesApi<"Candlestick">, string[]] => {
+export const createCandlesticksSeries = ({
+  chart,
+  dark,
+  options = {},
+}: {
+  chart: IChartApi;
+  dark: Accessor<boolean>;
+  options?: PriceSeriesOptions;
+}): [ISeriesApi<"Candlestick">, Color[]] => {
   const { inverseColors } = options;
-
-  const upColor = inverseColors ? colors.loss : colors.profit;
-
-  const downColor = inverseColors ? colors.profit : colors.loss;
 
   const candlestickSeries = chart.addCandlestickSeries({
     baseLineVisible: false,
-    upColor,
-    wickUpColor: upColor,
-    downColor,
-    wickDownColor: downColor,
     borderVisible: false,
     priceLineVisible: false,
     baseLineColor: "",
@@ -25,5 +22,22 @@ export const createCandlesticksSeries = (
     ...options.seriesOptions,
   });
 
-  return [candlestickSeries, [upColor, downColor]];
+  const _upColor = inverseColors ? colors.loss : colors.profit;
+
+  const _downColor = inverseColors ? colors.profit : colors.loss;
+
+  createEffect(() => {
+    const upColor = _upColor(dark);
+
+    const downColor = _downColor(dark);
+
+    candlestickSeries.applyOptions({
+      upColor,
+      wickUpColor: upColor,
+      downColor,
+      wickDownColor: downColor,
+    });
+  });
+
+  return [candlestickSeries, [_upColor, _downColor]];
 };

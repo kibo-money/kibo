@@ -41,11 +41,34 @@ export function App() {
 
   const dark = createRWS(false);
 
+  const preferredColorSchemeMatchMedia = window.matchMedia(
+    "(prefers-color-scheme: dark)",
+  );
+
+  const preferredSystemTheme = createRWS<"light" | "dark">(
+    preferredColorSchemeMatchMedia.matches ? "dark" : "light",
+  );
+
+  function preferredColorSchemeListener(event: MediaQueryListEvent) {
+    return preferredSystemTheme.set(event.matches ? "dark" : "light");
+  }
+
+  preferredColorSchemeMatchMedia.addEventListener(
+    "change",
+    preferredColorSchemeListener,
+  );
+
+  onCleanup(() => {
+    preferredColorSchemeMatchMedia.removeEventListener(
+      "change",
+      preferredColorSchemeListener,
+    );
+  });
+
   createEffect(() => {
     if (
       appTheme.selected() === "Dark" ||
-      (appTheme.selected() === "System" &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches)
+      (appTheme.selected() === "System" && preferredSystemTheme() === "dark")
     ) {
       dark.set(true);
       document.documentElement.classList.add("dark");

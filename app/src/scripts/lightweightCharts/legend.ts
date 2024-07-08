@@ -22,7 +22,7 @@ export function createSeriesLegend<Scale extends ResourceScale>({
   id: string;
   presetId: string;
   title: string;
-  color: Accessor<string | string[]>;
+  color: Color | Color[];
   seriesList: Accessor<ISeriesApi<SeriesType> | undefined>[];
   defaultVisible?: boolean;
   disabled?: Accessor<boolean>;

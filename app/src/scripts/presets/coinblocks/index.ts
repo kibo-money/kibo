@@ -540,7 +540,7 @@ export function createPresets<Scale extends ResourceScale>({
                 bottom: [
                   {
                     title: "Concurrent Liveliness 14d Median",
-                    color: `${colors.liveliness}66`,
+                    color: colors.darkLiveliness,
                     dataset:
                       params.datasets[scale].concurrent_liveliness_2w_median,
                   },
@@ -732,13 +732,13 @@ export function createPresets<Scale extends ResourceScale>({
                 bottom: [
                   {
                     title: "Active Supply Net Change",
-                    color: `${colors.liveliness}80`,
+                    color: colors.liveliness,
                     dataset: params.datasets[scale].active_supply_3m_net_change,
                     seriesType: SeriesType.Based,
                   },
                   {
                     title: "Vaulted Supply Net Change",
-                    color: `${colors.vaultedPrice}80`,
+                    color: colors.vaultedPrice,
                     seriesType: SeriesType.Based,
                     dataset:
                       params.datasets[scale].vaulted_supply_3m_net_change,

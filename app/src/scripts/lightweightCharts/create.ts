@@ -15,16 +15,11 @@ export function createChart(
     dark,
     priceScaleOptions,
   }: {
-    dark: boolean;
+    dark: Accessor<boolean>;
     priceScaleOptions: DeepPartialPriceScaleOptions;
   },
 ) {
   console.log(`chart: create (scale: ${scale})`);
-
-  const { white, black } = colors;
-
-  const textColor = dark ? white : black;
-  const borderColor = dark ? "#332F24" : "#F1E4E0";
 
   const options: DeepPartialChartOptions = {
     autoSize: true,
@@ -32,17 +27,12 @@ export function createChart(
       fontFamily: "Lexend",
       background: { color: "transparent" },
       fontSize: 14,
-      textColor,
     },
     grid: {
       vertLines: { visible: false },
       horzLines: { visible: false },
     },
-    rightPriceScale: {
-      borderColor,
-    },
     timeScale: {
-      borderColor,
       minBarSpacing: 0.05,
       shiftVisibleRangeOnNewBar: false,
       allowShiftVisibleRangeOnWhitespaceReplacement: false,
@@ -54,14 +44,6 @@ export function createChart(
     },
     crosshair: {
       mode: CrosshairMode.Normal,
-      horzLine: {
-        color: textColor,
-        labelBackgroundColor: textColor,
-      },
-      vertLine: {
-        color: textColor,
-        labelBackgroundColor: textColor,
-      },
     },
     localization: {
       priceFormatter: valueToString,
@@ -88,6 +70,35 @@ export function createChart(
       ...priceScaleOptions?.scaleMargins,
     },
     minimumWidth: 78,
+  });
+
+  createEffect(() => {
+    const { white } = colors;
+
+    const textColor = white(dark);
+    const borderColor = dark() ? "#332F24" : "#F1E4E0";
+
+    chart.applyOptions({
+      layout: {
+        textColor,
+      },
+      rightPriceScale: {
+        borderColor,
+      },
+      timeScale: {
+        borderColor,
+      },
+      crosshair: {
+        horzLine: {
+          color: textColor,
+          labelBackgroundColor: textColor,
+        },
+        vertLine: {
+          color: textColor,
+          labelBackgroundColor: textColor,
+        },
+      },
+    });
   });
 
   return chart;

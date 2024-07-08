@@ -19,6 +19,4 @@ interface BaselineSeriesOptions {
   title?: string;
 }
 
-type SeriesLegend = ReturnType<
-  typeof import("../../chart/legend").createSeriesLegend
->;
+type SeriesLegend = ReturnType<typeof import("./legend").createSeriesLegend>;
