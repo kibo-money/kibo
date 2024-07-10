@@ -10,14 +10,16 @@ struct BlockchainInfo {
     pub blocks: u64,
 }
 
-pub struct BitcoinDaemon<'a> {
-    path: &'a str,
+pub struct BitcoinDaemon {
+    path: String,
+    other_args: Vec<String>,
 }
 
-impl<'a> BitcoinDaemon<'a> {
-    pub fn new(bitcoin_dir_path: &'a str) -> Self {
+impl BitcoinDaemon {
+    pub fn new(bitcoin_dir_path: String, other_bitcoin_args: Vec<String>) -> Self {
         Self {
             path: bitcoin_dir_path,
+            other_args: other_bitcoin_args,
         }
     }
 
@@ -31,6 +33,10 @@ impl<'a> BitcoinDaemon<'a> {
             .arg("-blocksonly")
             .arg("-txindex=1")
             .arg("-daemon");
+
+        self.other_args.iter().for_each(|arg| {
+            command.arg(arg);
+        });
 
         // bitcoind -datadir=/Users/k/Developer/bitcoin -blocksonly -txindex=1 -daemon
         let output = command
@@ -95,18 +101,18 @@ impl<'a> BitcoinDaemon<'a> {
                 let output = String::from_utf8_lossy(&output.stdout);
 
                 let json: Value = serde_json::from_str(&output)?;
-                let json = json.as_object().ok_or(eyre!(""))?;
+                let json = json.as_object().ok_or(eyre!("json as object failed"))?;
 
                 let blocks = json
                     .get("blocks")
-                    .ok_or(eyre!(""))?
+                    .ok_or(eyre!("get field 'blocks' from json failed"))?
                     .as_u64()
-                    .ok_or(eyre!(""))?;
+                    .ok_or(eyre!("blocks to u64 failed"))?;
                 let headers = json
                     .get("headers")
-                    .ok_or(eyre!(""))?
+                    .ok_or(eyre!("get field 'headers' from json failed"))?
                     .as_u64()
-                    .ok_or(eyre!(""))?;
+                    .ok_or(eyre!("blocks to u64 failed"))?;
 
                 Ok(BlockchainInfo { headers, blocks })
             },

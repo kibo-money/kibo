@@ -4,19 +4,20 @@ use itertools::Itertools;
 use parser::{iter_blocks, log, BitcoinDB, BitcoinDaemon};
 
 fn main() -> color_eyre::Result<()> {
-    let args = args().collect_vec();
-    let bitcoin_dir_path = args.get(1).unwrap();
+    let mut args = args().collect_vec();
+    let bitcoin_dir_path = args.get(1).unwrap().to_owned();
+    args.drain(0..2);
 
     color_eyre::install()?;
 
-    let deamon = BitcoinDaemon::new(bitcoin_dir_path);
+    let deamon = BitcoinDaemon::new(bitcoin_dir_path.to_owned(), args);
 
     loop {
         deamon.stop();
 
         // Scoped to free bitcoin's lock
         let block_count = {
-            let bitcoin_db = BitcoinDB::new(Path::new(bitcoin_dir_path), true)?;
+            let bitcoin_db = BitcoinDB::new(Path::new(&bitcoin_dir_path), true)?;
 
             // let block_count = 200_000;
             let block_count = bitcoin_db.get_block_count();

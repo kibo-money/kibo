@@ -23,5 +23,4 @@ if [ "$(uname)" == "Darwin" ]; then
     tmutil thinlocalsnapshots / &> /dev/null
 fi
 
-# Update path
-cargo run -r -- "$HOME/Developer/bitcoin"
+eval $(echo "cargo run -r -- $(cat node.args)")
