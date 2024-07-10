@@ -52,6 +52,9 @@ impl UTXOCohortsSentStates {
                         let previous_value = previous_price * amount_sent;
                         let current_value = current_price * amount_sent;
 
+                        state.realized.value_destroyed += previous_value;
+                        state.realized.value_created += current_value;
+
                         match previous_value.cmp(&current_value) {
                             Ordering::Less => {
                                 state.realized.realized_profit += current_value - previous_value;

@@ -7,6 +7,8 @@ use crate::{
     utils::ONE_MONTH_IN_DAYS,
 };
 
+use super::RatioDataset;
+
 #[derive(Default, Allocative)]
 pub struct CapitalizationDataset {
     min_initial_states: MinInitialStates,
@@ -16,8 +18,8 @@ pub struct CapitalizationDataset {
 
     // Computed
     pub realized_price: BiMap<f32>,
-    mvrv: BiMap<f32>,
     realized_cap_1m_net_change: BiMap<f32>,
+    ratio: RatioDataset,
 }
 
 impl CapitalizationDataset {
@@ -30,7 +32,7 @@ impl CapitalizationDataset {
             realized_cap: BiMap::new_bin(1, &f("realized_cap")),
             realized_cap_1m_net_change: BiMap::new_bin(1, &f("realized_cap_1m_net_change")),
             realized_price: BiMap::new_bin(1, &f("realized_price")),
-            mvrv: BiMap::new_bin(1, &f("mvrv")),
+            ratio: RatioDataset::import(parent_path, "realized_price")?,
         };
 
         s.min_initial_states
@@ -61,10 +63,12 @@ impl CapitalizationDataset {
 
     pub fn compute(
         &mut self,
-        &ComputeData { heights, dates }: &ComputeData,
+        compute_data: &ComputeData,
         closes: &mut BiMap<f32>,
         cohort_supply: &mut BiMap<f64>,
     ) {
+        let &ComputeData { heights, dates } = compute_data;
+
         self.realized_price.multi_insert_divide(
             heights,
             dates,
@@ -72,21 +76,15 @@ impl CapitalizationDataset {
             cohort_supply,
         );
 
-        self.mvrv.height.multi_insert_divide(
-            heights,
-            &mut closes.height,
-            &mut self.realized_price.height,
-        );
-        self.mvrv
-            .date
-            .multi_insert_divide(dates, &mut closes.date, &mut self.realized_price.date);
-
         self.realized_cap_1m_net_change.multi_insert_net_change(
             heights,
             dates,
             &mut self.realized_cap,
             ONE_MONTH_IN_DAYS,
-        )
+        );
+
+        self.ratio
+            .compute(compute_data, closes, &mut self.realized_price);
     }
 }
 
@@ -104,18 +102,20 @@ impl AnyDataset for CapitalizationDataset {
     }
 
     fn to_computed_bi_map_vec(&self) -> Vec<&(dyn AnyBiMap + Send + Sync)> {
-        vec![
-            &self.realized_price,
-            &self.mvrv,
+        let mut v = vec![
+            &self.realized_price as &(dyn AnyBiMap + Send + Sync),
             &self.realized_cap_1m_net_change,
-        ]
+        ];
+        v.append(&mut self.ratio.to_computed_bi_map_vec());
+        v
     }
 
     fn to_computed_mut_bi_map_vec(&mut self) -> Vec<&mut dyn AnyBiMap> {
-        vec![
-            &mut self.realized_price,
-            &mut self.mvrv,
+        let mut v = vec![
+            &mut self.realized_price as &mut dyn AnyBiMap,
             &mut self.realized_cap_1m_net_change,
-        ]
+        ];
+        v.append(&mut self.ratio.to_computed_mut_bi_map_vec());
+        v
     }
 }

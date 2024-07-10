@@ -1,4 +1,4 @@
-use super::{AddressData, Price, ProfitOrLoss, WAmount};
+use super::{AddressData, Price, WAmount};
 
 #[derive(Debug)]
 pub struct AddressRealizedData {
@@ -7,6 +7,8 @@ pub struct AddressRealizedData {
     pub sent: WAmount,
     pub profit: Price,
     pub loss: Price,
+    pub value_created: Price,
+    pub value_destroyed: Price,
     pub utxos_created: u32,
     pub utxos_destroyed: u32,
 }
@@ -20,6 +22,8 @@ impl AddressRealizedData {
             loss: Price::ZERO,
             utxos_created: 0,
             utxos_destroyed: 0,
+            value_created: Price::ZERO,
+            value_destroyed: Price::ZERO,
             initial_address_data: *initial_address_data,
         }
     }
@@ -29,18 +33,21 @@ impl AddressRealizedData {
         self.utxos_created += 1;
     }
 
-    pub fn send(&mut self, amount: WAmount, realized_profit_or_loss: ProfitOrLoss) {
+    pub fn send(&mut self, amount: WAmount, current_price: Price, previous_price: Price) {
         self.sent += amount;
 
         self.utxos_destroyed += 1;
 
-        match realized_profit_or_loss {
-            ProfitOrLoss::Profit(price) => {
-                self.profit += price;
-            }
-            ProfitOrLoss::Loss(price) => {
-                self.loss += price;
-            }
+        let current_value = current_price * amount;
+        let previous_value = previous_price * amount;
+
+        self.value_created += current_value;
+        self.value_destroyed += previous_value;
+
+        if current_value >= previous_value {
+            self.profit += current_value - previous_value;
+        } else {
+            self.loss += previous_value - current_value;
         }
     }
 }

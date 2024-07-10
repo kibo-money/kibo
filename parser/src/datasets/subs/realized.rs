@@ -3,11 +3,10 @@ use allocative::Allocative;
 use crate::{
     datasets::{AnyDataset, ComputeData, InsertData, MinInitialStates},
     states::RealizedState,
-    structs::{AnyBiMap, BiMap},
+    structs::{AnyBiMap, BiMap, Price},
     utils::ONE_MONTH_IN_DAYS,
 };
 
-/// TODO: Fix fees not taken into account ?
 #[derive(Default, Allocative)]
 pub struct RealizedSubDataset {
     min_initial_states: MinInitialStates,
@@ -15,6 +14,9 @@ pub struct RealizedSubDataset {
     // Inserted
     realized_profit: BiMap<f32>,
     realized_loss: BiMap<f32>,
+    value_destroyed: BiMap<f32>,
+    value_created: BiMap<f32>,
+    spent_output_profit_ratio: BiMap<f32>,
 
     // Computed
     negative_realized_loss: BiMap<f32>,
@@ -35,6 +37,10 @@ impl RealizedSubDataset {
 
             realized_profit: BiMap::new_bin(1, &f("realized_profit")),
             realized_loss: BiMap::new_bin(1, &f("realized_loss")),
+            value_created: BiMap::new_bin(1, &f("value_created")),
+            value_destroyed: BiMap::new_bin(1, &f("value_destroyed")),
+            spent_output_profit_ratio: BiMap::new_bin(2, &f("spent_output_profit_ratio")),
+
             negative_realized_loss: BiMap::new_bin(2, &f("negative_realized_loss")),
             net_realized_profit_and_loss: BiMap::new_bin(1, &f("net_realized_profit_and_loss")),
             net_realized_profit_and_loss_to_market_cap_ratio: BiMap::new_bin(
@@ -78,12 +84,41 @@ impl RealizedSubDataset {
             .height
             .insert(height, height_state.realized_loss.to_dollar() as f32);
 
+        self.value_created
+            .height
+            .insert(height, height_state.value_created.to_dollar() as f32);
+
+        self.value_destroyed
+            .height
+            .insert(height, height_state.value_destroyed.to_dollar() as f32);
+
+        self.spent_output_profit_ratio.height.insert(height, {
+            if height_state.value_destroyed > Price::ZERO {
+                (height_state.value_created.to_cent() as f64
+                    / height_state.value_destroyed.to_cent() as f64) as f32
+            } else {
+                1.0
+            }
+        });
+
         if is_date_last_block {
             self.realized_profit
                 .date_insert_sum_range(date, date_blocks_range);
 
             self.realized_loss
                 .date_insert_sum_range(date, date_blocks_range);
+
+            self.value_created
+                .date_insert_sum_range(date, date_blocks_range);
+
+            self.value_destroyed
+                .date_insert_sum_range(date, date_blocks_range);
+
+            self.spent_output_profit_ratio.date.insert(
+                date,
+                self.value_created.height.sum_range(date_blocks_range)
+                    / self.value_destroyed.height.sum_range(date_blocks_range),
+            );
         }
     }
 
@@ -145,11 +180,23 @@ impl AnyDataset for RealizedSubDataset {
     }
 
     fn to_inserted_bi_map_vec(&self) -> Vec<&(dyn AnyBiMap + Send + Sync)> {
-        vec![&self.realized_loss, &self.realized_profit]
+        vec![
+            &self.realized_loss,
+            &self.realized_profit,
+            &self.value_created,
+            &self.value_destroyed,
+            &self.spent_output_profit_ratio,
+        ]
     }
 
     fn to_inserted_mut_bi_map_vec(&mut self) -> Vec<&mut dyn AnyBiMap> {
-        vec![&mut self.realized_loss, &mut self.realized_profit]
+        vec![
+            &mut self.realized_loss,
+            &mut self.realized_profit,
+            &mut self.value_created,
+            &mut self.value_destroyed,
+            &mut self.spent_output_profit_ratio,
+        ]
     }
 
     fn to_computed_bi_map_vec(&self) -> Vec<&(dyn AnyBiMap + Send + Sync)> {

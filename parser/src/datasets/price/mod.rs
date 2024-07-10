@@ -24,6 +24,7 @@ pub struct PriceDatasets {
     kraken_1mn: Option<BTreeMap<u32, OHLC>>,
     binance_1mn: Option<BTreeMap<u32, OHLC>>,
     binance_har: Option<BTreeMap<u32, OHLC>>,
+    satonomics_by_height: BTreeMap<usize, Option<BTreeMap<usize, OHLC>>>,
 
     // Inserted
     pub ohlcs: BiMap<OHLC>,
@@ -74,6 +75,7 @@ impl PriceDatasets {
             binance_har: None,
             kraken_1mn: None,
             kraken_daily: None,
+            satonomics_by_height: BTreeMap::default(),
 
             ohlcs: BiMap::new_json(1, &format!("{price_path}/ohlc")),
             closes: BiMap::new_json(1, &f("close")),

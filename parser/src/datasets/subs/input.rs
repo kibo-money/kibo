@@ -10,8 +10,10 @@ use crate::{
 pub struct InputSubDataset {
     min_initial_states: MinInitialStates,
 
+    // Inserted
     pub count: BiMap<u64>,
     pub volume: BiMap<f64>,
+    // Computed
     // add inputs_per_second
 }
 

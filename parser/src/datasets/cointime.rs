@@ -86,7 +86,7 @@ impl CointimeDataset {
             cointime_value_stored: BiMap::new_bin(1, &f("cointime_value_stored")),
             concurrent_liveliness: BiMap::new_bin(1, &f("concurrent_liveliness")),
             concurrent_liveliness_2w_median: BiMap::new_bin(
-                1,
+                2,
                 &f("concurrent_liveliness_2w_median"),
             ),
             cumulative_coinblocks_created: BiMap::new_bin(1, &f("cumulative_coinblocks_created")),
@@ -100,7 +100,7 @@ impl CointimeDataset {
             liveliness: BiMap::new_bin(1, &f("liveliness")),
             liveliness_net_change: BiMap::new_bin(1, &f("liveliness_net_change")),
             liveliness_net_change_2w_median: BiMap::new_bin(
-                1,
+                2,
                 &f("liveliness_net_change_2w_median"),
             ),
             producerness: BiMap::new_bin(1, &f("producerness")),

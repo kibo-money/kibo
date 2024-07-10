@@ -25,7 +25,8 @@ pub fn export(
         date,
     }: ExportedData,
 ) -> color_eyre::Result<()> {
-    log("Exporting... (Don't close !!)");
+    log("Exporting...");
+    log("WARNING: NOT SAFE TO STOP !!!");
 
     time("Total save time", || -> color_eyre::Result<()> {
         time("Datasets saved", || datasets.export())?;
@@ -42,6 +43,8 @@ pub fn export(
 
         Ok(())
     })?;
+
+    log("Export done - Safe to stop now");
 
     Ok(())
 }

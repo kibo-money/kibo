@@ -2,6 +2,7 @@ use allocative::Allocative;
 
 mod capitalization;
 mod input;
+mod ratio;
 // mod output;
 mod price_paid;
 mod realized;
@@ -11,6 +12,7 @@ mod utxo;
 
 pub use capitalization::*;
 pub use input::*;
+pub use ratio::*;
 // pub use output::*;
 pub use price_paid::*;
 pub use realized::*;

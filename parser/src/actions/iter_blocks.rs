@@ -166,9 +166,11 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
         ));
 
         if first_unsafe_heights.computed <= last_height {
-            datasets.compute(ComputeData {
-                dates: &processed_dates.into_iter().collect_vec(),
-                heights: &processed_heights.into_iter().collect_vec(),
+            time("Computing datasets", || {
+                datasets.compute(ComputeData {
+                    dates: &processed_dates.into_iter().collect_vec(),
+                    heights: &processed_heights.into_iter().collect_vec(),
+                })
             });
         }
 

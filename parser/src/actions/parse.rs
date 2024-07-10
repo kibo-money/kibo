@@ -476,9 +476,11 @@ pub fn parse(
                                         AddressRealizedData::default(input_address_data)
                                     });
 
+                            let previous_price = input_block_data.price;
+
                             // MUST be after `or_insert_with`
-                            let address_realized_profit_or_loss = input_address_data
-                                .send(input_amount, block_price, input_block_data.price)
+                            input_address_data
+                                .send(input_amount, previous_price)
                                 .unwrap_or_else(|_| {
                                     dbg!(
                                         input_address_index,
@@ -494,8 +496,11 @@ pub fn parse(
                                     panic!()
                                 });
 
-                            input_address_realized_data
-                                .send(input_amount, address_realized_profit_or_loss);
+                            input_address_realized_data.send(
+                                input_amount,
+                                block_price,
+                                previous_price,
+                            );
                         };
 
                         is_tx_data_from_cached_puts && input_tx_data.is_empty()

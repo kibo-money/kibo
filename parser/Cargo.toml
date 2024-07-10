@@ -1,6 +1,6 @@
 [package]
 name = "parser"
-version = "0.2.0"
+version = "0.2.1"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -27,5 +27,5 @@ par-iter-sync = "0.1.11"
 rayon = "1.10.0"
 reqwest = { version = "0.12.5", features = ["blocking", "json"] }
 sanakirja = "1.4.2"
-serde = { version = "1.0.203", features = ["derive"] }
+serde = { version = "1.0.204", features = ["derive"] }
 serde_json = "1.0.120"

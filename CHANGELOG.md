@@ -1,5 +1,45 @@
 # Changelog
 
+## v. 0.2.1 | WIP
+
+### Parser
+
+- Datasets
+  - Added the followinf datasets for all entities:
+    - Value destroyed
+    - Value created
+    - Spent Output Profit Ratio (SOPR)
+    - Market Price to Realized Price
+    - Market Price to Realized Price Ratio
+    - Market Price to Realized Price Ratio 1 Week SMA
+    - Market Price to Realized Price Ratio 1 Month SMA
+    - Market Price to Realized Price Ratio 1 Year SMA
+    - Market Price to Realized Price Ratio 99th Percentile
+    - Market Price to Realized Price Ratio 99.5th Percentile
+    - Market Price to Realized Price Ratio 99.9th Percentile
+    - Market Price to Realized Price Ratio 1st Percentile
+    - Market Price to Realized Price Ratio 0.5th Percentile
+    - Realized Price 0.1th Percentile
+    - Realized Price 99.5th Percentile
+    - Realized Price 99.9th Percentile
+    - Realized Price 1st Percentile
+    - Realized Price 0.5th Percentile
+    - Realized Price 0.1th Percentile
+
+### App
+
+- General
+  - Added a backup API in case the main one fails or is offline
+- Chart
+  - Fixed series color being set to default ones after hovering the legend
+- Settings
+  - Removed the horizontal scroll bar which was unintended
+
+### Server
+
+- Run file
+  - Only run with a watcher if `cargo watch` is available
+
 ## v. 0.2.0 | [851286](https://mempool.space/block/0000000000000000000281ca7f1bf8c50702bfca168c7af1bdc67c977c1ac8ed) - 2024/07/08
 
 ![Image of the Satonomics Web App version 0.2.0](./assets/v0.2.0.jpg)
@@ -7,7 +47,7 @@
 ### App
 
 - General
-  - Added height datasets and many optimizations to make them usable but only available on desktop and tablets for now
+  - Added the height version of all datasets and many optimizations to make them usable but only available on desktop and tablets for now
   - Added a light theme
 - Charts
   - Added split panes in order to have the vertical axis visible for all datasets
@@ -89,3 +129,7 @@
 ## v. 0.1.0 | [848642](https://mempool.space/block/000000000000000000020be5761d70751252219a9557f55e91ecdfb86c4e026a) - 2024/06/19
 
 ![Image of the Satonomics Web App version 0.1.0](./assets/v0.1.0.jpg)
+
+## v. 0.0.X | [835444](https://mempool.space/block/000000000000000000009f93907a0dd83c080d5585cc7ec82c076d45f6d7c872) - 2024/03/20
+
+![Image of the Satonomics Web App version 0.0.X](./assets/v0.0.X.jpg)

@@ -444,10 +444,10 @@ where
         &mut self,
         heights: &[usize],
         source: &mut HeightMap<K>,
-        transform: F,
+        mut transform: F,
     ) where
         K: MapValue,
-        F: Fn((K, &usize)) -> T,
+        F: FnMut((K, &usize)) -> T,
     {
         heights.iter().for_each(|height| {
             self.insert(*height, transform((source.get_or_import(height), height)));
@@ -695,24 +695,19 @@ where
     ) where
         T: FloatCore,
     {
-        self.multi_insert_percentile(heights, source, 0.5, block_time);
+        source.multi_insert_percentile(heights, vec![(self, 0.5)], block_time);
     }
 
     pub fn multi_insert_percentile(
         &mut self,
         heights: &[usize],
-        source: &mut HeightMap<T>,
-        percentile: f32,
+        mut map_and_percentiles: Vec<(&mut HeightMap<T>, f32)>,
         block_time: Option<usize>,
     ) where
         T: FloatCore,
     {
-        if !(0.0..=1.0).contains(&percentile) {
-            panic!("The percentile should be between 0.0 and 1.0");
-        }
-
         if block_time.map_or(false, |size| size < 3) {
-            panic!("Computing a median for a size lower than 3 is useless");
+            panic!("Computing a percentile for a size lower than 3 is useless");
         }
 
         let mut ordered_vec = None;
@@ -721,66 +716,100 @@ where
         heights.iter().for_each(|height| {
             let height = *height;
 
-            let value = {
-                if let Some(start) = block_time.map_or(Some(0), |size| height.checked_sub(size)) {
-                    if ordered_vec.is_none() {
-                        let mut vec = (start..=height)
-                            .map(|height| OrderedFloat(source.get_or_import(&height)))
-                            .collect_vec();
+            if let Some(start) = block_time.map_or(Some(0), |size| height.checked_sub(size)) {
+                if sorted_vec.is_none() {
+                    let mut vec = (start..=height)
+                        .map(|height| OrderedFloat(self.get_or_import(&height)))
+                        .collect_vec();
 
-                        if block_time.is_some() {
-                            ordered_vec.replace(VecDeque::from(vec.clone()));
-                        }
-
-                        vec.sort_unstable();
-                        sorted_vec.replace(vec);
-                    } else {
-                        let float_value = OrderedFloat(source.get_or_import(&height));
-
-                        if block_time.is_some() {
-                            let first = ordered_vec.as_mut().unwrap().pop_front().unwrap();
-                            let pos = sorted_vec.as_ref().unwrap().binary_search(&first).unwrap();
-                            sorted_vec.as_mut().unwrap().remove(pos);
-
-                            ordered_vec.as_mut().unwrap().push_back(float_value);
-                        }
-
-                        let pos = sorted_vec
-                            .as_ref()
-                            .unwrap()
-                            .binary_search(&float_value)
-                            .unwrap_or_else(|pos| pos);
-                        sorted_vec.as_mut().unwrap().insert(pos, float_value);
+                    if block_time.is_some() {
+                        ordered_vec.replace(VecDeque::from(vec.clone()));
                     }
 
-                    let vec = sorted_vec.as_ref().unwrap();
+                    vec.sort_unstable();
 
-                    let index = vec.len() as f32 * percentile;
-
-                    if index.fract() != 0.0 {
-                        (vec.get(index.ceil() as usize)
-                            .unwrap_or_else(|| {
-                                dbg!(index, &self.path_all, &source.path_all, block_time);
-                                panic!()
-                            })
-                            .0
-                            + vec
-                                .get(index.floor() as usize)
-                                .unwrap_or_else(|| {
-                                    dbg!(index, &self.path_all, &source.path_all, block_time);
-                                    panic!()
-                                })
-                                .0)
-                            / T::from(2.0).unwrap()
-                    } else {
-                        vec.get(index as usize).unwrap().0
-                    }
+                    sorted_vec.replace(vec);
                 } else {
-                    T::default()
-                }
-            };
+                    let float_value = OrderedFloat(self.get_or_import(&height));
 
-            self.insert(height, value);
+                    if block_time.is_some() {
+                        let first = ordered_vec.as_mut().unwrap().pop_front().unwrap();
+                        let pos = sorted_vec.as_ref().unwrap().binary_search(&first).unwrap();
+                        sorted_vec.as_mut().unwrap().remove(pos);
+
+                        ordered_vec.as_mut().unwrap().push_back(float_value);
+                    }
+
+                    let pos = sorted_vec
+                        .as_ref()
+                        .unwrap()
+                        .binary_search(&float_value)
+                        .unwrap_or_else(|pos| pos);
+
+                    sorted_vec.as_mut().unwrap().insert(pos, float_value);
+                }
+
+                let vec = sorted_vec.as_ref().unwrap();
+
+                let len = vec.len();
+
+                map_and_percentiles
+                    .iter_mut()
+                    .for_each(|(map, percentile)| {
+                        if !(0.0..=1.0).contains(percentile) {
+                            panic!("The percentile should be between 0.0 and 1.0");
+                        }
+
+                        let value = {
+                            if vec.is_empty() {
+                                T::default()
+                            } else {
+                                let index = (len - 1) as f32 * *percentile;
+
+                                let fract = index.fract();
+                                let fract_t = T::from(fract).unwrap();
+
+                                if fract != 0.0 {
+                                    (vec.get(index.ceil() as usize)
+                                        .unwrap_or_else(|| {
+                                            dbg!(
+                                                index,
+                                                &self.path_all,
+                                                &self.path_all,
+                                                &self.to_insert,
+                                                block_time,
+                                                vec
+                                            );
+                                            panic!()
+                                        })
+                                        .0
+                                        * fract_t
+                                        + vec
+                                            .get(index.floor() as usize)
+                                            .unwrap_or_else(|| {
+                                                dbg!(
+                                                    index,
+                                                    &self.path_all,
+                                                    &self.path_all,
+                                                    block_time
+                                                );
+                                                panic!()
+                                            })
+                                            .0)
+                                        * T::from(1.0 - fract).unwrap()
+                                } else {
+                                    vec.get(index as usize).unwrap().0
+                                }
+                            }
+                        };
+
+                        (*map).insert(height, value);
+                    });
+            } else {
+                map_and_percentiles.iter_mut().for_each(|(map, _)| {
+                    (*map).insert(height, T::default());
+                });
+            }
         });
     }
 

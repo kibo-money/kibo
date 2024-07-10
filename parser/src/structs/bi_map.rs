@@ -277,20 +277,29 @@ where
         &mut self,
         heights: &[usize],
         dates: &[WNaiveDate],
-        source: &mut BiMap<T>,
-        percentile: f32,
+        mut map_and_percentiles: Vec<(&mut BiMap<T>, f32)>,
         days: Option<usize>,
     ) where
         T: FloatCore,
     {
+        let mut date_map_and_percentiles = vec![];
+        let mut height_map_and_percentiles = vec![];
+
+        map_and_percentiles
+            .iter_mut()
+            .for_each(|(map, percentile)| {
+                date_map_and_percentiles.push((&mut map.date, *percentile));
+                height_map_and_percentiles.push((&mut map.height, *percentile));
+            });
+
         self.height.multi_insert_percentile(
             heights,
-            &mut source.height,
-            percentile,
+            height_map_and_percentiles,
             days.map(|days| TARGET_BLOCKS_PER_DAY * days),
         );
+
         self.date
-            .multi_insert_percentile(dates, &mut source.date, percentile, days);
+            .multi_insert_percentile(dates, date_map_and_percentiles, days);
     }
 }
 
