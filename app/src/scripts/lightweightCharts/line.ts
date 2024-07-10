@@ -11,15 +11,20 @@ export const createLineSeries = ({
   color: Color;
   options?: DeepPartialLineOptions;
 }) => {
+  function computeColors() {
+    return {
+      color: color(dark),
+    } as const;
+  }
+
   const series = chart.addLineSeries({
     ...defaultSeriesOptions,
     ...options,
+    ...computeColors(),
   });
 
   createEffect(() => {
-    series.applyOptions({
-      color: color(dark),
-    });
+    series.applyOptions(computeColors());
   });
 
   return series;

@@ -11,6 +11,22 @@ export const createCandlesticksSeries = ({
 }): [ISeriesApi<"Candlestick">, Color[]] => {
   const { inverseColors } = options;
 
+  const _upColor = inverseColors ? colors.loss : colors.profit;
+
+  const _downColor = inverseColors ? colors.profit : colors.loss;
+
+  function computeColors() {
+    const upColor = _upColor(dark);
+
+    const downColor = _downColor(dark);
+
+    return {
+      upColor,
+      wickUpColor: upColor,
+      downColor,
+      wickDownColor: downColor,
+    } as const;
+  }
   const candlestickSeries = chart.addCandlestickSeries({
     baseLineVisible: false,
     borderVisible: false,
@@ -20,23 +36,11 @@ export const createCandlesticksSeries = ({
     borderDownColor: "",
     borderUpColor: "",
     ...options.seriesOptions,
+    ...computeColors(),
   });
 
-  const _upColor = inverseColors ? colors.loss : colors.profit;
-
-  const _downColor = inverseColors ? colors.profit : colors.loss;
-
   createEffect(() => {
-    const upColor = _upColor(dark);
-
-    const downColor = _downColor(dark);
-
-    candlestickSeries.applyOptions({
-      upColor,
-      wickUpColor: upColor,
-      downColor,
-      wickDownColor: downColor,
-    });
+    candlestickSeries.applyOptions(computeColors());
   });
 
   return [candlestickSeries, [_upColor, _downColor]];

@@ -11,7 +11,7 @@ export function FavoritesFrame({
 }) {
   return (
     <div
-      class="flex-1 overflow-y-auto"
+      class="flex-1 overflow-y-auto overflow-x-hidden"
       style={{
         display: selectedFrame() !== "Favorites" ? "none" : undefined,
       }}

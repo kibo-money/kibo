@@ -33,6 +33,13 @@ export const createBaseLineSeries = ({
 
   const bottomLineColor = bottomColor || color || DEFAULT_BASELINE_BOTTOM_COLOR;
 
+  function computeColors() {
+    return {
+      topLineColor: topLineColor(dark),
+      bottomLineColor: bottomLineColor(dark),
+    } as const;
+  }
+
   const seriesOptions: DeepPartialBaselineOptions = {
     priceScaleId: "right",
     ...defaultSeriesOptions,
@@ -45,15 +52,13 @@ export const createBaseLineSeries = ({
     topFillColor2: transparent,
     bottomFillColor1: transparent,
     bottomFillColor2: transparent,
+    ...computeColors(),
   };
 
   const series = chart.addBaselineSeries(seriesOptions);
 
   createEffect(() => {
-    series.applyOptions({
-      topLineColor: topLineColor(dark),
-      bottomLineColor: bottomLineColor(dark),
-    });
+    series.applyOptions(computeColors());
   });
 
   return series;

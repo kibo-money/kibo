@@ -21,7 +21,7 @@ export function SettingsFrame({
 }) {
   return (
     <div
-      class="flex-1 overflow-y-auto"
+      class="flex-1 overflow-y-auto overflow-x-hidden"
       style={{
         display: selectedFrame() !== "Settings" ? "none" : undefined,
       }}
@@ -119,7 +119,7 @@ export function SettingsFrame({
                 {
                   name: "btcschellingpt",
                   url: "https://primal.net/p/npub1nvfgglea9zlcs58tcqlc6j26rt50ngkgdk7699wfq4txrx37aqcsz4e7zd",
-                  amount: 1_000,
+                  amount: 1_000 + 1_000,
                 },
                 {
                   name: "Coinatra",
@@ -135,6 +135,21 @@ export function SettingsFrame({
                   name: "b81776c32d7b",
                   url: "https://primal.net/p/npub1hqthdsed0wpg57sqsc5mtyqxxgrh3s7493ja5h49v23v2nhhds4qk4w0kz",
                   amount: 17_509,
+                },
+                {
+                  name: "DerGigi",
+                  url: "https://primal.net/p/npub1dergggklka99wwrs92yz8wdjs952h2ux2ha2ed598ngwu9w7a6fsh9xzpc",
+                  amount: 6001,
+                },
+                {
+                  name: "Adarnit",
+                  url: "https://primal.net/p/npub17armdveqy42uhuuuwjc5m2dgjkz7t7epgvwpuccqw8jusm8m0g4sn86n3s",
+                  amount: 17_726,
+                },
+                {
+                  name: "Auburn Citadel",
+                  url: "https://primal.net/p/npub1730y5k2s9u82w9snx3hl37r8gpsrmqetc2y3xyx9h65yfpf28rtq0y635y",
+                  amount: 17_471,
                 },
               ]
                 .sort((a, b) =>

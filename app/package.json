@@ -1,7 +1,7 @@
 {
   "name": "satonomics",
   "description": "A better, FOSS, Bitcoin-only, self-hostable Glassnode",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -19,14 +19,14 @@
     "@leeoniya/ufuzzy": "^1.0.14",
     "@solid-primitives/event-listener": "^2.3.3",
     "@solid-primitives/intersection-observer": "^2.1.6",
-    "@solid-primitives/resize-observer": "^2.0.25",
+    "@solid-primitives/resize-observer": "^2.0.26",
     "lean-qr": "^2.3.4",
     "lightweight-charts": "^4.1.6",
     "solid-js": "^1.8.18"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.3.0",
-    "@iconify-json/tabler": "^1.1.116",
+    "@iconify-json/tabler": "^1.1.117",
     "@tailwindcss/container-queries": "^0.1.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.39",
@@ -42,6 +42,6 @@
     "vite-plugin-pwa": "^0.20.0",
     "vite-plugin-solid": "^2.10.2",
     "workbox-window": "^7.1.0",
-    "wrangler": "^3.63.1"
+    "wrangler": "^3.63.2"
   }
 }

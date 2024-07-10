@@ -29,7 +29,7 @@ export function FoldersFrame({
         display: selectedFrame() !== "Folders" ? "none" : undefined,
       }}
     >
-      <div class="flex-1 overflow-y-auto">
+      <div class="flex-1 overflow-y-auto overflow-x-hidden">
         <div class="flex max-h-full min-h-0 flex-1 flex-col gap-4 p-4">
           <Header title="Folders">
             <Number number={() => presets.list.length} /> charts organized in a

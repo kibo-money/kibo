@@ -1,3 +1,4 @@
+import { requestIdleCallbackPossible } from "/src/env";
 import { ONE_HOUR_IN_MS, ONE_MINUTE_IN_MS } from "/src/scripts/utils/time";
 import { createRWS } from "/src/solid/rws";
 
@@ -20,6 +21,13 @@ export function createResourceDataset<
     //   ? "http://localhost:3110"
     //   : "https://api.satonomics.xyz"
     "https://api.satonomics.xyz"
+  }${path}`;
+
+  const backupURL = `${
+    // location.hostname === "localhost"
+    //   ? "http://localhost:3110"
+    //   : "https://api.satonomics.xyz"
+    "https://api-bkp.satonomics.xyz"
   }${path}`;
 
   const fetchedJSONs = new Array(
@@ -114,6 +122,7 @@ export function createResourceDataset<
     let cache: Cache | undefined;
 
     const urlWithQuery = `${baseURL}?chunk=${id}`;
+    const backupUrlWithQuery = `${backupURL}?chunk=${id}`;
 
     if (!fetched.json()) {
       try {
@@ -138,68 +147,87 @@ export function createResourceDataset<
       return;
     }
 
+    let fetchedResponse: Response | undefined;
+
     try {
-      const fetchedResponse = await fetch(urlWithQuery);
+      fetchedResponse = await fetch(urlWithQuery);
 
       if (!fetchedResponse.ok) {
+        throw Error;
+      }
+    } catch {
+      try {
+        fetchedResponse = await fetch(backupUrlWithQuery);
+      } catch {
         fetched.loading = false;
         return;
       }
 
-      const clonedResponse = fetchedResponse.clone();
+      if (!fetchedResponse || !fetchedResponse.ok) {
+        fetched.loading = false;
+        return;
+      }
+    }
 
-      const json = await convertResponseToJSON<Scale, Type>(fetchedResponse);
+    const clonedResponse = fetchedResponse.clone();
 
-      if (json) {
-        console.log(`fetch: ${path}?chunk=${id}`);
+    const json = await convertResponseToJSON<Scale, Type>(fetchedResponse);
 
-        const previousMap = fetched.json()?.dataset.map;
-        const newMap = json.dataset.map;
+    if (!json) {
+      fetched.loading = false;
+      return;
+    }
 
-        const previousLength = Object.keys(previousMap || []).length;
-        const newLength = Object.keys(newMap).length;
+    console.log(`fetch: ${path}?chunk=${id}`);
 
-        if (!newLength) {
+    const previousMap = fetched.json()?.dataset.map;
+    const newMap = json.dataset.map;
+
+    const previousLength = Object.keys(previousMap || []).length;
+    const newLength = Object.keys(newMap).length;
+
+    if (!newLength) {
+      fetched.loading = false;
+      return;
+    }
+
+    if (previousLength && previousLength === newLength) {
+      const previousLastValue = Object.values(previousMap || []).at(-1);
+      const newLastValue = Object.values(newMap).at(-1);
+
+      if (typeof newLastValue === "number") {
+        if (previousLastValue === newLastValue) {
+          fetched.at = new Date();
           fetched.loading = false;
           return;
         }
+      } else {
+        const previousLastOHLC = previousLastValue as OHLC;
+        const newLastOHLC = newLastValue as OHLC;
 
-        if (previousLength && previousLength === newLength) {
-          const previousLastValue = Object.values(previousMap || []).at(-1);
-          const newLastValue = Object.values(newMap).at(-1);
-
-          if (typeof newLastValue === "number") {
-            if (previousLastValue === newLastValue) {
-              fetched.at = new Date();
-              fetched.loading = false;
-              return;
-            }
-          } else {
-            const previousLastOHLC = previousLastValue as OHLC;
-            const newLastOHLC = newLastValue as OHLC;
-
-            if (
-              previousLastOHLC.open === newLastOHLC.open &&
-              previousLastOHLC.high === newLastOHLC.high &&
-              previousLastOHLC.low === newLastOHLC.low &&
-              previousLastOHLC.close === newLastOHLC.close
-            ) {
-              fetched.loading = false;
-              fetched.at = new Date();
-              return;
-            }
-          }
-        }
-
-        fetched.json.set(() => json);
-
-        if (cache) {
-          cache.put(urlWithQuery, clonedResponse);
+        if (
+          previousLastOHLC.open === newLastOHLC.open &&
+          previousLastOHLC.high === newLastOHLC.high &&
+          previousLastOHLC.low === newLastOHLC.low &&
+          previousLastOHLC.close === newLastOHLC.close
+        ) {
+          fetched.loading = false;
+          fetched.at = new Date();
+          return;
         }
       }
-    } catch {
-      fetched.loading = false;
-      return;
+    }
+
+    fetched.json.set(() => json);
+
+    function saveToCache() {
+      cache?.put(urlWithQuery, clonedResponse);
+    }
+
+    if (requestIdleCallbackPossible) {
+      requestIdleCallback(saveToCache);
+    } else {
+      setTimeout(saveToCache, 1);
     }
 
     fetched.at = new Date();
