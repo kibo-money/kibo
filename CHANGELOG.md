@@ -25,6 +25,8 @@
     - Realized Price 1st Percentile
     - Realized Price 0.5th Percentile
     - Realized Price 0.1th Percentile
+- Node
+  - Added a `node.args` file where you can set the path to your node `datadir` and where you can add additional args (you can see the syntax in `parser/README.md`)
 
 ### App
 

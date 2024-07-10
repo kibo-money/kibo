@@ -300,15 +300,32 @@ impl PriceDatasets {
 
         let previous_timestamp = previous_timestamp.map(clean_timestamp);
 
-        let ohlc = self.get_from_1mn_kraken(timestamp, previous_timestamp).unwrap_or_else(|_| {
+        let ohlc = self
+            .get_from_1mn_kraken(timestamp, previous_timestamp)
+            .unwrap_or_else(|_| {
                 self.get_from_1mn_binance(timestamp, previous_timestamp)
-                    .unwrap_or_else(|_| self.get_from_har_binance(timestamp, previous_timestamp).unwrap_or_else(|_| {
-                        let date = WNaiveDate::from_timestamp(timestamp);
+                    .unwrap_or_else(|_| {
+                        self.get_from_har_binance(timestamp, previous_timestamp)
+                            .unwrap_or_else(|_| {
+                                let date = WNaiveDate::from_timestamp(timestamp);
 
-                        panic!(
-                            "Can't find price for {height} - {timestamp} - {date}, please update binance.har file"
-                        )
-                    }))
+                                panic!(
+                                    "Can't find the price for: height: {height} - date: {date}
+1mn APIs are limited to the last 16 hours for Binance's and the last 10 hours for Kraken's
+How to fix this:
+1. Go to https://www.binance.com/en/trade/BTC_USDT?type=spot
+2. Select 1mn interval
+3. Open the inspector/dev tools
+4. Go to the Network Tab
+5. Filter URLs by 'uiKlines'
+6. Go back to the chart and scroll until you pass the date mentioned few lines ago
+7. Go back to the dev tools
+8. Export to a har file (if there is no explicit button, click on the cog button)
+9. Move the file to 'parser/imports/binance.har'
+"
+                                )
+                            })
+                    })
             });
 
         self.ohlcs.height.insert(height, ohlc);
