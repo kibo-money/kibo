@@ -1,9 +1,7 @@
 import { averages } from "/src/scripts/datasets/date";
 import { colors } from "/src/scripts/utils/colors";
 
-export function createPresets(): PartialPresetFolder {
-  const scale: ResourceScale = "date";
-
+export function createPresets(scale: ResourceScale): PartialPresetFolder {
   return {
     name: "Averages",
     tree: [
@@ -55,7 +53,7 @@ function createPresetFolder({
           {
             title: `SMA`,
             color,
-            datasetPath: `/date-to-price-${key}-sma`,
+            datasetPath: `/${scale}-to-price-${key}-sma`,
           },
         ],
       },
@@ -64,19 +62,24 @@ function createPresetFolder({
         name: "Ratio",
         description: "",
         icon: IconTablerMathXDivideY,
-        title: `${name} Moving Average Ratio`,
+        title: `Market Price To ${name} Moving Average Ratio`,
         top: [
           {
             title: `SMA`,
             color,
-            datasetPath: `/date-to-price-${key}-sma`,
+            datasetPath: `/${scale}-to-price-${key}-sma`,
           },
         ],
         bottom: [
           {
             title: `Ratio`,
             color,
-            datasetPath: `/date-to-market-price-to-price-${key}-sma-ratio`,
+            datasetPath: `/${scale}-to-market-price-to-price-${key}-sma-ratio`,
+          },
+          {
+            title: `Even`,
+            color: colors.white,
+            datasetPath: `/${scale}-to-1`,
           },
         ],
       },

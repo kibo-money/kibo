@@ -28,9 +28,9 @@ export function createPresets(scale: ResourceScale) {
           },
         ],
       },
+      createAveragesPresets(scale),
       ...(scale === "date"
         ? ([
-            createAveragesPresets(),
             createReturnsPresets(),
             createIndicatorsPresets(),
           ] satisfies PartialPresetTree)
