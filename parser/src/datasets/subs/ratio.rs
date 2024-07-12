@@ -52,12 +52,12 @@ impl RatioDataset {
             ratio_1p: BiMap::new_bin(3, &f_ratio("ratio_1p")),
             ratio_0_5p: BiMap::new_bin(3, &f_ratio("ratio_0_5p")),
             ratio_0_1p: BiMap::new_bin(3, &f_ratio("ratio_0_1p")),
-            price_99p: BiMap::new_bin(3, &f_price("99p")),
-            price_99_5p: BiMap::new_bin(3, &f_price("99_5p")),
-            price_99_9p: BiMap::new_bin(3, &f_price("99_9p")),
-            price_1p: BiMap::new_bin(3, &f_price("1p")),
-            price_0_5p: BiMap::new_bin(3, &f_price("0_5p")),
-            price_0_1p: BiMap::new_bin(3, &f_price("0_1p")),
+            price_99p: BiMap::new_bin(4, &f_price("99p")),
+            price_99_5p: BiMap::new_bin(4, &f_price("99_5p")),
+            price_99_9p: BiMap::new_bin(4, &f_price("99_9p")),
+            price_1p: BiMap::new_bin(4, &f_price("1p")),
+            price_0_5p: BiMap::new_bin(4, &f_price("0_5p")),
+            price_0_1p: BiMap::new_bin(4, &f_price("0_1p")),
         };
 
         s.min_initial_states
@@ -137,22 +137,22 @@ impl RatioDataset {
         );
 
         self.price_99p
-            .multi_insert_multiply(heights, dates, market_price, &mut self.ratio_99p);
+            .multi_insert_multiply(heights, dates, other_price, &mut self.ratio_99p);
 
         self.price_99_5p
-            .multi_insert_multiply(heights, dates, market_price, &mut self.ratio_99_5p);
+            .multi_insert_multiply(heights, dates, other_price, &mut self.ratio_99_5p);
 
         self.price_99_9p
-            .multi_insert_multiply(heights, dates, market_price, &mut self.ratio_99_9p);
+            .multi_insert_multiply(heights, dates, other_price, &mut self.ratio_99_9p);
 
         self.price_1p
-            .multi_insert_multiply(heights, dates, market_price, &mut self.ratio_1p);
+            .multi_insert_multiply(heights, dates, other_price, &mut self.ratio_1p);
 
         self.price_0_5p
-            .multi_insert_multiply(heights, dates, market_price, &mut self.ratio_0_5p);
+            .multi_insert_multiply(heights, dates, other_price, &mut self.ratio_0_5p);
 
         self.price_0_1p
-            .multi_insert_multiply(heights, dates, market_price, &mut self.ratio_0_1p);
+            .multi_insert_multiply(heights, dates, other_price, &mut self.ratio_0_1p);
     }
 }
 

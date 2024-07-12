@@ -245,6 +245,30 @@ function createPresetFolder({
               },
             ],
           },
+          {
+            scale,
+            name: "Extreme Tops",
+            description: "",
+            icon: IconTablerRocket,
+            title: `${name} Moving Average Extreme Tops`,
+            top: [
+              {
+                title: `99.9%`,
+                color: colors.extremeMax,
+                datasetPath: `/${scale}-to-price-${key}-sma-99-9p`,
+              },
+              {
+                title: `99.5%`,
+                color: colors.extremeMiddle,
+                datasetPath: `/${scale}-to-price-${key}-sma-99-5p`,
+              },
+              {
+                title: `99%`,
+                color: colors.extremeMin,
+                datasetPath: `/${scale}-to-price-${key}-sma-99p`,
+              },
+            ],
+          },
         ],
       },
     ],
