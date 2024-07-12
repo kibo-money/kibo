@@ -1,5 +1,6 @@
 import { colors } from "../../utils/colors";
 import { SeriesType } from "../enums";
+import { createRatioFolder } from "../templates/ratio";
 
 export function createPresets(scale: ResourceScale) {
   return {
@@ -59,6 +60,13 @@ export function createPresets(scale: ResourceScale) {
                   },
                 ],
               },
+              createRatioFolder({
+                color: colors.liveliness,
+                ratioDatasetPath: `/${scale}-to-market-price-to-active-price-ratio`,
+                scale,
+                title: "Active Price",
+                valueDatasetPath: `/${scale}-to-active-price`,
+              }),
             ],
           },
           {
@@ -78,6 +86,13 @@ export function createPresets(scale: ResourceScale) {
                   },
                 ],
               },
+              createRatioFolder({
+                color: colors.vaultedness,
+                ratioDatasetPath: `/${scale}-to-market-price-to-vaulted-price-ratio`,
+                scale,
+                title: "Vaulted Price",
+                valueDatasetPath: `/${scale}-to-vaulted-price`,
+              }),
             ],
           },
           {
@@ -97,6 +112,13 @@ export function createPresets(scale: ResourceScale) {
                   },
                 ],
               },
+              createRatioFolder({
+                color: colors.liveliness,
+                ratioDatasetPath: `/${scale}-to-market-price-to-true-market-mean-ratio`,
+                scale,
+                title: "True Market Mean",
+                valueDatasetPath: `/${scale}-to-true-market-mean`,
+              }),
             ],
           },
           {
@@ -116,6 +138,13 @@ export function createPresets(scale: ResourceScale) {
                   },
                 ],
               },
+              createRatioFolder({
+                color: colors.cointimePrice,
+                ratioDatasetPath: `/${scale}-to-market-price-to-cointime-price-ratio`,
+                scale,
+                title: "Cointime",
+                valueDatasetPath: `/${scale}-to-cointime-price`,
+              }),
             ],
           },
         ],

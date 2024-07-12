@@ -5,6 +5,9 @@
 //   SeriesType,
 // } from "/src/scripts";
 
+import { colors } from "../../utils/colors";
+import { SeriesType } from "../enums";
+
 // // type HeightRatioKey =
 // //   | `${AnyPossibleCohortKey}RealizedPrice`
 // //   | "activePrice"
@@ -14,276 +17,259 @@
 // // // type DateRatioKey = HeightRatioKey;
 // // type DateRatioKey = HeightRatioKey | `price${AverageName}MA`;
 
-// export function createRatioPresetFolder<
-//   Scale extends ResourceScale,
-//   Key extends string,
-// >({
-//   datasets,
-//   scale,
-//   id,
-//   title,
-//   datasetId,
-//   color,
-// }: {
-//   datasets: Record<`${Key}${RatioKey}`, Dataset<ResourceScale>>;
-//   scale: Scale;
-//   id: string;
-//   title: string;
-//   color: string;
-//   datasetId: Key;
-// }): PartialPresetFolder {
-//   return {
-//     id: `${scale}-${id}-ratio`,
-//     name: "Ratio",
-//     tree: [
-//       {
-//         id: `${scale}-${id}-ratio-value`,
-//         name: `Value`,
-//         title: `Bitcoin Price to ${title} Ratio`,
-//         icon: () => IconTablerDivide,
-//         applyPreset(params) {
-//           return applyMultipleSeries({
-//             scale,
-//             ...params,
-//             priceScaleOptions: {
-//               halved: true,
-//             },
-//             list: [
-//               {
-//                 title: "Ratio",
-//                 seriesType: SeriesType.Based,
-//                 dataset: datasets[`${datasetId}Ratio`],
-//                 options: {
-//                   base: 1,
-//                 },
-//               },
-//             ],
-//           });
-//         },
-//         description: "",
-//       },
-//       {
-//         id: `${scale}-${id}-ratio-1y-average`,
-//         name: "Averages",
-//         tree: [
-//           {
-//             id: `${scale}-${id}-ratio-averages`,
-//             name: `7 Day VS. 1 Year`,
-//             title: `Bitcoin Price to ${title} Ratio Moving Averages`,
-//             icon: () => IconTablerSwords,
-//             applyPreset(params) {
-//               return applyMultipleSeries({
-//                 scale,
-//                 ...params,
-//                 priceScaleOptions: {
-//                   halved: true,
-//                 },
-//                 list: [
-//                   {
-//                     title: "Ratio",
-//                     seriesType: SeriesType.Based,
-//                     color: colors.gray,
-//                     dataset: datasets[`${datasetId}Ratio`],
-//                     options: {
-//                       base: 1,
-//                     },
-//                   },
-//                   {
-//                     title: "7 Day Moving Average",
-//                     color: colors.closes7DMA,
-//                     dataset: datasets[`${datasetId}Ratio7DayMovingAverage`],
-//                   },
-//                   {
-//                     title: "1 Year Moving Average",
-//                     color: colors.closes1YMA,
-//                     dataset: datasets[`${datasetId}Ratio1YearMovingAverage`],
-//                   },
-//                 ],
-//               });
-//             },
-//             description: "",
-//           },
-//           createMomentumPresetFolder({
-//             datasets,
-//             scale,
-//             id: `${scale}-${id}-ratio-averages`,
-//             title: `${title} Ratio Moving Averages`,
-//             datasetId: `${datasetId}Ratio`,
-//           }),
-//         ],
-//       },
-//       {
-//         id: `${scale}-${id}-ratio-extremes`,
-//         name: "Extremes",
-//         tree: [
-//           {
-//             id: `${scale}-${id}-extreme-top-ratios`,
-//             name: "Top Ratios",
-//             description: "",
-//             icon: () => IconTablerJetpack,
-//             title: `${title} Extreme Top Ratios`,
-//             applyPreset(params) {
-//               return applyMultipleSeries({
-//                 scale,
-//                 ...params,
-//                 priceScaleOptions: {
-//                   halved: true,
-//                 },
-//                 list: [
-//                   {
-//                     id: "ratio",
-//                     title: "Ratio",
-//                     color: colors.white,
-//                     seriesType: SeriesType.Based,
-//                     dataset: datasets[`${datasetId}Ratio`],
-//                     options: {
-//                       base: 1,
-//                       options: {
-//                         baseLineColor: color,
-//                         baseLineVisible: true,
-//                       },
-//                     },
-//                   },
-//                   {
-//                     id: "99.9-percentile",
-//                     title: "99.9th Percentile",
-//                     dataset: datasets[`${datasetId}Ratio99.9Percentile`],
-//                     color: colors.extremeMax,
-//                   },
-//                   {
-//                     id: "99.5-percentile",
-//                     title: "99.5th Percentile",
-//                     color: colors.extremeMiddle,
-//                     dataset: datasets[`${datasetId}Ratio99.5Percentile`],
-//                   },
-//                   {
-//                     id: "99-percentile",
-//                     title: "99th Percentile",
-//                     color: colors.extremeMin,
-//                     dataset: datasets[`${datasetId}Ratio99Percentile`],
-//                   },
-//                 ],
-//               });
-//             },
-//           },
-//           {
-//             id: `${scale}-${id}-extreme-bottom-ratios`,
-//             name: "Bottom Ratios",
-//             description: "",
-//             icon: () => IconTablerScubaMask,
-//             title: `${title} Extreme Bottom Ratios`,
-//             applyPreset(params) {
-//               return applyMultipleSeries({
-//                 scale,
-//                 ...params,
-//                 priceScaleOptions: {
-//                   halved: true,
-//                 },
-//                 list: [
-//                   {
-//                     id: "ratio",
-//                     title: "Ratio",
-//                     color: colors.white,
-//                     seriesType: SeriesType.Based,
-//                     dataset: datasets[`${datasetId}Ratio`],
-//                     options: {
-//                       base: 1,
-//                       options: {
-//                         baseLineColor: color,
-//                         baseLineVisible: true,
-//                       },
-//                     },
-//                   },
-//                   {
-//                     id: "1-percentile",
-//                     title: "1st Percentile",
-//                     color: colors.extremeMin,
-//                     dataset: datasets[`${datasetId}Ratio1Percentile`],
-//                   },
-//                   {
-//                     id: "0.5-percentile",
-//                     title: "0.5th Percentile",
-//                     color: colors.extremeMiddle,
-//                     dataset: datasets[`${datasetId}Ratio0.5Percentile`],
-//                   },
-//                   {
-//                     id: "0.1-percentile",
-//                     title: "0.1th Percentile",
-//                     color: colors.extremeMax,
-//                     dataset: datasets[`${datasetId}Ratio0.1Percentile`],
-//                   },
-//                 ],
-//               });
-//             },
-//           },
-//           {
-//             id: `${scale}-${id}-extreme-top-prices`,
-//             name: "Top Prices",
-//             description: "",
-//             icon: () => IconTablerRocket,
-//             title: `${title} Extreme Top Prices`,
-//             applyPreset(params) {
-//               return applyMultipleSeries({
-//                 scale,
-//                 ...params,
-//                 list: [
-//                   {
-//                     id: "99.9-percentile",
-//                     title: "99.9th Percentile",
-//                     color: colors.extremeMax,
-//                     dataset: datasets[`${datasetId}Ratio99.9Price`],
-//                   },
-//                   {
-//                     id: "99.5-percentile",
-//                     title: "99.5th Percentile",
-//                     color: colors.extremeMiddle,
-//                     dataset: datasets[`${datasetId}Ratio99.5Price`],
-//                   },
-//                   {
-//                     id: "99-percentile",
-//                     title: "99th Percentile",
-//                     color: colors.extremeMin,
-//                     dataset: datasets[`${datasetId}Ratio99Price`],
-//                   },
-//                 ],
-//               });
-//             },
-//           },
-//           {
-//             id: `${scale}-${id}-extreme-bottom-prices`,
-//             name: "Bottom Prices",
-//             description: "",
-//             icon: () => IconTablerSubmarine,
-//             title: `${title} Extreme Bottom Prices`,
-//             applyPreset(params) {
-//               return applyMultipleSeries({
-//                 scale,
-//                 ...params,
-//                 list: [
-//                   {
-//                     id: "1-percentile",
-//                     title: "1st Percentile",
-//                     color: colors.extremeMin,
-//                     dataset: datasets[`${datasetId}Ratio1Price`],
-//                   },
-//                   {
-//                     id: "0.5-percentile",
-//                     title: "0.5th Percentile",
-//                     color: colors.extremeMiddle,
-//                     dataset: datasets[`${datasetId}Ratio0.5Price`],
-//                   },
-//                   {
-//                     id: "0.1-percentile",
-//                     title: "0.1th Percentile",
-//                     color: colors.extremeMax,
-//                     dataset: datasets[`${datasetId}Ratio0.1Price`],
-//                   },
-//                 ],
-//               });
-//             },
-//           },
-//         ],
-//       },
-//     ],
-//   };
-// }
+export function createRatioFolder({
+  scale,
+  color,
+  valueDatasetPath,
+  ratioDatasetPath,
+  title,
+}: {
+  scale: ResourceScale;
+  color: Color;
+  valueDatasetPath: AnyDatasetPath;
+  ratioDatasetPath: AnyDatasetPath;
+  title: string;
+}): PartialPresetFolder {
+  return {
+    name: "Ratio",
+    tree: [
+      {
+        scale,
+        name: "Basic",
+        description: "",
+        icon: IconTablerMathXDivideY,
+        title: `Market Price To ${title} Ratio`,
+        top: [
+          {
+            title: `SMA`,
+            color,
+            datasetPath: valueDatasetPath,
+          },
+        ],
+        bottom: [
+          {
+            title: `Ratio`,
+            seriesType: SeriesType.Based,
+            datasetPath: ratioDatasetPath,
+            options: {
+              base: 1,
+            },
+          },
+          {
+            title: `Even`,
+            color: colors.white,
+            datasetPath: `/${scale}-to-1`,
+            options: {
+              lineStyle: 3,
+              lastValueVisible: false,
+            },
+          },
+        ],
+      },
+      {
+        scale,
+        name: "Averages",
+        description: "",
+        icon: IconTablerMathAvg,
+        title: `Market Price To ${title} Ratio Averages`,
+        top: [
+          {
+            title: `SMA`,
+            color,
+            datasetPath: valueDatasetPath,
+          },
+        ],
+        bottom: [
+          {
+            title: `1Y`,
+            color: colors._1y,
+            datasetPath: `${ratioDatasetPath}-1y-sma`,
+          },
+          {
+            title: `1M`,
+            color: colors._1m,
+            datasetPath: `${ratioDatasetPath}-1m-sma`,
+          },
+          {
+            title: `1W`,
+            color: colors._1w,
+            datasetPath: `${ratioDatasetPath}-1w-sma`,
+          },
+          {
+            title: `Raw`,
+            color: colors.white,
+            datasetPath: ratioDatasetPath,
+            options: {
+              base: 1,
+            },
+          },
+          {
+            title: `Even`,
+            color: colors.gray,
+            datasetPath: `/${scale}-to-1`,
+            options: {
+              lineStyle: 3,
+              lastValueVisible: false,
+            },
+          },
+        ],
+      },
+      {
+        scale,
+        name: "Momentum Oscillator",
+        description: "",
+        icon: IconTablerWaveSine,
+        title: `Market Price To ${title} Ratio 1Y SMA Momentum Oscillator`,
+        top: [
+          {
+            title: `SMA`,
+            color,
+            datasetPath: valueDatasetPath,
+          },
+        ],
+        bottom: [
+          {
+            title: `Momentum`,
+            seriesType: SeriesType.Based,
+            datasetPath: `${ratioDatasetPath}-1y-sma-momentum-oscillator`,
+          },
+          {
+            title: `Base`,
+            color: colors.white,
+            datasetPath: `/${scale}-to-0`,
+            options: {
+              lineStyle: 3,
+              lastValueVisible: false,
+            },
+          },
+        ],
+      },
+      {
+        scale,
+        name: "Top Percentiles",
+        description: "",
+        icon: IconTablerJetpack,
+        title: `Market Price To ${title} Ratio Top Percentiles`,
+        top: [
+          {
+            title: `SMA`,
+            color,
+            datasetPath: valueDatasetPath,
+          },
+        ],
+        bottom: [
+          {
+            title: `99.9%`,
+            color: colors.extremeMax,
+            datasetPath: `${ratioDatasetPath}-99-9p`,
+          },
+          {
+            title: `99.5%`,
+            color: colors.extremeMiddle,
+            datasetPath: `${ratioDatasetPath}-99-5p`,
+          },
+          {
+            title: `99%`,
+            color: colors.extremeMin,
+            datasetPath: `${ratioDatasetPath}-99p`,
+          },
+          {
+            title: `Raw`,
+            color: colors.white,
+            datasetPath: ratioDatasetPath,
+            options: {
+              base: 1,
+            },
+          },
+        ],
+      },
+      {
+        scale,
+        name: "Bottom Percentiles",
+        description: "",
+        icon: IconTablerScubaMask,
+        title: `Market Price To ${title} Ratio Bottom Percentiles`,
+        top: [
+          {
+            title: `SMA`,
+            color,
+            datasetPath: valueDatasetPath,
+          },
+        ],
+        bottom: [
+          {
+            title: `1%`,
+            color: colors.extremeMin,
+            datasetPath: `${ratioDatasetPath}-1p`,
+          },
+          {
+            title: `0.5%`,
+            color: colors.extremeMiddle,
+            datasetPath: `${ratioDatasetPath}-0-5p`,
+          },
+          {
+            title: `0.1%`,
+            color: colors.extremeMax,
+            datasetPath: `${ratioDatasetPath}-0-1p`,
+          },
+          {
+            title: `Raw`,
+            color: colors.white,
+            datasetPath: ratioDatasetPath,
+            options: {
+              base: 1,
+            },
+          },
+        ],
+      },
+      {
+        scale,
+        name: "Extreme Tops",
+        description: "",
+        icon: IconTablerRocket,
+        title: `${title} Extreme Tops`,
+        top: [
+          {
+            title: `99.9%`,
+            color: colors.extremeMax,
+            datasetPath: `${valueDatasetPath}-99-9p`,
+          },
+          {
+            title: `99.5%`,
+            color: colors.extremeMiddle,
+            datasetPath: `${valueDatasetPath}-99-5p`,
+          },
+          {
+            title: `99%`,
+            color: colors.extremeMin,
+            datasetPath: `${valueDatasetPath}-99p`,
+          },
+        ],
+      },
+      {
+        scale,
+        name: "Extreme Bottoms",
+        description: "",
+        icon: IconTablerSubmarine,
+        title: `${title} Extreme Bottoms`,
+        top: [
+          {
+            title: `0.1%`,
+            color: colors.extremeMax,
+            datasetPath: `${valueDatasetPath}-0-1p`,
+          },
+          {
+            title: `0.5%`,
+            color: colors.extremeMiddle,
+            datasetPath: `${valueDatasetPath}-0-5p`,
+          },
+          {
+            title: `1%`,
+            color: colors.extremeMin,
+            datasetPath: `${valueDatasetPath}-1p`,
+          },
+        ],
+      },
+    ],
+  };
+}

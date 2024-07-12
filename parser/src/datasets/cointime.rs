@@ -5,7 +5,7 @@ use crate::{
     utils::{ONE_DAY_IN_DAYS, ONE_YEAR_IN_DAYS, THREE_MONTHS_IN_DAYS, TWO_WEEK_IN_DAYS},
 };
 
-use super::{AnyDataset, ComputeData, InsertData, MinInitialStates};
+use super::{AnyDataset, ComputeData, InsertData, MinInitialStates, RatioDataset};
 
 #[derive(Allocative)]
 pub struct CointimeDataset {
@@ -17,6 +17,7 @@ pub struct CointimeDataset {
     // Computed
     pub active_cap: BiMap<f32>,
     pub active_price: BiMap<f32>,
+    pub active_price_ratio: RatioDataset,
     pub active_supply: BiMap<f32>,
     pub active_supply_3m_net_change: BiMap<f32>,
     pub active_supply_net_change: BiMap<f32>,
@@ -27,6 +28,7 @@ pub struct CointimeDataset {
     pub cointime_adjusted_yearly_inflation_rate: BiMap<f32>,
     pub cointime_cap: BiMap<f32>,
     pub cointime_price: BiMap<f32>,
+    pub cointime_price_ratio: RatioDataset,
     pub cointime_value_created: BiMap<f32>,
     pub cointime_value_destroyed: BiMap<f32>,
     pub cointime_value_stored: BiMap<f32>,
@@ -48,9 +50,11 @@ pub struct CointimeDataset {
     pub total_cointime_value_stored: BiMap<f32>,
     pub true_market_deviation: BiMap<f32>,
     pub true_market_mean: BiMap<f32>,
+    pub true_market_mean_ratio: RatioDataset,
     pub true_market_net_unrealized_profit_and_loss: BiMap<f32>,
     pub vaulted_cap: BiMap<f32>,
     pub vaulted_price: BiMap<f32>,
+    pub vaulted_price_ratio: RatioDataset,
     pub vaulted_supply: BiMap<f32>,
     pub vaulted_supply_net_change: BiMap<f32>,
     pub vaulted_supply_3m_net_change: BiMap<f32>,
@@ -67,6 +71,7 @@ impl CointimeDataset {
 
             active_cap: BiMap::new_bin(1, &f("active_cap")),
             active_price: BiMap::new_bin(1, &f("active_price")),
+            active_price_ratio: RatioDataset::import(parent_path, "active_price")?,
             active_supply: BiMap::new_bin(1, &f("active_supply")),
             active_supply_3m_net_change: BiMap::new_bin(1, &f("active_supply_3m_net_change")),
             active_supply_net_change: BiMap::new_bin(1, &f("active_supply_net_change")),
@@ -81,6 +86,7 @@ impl CointimeDataset {
             ),
             cointime_cap: BiMap::new_bin(1, &f("cointime_cap")),
             cointime_price: BiMap::new_bin(1, &f("cointime_price")),
+            cointime_price_ratio: RatioDataset::import(parent_path, "cointime_price")?,
             cointime_value_created: BiMap::new_bin(1, &f("cointime_value_created")),
             cointime_value_destroyed: BiMap::new_bin(1, &f("cointime_value_destroyed")),
             cointime_value_stored: BiMap::new_bin(1, &f("cointime_value_stored")),
@@ -114,12 +120,14 @@ impl CointimeDataset {
             total_cointime_value_stored: BiMap::new_bin(1, &f("total_cointime_value_stored")),
             true_market_deviation: BiMap::new_bin(1, &f("true_market_deviation")),
             true_market_mean: BiMap::new_bin(1, &f("true_market_mean")),
+            true_market_mean_ratio: RatioDataset::import(parent_path, "true_market_mean")?,
             true_market_net_unrealized_profit_and_loss: BiMap::new_bin(
                 1,
                 &f("true_market_net_unrealized_profit_and_loss"),
             ),
             vaulted_cap: BiMap::new_bin(1, &f("vaulted_cap")),
             vaulted_price: BiMap::new_bin(1, &f("vaulted_price")),
+            vaulted_price_ratio: RatioDataset::import(parent_path, "vaulted_price")?,
             vaulted_supply: BiMap::new_bin(1, &f("vaulted_supply")),
             vaulted_supply_3m_net_change: BiMap::new_bin(1, &f("vaulted_supply_3m_net_change")),
             vaulted_supply_net_change: BiMap::new_bin(1, &f("vaulted_supply_net_change")),
@@ -493,8 +501,8 @@ impl AnyDataset for CointimeDataset {
     }
 
     fn to_computed_bi_map_vec(&self) -> Vec<&(dyn AnyBiMap + Send + Sync)> {
-        vec![
-            &self.active_cap,
+        let mut v = vec![
+            &self.active_cap as &(dyn AnyBiMap + Send + Sync),
             &self.active_price,
             &self.active_supply,
             &self.active_supply_3m_net_change,
@@ -535,12 +543,19 @@ impl AnyDataset for CointimeDataset {
             &self.vaulted_supply_3m_net_change,
             &self.vaultedness,
             &self.vaulting_rate,
-        ]
+        ];
+
+        v.append(&mut self.active_price_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.cointime_price_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.true_market_mean_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.vaulted_price_ratio.to_computed_bi_map_vec());
+
+        v
     }
 
     fn to_computed_mut_bi_map_vec(&mut self) -> Vec<&mut dyn AnyBiMap> {
-        vec![
-            &mut self.active_cap,
+        let mut v = vec![
+            &mut self.active_cap as &mut dyn AnyBiMap,
             &mut self.active_price,
             &mut self.active_supply,
             &mut self.active_supply_3m_net_change,
@@ -581,7 +596,14 @@ impl AnyDataset for CointimeDataset {
             &mut self.vaulted_supply_3m_net_change,
             &mut self.vaultedness,
             &mut self.vaulting_rate,
-        ]
+        ];
+
+        v.append(&mut self.active_price_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.cointime_price_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.true_market_mean_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.vaulted_price_ratio.to_computed_mut_bi_map_vec());
+
+        v
     }
 
     fn get_min_initial_states(&self) -> &MinInitialStates {

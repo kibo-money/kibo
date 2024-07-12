@@ -10,7 +10,7 @@ import {
   createLiquidityFolder,
 } from "./addresses";
 import { createPresets as createBlocksPresets } from "./blocks";
-import { createPresets as createCoinblocksPresets } from "./coinblocks";
+import { createPresets as createCoinblocksPresets } from "./cointime";
 import { createPresets as createHodlersPresets } from "./hodlers";
 import { createPresets as createMarketPresets } from "./market";
 import { createPresets as createMinersPresets } from "./miners";

@@ -1,6 +1,7 @@
 import { colors } from "/src/scripts/utils/colors";
 
 import { SeriesType } from "../../enums";
+import { createRatioFolder } from "../ratio";
 import { datasetIdToPrefix } from "./utils";
 
 export function createCohortPresetRealizedFolder({
@@ -33,6 +34,13 @@ export function createCohortPresetRealizedFolder({
           },
         ],
       },
+      createRatioFolder({
+        scale,
+        color,
+        ratioDatasetPath: `/${scale}-to-market-price-to-${datasetPrefix}realized-price-ratio`,
+        valueDatasetPath: `/${scale}-to-${datasetPrefix}realized-price`,
+        title: `${title} Realized Price`,
+      }),
       {
         scale,
         name: `Capitalization`,
