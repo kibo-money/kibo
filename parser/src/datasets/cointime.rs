@@ -165,7 +165,7 @@ impl CointimeDataset {
     #[allow(clippy::too_many_arguments)]
     pub fn compute(
         &mut self,
-        &ComputeData { heights, dates }: &ComputeData,
+        compute_data: &ComputeData,
         first_height: &mut DateMap<usize>,
         last_height: &mut DateMap<usize>,
         closes: &mut BiMap<f32>,
@@ -176,6 +176,8 @@ impl CointimeDataset {
         annualized_transaction_volume: &mut BiMap<f32>,
         cumulative_subsidy_in_dollars: &mut BiMap<f32>,
     ) {
+        let &ComputeData { heights, dates } = compute_data;
+
         self.cumulative_coinblocks_destroyed
             .multi_insert_cumulative(heights, dates, &mut self.coinblocks_destroyed);
 
@@ -488,6 +490,18 @@ impl CointimeDataset {
             &mut self.cointime_price,
             circulating_supply,
         );
+
+        self.active_price_ratio
+            .compute(compute_data, closes, &mut self.active_price);
+
+        self.cointime_price_ratio
+            .compute(compute_data, closes, &mut self.cointime_price);
+
+        self.true_market_mean_ratio
+            .compute(compute_data, closes, &mut self.true_market_mean);
+
+        self.vaulted_price_ratio
+            .compute(compute_data, closes, &mut self.vaulted_price);
     }
 }
 
