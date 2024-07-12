@@ -1,6 +1,8 @@
 import { averages } from "/src/scripts/datasets/date";
 import { colors } from "/src/scripts/utils/colors";
 
+import { SeriesType } from "../../enums";
+
 export function createPresets(scale: ResourceScale): PartialPresetFolder {
   return {
     name: "Averages",
@@ -58,28 +60,88 @@ function createPresetFolder({
         ],
       },
       {
-        scale,
         name: "Ratio",
-        description: "",
-        icon: IconTablerMathXDivideY,
-        title: `Market Price To ${name} Moving Average Ratio`,
-        top: [
+        tree: [
           {
-            title: `SMA`,
-            color,
-            datasetPath: `/${scale}-to-price-${key}-sma`,
+            scale,
+            name: "Basic",
+            description: "",
+            icon: IconTablerMathXDivideY,
+            title: `Market Price To ${name} Moving Average Ratio`,
+            top: [
+              {
+                title: `SMA`,
+                color,
+                datasetPath: `/${scale}-to-price-${key}-sma`,
+              },
+            ],
+            bottom: [
+              {
+                title: `Ratio`,
+                seriesType: SeriesType.Based,
+                datasetPath: `/${scale}-to-market-price-to-price-${key}-sma-ratio`,
+                options: {
+                  base: 1,
+                },
+              },
+              {
+                title: `Even`,
+                color: colors.white,
+                datasetPath: `/${scale}-to-1`,
+                options: {
+                  lineStyle: 3,
+                  lastValueVisible: false,
+                },
+              },
+            ],
           },
-        ],
-        bottom: [
           {
-            title: `Ratio`,
-            color,
-            datasetPath: `/${scale}-to-market-price-to-price-${key}-sma-ratio`,
-          },
-          {
-            title: `Even`,
-            color: colors.white,
-            datasetPath: `/${scale}-to-1`,
+            scale,
+            name: "Averages",
+            description: "",
+            icon: IconTablerMathAvg,
+            title: `Market Price To ${name} Moving Average Ratio Averages`,
+            top: [
+              {
+                title: `SMA`,
+                color,
+                datasetPath: `/${scale}-to-price-${key}-sma`,
+              },
+            ],
+            bottom: [
+              {
+                title: `1Y`,
+                color: colors.red,
+                datasetPath: `/${scale}-to-market-price-to-price-${key}-sma-ratio-1y-sma`,
+              },
+              {
+                title: `1M`,
+                color: colors.orange,
+                datasetPath: `/${scale}-to-market-price-to-price-${key}-sma-ratio-1m-sma`,
+              },
+              {
+                title: `1W`,
+                color: colors.yellow,
+                datasetPath: `/${scale}-to-market-price-to-price-${key}-sma-ratio-1w-sma`,
+              },
+              {
+                title: `Raw`,
+                color: colors.white,
+                datasetPath: `/${scale}-to-market-price-to-price-${key}-sma-ratio`,
+                options: {
+                  base: 1,
+                },
+              },
+              {
+                title: `Even`,
+                color: colors.gray,
+                datasetPath: `/${scale}-to-1`,
+                options: {
+                  lineStyle: 3,
+                  lastValueVisible: false,
+                },
+              },
+            ],
           },
         ],
       },

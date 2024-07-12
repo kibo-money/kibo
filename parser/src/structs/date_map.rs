@@ -640,10 +640,14 @@ where
                 })
                 .into();
 
-            let last_value = f32::lossy_from(source.get_or_import(date).unwrap_or_else(|| {
+            let mut last_value = f32::lossy_from(source.get_or_import(date).unwrap_or_else(|| {
                 dbg!(date);
                 panic!()
             }));
+
+            if last_value.is_nan() {
+                last_value = 0.0;
+            }
 
             average.replace(((previous_average * (days - 1.0) + last_value) / days).into());
 

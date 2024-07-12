@@ -652,7 +652,11 @@ where
                 })
                 .into();
 
-            let last_value = f32::lossy_from(source.get_or_import(&height));
+            let mut last_value = f32::lossy_from(source.get_or_import(&height));
+
+            if last_value.is_nan() {
+                last_value = 0.0;
+            }
 
             average.replace(
                 ((previous_average * (block_time as f32 - 1.0) + last_value) / block_time as f32)
