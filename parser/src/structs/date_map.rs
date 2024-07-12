@@ -731,10 +731,13 @@ where
         let min_percentile_date = chrono::NaiveDate::from_ymd_opt(2012, 1, 1).unwrap();
         let min_percentile_wdate = WNaiveDate::wrap(min_percentile_date);
 
+        let nan = T::from(f32::NAN).unwrap();
+        let two = T::from(2.0).unwrap();
+
         dates.iter().cloned().try_for_each(|date| {
             if date < min_percentile_wdate {
                 map_and_percentiles.iter_mut().for_each(|(map, _)| {
-                    (*map).insert(date, T::from(f32::NAN).unwrap());
+                    (*map).insert(date, nan);
                 });
                 return ControlFlow::Continue::<()>(());
             }
@@ -800,13 +803,12 @@ where
                         }
 
                         let value = {
-                            if vec.is_empty() {
-                                T::default()
+                            if len < 2 {
+                                nan
                             } else {
                                 let index = (len - 1) as f32 * *percentile;
 
                                 let fract = index.fract();
-                                let fract_t = T::from(fract).unwrap();
 
                                 if fract != 0.0 {
                                     (vec.get(index.ceil() as usize)
@@ -815,7 +817,6 @@ where
                                             panic!()
                                         })
                                         .0
-                                        * fract_t
                                         + vec
                                             .get(index.floor() as usize)
                                             .unwrap_or_else(|| {
@@ -829,7 +830,7 @@ where
                                                 panic!()
                                             })
                                             .0)
-                                        * T::from(1.0 - fract).unwrap()
+                                        / two
                                 } else {
                                     vec.get(index.floor() as usize)
                                         .unwrap_or_else(|| {
@@ -845,7 +846,7 @@ where
                     });
             } else {
                 map_and_percentiles.iter_mut().for_each(|(map, _)| {
-                    (*map).insert(date, T::default());
+                    (*map).insert(date, nan);
                 });
             }
 
