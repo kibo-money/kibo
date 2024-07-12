@@ -717,104 +717,114 @@ where
         let mut ordered_vec = None;
         let mut sorted_vec = None;
 
-        heights.iter().for_each(|height| {
-            let height = *height;
+        let min_percentile_height = 160_000;
 
-            if let Some(start) = block_time.map_or(Some(0), |size| height.checked_sub(size)) {
-                if sorted_vec.is_none() {
-                    let mut vec = (start..=height)
-                        .map(|height| OrderedFloat(self.get_or_import(&height)))
-                        .collect_vec();
+        if min_percentile_height % HEIGHT_MAP_CHUNK_SIZE != 0 {
+            panic!("Should be 0");
+        }
 
-                    if block_time.is_some() {
-                        ordered_vec.replace(VecDeque::from(vec.clone()));
-                    }
+        heights
+            .iter()
+            .cloned()
+            .filter(|height| height < &min_percentile_height)
+            .for_each(|height| {
+                if let Some(start) =
+                    block_time.map_or(Some(min_percentile_height), |size| height.checked_sub(size))
+                {
+                    if sorted_vec.is_none() {
+                        let mut vec = (start..=height)
+                            .map(|height| OrderedFloat(self.get_or_import(&height)))
+                            .collect_vec();
 
-                    vec.sort_unstable();
-
-                    sorted_vec.replace(vec);
-                } else {
-                    let float_value = OrderedFloat(self.get_or_import(&height));
-
-                    if block_time.is_some() {
-                        let first = ordered_vec.as_mut().unwrap().pop_front().unwrap();
-                        let pos = sorted_vec.as_ref().unwrap().binary_search(&first).unwrap();
-                        sorted_vec.as_mut().unwrap().remove(pos);
-
-                        ordered_vec.as_mut().unwrap().push_back(float_value);
-                    }
-
-                    let pos = sorted_vec
-                        .as_ref()
-                        .unwrap()
-                        .binary_search(&float_value)
-                        .unwrap_or_else(|pos| pos);
-
-                    sorted_vec.as_mut().unwrap().insert(pos, float_value);
-                }
-
-                let vec = sorted_vec.as_ref().unwrap();
-
-                let len = vec.len();
-
-                map_and_percentiles
-                    .iter_mut()
-                    .for_each(|(map, percentile)| {
-                        if !(0.0..=1.0).contains(percentile) {
-                            panic!("The percentile should be between 0.0 and 1.0");
+                        if block_time.is_some() {
+                            ordered_vec.replace(VecDeque::from(vec.clone()));
                         }
 
-                        let value = {
-                            if vec.is_empty() {
-                                T::default()
-                            } else {
-                                let index = (len - 1) as f32 * *percentile;
+                        vec.sort_unstable();
 
-                                let fract = index.fract();
-                                let fract_t = T::from(fract).unwrap();
+                        sorted_vec.replace(vec);
+                    } else {
+                        let float_value = OrderedFloat(self.get_or_import(&height));
 
-                                if fract != 0.0 {
-                                    (vec.get(index.ceil() as usize)
-                                        .unwrap_or_else(|| {
-                                            dbg!(
-                                                index,
-                                                &self.path_all,
-                                                &self.path_all,
-                                                &self.to_insert,
-                                                block_time,
-                                                vec
-                                            );
-                                            panic!()
-                                        })
-                                        .0
-                                        * fract_t
-                                        + vec
-                                            .get(index.floor() as usize)
+                        if block_time.is_some() {
+                            let first = ordered_vec.as_mut().unwrap().pop_front().unwrap();
+                            let pos = sorted_vec.as_ref().unwrap().binary_search(&first).unwrap();
+                            sorted_vec.as_mut().unwrap().remove(pos);
+
+                            ordered_vec.as_mut().unwrap().push_back(float_value);
+                        }
+
+                        let pos = sorted_vec
+                            .as_ref()
+                            .unwrap()
+                            .binary_search(&float_value)
+                            .unwrap_or_else(|pos| pos);
+
+                        sorted_vec.as_mut().unwrap().insert(pos, float_value);
+                    }
+
+                    let vec = sorted_vec.as_ref().unwrap();
+
+                    let len = vec.len();
+
+                    map_and_percentiles
+                        .iter_mut()
+                        .for_each(|(map, percentile)| {
+                            if !(0.0..=1.0).contains(percentile) {
+                                panic!("The percentile should be between 0.0 and 1.0");
+                            }
+
+                            let value = {
+                                if vec.is_empty() {
+                                    T::default()
+                                } else {
+                                    let index = (len - 1) as f32 * *percentile;
+
+                                    let fract = index.fract();
+                                    let fract_t = T::from(fract).unwrap();
+
+                                    if fract != 0.0 {
+                                        (vec.get(index.ceil() as usize)
                                             .unwrap_or_else(|| {
                                                 dbg!(
                                                     index,
                                                     &self.path_all,
                                                     &self.path_all,
-                                                    block_time
+                                                    &self.to_insert,
+                                                    block_time,
+                                                    vec
                                                 );
                                                 panic!()
                                             })
-                                            .0)
-                                        * T::from(1.0 - fract).unwrap()
-                                } else {
-                                    vec.get(index as usize).unwrap().0
+                                            .0
+                                            * fract_t
+                                            + vec
+                                                .get(index.floor() as usize)
+                                                .unwrap_or_else(|| {
+                                                    dbg!(
+                                                        index,
+                                                        &self.path_all,
+                                                        &self.path_all,
+                                                        block_time
+                                                    );
+                                                    panic!()
+                                                })
+                                                .0)
+                                            * T::from(1.0 - fract).unwrap()
+                                    } else {
+                                        vec.get(index as usize).unwrap().0
+                                    }
                                 }
-                            }
-                        };
+                            };
 
-                        (*map).insert(height, value);
+                            (*map).insert(height, value);
+                        });
+                } else {
+                    map_and_percentiles.iter_mut().for_each(|(map, _)| {
+                        (*map).insert(height, T::default());
                     });
-            } else {
-                map_and_percentiles.iter_mut().for_each(|(map, _)| {
-                    (*map).insert(height, T::default());
-                });
-            }
-        });
+                }
+            });
     }
 
     // pub fn insert_cumulative(&mut self, height: usize, source: &HeightMap<T>) -> T

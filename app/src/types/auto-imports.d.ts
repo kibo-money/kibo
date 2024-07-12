@@ -238,6 +238,7 @@ declare global {
   const IconTablerVolume2: typeof import('~icons/tabler/volume2.jsx')['default']
   const IconTablerWall: typeof import('~icons/tabler/wall.jsx')['default']
   const IconTablerWallet: typeof import('~icons/tabler/wallet.jsx')['default']
+  const IconTablerWaveSine: typeof import('~icons/tabler/wave-sine.jsx')['default']
   const IconTablerWeight: typeof import('~icons/tabler/weight.jsx')['default']
   const IconTablerWind: typeof import('~icons/tabler/wind.jsx')['default']
   const IconTablerX: typeof import('~icons/tabler/x.jsx')['default']

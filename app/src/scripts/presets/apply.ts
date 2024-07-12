@@ -294,7 +294,7 @@ export function applySeriesList({
         });
       }
 
-      seriesConfigList.reverse().forEach((seriesConfig, index) => {
+      [...seriesConfigList].reverse().forEach((seriesConfig, index) => {
         const dataset = datasets.getOrImport(scale, seriesConfig.datasetPath);
 
         activeDatasets.push(dataset);

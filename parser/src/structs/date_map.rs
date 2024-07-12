@@ -728,81 +728,80 @@ where
         let mut ordered_vec = None;
         let mut sorted_vec = None;
 
-        dates.iter().for_each(|date| {
-            if let Some(start) = days.map_or(chrono::NaiveDate::from_ymd_opt(2009, 1, 3), |size| {
-                date.checked_sub_days(Days::new(size as u64))
-            }) {
-                if sorted_vec.is_none() {
-                    let mut vec = start
-                        .iter_days()
-                        .take_while(|d| *d != **date)
-                        .flat_map(|date| self.get_or_import(&WNaiveDate::wrap(date)))
-                        .map(|f| OrderedFloat(f))
-                        .collect_vec();
+        let min_percentile_date = chrono::NaiveDate::from_ymd_opt(2012, 1, 1).unwrap();
+        let min_percentile_wdate = WNaiveDate::wrap(min_percentile_date);
 
-                    if days.is_some() {
-                        ordered_vec.replace(VecDeque::from(vec.clone()));
+        dates
+            .iter()
+            .cloned()
+            .filter(|date| date < &min_percentile_wdate)
+            .for_each(|date| {
+                if let Some(start) = days.map_or(Some(min_percentile_date), |size| {
+                    date.checked_sub_days(Days::new(size as u64))
+                }) {
+                    if sorted_vec.is_none() {
+                        let mut vec = start
+                            .iter_days()
+                            .take_while(|d| *d <= *date)
+                            .flat_map(|date| self.get_or_import(&WNaiveDate::wrap(date)))
+                            .map(|f| OrderedFloat(f))
+                            .collect_vec();
+
+                        if days.is_some() {
+                            ordered_vec.replace(VecDeque::from(vec.clone()));
+                        }
+
+                        vec.sort_unstable();
+                        sorted_vec.replace(vec);
+                    } else {
+                        let float_value = OrderedFloat(self.get_or_import(&date).unwrap());
+
+                        if let Some(days) = days {
+                            if let Some(ordered_vec) = ordered_vec.as_mut() {
+                                if ordered_vec.len() == days {
+                                    let first = ordered_vec.pop_front().unwrap();
+
+                                    let pos =
+                                        sorted_vec.as_ref().unwrap().binary_search(&first).unwrap();
+
+                                    sorted_vec.as_mut().unwrap().remove(pos);
+                                }
+
+                                ordered_vec.push_back(float_value);
+                            }
+                        }
+
+                        let pos = sorted_vec
+                            .as_ref()
+                            .unwrap()
+                            .binary_search(&float_value)
+                            .unwrap_or_else(|pos| pos);
+
+                        sorted_vec.as_mut().unwrap().insert(pos, float_value);
                     }
 
-                    vec.sort_unstable();
-                    sorted_vec.replace(vec);
-                } else {
-                    let float_value = OrderedFloat(self.get_or_import(date).unwrap());
+                    let vec = sorted_vec.as_ref().unwrap();
 
-                    if let Some(days) = days {
-                        if let Some(ordered_vec) = ordered_vec.as_mut() {
-                            if ordered_vec.len() == days {
-                                let first = ordered_vec.pop_front().unwrap();
+                    let len = vec.len();
 
-                                let pos =
-                                    sorted_vec.as_ref().unwrap().binary_search(&first).unwrap();
-
-                                sorted_vec.as_mut().unwrap().remove(pos);
+                    map_and_percentiles
+                        .iter_mut()
+                        .for_each(|(map, percentile)| {
+                            if !(0.0..=1.0).contains(percentile) {
+                                panic!("The percentile should be between 0.0 and 1.0");
                             }
 
-                            ordered_vec.push_back(float_value);
-                        }
-                    }
+                            let value = {
+                                if vec.is_empty() {
+                                    T::default()
+                                } else {
+                                    let index = (len - 1) as f32 * *percentile;
 
-                    let pos = sorted_vec
-                        .as_ref()
-                        .unwrap()
-                        .binary_search(&float_value)
-                        .unwrap_or_else(|pos| pos);
+                                    let fract = index.fract();
+                                    let fract_t = T::from(fract).unwrap();
 
-                    sorted_vec.as_mut().unwrap().insert(pos, float_value);
-                }
-
-                let vec = sorted_vec.as_ref().unwrap();
-
-                let len = vec.len();
-
-                map_and_percentiles
-                    .iter_mut()
-                    .for_each(|(map, percentile)| {
-                        if !(0.0..=1.0).contains(percentile) {
-                            panic!("The percentile should be between 0.0 and 1.0");
-                        }
-
-                        let value = {
-                            if vec.is_empty() {
-                                T::default()
-                            } else {
-                                let index = (len - 1) as f32 * *percentile;
-
-                                let fract = index.fract();
-                                let fract_t = T::from(fract).unwrap();
-
-                                if fract != 0.0 {
-                                    (vec.get(index.ceil() as usize)
-                                        .unwrap_or_else(|| {
-                                            dbg!(vec, index, &self.path_all, &self.path_all, days);
-                                            panic!()
-                                        })
-                                        .0
-                                        * fract_t
-                                        + vec
-                                            .get(index.floor() as usize)
+                                    if fract != 0.0 {
+                                        (vec.get(index.ceil() as usize)
                                             .unwrap_or_else(|| {
                                                 dbg!(
                                                     vec,
@@ -813,27 +812,41 @@ where
                                                 );
                                                 panic!()
                                             })
-                                            .0)
-                                        * T::from(1.0 - fract).unwrap()
-                                } else {
-                                    vec.get(index.floor() as usize)
-                                        .unwrap_or_else(|| {
-                                            dbg!(vec, index);
-                                            panic!();
-                                        })
-                                        .0
+                                            .0
+                                            * fract_t
+                                            + vec
+                                                .get(index.floor() as usize)
+                                                .unwrap_or_else(|| {
+                                                    dbg!(
+                                                        vec,
+                                                        index,
+                                                        &self.path_all,
+                                                        &self.path_all,
+                                                        days
+                                                    );
+                                                    panic!()
+                                                })
+                                                .0)
+                                            * T::from(1.0 - fract).unwrap()
+                                    } else {
+                                        vec.get(index.floor() as usize)
+                                            .unwrap_or_else(|| {
+                                                dbg!(vec, index);
+                                                panic!();
+                                            })
+                                            .0
+                                    }
                                 }
-                            }
-                        };
+                            };
 
-                        (*map).insert(*date, value);
+                            (*map).insert(date, value);
+                        });
+                } else {
+                    map_and_percentiles.iter_mut().for_each(|(map, _)| {
+                        (*map).insert(date, T::default());
                     });
-            } else {
-                map_and_percentiles.iter_mut().for_each(|(map, _)| {
-                    (*map).insert(*date, T::default());
-                });
-            }
-        });
+                }
+            });
     }
 
     //
