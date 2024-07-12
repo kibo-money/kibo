@@ -552,7 +552,7 @@ export function createPresets(scale: ResourceScale) {
               {
                 title: "Vaulted Supply Net Change",
                 color: colors.vaultedness,
-                datasetPath: `/${scale}-to-vaulted-supply`,
+                datasetPath: `/${scale}-to-vaulted-supply-net-change`,
               },
             ],
           },

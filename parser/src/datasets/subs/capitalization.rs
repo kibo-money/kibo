@@ -19,7 +19,7 @@ pub struct CapitalizationDataset {
     // Computed
     pub realized_price: BiMap<f32>,
     realized_cap_1m_net_change: BiMap<f32>,
-    ratio: RatioDataset,
+    realized_price_ratio: RatioDataset,
 }
 
 impl CapitalizationDataset {
@@ -32,7 +32,7 @@ impl CapitalizationDataset {
             realized_cap: BiMap::new_bin(1, &f("realized_cap")),
             realized_cap_1m_net_change: BiMap::new_bin(1, &f("realized_cap_1m_net_change")),
             realized_price: BiMap::new_bin(1, &f("realized_price")),
-            ratio: RatioDataset::import(parent_path, "realized_price")?,
+            realized_price_ratio: RatioDataset::import(parent_path, "realized_price")?,
         };
 
         s.min_initial_states
@@ -83,7 +83,7 @@ impl CapitalizationDataset {
             ONE_MONTH_IN_DAYS,
         );
 
-        self.ratio
+        self.realized_price_ratio
             .compute(compute_data, closes, &mut self.realized_price);
     }
 }
@@ -106,7 +106,7 @@ impl AnyDataset for CapitalizationDataset {
             &self.realized_price as &(dyn AnyBiMap + Send + Sync),
             &self.realized_cap_1m_net_change,
         ];
-        v.append(&mut self.ratio.to_computed_bi_map_vec());
+        v.append(&mut self.realized_price_ratio.to_computed_bi_map_vec());
         v
     }
 
@@ -115,7 +115,7 @@ impl AnyDataset for CapitalizationDataset {
             &mut self.realized_price as &mut dyn AnyBiMap,
             &mut self.realized_cap_1m_net_change,
         ];
-        v.append(&mut self.ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.realized_price_ratio.to_computed_mut_bi_map_vec());
         v
     }
 }

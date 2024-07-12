@@ -14,7 +14,7 @@ use crate::{
     utils::{ONE_MONTH_IN_DAYS, ONE_WEEK_IN_DAYS, ONE_YEAR_IN_DAYS},
 };
 
-use super::{AnyDataset, ComputeData, MinInitialStates};
+use super::{AnyDataset, ComputeData, MinInitialStates, RatioDataset};
 
 #[derive(Allocative)]
 pub struct PriceDatasets {
@@ -32,19 +32,32 @@ pub struct PriceDatasets {
     // Computed
     pub closes: BiMap<f32>,
     pub market_cap: BiMap<f32>,
-    pub price_1w_sma: DateMap<f32>,
-    pub price_1m_sma: DateMap<f32>,
-    pub price_1y_sma: DateMap<f32>,
-    pub price_2y_sma: DateMap<f32>,
-    pub price_4y_sma: DateMap<f32>,
-    pub price_8d_sma: DateMap<f32>,
-    pub price_13d_sma: DateMap<f32>,
-    pub price_21d_sma: DateMap<f32>,
-    pub price_34d_sma: DateMap<f32>,
-    pub price_55d_sma: DateMap<f32>,
-    pub price_89d_sma: DateMap<f32>,
-    pub price_144d_sma: DateMap<f32>,
-    pub price_200w_sma: DateMap<f32>,
+    pub price_1w_sma: BiMap<f32>,
+    pub price_1w_sma_ratio: RatioDataset,
+    pub price_1m_sma: BiMap<f32>,
+    pub price_1m_sma_ratio: RatioDataset,
+    pub price_1y_sma: BiMap<f32>,
+    pub price_1y_sma_ratio: RatioDataset,
+    pub price_2y_sma: BiMap<f32>,
+    pub price_2y_sma_ratio: RatioDataset,
+    pub price_4y_sma: BiMap<f32>,
+    pub price_4y_sma_ratio: RatioDataset,
+    pub price_8d_sma: BiMap<f32>,
+    pub price_8d_sma_ratio: RatioDataset,
+    pub price_13d_sma: BiMap<f32>,
+    pub price_13d_sma_ratio: RatioDataset,
+    pub price_21d_sma: BiMap<f32>,
+    pub price_21d_sma_ratio: RatioDataset,
+    pub price_34d_sma: BiMap<f32>,
+    pub price_34d_sma_ratio: RatioDataset,
+    pub price_55d_sma: BiMap<f32>,
+    pub price_55d_sma_ratio: RatioDataset,
+    pub price_89d_sma: BiMap<f32>,
+    pub price_89d_sma_ratio: RatioDataset,
+    pub price_144d_sma: BiMap<f32>,
+    pub price_144d_sma_ratio: RatioDataset,
+    pub price_200w_sma: BiMap<f32>,
+    pub price_200w_sma_ratio: RatioDataset,
     pub price_1d_total_return: DateMap<f32>,
     pub price_1m_total_return: DateMap<f32>,
     pub price_6m_total_return: DateMap<f32>,
@@ -80,19 +93,32 @@ impl PriceDatasets {
             ohlcs: BiMap::new_json(1, &format!("{price_path}/ohlc")),
             closes: BiMap::new_json(1, &f("close")),
             market_cap: BiMap::new_bin(1, &f("market_cap")),
-            price_1w_sma: DateMap::new_bin(1, &f("price_1w_sma")),
-            price_1m_sma: DateMap::new_bin(1, &f("price_1m_sma")),
-            price_1y_sma: DateMap::new_bin(1, &f("price_1y_sma")),
-            price_2y_sma: DateMap::new_bin(1, &f("price_2y_sma")),
-            price_4y_sma: DateMap::new_bin(1, &f("price_4y_sma")),
-            price_8d_sma: DateMap::new_bin(1, &f("price_8d_sma")),
-            price_13d_sma: DateMap::new_bin(1, &f("price_13d_sma")),
-            price_21d_sma: DateMap::new_bin(1, &f("price_21d_sma")),
-            price_34d_sma: DateMap::new_bin(1, &f("price_34d_sma")),
-            price_55d_sma: DateMap::new_bin(1, &f("price_55d_sma")),
-            price_89d_sma: DateMap::new_bin(1, &f("price_89d_sma")),
-            price_144d_sma: DateMap::new_bin(1, &f("price_144d_sma")),
-            price_200w_sma: DateMap::new_bin(1, &f("price_200w_sma")),
+            price_1w_sma: BiMap::new_bin(1, &f("price_1w_sma")),
+            price_1w_sma_ratio: RatioDataset::import(datasets_path, "price_1w_sma")?,
+            price_1m_sma: BiMap::new_bin(1, &f("price_1m_sma")),
+            price_1m_sma_ratio: RatioDataset::import(datasets_path, "price_1m_sma")?,
+            price_1y_sma: BiMap::new_bin(1, &f("price_1y_sma")),
+            price_1y_sma_ratio: RatioDataset::import(datasets_path, "price_1y_sma")?,
+            price_2y_sma: BiMap::new_bin(1, &f("price_2y_sma")),
+            price_2y_sma_ratio: RatioDataset::import(datasets_path, "price_2y_sma")?,
+            price_4y_sma: BiMap::new_bin(1, &f("price_4y_sma")),
+            price_4y_sma_ratio: RatioDataset::import(datasets_path, "price_4y_sma")?,
+            price_8d_sma: BiMap::new_bin(1, &f("price_8d_sma")),
+            price_8d_sma_ratio: RatioDataset::import(datasets_path, "price_8d_sma")?,
+            price_13d_sma: BiMap::new_bin(1, &f("price_13d_sma")),
+            price_13d_sma_ratio: RatioDataset::import(datasets_path, "price_13d_sma")?,
+            price_21d_sma: BiMap::new_bin(1, &f("price_21d_sma")),
+            price_21d_sma_ratio: RatioDataset::import(datasets_path, "price_21d_sma")?,
+            price_34d_sma: BiMap::new_bin(1, &f("price_34d_sma")),
+            price_34d_sma_ratio: RatioDataset::import(datasets_path, "price_34d_sma")?,
+            price_55d_sma: BiMap::new_bin(1, &f("price_55d_sma")),
+            price_55d_sma_ratio: RatioDataset::import(datasets_path, "price_55d_sma")?,
+            price_89d_sma: BiMap::new_bin(1, &f("price_89d_sma")),
+            price_89d_sma_ratio: RatioDataset::import(datasets_path, "price_89d_sma")?,
+            price_144d_sma: BiMap::new_bin(1, &f("price_144d_sma")),
+            price_144d_sma_ratio: RatioDataset::import(datasets_path, "price_144d_sma")?,
+            price_200w_sma: BiMap::new_bin(1, &f("price_200w_sma")),
+            price_200w_sma_ratio: RatioDataset::import(datasets_path, "price_200w_sma")?,
             price_1d_total_return: DateMap::new_bin(1, &f("price_1d_total_return")),
             price_1m_total_return: DateMap::new_bin(1, &f("price_1m_total_return")),
             price_6m_total_return: DateMap::new_bin(1, &f("price_6m_total_return")),
@@ -124,59 +150,65 @@ impl PriceDatasets {
             .multi_insert_multiply(heights, dates, &mut self.closes, circulating_supply);
 
         self.price_1w_sma.multi_insert_simple_average(
+            heights,
             dates,
-            &mut self.closes.date,
+            &mut self.closes,
             ONE_WEEK_IN_DAYS,
         );
 
         self.price_1m_sma.multi_insert_simple_average(
+            heights,
             dates,
-            &mut self.closes.date,
+            &mut self.closes,
             ONE_MONTH_IN_DAYS,
         );
 
         self.price_1y_sma.multi_insert_simple_average(
+            heights,
             dates,
-            &mut self.closes.date,
+            &mut self.closes,
             ONE_YEAR_IN_DAYS,
         );
 
         self.price_2y_sma.multi_insert_simple_average(
+            heights,
             dates,
-            &mut self.closes.date,
+            &mut self.closes,
             2 * ONE_YEAR_IN_DAYS,
         );
 
         self.price_4y_sma.multi_insert_simple_average(
+            heights,
             dates,
-            &mut self.closes.date,
+            &mut self.closes,
             4 * ONE_YEAR_IN_DAYS,
         );
 
         self.price_8d_sma
-            .multi_insert_simple_average(dates, &mut self.closes.date, 8);
+            .multi_insert_simple_average(heights, dates, &mut self.closes, 8);
 
         self.price_13d_sma
-            .multi_insert_simple_average(dates, &mut self.closes.date, 13);
+            .multi_insert_simple_average(heights, dates, &mut self.closes, 13);
 
         self.price_21d_sma
-            .multi_insert_simple_average(dates, &mut self.closes.date, 21);
+            .multi_insert_simple_average(heights, dates, &mut self.closes, 21);
 
         self.price_34d_sma
-            .multi_insert_simple_average(dates, &mut self.closes.date, 34);
+            .multi_insert_simple_average(heights, dates, &mut self.closes, 34);
 
         self.price_55d_sma
-            .multi_insert_simple_average(dates, &mut self.closes.date, 55);
+            .multi_insert_simple_average(heights, dates, &mut self.closes, 55);
 
         self.price_89d_sma
-            .multi_insert_simple_average(dates, &mut self.closes.date, 89);
+            .multi_insert_simple_average(heights, dates, &mut self.closes, 89);
 
         self.price_144d_sma
-            .multi_insert_simple_average(dates, &mut self.closes.date, 144);
+            .multi_insert_simple_average(heights, dates, &mut self.closes, 144);
 
         self.price_200w_sma.multi_insert_simple_average(
+            heights,
             dates,
-            &mut self.closes.date,
+            &mut self.closes,
             200 * ONE_WEEK_IN_DAYS,
         );
 
@@ -445,15 +477,9 @@ impl AnyDataset for PriceDatasets {
     }
 
     fn to_computed_bi_map_vec(&self) -> Vec<&(dyn AnyBiMap + Send + Sync)> {
-        vec![&self.closes, &self.market_cap]
-    }
-
-    fn to_computed_mut_bi_map_vec(&mut self) -> Vec<&mut dyn AnyBiMap> {
-        vec![&mut self.closes, &mut self.market_cap]
-    }
-
-    fn to_computed_date_map_vec(&self) -> Vec<&(dyn AnyDateMap + Send + Sync)> {
-        vec![
+        let mut v = vec![
+            &self.closes as &(dyn AnyBiMap + Send + Sync),
+            &self.market_cap,
             &self.price_1w_sma,
             &self.price_1m_sma,
             &self.price_1y_sma,
@@ -467,6 +493,63 @@ impl AnyDataset for PriceDatasets {
             &self.price_89d_sma,
             &self.price_144d_sma,
             &self.price_200w_sma,
+        ];
+
+        v.append(&mut self.price_1w_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_1m_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_1y_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_2y_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_4y_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_8d_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_13d_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_21d_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_34d_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_55d_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_89d_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_144d_sma_ratio.to_computed_bi_map_vec());
+        v.append(&mut self.price_200w_sma_ratio.to_computed_bi_map_vec());
+
+        v
+    }
+
+    fn to_computed_mut_bi_map_vec(&mut self) -> Vec<&mut dyn AnyBiMap> {
+        let mut v = vec![
+            &mut self.closes as &mut dyn AnyBiMap,
+            &mut self.market_cap,
+            &mut self.price_1w_sma,
+            &mut self.price_1m_sma,
+            &mut self.price_1y_sma,
+            &mut self.price_2y_sma,
+            &mut self.price_4y_sma,
+            &mut self.price_8d_sma,
+            &mut self.price_13d_sma,
+            &mut self.price_21d_sma,
+            &mut self.price_34d_sma,
+            &mut self.price_55d_sma,
+            &mut self.price_89d_sma,
+            &mut self.price_144d_sma,
+            &mut self.price_200w_sma,
+        ];
+
+        v.append(&mut self.price_1w_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_1m_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_1y_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_2y_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_4y_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_8d_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_13d_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_21d_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_34d_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_55d_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_89d_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_144d_sma_ratio.to_computed_mut_bi_map_vec());
+        v.append(&mut self.price_200w_sma_ratio.to_computed_mut_bi_map_vec());
+
+        v
+    }
+
+    fn to_computed_date_map_vec(&self) -> Vec<&(dyn AnyDateMap + Send + Sync)> {
+        vec![
             &self.price_1d_total_return,
             &self.price_1m_total_return,
             &self.price_6m_total_return,
@@ -483,19 +566,6 @@ impl AnyDataset for PriceDatasets {
 
     fn to_computed_mut_date_map_vec(&mut self) -> Vec<&mut dyn AnyDateMap> {
         vec![
-            &mut self.price_1w_sma,
-            &mut self.price_1m_sma,
-            &mut self.price_1y_sma,
-            &mut self.price_2y_sma,
-            &mut self.price_4y_sma,
-            &mut self.price_8d_sma,
-            &mut self.price_13d_sma,
-            &mut self.price_21d_sma,
-            &mut self.price_34d_sma,
-            &mut self.price_55d_sma,
-            &mut self.price_89d_sma,
-            &mut self.price_144d_sma,
-            &mut self.price_200w_sma,
             &mut self.price_1d_total_return,
             &mut self.price_1m_total_return,
             &mut self.price_6m_total_return,

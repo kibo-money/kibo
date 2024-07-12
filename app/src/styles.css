@@ -65,6 +65,11 @@ strong {
 .text-high-contrast {
   @apply text-orange-950 dark:text-orange-50;
 }
+
+.text-low-contrast {
+  @apply text-orange-950/50 dark:text-orange-50/50;
+}
+
 .decoration-high-contrast {
   @apply decoration-orange-950 dark:decoration-orange-50;
 }

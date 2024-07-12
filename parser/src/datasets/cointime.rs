@@ -215,7 +215,7 @@ impl CointimeDataset {
             &|liveliness| 1.0 - liveliness,
         );
 
-        self.activity_to_vaultedness_ratio.multi_insert_percentage(
+        self.activity_to_vaultedness_ratio.multi_insert_divide(
             heights,
             dates,
             &mut self.liveliness,

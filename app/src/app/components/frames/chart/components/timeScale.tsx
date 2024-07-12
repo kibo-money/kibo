@@ -167,7 +167,9 @@ function Button({
   return (
     <button
       class={classPropToString([
-        disabled() ? "opacity-50" : "hover:bg-orange-50/20 active:scale-95",
+        disabled()
+          ? "text-low-contrast"
+          : "hover:bg-orange-50/20 active:scale-95",
         "min-w-20 flex-shrink-0 flex-grow whitespace-nowrap rounded-lg px-2 py-1.5",
       ])}
       onClick={onClick}
