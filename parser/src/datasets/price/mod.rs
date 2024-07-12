@@ -138,11 +138,9 @@ impl PriceDatasets {
         Ok(s)
     }
 
-    pub fn compute(
-        &mut self,
-        &ComputeData { dates, heights }: &ComputeData,
-        circulating_supply: &mut BiMap<f64>,
-    ) {
+    pub fn compute(&mut self, compute_data: &ComputeData, circulating_supply: &mut BiMap<f64>) {
+        let &ComputeData { dates, heights } = compute_data;
+
         self.closes
             .multi_insert_simple_transform(heights, dates, &mut self.ohlcs, &|ohlc| ohlc.close);
 
@@ -273,6 +271,33 @@ impl PriceDatasets {
                     (((last_value / previous_value).powf(1.0 / 4.0)) - 1.0) * 100.0
                 },
             );
+
+        self.price_1w_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_1w_sma);
+        self.price_1m_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_1m_sma);
+        self.price_1y_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_1y_sma);
+        self.price_2y_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_2y_sma);
+        self.price_4y_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_4y_sma);
+        self.price_8d_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_8d_sma);
+        self.price_13d_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_13d_sma);
+        self.price_21d_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_21d_sma);
+        self.price_34d_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_34d_sma);
+        self.price_55d_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_55d_sma);
+        self.price_89d_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_89d_sma);
+        self.price_144d_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_144d_sma);
+        self.price_200w_sma_ratio
+            .compute(compute_data, &mut self.closes, &mut self.price_200w_sma);
     }
 
     pub fn get_date_ohlc(&mut self, date: WNaiveDate) -> color_eyre::Result<OHLC> {

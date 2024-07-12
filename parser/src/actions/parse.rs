@@ -12,7 +12,6 @@ use crate::{
         Databases, TxidToTxData, TxoutIndexToAddressIndex, TxoutIndexToAmount,
     },
     datasets::{AllDatasets, InsertData},
-    log,
     states::{
         AddressCohortsInputStates, AddressCohortsOutputStates, AddressCohortsRealizedStates,
         States, UTXOCohortsOneShotStates, UTXOCohortsSentStates,

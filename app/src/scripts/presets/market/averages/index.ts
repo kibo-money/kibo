@@ -43,17 +43,43 @@ function createPresetFolder({
   key: AverageName;
 }) {
   return {
-    scale,
     name,
-    description: "",
-    icon: IconTablerMathAvg,
-    title: `${name} Moving Average`,
-    top: [
+    tree: [
       {
-        title: `SMA`,
-        color,
-        datasetPath: `/date-to-price-${key}-sma`,
+        scale,
+        name: "Average",
+        description: "",
+        icon: IconTablerMathAvg,
+        title: `${name} Moving Average`,
+        top: [
+          {
+            title: `SMA`,
+            color,
+            datasetPath: `/date-to-price-${key}-sma`,
+          },
+        ],
+      },
+      {
+        scale,
+        name: "Ratio",
+        description: "",
+        icon: IconTablerMathXDivideY,
+        title: `${name} Moving Average Ratio`,
+        top: [
+          {
+            title: `SMA`,
+            color,
+            datasetPath: `/date-to-price-${key}-sma`,
+          },
+        ],
+        bottom: [
+          {
+            title: `Ratio`,
+            color,
+            datasetPath: `/date-to-market-price-to-price-${key}-sma-ratio`,
+          },
+        ],
       },
     ],
-  } satisfies PartialPreset;
+  } satisfies PartialPresetFolder;
 }

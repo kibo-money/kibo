@@ -168,6 +168,7 @@ declare global {
   const IconTablerLoop: (typeof import("~icons/tabler/loop.jsx"))["default"]
   const IconTablerMail: typeof import('~icons/tabler/mail.jsx')['default']
   const IconTablerMathAvg: typeof import('~icons/tabler/math-avg.jsx')['default']
+  const IconTablerMathXDivideY: typeof import('~icons/tabler/math-x-divide-y.jsx')['default']
   const IconTablerMaximize: typeof import('~icons/tabler/maximize.jsx')['default']
   const IconTablerMoneybag: typeof import('~icons/tabler/moneybag.jsx')['default']
   const IconTablerMoodDollar: typeof import('~icons/tabler/mood-dollar.jsx')['default']

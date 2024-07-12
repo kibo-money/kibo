@@ -18,7 +18,6 @@ import { FavoritesFrame } from "./components/frames/favorites";
 import { FoldersFrame } from "./components/frames/folders";
 import { HistoryFrame } from "./components/frames/history";
 import { SettingsFrame } from "./components/frames/settings";
-import { Qrcode } from "./components/qrcode";
 import { StripDesktop, StripMobile } from "./components/strip";
 import { Update } from "./components/update";
 
@@ -231,6 +230,12 @@ export function App() {
     })),
   );
 
+  const Qrcode = lazy(() =>
+    import("./components/qrcode").then((d) => ({
+      default: d.Qrcode,
+    })),
+  );
+
   return (
     <>
       <Background
@@ -264,7 +269,10 @@ export function App() {
         onTouchEnd={() => resizingBarStart.set(undefined)}
         onTouchCancel={() => resizingBarStart.set(undefined)}
       >
-        <Qrcode qrcode={qrcode} />
+        <Show when={qrcode()}>
+          <Qrcode qrcode={qrcode} />
+        </Show>
+
         <Update />
 
         <div class="flex size-full flex-col md:flex-row md:p-3 md:short:p-0">

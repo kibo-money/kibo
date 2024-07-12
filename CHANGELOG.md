@@ -43,6 +43,7 @@
 - Chart
   - Fixed series color being set to default ones after hovering the legend
   - Fixed chart starting showing candlesticks and quickly switching to a line when it should've started directly with the line
+  - Separated the QRCode generator library from the main chunk and made it imported on click
 - Settings
   - Removed the horizontal scroll bar which was unintended
 
