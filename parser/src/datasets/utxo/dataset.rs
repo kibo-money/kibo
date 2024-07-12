@@ -20,14 +20,12 @@ pub struct UTXODataset {
 
 impl UTXODataset {
     pub fn import(parent_path: &str, id: UTXOCohortId) -> color_eyre::Result<Self> {
-        let name = id.name();
-
-        let folder_path = format!("{parent_path}/{name}");
+        let name = id.name().to_owned();
 
         let mut s = Self {
             min_initial_states: MinInitialStates::default(),
             id,
-            subs: SubDataset::import(&folder_path)?,
+            subs: SubDataset::import(parent_path, &Some(name))?,
         };
 
         s.min_initial_states

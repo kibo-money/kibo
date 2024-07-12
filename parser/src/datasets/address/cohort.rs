@@ -27,22 +27,14 @@ pub struct CohortDataset {
 
 impl CohortDataset {
     pub fn import(parent_path: &str, id: AddressCohortId) -> color_eyre::Result<Self> {
-        let name = id.as_name();
+        let name = id.as_name().map(|s| s.to_owned());
         let split = id.as_split();
 
-        let folder_path = {
-            if let Some(name) = name {
-                format!("{parent_path}/{name}")
-            } else {
-                parent_path.to_owned()
-            }
-        };
-
         let f = |s: &str| {
-            if let Some(name) = name {
-                format!("{parent_path}/{s}/{name}")
+            if let Some(name) = &name {
+                Some(format!("{s}/{name}"))
             } else {
-                format!("{parent_path}/{s}")
+                Some(s.to_owned())
             }
         };
 
@@ -51,11 +43,11 @@ impl CohortDataset {
 
             split,
 
-            metadata: MetadataDataset::import(&folder_path)?,
-            all: SubDataset::import(&folder_path)?,
-            illiquid: SubDataset::import(&f("illiquid"))?,
-            liquid: SubDataset::import(&f("liquid"))?,
-            highly_liquid: SubDataset::import(&f("highly_liquid"))?,
+            metadata: MetadataDataset::import(parent_path, &name)?,
+            all: SubDataset::import(parent_path, &name)?,
+            illiquid: SubDataset::import(parent_path, &f("illiquid"))?,
+            liquid: SubDataset::import(parent_path, &f("liquid"))?,
+            highly_liquid: SubDataset::import(parent_path, &f("highly_liquid"))?,
         };
 
         s.min_initial_states

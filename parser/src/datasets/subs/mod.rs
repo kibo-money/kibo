@@ -37,16 +37,16 @@ pub struct SubDataset {
 }
 
 impl SubDataset {
-    pub fn import(parent_path: &str) -> color_eyre::Result<Self> {
+    pub fn import(parent_path: &str, name: &Option<String>) -> color_eyre::Result<Self> {
         let s = Self {
-            capitalization: CapitalizationDataset::import(parent_path)?,
-            input: InputSubDataset::import(parent_path)?,
+            capitalization: CapitalizationDataset::import(parent_path, name)?,
+            input: InputSubDataset::import(parent_path, name)?,
             // output: OutputSubDataset::import(parent_path)?,
-            price_paid: PricePaidSubDataset::import(parent_path)?,
-            realized: RealizedSubDataset::import(parent_path)?,
-            supply: SupplySubDataset::import(parent_path)?,
-            unrealized: UnrealizedSubDataset::import(parent_path)?,
-            utxo: UTXOSubDataset::import(parent_path)?,
+            price_paid: PricePaidSubDataset::import(parent_path, name)?,
+            realized: RealizedSubDataset::import(parent_path, name)?,
+            supply: SupplySubDataset::import(parent_path, name)?,
+            unrealized: UnrealizedSubDataset::import(parent_path, name)?,
+            utxo: UTXOSubDataset::import(parent_path, name)?,
         };
 
         Ok(s)

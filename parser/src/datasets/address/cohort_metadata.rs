@@ -18,8 +18,14 @@ pub struct MetadataDataset {
 }
 
 impl MetadataDataset {
-    pub fn import(parent_path: &str) -> color_eyre::Result<Self> {
-        let f = |s: &str| format!("{parent_path}/{s}");
+    pub fn import(parent_path: &str, name: &Option<String>) -> color_eyre::Result<Self> {
+        let f = |s: &str| {
+            if let Some(name) = name {
+                format!("{parent_path}/{name}/{s}")
+            } else {
+                format!("{parent_path}/{s}")
+            }
+        };
 
         let mut s = Self {
             min_initial_states: MinInitialStates::default(),

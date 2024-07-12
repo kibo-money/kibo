@@ -23,8 +23,14 @@ pub struct CapitalizationDataset {
 }
 
 impl CapitalizationDataset {
-    pub fn import(parent_path: &str) -> color_eyre::Result<Self> {
-        let f = |s: &str| format!("{parent_path}/{s}");
+    pub fn import(parent_path: &str, name: &Option<String>) -> color_eyre::Result<Self> {
+        let f = |s: &str| {
+            if let Some(name) = name {
+                format!("{parent_path}/{name}/{s}")
+            } else {
+                format!("{parent_path}/{s}")
+            }
+        };
 
         let mut s = Self {
             min_initial_states: MinInitialStates::default(),
@@ -32,7 +38,13 @@ impl CapitalizationDataset {
             realized_cap: BiMap::new_bin(1, &f("realized_cap")),
             realized_cap_1m_net_change: BiMap::new_bin(1, &f("realized_cap_1m_net_change")),
             realized_price: BiMap::new_bin(1, &f("realized_price")),
-            realized_price_ratio: RatioDataset::import(parent_path, "realized_price")?,
+            realized_price_ratio: RatioDataset::import(
+                parent_path,
+                &format!(
+                    "{}realized_price",
+                    name.as_ref().map_or("".to_owned(), |n| format!("{n}-"))
+                ),
+            )?,
         };
 
         s.min_initial_states
