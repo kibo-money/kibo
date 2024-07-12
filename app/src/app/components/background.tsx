@@ -104,8 +104,7 @@ function Line({
   mode: SL<"Scroll" | "Static">;
   focused: Accessor<boolean>;
 }) {
-  const shuffled = shuffle([...texts]);
-  shuffled.pop();
+  const shuffled = shuffle(texts).slice(0, 10);
   const joined = shuffled.join(". ");
 
   return (

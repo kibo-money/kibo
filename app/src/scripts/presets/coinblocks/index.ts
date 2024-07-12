@@ -1,11 +1,7 @@
 import { colors } from "../../utils/colors";
-import { applySeriesList, SeriesType } from "../apply";
+import { SeriesType } from "../enums";
 
-export function createPresets<Scale extends ResourceScale>({
-  scale,
-}: {
-  scale: Scale;
-}) {
+export function createPresets(scale: ResourceScale) {
   return {
     name: "Cointime Economics",
     tree: [
@@ -18,38 +14,33 @@ export function createPresets<Scale extends ResourceScale>({
             name: "All",
             title: "All Cointime Prices",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                top: [
-                  {
-                    title: "Vaulted Price",
-                    color: colors.vaultedness,
-                    dataset: params.datasets[scale].vaulted_price,
-                  },
-                  {
-                    title: "Active Price",
-                    color: colors.liveliness,
-                    dataset: params.datasets[scale].active_price,
-                  },
-                  {
-                    title: "True Market Mean",
-                    color: colors.trueMarketMeanPrice,
-                    dataset: params.datasets[scale].true_market_mean,
-                  },
-                  {
-                    title: "Realized Price",
-                    color: colors.bitcoin,
-                    dataset: params.datasets[scale].realized_price,
-                  },
-                  {
-                    title: "Cointime",
-                    color: colors.cointimePrice,
-                    dataset: params.datasets[scale].cointime_price,
-                  },
-                ],
-              });
-            },
+            top: [
+              {
+                title: "Vaulted Price",
+                color: colors.vaultedness,
+                datasetPath: `/${scale}-to-vaulted-price`,
+              },
+              {
+                title: "Active Price",
+                color: colors.liveliness,
+                datasetPath: `/${scale}-to-active-price`,
+              },
+              {
+                title: "True Market Mean",
+                color: colors.trueMarketMeanPrice,
+                datasetPath: `/${scale}-to-true-market-mean`,
+              },
+              {
+                title: "Realized Price",
+                color: colors.bitcoin,
+                datasetPath: `/${scale}-to-realized-price`,
+              },
+              {
+                title: "Cointime",
+                color: colors.cointimePrice,
+                datasetPath: `/${scale}-to-cointime-price`,
+              },
+            ],
           },
           {
             name: "Active",
@@ -60,18 +51,13 @@ export function createPresets<Scale extends ResourceScale>({
                 name: "Price",
                 title: "Active Price",
                 description: "",
-                applyPreset(params) {
-                  return applySeriesList({
-                    ...params,
-                    top: [
-                      {
-                        title: "Active Price",
-                        color: colors.liveliness,
-                        dataset: params.datasets[scale].active_price,
-                      },
-                    ],
-                  });
-                },
+                top: [
+                  {
+                    title: "Active Price",
+                    color: colors.liveliness,
+                    datasetPath: `/${scale}-to-active-price`,
+                  },
+                ],
               },
             ],
           },
@@ -84,18 +70,13 @@ export function createPresets<Scale extends ResourceScale>({
                 name: "Price",
                 title: "Vaulted Price",
                 description: "",
-                applyPreset(params) {
-                  return applySeriesList({
-                    ...params,
-                    top: [
-                      {
-                        title: "Vaulted Price",
-                        color: colors.vaultedness,
-                        dataset: params.datasets[scale].vaulted_price,
-                      },
-                    ],
-                  });
-                },
+                top: [
+                  {
+                    title: "Vaulted Price",
+                    color: colors.vaultedness,
+                    datasetPath: `/${scale}-to-vaulted-price`,
+                  },
+                ],
               },
             ],
           },
@@ -108,18 +89,13 @@ export function createPresets<Scale extends ResourceScale>({
                 name: "Price",
                 title: "True Market Mean",
                 description: "",
-                applyPreset(params) {
-                  return applySeriesList({
-                    ...params,
-                    top: [
-                      {
-                        title: "True Market Mean",
-                        color: colors.trueMarketMeanPrice,
-                        dataset: params.datasets[scale].true_market_mean,
-                      },
-                    ],
-                  });
-                },
+                top: [
+                  {
+                    title: "True Market Mean",
+                    color: colors.trueMarketMeanPrice,
+                    datasetPath: `/${scale}-to-true-market-mean`,
+                  },
+                ],
               },
             ],
           },
@@ -132,18 +108,13 @@ export function createPresets<Scale extends ResourceScale>({
                 name: "Price",
                 title: "Cointime Price",
                 description: "",
-                applyPreset(params) {
-                  return applySeriesList({
-                    ...params,
-                    top: [
-                      {
-                        title: "Cointime",
-                        color: colors.cointimePrice,
-                        dataset: params.datasets[scale].cointime_price,
-                      },
-                    ],
-                  });
-                },
+                top: [
+                  {
+                    title: "Cointime",
+                    color: colors.cointimePrice,
+                    datasetPath: `/${scale}-to-cointime-price`,
+                  },
+                ],
               },
             ],
           },
@@ -158,36 +129,31 @@ export function createPresets<Scale extends ResourceScale>({
             name: "All",
             title: "Cointime Capitalizations",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                priceScaleOptions: {
-                  mode: 1,
-                },
-                bottom: [
-                  {
-                    title: "Market Cap",
-                    color: colors.white,
-                    dataset: params.datasets[scale].market_cap,
-                  },
-                  {
-                    title: "Realized Cap",
-                    color: colors.realizedCap,
-                    dataset: params.datasets[scale].realized_cap,
-                  },
-                  {
-                    title: "Investor Cap",
-                    color: colors.investorCap,
-                    dataset: params.datasets[scale].investor_cap,
-                  },
-                  {
-                    title: "Thermo Cap",
-                    color: colors.thermoCap,
-                    dataset: params.datasets[scale].thermo_cap,
-                  },
-                ],
-              });
+            priceScaleOptions: {
+              mode: 1,
             },
+            bottom: [
+              {
+                title: "Market Cap",
+                color: colors.white,
+                datasetPath: `/${scale}-to-market-cap`,
+              },
+              {
+                title: "Realized Cap",
+                color: colors.realizedCap,
+                datasetPath: `/${scale}-to-realized-cap`,
+              },
+              {
+                title: "Investor Cap",
+                color: colors.investorCap,
+                datasetPath: `/${scale}-to-investor-cap`,
+              },
+              {
+                title: "Thermo Cap",
+                color: colors.thermoCap,
+                datasetPath: `/${scale}-to-thermo-cap`,
+              },
+            ],
           },
           {
             scale,
@@ -195,21 +161,16 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Thermo Cap",
             title: "Thermo Cap",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                priceScaleOptions: {
-                  mode: 1,
-                },
-                bottom: [
-                  {
-                    title: "Thermo Cap",
-                    color: colors.thermoCap,
-                    dataset: params.datasets[scale].thermo_cap,
-                  },
-                ],
-              });
+            priceScaleOptions: {
+              mode: 1,
             },
+            bottom: [
+              {
+                title: "Thermo Cap",
+                color: colors.thermoCap,
+                datasetPath: `/${scale}-to-thermo-cap`,
+              },
+            ],
           },
           {
             scale,
@@ -217,21 +178,17 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Investor Cap",
             title: "Investor Cap",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                priceScaleOptions: {
-                  mode: 1,
-                },
-                bottom: [
-                  {
-                    title: "Investor Cap",
-                    color: colors.investorCap,
-                    dataset: params.datasets[scale].investor_cap,
-                  },
-                ],
-              });
+
+            priceScaleOptions: {
+              mode: 1,
             },
+            bottom: [
+              {
+                title: "Investor Cap",
+                color: colors.investorCap,
+                datasetPath: `/${scale}-to-investor-cap`,
+              },
+            ],
           },
           {
             scale,
@@ -239,19 +196,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Thermo Cap To Investor Cap Ratio",
             title: "Thermo Cap To Investor Cap Ratio (%)",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Ratio",
-                    color: colors.bitcoin,
-                    dataset:
-                      params.datasets[scale].thermo_cap_to_investor_cap_ratio,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Ratio",
+                color: colors.bitcoin,
+                datasetPath: `/${scale}-to-thermo-cap-to-investor-cap-ratio`,
+              },
+            ],
           },
         ],
       },
@@ -264,28 +215,23 @@ export function createPresets<Scale extends ResourceScale>({
             name: "All",
             title: "All Coinblocks",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Coinblocks Created",
-                    color: colors.coinblocksCreated,
-                    dataset: params.datasets[scale].coinblocks_created,
-                  },
-                  {
-                    title: "Coinblocks Destroyed",
-                    color: colors.coinblocksDestroyed,
-                    dataset: params.datasets[scale].coinblocks_destroyed,
-                  },
-                  {
-                    title: "Coinblocks Stored",
-                    color: colors.coinblocksStored,
-                    dataset: params.datasets[scale].coinblocks_stored,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Coinblocks Created",
+                color: colors.coinblocksCreated,
+                datasetPath: `/${scale}-to-coinblocks-created`,
+              },
+              {
+                title: "Coinblocks Destroyed",
+                color: colors.coinblocksDestroyed,
+                datasetPath: `/${scale}-to-coinblocks-destroyed`,
+              },
+              {
+                title: "Coinblocks Stored",
+                color: colors.coinblocksStored,
+                datasetPath: `/${scale}-to-coinblocks-stored`,
+              },
+            ],
           },
           {
             scale,
@@ -293,18 +239,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Created",
             title: "Coinblocks Created",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Coinblocks Created",
-                    color: colors.coinblocksCreated,
-                    dataset: params.datasets[scale].coinblocks_created,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Coinblocks Created",
+                color: colors.coinblocksCreated,
+                datasetPath: `/${scale}-to-coinblocks-created`,
+              },
+            ],
           },
           {
             scale,
@@ -312,18 +253,14 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Destroyed",
             title: "Coinblocks Destroyed",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Coinblocks Destroyed",
-                    color: colors.coinblocksDestroyed,
-                    dataset: params.datasets[scale].coinblocks_destroyed,
-                  },
-                ],
-              });
-            },
+
+            bottom: [
+              {
+                title: "Coinblocks Destroyed",
+                color: colors.coinblocksDestroyed,
+                datasetPath: `/${scale}-to-coinblocks-destroyed`,
+              },
+            ],
           },
           {
             scale,
@@ -331,18 +268,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Stored",
             title: "Coinblocks Stored",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Coinblocks Stored",
-                    color: colors.coinblocksStored,
-                    dataset: params.datasets[scale].coinblocks_stored,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Coinblocks Stored",
+                color: colors.coinblocksStored,
+                datasetPath: `/${scale}-to-coinblocks-stored`,
+              },
+            ],
           },
         ],
       },
@@ -355,31 +287,23 @@ export function createPresets<Scale extends ResourceScale>({
             name: "All",
             title: "All Cumulative Coinblocks",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Cumulative Coinblocks Created",
-                    color: colors.coinblocksCreated,
-                    dataset:
-                      params.datasets[scale].cumulative_coinblocks_created,
-                  },
-                  {
-                    title: "Cumulative Coinblocks Destroyed",
-                    color: colors.coinblocksDestroyed,
-                    dataset:
-                      params.datasets[scale].cumulative_coinblocks_destroyed,
-                  },
-                  {
-                    title: "Cumulative Coinblocks Stored",
-                    color: colors.coinblocksStored,
-                    dataset:
-                      params.datasets[scale].cumulative_coinblocks_stored,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Cumulative Coinblocks Created",
+                color: colors.coinblocksCreated,
+                datasetPath: `/${scale}-to-cumulative-coinblocks-created`,
+              },
+              {
+                title: "Cumulative Coinblocks Destroyed",
+                color: colors.coinblocksDestroyed,
+                datasetPath: `/${scale}-to-cumulative-coinblocks-destroyed`,
+              },
+              {
+                title: "Cumulative Coinblocks Stored",
+                color: colors.coinblocksStored,
+                datasetPath: `/${scale}-to-cumulative-coinblocks-stored`,
+              },
+            ],
           },
           {
             scale,
@@ -387,19 +311,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Created",
             title: "Cumulative Coinblocks Created",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Cumulative Coinblocks Created",
-                    color: colors.coinblocksCreated,
-                    dataset:
-                      params.datasets[scale].cumulative_coinblocks_created,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Cumulative Coinblocks Created",
+                color: colors.coinblocksCreated,
+                datasetPath: `/${scale}-to-cumulative-coinblocks-created`,
+              },
+            ],
           },
           {
             scale,
@@ -407,19 +325,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Destroyed",
             title: "Cumulative Coinblocks Destroyed",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Cumulative Coinblocks Destroyed",
-                    color: colors.coinblocksDestroyed,
-                    dataset:
-                      params.datasets[scale].cumulative_coinblocks_destroyed,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Cumulative Coinblocks Destroyed",
+                color: colors.coinblocksDestroyed,
+                datasetPath: `/${scale}-to-cumulative-coinblocks-destroyed`,
+              },
+            ],
           },
           {
             scale,
@@ -427,19 +339,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Stored",
             title: "Cumulative Coinblocks Stored",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Cumulative Coinblocks Stored",
-                    color: colors.coinblocksStored,
-                    dataset:
-                      params.datasets[scale].cumulative_coinblocks_stored,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Cumulative Coinblocks Stored",
+                color: colors.coinblocksStored,
+                datasetPath: `/${scale}-to-cumulative-coinblocks-stored`,
+              },
+            ],
           },
         ],
       },
@@ -452,18 +358,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Liveliness - Activity",
             title: "Liveliness (Activity)",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Liveliness",
-                    color: colors.liveliness,
-                    dataset: params.datasets[scale].liveliness,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Liveliness",
+                color: colors.liveliness,
+                datasetPath: `/${scale}-to-liveliness`,
+              },
+            ],
           },
           {
             scale,
@@ -471,18 +372,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Vaultedness",
             title: "Vaultedness",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Vaultedness",
-                    color: colors.vaultedness,
-                    dataset: params.datasets[scale].vaultedness,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Vaultedness",
+                color: colors.vaultedness,
+                datasetPath: `/${scale}-to-vaultedness`,
+              },
+            ],
           },
           {
             scale,
@@ -490,23 +386,18 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Versus",
             title: "Liveliness V. Vaultedness",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Liveliness",
-                    color: colors.liveliness,
-                    dataset: params.datasets[scale].liveliness,
-                  },
-                  {
-                    title: "Vaultedness",
-                    color: colors.vaultedness,
-                    dataset: params.datasets[scale].vaultedness,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Liveliness",
+                color: colors.liveliness,
+                datasetPath: `/${scale}-to-liveliness`,
+              },
+              {
+                title: "Vaultedness",
+                color: colors.vaultedness,
+                datasetPath: `/${scale}-to-vaultedness`,
+              },
+            ],
           },
           {
             scale,
@@ -514,19 +405,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Activity To Vaultedness Ratio",
             title: "Activity To Vaultedness Ratio",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Activity To Vaultedness Ratio",
-                    color: colors.activityToVaultednessRatio,
-                    dataset:
-                      params.datasets[scale].activity_to_vaultedness_ratio,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Activity To Vaultedness Ratio",
+                color: colors.activityToVaultednessRatio,
+                datasetPath: `/${scale}-to-activity-to-vaultedness-ratio`,
+              },
+            ],
           },
           {
             scale,
@@ -534,24 +419,18 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Concurrent Liveliness - Supply Adjusted Coindays Destroyed",
             title: "Concurrent Liveliness - Supply Adjusted Coindays Destroyed",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Concurrent Liveliness 14d Median",
-                    color: colors.darkLiveliness,
-                    dataset:
-                      params.datasets[scale].concurrent_liveliness_2w_median,
-                  },
-                  {
-                    title: "Concurrent Liveliness",
-                    color: colors.liveliness,
-                    dataset: params.datasets[scale].concurrent_liveliness,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Concurrent Liveliness 14d Median",
+                color: colors.darkLiveliness,
+                datasetPath: `/${scale}-to-concurrent-liveliness-2w-median`,
+              },
+              {
+                title: "Concurrent Liveliness",
+                color: colors.liveliness,
+                datasetPath: `/${scale}-to-concurrent-liveliness`,
+              },
+            ],
           },
           {
             scale,
@@ -559,26 +438,20 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Liveliness Incremental Change",
             title: "Liveliness Incremental Change",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Liveliness Incremental Change",
-                    color: colors.darkLiveliness,
-                    seriesType: SeriesType.Based,
-                    dataset: params.datasets[scale].liveliness_net_change,
-                  },
-                  {
-                    title: "Liveliness Incremental Change 14 Day Median",
-                    color: colors.liveliness,
-                    seriesType: SeriesType.Based,
-                    dataset:
-                      params.datasets[scale].liveliness_net_change_2w_median,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Liveliness Incremental Change",
+                color: colors.darkLiveliness,
+                seriesType: SeriesType.Based,
+                datasetPath: `/${scale}-to-liveliness-net-change`,
+              },
+              {
+                title: "Liveliness Incremental Change 14 Day Median",
+                color: colors.liveliness,
+                seriesType: SeriesType.Based,
+                datasetPath: `/${scale}-to-liveliness-net-change-2w-median`,
+              },
+            ],
           },
         ],
       },
@@ -591,18 +464,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Vaulted",
             title: "Vaulted Supply",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Vaulted Supply",
-                    color: colors.vaultedness,
-                    dataset: params.datasets[scale].vaulted_supply,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Vaulted Supply",
+                color: colors.vaultedness,
+                datasetPath: `/${scale}-to-vaulted-supply`,
+              },
+            ],
           },
           {
             scale,
@@ -610,18 +478,14 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Active",
             title: "Active Supply",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Active Supply",
-                    color: colors.liveliness,
-                    dataset: params.datasets[scale].active_supply,
-                  },
-                ],
-              });
-            },
+
+            bottom: [
+              {
+                title: "Active Supply",
+                color: colors.liveliness,
+                datasetPath: `/${scale}-to-active-supply`,
+              },
+            ],
           },
           {
             scale,
@@ -629,28 +493,24 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Vaulted V. Active",
             title: "Vaulted V. Active",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Circulating Supply",
-                    color: colors.coinblocksCreated,
-                    dataset: params.datasets[scale].supply,
-                  },
-                  {
-                    title: "Vaulted Supply",
-                    color: colors.vaultedness,
-                    dataset: params.datasets[scale].vaulted_supply,
-                  },
-                  {
-                    title: "Active Supply",
-                    color: colors.liveliness,
-                    dataset: params.datasets[scale].active_supply,
-                  },
-                ],
-              });
-            },
+
+            bottom: [
+              {
+                title: "Circulating Supply",
+                color: colors.coinblocksCreated,
+                datasetPath: `/${scale}-to-supply`,
+              },
+              {
+                title: "Vaulted Supply",
+                color: colors.vaultedness,
+                datasetPath: `/${scale}-to-vaulted-supply`,
+              },
+              {
+                title: "Active Supply",
+                color: colors.liveliness,
+                datasetPath: `/${scale}-to-active-supply`,
+              },
+            ],
           },
           // TODO: Fix, Bad data
           // {
@@ -670,13 +530,13 @@ export function createPresets<Scale extends ResourceScale>({
           //           id: 'min-vaulted',
           //           title: 'Min Vaulted Supply',
           //           color: colors.vaultedness,
-          //           dataset: params.params.datasets[scale].dateToMinVaultedSupply,
+          //           dataset: params.`/${scale}-to-dateToMinVaultedSupply,
           //         },
           //         {
           //           id: 'max-active',
           //           title: 'Max Active Supply',
           //           color: colors.liveliness,
-          //           dataset: params.params.datasets[scale].dateToMaxActiveSupply,
+          //           dataset: params.`/${scale}-to-dateToMaxActiveSupply,
           //         },
           //       ],
           //     })
@@ -688,18 +548,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Vaulted Net Change",
             title: "Vaulted Supply Net Change",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Vaulted Supply Net Change",
-                    color: colors.vaultedness,
-                    dataset: params.datasets[scale].vaulted_supply,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Vaulted Supply Net Change",
+                color: colors.vaultedness,
+                datasetPath: `/${scale}-to-vaulted-supply`,
+              },
+            ],
           },
           {
             scale,
@@ -707,18 +562,13 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Active Net Change",
             title: "Active Supply Net Change",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Active Supply Net Change",
-                    color: colors.liveliness,
-                    dataset: params.datasets[scale].active_supply_net_change,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Active Supply Net Change",
+                color: colors.liveliness,
+                datasetPath: `/${scale}-to-active-supply-net-change`,
+              },
+            ],
           },
           {
             scale,
@@ -726,26 +576,20 @@ export function createPresets<Scale extends ResourceScale>({
             name: "Active VS. Vaulted 90D Net Change",
             title: "Active VS. Vaulted 90 Day Supply Net Change",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Active Supply Net Change",
-                    color: colors.liveliness,
-                    dataset: params.datasets[scale].active_supply_3m_net_change,
-                    seriesType: SeriesType.Based,
-                  },
-                  {
-                    title: "Vaulted Supply Net Change",
-                    color: colors.vaultedPrice,
-                    seriesType: SeriesType.Based,
-                    dataset:
-                      params.datasets[scale].vaulted_supply_3m_net_change,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Active Supply Net Change",
+                color: colors.liveliness,
+                datasetPath: `/${scale}-to-active-supply-3m-net-change`,
+                seriesType: SeriesType.Based,
+              },
+              {
+                title: "Vaulted Supply Net Change",
+                color: colors.vaultedPrice,
+                seriesType: SeriesType.Based,
+                datasetPath: `/${scale}-to-vaulted-supply-3m-net-change`,
+              },
+            ],
           },
           // TODO: Fix, Bad data
           // {
@@ -766,7 +610,7 @@ export function createPresets<Scale extends ResourceScale>({
           //           title: 'Vaulted Supply Annualized Net Change',
           //           color: colors.vaultedness,
           //           dataset:
-          //             params.datasets[scale].vaultedAnnualizedSupplyNetChange,
+          //             `/${scale}-to-vaultedAnnualizedSupplyNetChange,
           //         },
           //       ],
           //     })
@@ -791,13 +635,13 @@ export function createPresets<Scale extends ResourceScale>({
           //           id: 'vaulting-rate',
           //           title: 'Vaulting Rate',
           //           color: colors.vaultedness,
-          //           dataset: params.datasets[scale].vaultingRate,
+          //           dataset: `/${scale}-to-vaultingRate,
           //         },
           //         {
           //           id: 'nominal-inflation-rate',
           //           title: 'Nominal Inflation Rate',
           //           color: colors.orange,
-          //           dataset: params.params.datasets[scale].dateToYearlyInflationRate,
+          //           dataset: params.`/${scale}-to-dateToYearlyInflationRate,
           //         },
           //       ],
           //     })
@@ -838,7 +682,7 @@ export function createPresets<Scale extends ResourceScale>({
           //         //   id: 'active',
           //         //   title: 'Active Supply',
           //         //   color: colors.liveliness,
-          //         //   dataset: params.datasets[scale].activeSupply,
+          //         //   dataset: `/${scale}-to-activeSupply,
           //         // },
           //       ],
           //     })
@@ -851,28 +695,23 @@ export function createPresets<Scale extends ResourceScale>({
             name: "In Profit",
             title: "Cointime Supply In Profit",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Circulating Supply",
-                    color: colors.coinblocksCreated,
-                    dataset: params.datasets[scale].supply,
-                  },
-                  {
-                    title: "Vaulted Supply",
-                    color: colors.vaultedness,
-                    dataset: params.datasets[scale].vaulted_supply,
-                  },
-                  {
-                    title: "Supply in profit",
-                    color: colors.bitcoin,
-                    dataset: params.datasets[scale].supply_in_profit,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Circulating Supply",
+                color: colors.coinblocksCreated,
+                datasetPath: `/${scale}-to-supply`,
+              },
+              {
+                title: "Vaulted Supply",
+                color: colors.vaultedness,
+                datasetPath: `/${scale}-to-vaulted-supply`,
+              },
+              {
+                title: "Supply in profit",
+                color: colors.bitcoin,
+                datasetPath: `/${scale}-to-supply-in-profit`,
+              },
+            ],
           },
           {
             scale,
@@ -880,28 +719,23 @@ export function createPresets<Scale extends ResourceScale>({
             name: "In Loss",
             title: "Cointime Supply In Loss",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Circulating Supply",
-                    color: colors.coinblocksCreated,
-                    dataset: params.datasets[scale].supply,
-                  },
-                  {
-                    title: "Active Supply",
-                    color: colors.liveliness,
-                    dataset: params.datasets[scale].active_supply,
-                  },
-                  {
-                    title: "Supply in Loss",
-                    color: colors.bitcoin,
-                    dataset: params.datasets[scale].supply_in_loss,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Circulating Supply",
+                color: colors.coinblocksCreated,
+                datasetPath: `/${scale}-to-supply`,
+              },
+              {
+                title: "Active Supply",
+                color: colors.liveliness,
+                datasetPath: `/${scale}-to-active-supply`,
+              },
+              {
+                title: "Supply in Loss",
+                color: colors.bitcoin,
+                datasetPath: `/${scale}-to-supply-in-loss`,
+              },
+            ],
           },
         ],
       },
@@ -911,28 +745,21 @@ export function createPresets<Scale extends ResourceScale>({
         name: "Cointime Yearly Inflation Rate",
         title: "Cointime-Adjusted Yearly Inflation Rate (%)",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            priceScaleOptions: {
-              mode: 1,
-            },
-            bottom: [
-              {
-                title: "Cointime Adjusted",
-                color: colors.coinblocksCreated,
-                dataset:
-                  params.datasets[scale]
-                    .cointime_adjusted_yearly_inflation_rate,
-              },
-              {
-                title: "Nominal",
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].yearly_inflation_rate,
-              },
-            ],
-          });
+        priceScaleOptions: {
+          mode: 1,
         },
+        bottom: [
+          {
+            title: "Cointime Adjusted",
+            color: colors.coinblocksCreated,
+            datasetPath: `/${scale}-to-cointime-adjusted-yearly-inflation-rate`,
+          },
+          {
+            title: "Nominal",
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-yearly-inflation-rate`,
+          },
+        ],
       },
       {
         scale,
@@ -940,26 +767,21 @@ export function createPresets<Scale extends ResourceScale>({
         name: "Cointime Velocity",
         title: "Cointime-Adjusted Transactions Velocity",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            priceScaleOptions: {
-              mode: 1,
-            },
-            bottom: [
-              {
-                title: "Cointime Adjusted",
-                color: colors.coinblocksCreated,
-                dataset: params.datasets[scale].cointime_adjusted_velocity,
-              },
-              {
-                title: "Nominal",
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].transaction_velocity,
-              },
-            ],
-          });
+        priceScaleOptions: {
+          mode: 1,
         },
+        bottom: [
+          {
+            title: "Cointime Adjusted",
+            color: colors.coinblocksCreated,
+            datasetPath: `/${scale}-to-cointime-adjusted-velocity`,
+          },
+          {
+            title: "Nominal",
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-transaction-velocity`,
+          },
+        ],
       },
     ],
   } satisfies PartialPresetFolder;

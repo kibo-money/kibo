@@ -1,5 +1,4 @@
 import { colors } from "../../utils/colors";
-import { applySeriesList } from "../apply";
 
 export function createPresets(scale: ResourceScale) {
   return {
@@ -11,28 +10,23 @@ export function createPresets(scale: ResourceScale) {
         name: "Count",
         title: "Transaction Count",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: "1M SMA",
-                color: colors.momentumYellow,
-                dataset: params.datasets[scale].transaction_count_1m_sma,
-              },
-              {
-                title: "1W SMA",
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].transaction_count_1w_sma,
-              },
-              {
-                title: "Raw",
-                color: colors.darkBitcoin,
-                dataset: params.datasets[scale].transaction_count,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: "1M SMA",
+            color: colors.momentumYellow,
+            datasetPath: `/${scale}-to-transaction-count-1m-sma`,
+          },
+          {
+            title: "1W SMA",
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-transaction-count-1w-sma`,
+          },
+          {
+            title: "Raw",
+            color: colors.darkBitcoin,
+            datasetPath: `/${scale}-to-transaction-count`,
+          },
+        ],
       },
 
       {
@@ -44,28 +38,23 @@ export function createPresets(scale: ResourceScale) {
             name: "In Bitcoin",
             title: "Transaction Volume",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "1M SMA",
-                    color: colors.momentumYellow,
-                    dataset: params.datasets[scale].transaction_volume_1m_sma,
-                  },
-                  {
-                    title: "1W SMA",
-                    color: colors.bitcoin,
-                    dataset: params.datasets[scale].transaction_volume_1w_sma,
-                  },
-                  {
-                    title: "Raw",
-                    color: colors.darkBitcoin,
-                    dataset: params.datasets[scale].transaction_volume,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "1M SMA",
+                color: colors.momentumYellow,
+                datasetPath: `/${scale}-to-transaction-volume-1m-sma`,
+              },
+              {
+                title: "1W SMA",
+                color: colors.bitcoin,
+                datasetPath: `/${scale}-to-transaction-volume-1w-sma`,
+              },
+              {
+                title: "Raw",
+                color: colors.darkBitcoin,
+                datasetPath: `/${scale}-to-transaction-volume`,
+              },
+            ],
           },
           {
             scale,
@@ -73,36 +62,26 @@ export function createPresets(scale: ResourceScale) {
             name: "In Dollars",
             title: "Transaction Volume In Dollars",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                priceScaleOptions: {
-                  mode: 1,
-                },
-                bottom: [
-                  {
-                    title: "1M SMA",
-                    color: colors.lightDollars,
-                    dataset:
-                      params.datasets[scale]
-                        .transaction_volume_in_dollars_1m_sma,
-                  },
-                  {
-                    title: "1W SMA",
-                    color: colors.dollars,
-                    dataset:
-                      params.datasets[scale]
-                        .transaction_volume_in_dollars_1w_sma,
-                  },
-                  {
-                    title: "Raw",
-                    color: colors.darkDollars,
-                    dataset:
-                      params.datasets[scale].transaction_volume_in_dollars,
-                  },
-                ],
-              });
+            priceScaleOptions: {
+              mode: 1,
             },
+            bottom: [
+              {
+                title: "1M SMA",
+                color: colors.lightDollars,
+                datasetPath: `/${scale}-to-transaction-volume-in-dollars-1m-sma`,
+              },
+              {
+                title: "1W SMA",
+                color: colors.dollars,
+                datasetPath: `/${scale}-to-transaction-volume-in-dollars-1w-sma`,
+              },
+              {
+                title: "Raw",
+                color: colors.darkDollars,
+                datasetPath: `/${scale}-to-transaction-volume-in-dollars`,
+              },
+            ],
           },
         ],
       },
@@ -116,19 +95,13 @@ export function createPresets(scale: ResourceScale) {
             name: "In Bitcoin",
             title: "Annualized Transaction Volume",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Volume",
-                    color: colors.bitcoin,
-                    dataset:
-                      params.datasets[scale].annualized_transaction_volume,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Volume",
+                color: colors.bitcoin,
+                datasetPath: `/${scale}-to-annualized-transaction-volume`,
+              },
+            ],
           },
           {
             scale,
@@ -136,20 +109,13 @@ export function createPresets(scale: ResourceScale) {
             name: "In Dollars",
             title: "Annualized Transaction Volume In Dollars",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Volume",
-                    color: colors.dollars,
-                    dataset:
-                      params.datasets[scale]
-                        .annualized_transaction_volume_in_dollars,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Volume",
+                color: colors.dollars,
+                datasetPath: `/${scale}-to-annualized-transaction-volume-in-dollars`,
+              },
+            ],
           },
         ],
       },
@@ -159,18 +125,13 @@ export function createPresets(scale: ResourceScale) {
         name: "Velocity",
         title: "Transactions Velocity",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: "Transactions Velocity",
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].transaction_velocity,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: "Transactions Velocity",
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-transaction-velocity`,
+          },
+        ],
       },
       {
         scale,
@@ -178,28 +139,23 @@ export function createPresets(scale: ResourceScale) {
         name: "Per Second",
         title: "Transactions Per Second",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: "1M SMA",
-                color: colors.lightBitcoin,
-                dataset: params.datasets[scale].transactions_per_second_1m_sma,
-              },
-              {
-                title: "1W SMA",
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].transactions_per_second_1w_sma,
-              },
-              {
-                title: "Raw",
-                color: colors.darkBitcoin,
-                dataset: params.datasets[scale].transactions_per_second,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: "1M SMA",
+            color: colors.lightBitcoin,
+            datasetPath: `/${scale}-to-transactions-per-second-1m-sma`,
+          },
+          {
+            title: "1W SMA",
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-transactions-per-second-1w-sma`,
+          },
+          {
+            title: "Raw",
+            color: colors.darkBitcoin,
+            datasetPath: `/${scale}-to-transactions-per-second`,
+          },
+        ],
       },
     ],
   } satisfies PartialPresetFolder;

@@ -16,7 +16,7 @@ export function createChart(
     priceScaleOptions,
   }: {
     dark: Accessor<boolean>;
-    priceScaleOptions: DeepPartialPriceScaleOptions;
+    priceScaleOptions?: DeepPartialPriceScaleOptions;
   },
 ) {
   console.log(`chart: create (scale: ${scale})`);

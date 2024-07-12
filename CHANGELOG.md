@@ -5,7 +5,7 @@
 ### Parser
 
 - Datasets
-  - Added the followinf datasets for all entities:
+  - Added the following datasets for all entities:
     - Value destroyed
     - Value created
     - Spent Output Profit Ratio (SOPR)
@@ -27,13 +27,22 @@
     - Realized Price 0.1th Percentile
 - Node
   - Added a `node.args` file where you can set the path to your node `datadir` and where you can add additional args (you can see the syntax in `parser/README.md`)
+- Price
+  - Improved error message when price cannot be found
 
 ### App
 
 - General
   - Added a backup API in case the main one fails or is offline
+  - Complete redesign of the datasets object
+  - Removed import of routes in JSON in favor for hardcoded typed routes in string format which resulted in:
+    - + A much lighter app
+    - + Better Lighthouse score
+    - - Slower Typescript server
+  - Fixed datasets with null values crashing their fetch function
 - Chart
   - Fixed series color being set to default ones after hovering the legend
+  - Fixed chart starting showing candlesticks and quickly switching to a line when it should've started directly with the line
 - Settings
   - Removed the horizontal scroll bar which was unintended
 

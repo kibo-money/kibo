@@ -1,4 +1,7 @@
-use std::collections::{BTreeMap, HashMap};
+use std::{
+    collections::{BTreeMap, HashMap},
+    fs,
+};
 
 use derive_deref::{Deref, DerefMut};
 use itertools::Itertools;
@@ -87,27 +90,55 @@ impl Routes {
         routes
     }
 
-    pub fn generate_grouped_keys_to_url_path_file(&self) {
-        let transform = |map: &HashMap<String, Route>| -> BTreeMap<String, String> {
+    pub fn generate_front_end_files(&self) {
+        self.generate_json_group_files();
+        self.generate_definition_files();
+    }
+
+    fn generate_json_group_files(&self) {
+        let map_to_group = |map: &HashMap<String, Route>| -> BTreeMap<String, String> {
             map.iter()
                 .map(|(key, route)| (key.to_owned(), route.url_path.to_owned()))
                 .collect()
         };
 
-        let date_paths = transform(&self.date);
-        let height_paths = transform(&self.height);
-        let last_paths = transform(&self.last);
+        let date_group = map_to_group(&self.date);
+        let height_group = map_to_group(&self.height);
+        let last_group = map_to_group(&self.last);
 
-        let paths = Paths(Grouped {
-            date: date_paths,
-            height: height_paths,
-            last: last_paths,
+        let groups = Paths(Grouped {
+            date: date_group,
+            height: height_group,
+            last: last_group,
         });
 
         let _ = Json::export(
             &format!("{DATASETS_PATH}/grouped_keys_to_url_path.json"),
-            &paths,
+            &groups,
         );
+    }
+
+    fn generate_definition_files(&self) {
+        let map_to_type = |name: &str, map: &HashMap<String, Route>| -> String {
+            let paths = map
+                .values()
+                .map(|route| format!("\"{}\"", route.url_path))
+                .join(" | ");
+
+            format!("export type {}Path = {};\n", name, paths)
+        };
+
+        let date_type = map_to_type("Date", &self.date);
+
+        let height_type = map_to_type("Height", &self.height);
+
+        let last_type = map_to_type("Last", &self.last);
+
+        fs::write(
+            format!("{DATASETS_PATH}/paths.d.ts"),
+            format!("{date_type}\n{height_type}\n{last_type}"),
+        )
+        .unwrap();
     }
 
     pub fn to_full_paths(&self, host: String) -> Paths {

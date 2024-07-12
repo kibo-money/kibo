@@ -6,10 +6,9 @@ import {
   yearCohorts,
 } from "../../datasets/consts/age";
 import { colors } from "../../utils/colors";
-import { applySeriesList } from "../apply";
 import { createCohortPresetFolder } from "../templates/cohort";
 
-export function createPresets({ scale }: { scale: ResourceScale }) {
+export function createPresets(scale: ResourceScale) {
   return {
     name: "Hodlers",
     tree: [
@@ -19,91 +18,80 @@ export function createPresets({ scale }: { scale: ResourceScale }) {
         title: `Hodl Supply`,
         description: "",
         icon: IconTablerRipple,
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: `24h`,
-                color: colors.up_to_1d,
-                dataset:
-                  params.datasets.date
-                    .up_to_1d_supply_to_circulating_supply_ratio,
-              },
+        bottom: [
+          {
+            title: `24h`,
+            color: colors.up_to_1d,
+            datasetPath: `/date-to-up-to-1d-supply-to-circulating-supply-ratio`,
+          },
 
-              ...fromXToYCohorts.map(({ key, name, legend }) => ({
-                title: legend,
-                color: colors[key],
-                dataset:
-                  params.datasets.date[
-                    `${key}_supply_to_circulating_supply_ratio`
-                  ],
-              })),
+          ...fromXToYCohorts.map(({ key, id, name, legend }) => ({
+            title: legend,
+            color: colors[key],
+            datasetPath:
+              `/date-to-${id}-supply-to-circulating-supply-ratio` as const,
+          })),
 
-              {
-                title: `15y+`,
-                color: colors.from_15y,
-                dataset:
-                  params.datasets.date
-                    .from_15y_supply_to_circulating_supply_ratio,
-              },
-            ],
-          });
-        },
+          {
+            title: `15y+`,
+            color: colors.from_15y,
+            datasetPath: `/date-to-from-15y-supply-to-circulating-supply-ratio`,
+          },
+        ],
       },
-      ...xthCohorts.map(({ key, name, legend }) =>
+      ...xthCohorts.map(({ key, id, name, legend }) =>
         createCohortPresetFolder({
           scale,
           color: colors[key],
           name: legend,
-          datasetKey: key,
+          datasetId: id,
           title: name,
         }),
       ),
       {
         name: "Up To X",
-        tree: upToCohorts.map(({ key, name }) =>
+        tree: upToCohorts.map(({ key, id, name }) =>
           createCohortPresetFolder({
             scale,
             color: colors[key],
             name,
-            datasetKey: key,
+            datasetId: id,
             title: name,
           }),
         ),
       },
       {
         name: "From X To Y",
-        tree: fromXToYCohorts.map(({ key, name }) =>
+        tree: fromXToYCohorts.map(({ key, id, name }) =>
           createCohortPresetFolder({
             scale,
             color: colors[key],
             name,
-            datasetKey: key,
+            datasetId: id,
             title: name,
           }),
         ),
       },
       {
         name: "From X",
-        tree: fromXCohorts.map(({ key, name }) =>
+        tree: fromXCohorts.map(({ key, id, name }) =>
           createCohortPresetFolder({
             scale,
             color: colors[key],
             name,
-            datasetKey: key,
+            datasetId: id,
             title: name,
           }),
         ),
       },
       {
         name: "Years",
-        tree: yearCohorts.map(({ key, name }) =>
+        tree: yearCohorts.map(({ key, id, name }) =>
           createCohortPresetFolder({
             scale,
             color: colors[key],
             name,
-            datasetKey: key,
+            datasetId: id,
             title: name,
           }),
         ),

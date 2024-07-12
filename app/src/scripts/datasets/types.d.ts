@@ -1,9 +1,5 @@
 type Datasets = ReturnType<typeof import("./index").createDatasets>;
 
-type DateDatasets = Datasets["date"];
-type HeightDatasets = Datasets["height"];
-type AnyDatasets = DateDatasets | HeightDatasets;
-
 type ResourceScale = (typeof import("./index").scales)[index];
 
 type DatasetValue<T> = T & Valued;
@@ -92,3 +88,15 @@ interface OHLC {
 
 type GroupedKeysToURLPath =
   typeof import("/src/../../datasets/grouped_keys_to_url_path.json");
+
+type DateDatasetPath = import("/src/../../datasets/paths").DatePath;
+
+type HeightDatasetPath = import("/src/../../datasets/paths").HeightPath;
+
+type LastDataPath = import("/src/../../datasets/paths").LastPath;
+
+type DatasetPath<Scale extends ResourceScale> = Scale extends "date"
+  ? DateDatasetPath
+  : HeightDatasetPath;
+
+type AnyDatasetPath = DateDatasetPath | HeightDatasetPath;

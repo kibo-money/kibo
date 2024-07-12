@@ -19,6 +19,7 @@ export function createSeriesLegend<Scale extends ResourceScale>({
   visible: _visible,
   dataset,
 }: {
+  scale: Scale;
   id: string;
   presetId: string;
   title: string;

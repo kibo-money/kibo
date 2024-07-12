@@ -3,7 +3,7 @@ import {
   totalReturns,
 } from "/src/scripts/datasets/consts/returns";
 
-import { applySeriesList, SeriesType } from "../../apply";
+import { SeriesType } from "../../enums";
 
 export function createPresets() {
   return {
@@ -17,7 +17,7 @@ export function createPresets() {
               scale: "date",
               name,
               title: `${name} Total`,
-              key: `${key}_total`,
+              key: `${key}-total`,
             }),
           ),
         ],
@@ -30,7 +30,7 @@ export function createPresets() {
               scale: "date",
               name,
               title: `${name} Compound`,
-              key: `${key}_compound`,
+              key: `${key}-compound`,
             }),
           ),
         ],
@@ -48,7 +48,7 @@ function createPreset({
   scale: ResourceScale;
   name: string;
   title: string;
-  key: `${TotalReturnKey}_total` | `${CompoundReturnKey}_compound`;
+  key: `${TotalReturnKey}-total` | `${CompoundReturnKey}-compound`;
 }): PartialPreset {
   return {
     scale,
@@ -56,17 +56,12 @@ function createPreset({
     description: "",
     icon: IconTablerReceiptTax,
     title: `${title} Return`,
-    applyPreset(params) {
-      return applySeriesList({
-        ...params,
-        bottom: [
-          {
-            title: `Return (%)`,
-            seriesType: SeriesType.Based,
-            dataset: params.datasets.date[`price_${key}_return`],
-          },
-        ],
-      });
-    },
+    bottom: [
+      {
+        title: `Return (%)`,
+        seriesType: SeriesType.Based,
+        datasetPath: `/date-to-price-${key}-return`,
+      },
+    ],
   };
 }

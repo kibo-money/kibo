@@ -6,7 +6,7 @@
 
 @font-face {
   font-family: "Lexend";
-  font-display: "swap";
+  font-display: "auto";
   src: url("/fonts/Lexend.var.woff2") format("woff2");
   font-weight: 100 900;
   font-optical-sizing: auto;

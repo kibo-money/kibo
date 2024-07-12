@@ -164,7 +164,7 @@ export function Legend({
                           : undefined
                       }
                     >
-                      <IconTablerExternalLink />
+                      <IconTablerDownload />
                     </a>
                   )}
                 </Show>

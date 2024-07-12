@@ -59,6 +59,7 @@ Big features that are planned, in no particular order:
 - **Datasets by block timestamp**: In addition to having datasets by block date and block height
 - **Descriptions**: Add text to describe all charts and what they mean
 - **Start9 Add-on**: By making the whole suite much easier to self-host, it's quite rough right now
+- **API Documentation**: Highly needed to explain what's what
 
 _Maybe_:
 

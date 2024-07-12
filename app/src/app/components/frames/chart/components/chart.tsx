@@ -1,4 +1,5 @@
 import { requestIdleCallbackPossible } from "/src/env";
+import { applySeriesList } from "/src/scripts/presets/apply";
 import { createRWS } from "/src/solid/rws";
 
 export function Chart({
@@ -22,7 +23,6 @@ export function Chart({
 
   if (requestIdleCallbackPossible) {
     const idleCallback = requestIdleCallback(() => {
-      console.log("idle");
       wasIdle.set(true);
       cancelIdleCallback(idleCallback);
     });
@@ -32,7 +32,6 @@ export function Chart({
     });
   } else {
     const timeout = setTimeout(() => {
-      console.log("timeout");
       wasIdle.set(true);
     }, 500);
 
@@ -51,7 +50,7 @@ export function Chart({
       untrack(() => {
         try {
           console.log(`preset: ${preset.id}`);
-          preset.applyPreset({
+          applySeriesList({
             charts,
             parentDiv: div,
             datasets,
@@ -59,6 +58,9 @@ export function Chart({
             legendSetter,
             dark,
             activeIds,
+            priceScaleOptions: preset.priceScaleOptions,
+            top: preset.top,
+            bottom: preset.bottom,
           });
         } catch (error) {
           console.error("chart: render: failed", error);

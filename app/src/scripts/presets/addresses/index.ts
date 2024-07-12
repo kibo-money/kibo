@@ -4,14 +4,9 @@ import {
 } from "../../datasets/consts/address";
 import { liquidities } from "../../datasets/consts/liquidities";
 import { colors } from "../../utils/colors";
-import { applySeriesList, SeriesType } from "../apply";
 import { createCohortPresetList } from "../templates/cohort";
 
-export function createPresets({
-  scale,
-}: {
-  scale: ResourceScale;
-}): PartialPresetFolder {
+export function createPresets(scale: ResourceScale): PartialPresetFolder {
   return {
     name: "Addresses",
     tree: [
@@ -21,18 +16,13 @@ export function createPresets({
         title: `Total Non Empty Address`,
         description: "",
         icon: IconTablerWallet,
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: `Total Non Empty Address`,
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].address_count,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: `Total Non Empty Address`,
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-address-count`,
+          },
+        ],
       },
       {
         scale,
@@ -40,18 +30,13 @@ export function createPresets({
         title: `New Addresses`,
         description: "",
         icon: IconTablerSparkles,
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: `New Addresses`,
-                color: colors.white,
-                dataset: params.datasets[scale].created_addresses,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: `New Addresses`,
+            color: colors.white,
+            datasetPath: `/${scale}-to-created-addresses`,
+          },
+        ],
       },
       {
         scale,
@@ -59,18 +44,13 @@ export function createPresets({
         title: `Total Addresses Created`,
         description: "",
         icon: IconTablerArchive,
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: `Total Addresses Created`,
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].created_addresses,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: `Total Addresses Created`,
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-created-addresses`,
+          },
+        ],
       },
       {
         scale,
@@ -78,18 +58,13 @@ export function createPresets({
         title: `Total Empty Addresses`,
         description: "",
         icon: IconTablerTrash,
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: `Total Empty Addresses`,
-                color: colors.darkWhite,
-                dataset: params.datasets[scale].empty_addresses,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: `Total Empty Addresses`,
+            color: colors.darkWhite,
+            datasetPath: `/${scale}-to-empty-addresses`,
+          },
+        ],
       },
       {
         name: "By Size",
@@ -98,7 +73,7 @@ export function createPresets({
             scale,
             color: colors[key],
             name,
-            datasetKey: key,
+            datasetId: key,
           }),
         ),
       },
@@ -110,7 +85,7 @@ export function createPresets({
             scale,
             color: colors[key],
             name,
-            datasetKey: key,
+            datasetId: key,
           }),
         ),
       },
@@ -118,47 +93,47 @@ export function createPresets({
   } satisfies PartialPresetFolder;
 }
 
-function createAddressPresetFolder<Scale extends ResourceScale>({
+function createAddressPresetFolder({
   scale,
   color,
   name,
-  datasetKey,
+  datasetId,
 }: {
-  scale: Scale;
+  scale: ResourceScale;
   name: string;
-  datasetKey: AddressCohortKey;
+  datasetId: AddressCohortId;
   color: Color;
 }): PartialPresetFolder {
   return {
     name,
     tree: [
-      createAddressCountPreset({ scale, name, datasetKey, color }),
+      createAddressCountPreset({ scale, name, datasetId, color }),
       ...createCohortPresetList({
         title: name,
         scale,
         name,
         color,
-        datasetKey,
+        datasetId,
       }),
       createLiquidityFolder({
         scale,
         name,
-        datasetKey,
+        datasetId,
         color,
       }),
     ],
   };
 }
 
-export function createLiquidityFolder<Scale extends ResourceScale>({
+export function createLiquidityFolder({
   scale,
   color,
   name,
-  datasetKey,
+  datasetId,
 }: {
-  scale: Scale;
+  scale: ResourceScale;
   name: string;
-  datasetKey: AddressCohortKey | "";
+  datasetId: AddressCohortId | "";
   color: Color;
 }): PartialPresetFolder {
   return {
@@ -171,43 +146,36 @@ export function createLiquidityFolder<Scale extends ResourceScale>({
           name: `${liquidity.name} ${name}`,
           scale,
           color,
-          datasetKey: !datasetKey
-            ? liquidity.key
-            : `${liquidity.key}_${datasetKey}`,
+          datasetId: !datasetId ? liquidity.id : `${liquidity.id}-${datasetId}`,
         }),
       }),
     ),
   };
 }
 
-export function createAddressCountPreset<Scale extends ResourceScale>({
+export function createAddressCountPreset({
   scale,
   color,
   name,
-  datasetKey,
+  datasetId,
 }: {
-  scale: Scale;
+  scale: ResourceScale;
   name: string;
-  datasetKey: AddressCohortKey;
+  datasetId: AddressCohortId;
   color: Color;
 }): PartialPreset {
+  const addressCount: SeriesConfig = {
+    title: "Address Count",
+    color,
+    datasetPath: `/${scale}-to-${datasetId}-address-count`,
+  };
+
   return {
     scale,
     name: `Address Count`,
     title: `${name} Address Count`,
     icon: IconTablerAddressBook,
-    applyPreset(params) {
-      return applySeriesList({
-        ...params,
-        bottom: [
-          {
-            title: "Address Count",
-            color,
-            dataset: params.datasets[scale][`${datasetKey}_address_count`],
-          },
-        ],
-      });
-    },
     description: "",
+    bottom: [addressCount],
   };
 }

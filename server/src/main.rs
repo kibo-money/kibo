@@ -38,7 +38,7 @@ async fn main() -> color_eyre::Result<()> {
 
     let routes = Routes::build();
 
-    routes.generate_grouped_keys_to_url_path_file();
+    routes.generate_front_end_files();
 
     let state = AppState {
         routes: Arc::new(routes),

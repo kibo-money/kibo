@@ -19,62 +19,13 @@ import {
 } from "../lightweightCharts/time";
 import { setWhitespace } from "../lightweightCharts/whitespace";
 import { colors } from "../utils/colors";
+import { dateFromTime, getNumberOfDaysBetweenTwoDates } from "../utils/date";
 import { debounce } from "../utils/debounce";
 import { stringToId } from "../utils/id";
 import { webSockets } from "../ws";
+import { SeriesType } from "./enums";
 
-export enum SeriesType {
-  Line,
-  Based,
-  Histogram,
-  Candlestick,
-}
-
-type SeriesConfig<Scale extends ResourceScale> =
-  | {
-      dataset: ResourceDataset<Scale>;
-      color?: Color;
-      topColor?: Color;
-      bottomColor?: Color;
-      colors?: undefined;
-      seriesType: SeriesType.Based;
-      title: string;
-      options?: BaselineSeriesOptions;
-      priceScaleOptions?: DeepPartialPriceScaleOptions;
-      defaultVisible?: boolean;
-    }
-  | {
-      dataset: ResourceDataset<Scale>;
-      color?: Color;
-      colors?: Color[];
-      seriesType: SeriesType.Histogram;
-      title: string;
-      options?: DeepPartialHistogramOptions;
-      priceScaleOptions?: DeepPartialPriceScaleOptions;
-      defaultVisible?: boolean;
-    }
-  | {
-      dataset: ResourceDataset<Scale>;
-      seriesType: SeriesType.Candlestick;
-      priceScaleOptions?: DeepPartialPriceScaleOptions;
-      colors?: undefined;
-      color?: undefined;
-      options?: DeepPartialLineOptions;
-      defaultVisible?: boolean;
-      title: string;
-    }
-  | {
-      dataset: ResourceDataset<Scale>;
-      color: Color;
-      colors?: undefined;
-      seriesType?: SeriesType.Line;
-      title: string;
-      options?: DeepPartialLineOptions;
-      priceScaleOptions?: DeepPartialPriceScaleOptions;
-      defaultVisible?: boolean;
-    };
-
-export function applySeriesList<Scale extends ResourceScale>({
+export function applySeriesList({
   parentDiv,
   charts: reactiveChartList,
   top,
@@ -92,15 +43,15 @@ export function applySeriesList<Scale extends ResourceScale>({
   parentDiv: HTMLDivElement;
   preset: Preset;
   legendSetter: Setter<SeriesLegend[]>;
-  priceDataset?: ResourceDataset<Scale>;
+  priceDataset?: AnyDatasetPath;
   priceOptions?: PriceSeriesOptions;
-  priceScaleOptions?: DeepPartialPriceScaleOptions;
-  top?: SeriesConfig<Scale>[];
-  bottom?: SeriesConfig<Scale>[];
+  // priceScaleOptions?: DeepPartialPriceScaleOptions;
+  // top?: SeriesConfig<Scale>[];
+  // bottom?: SeriesConfig<Scale>[];
   datasets: Datasets;
   dark: Accessor<boolean>;
   activeIds: RWS<number[]>;
-}) {
+} & PresetParams) {
   // ---
   // Reset states
   // ---
@@ -145,22 +96,20 @@ export function applySeriesList<Scale extends ResourceScale>({
 
   const charts = [top || [], bottom]
     .flatMap((list) => (list ? [list] : []))
-    .flatMap((seriesConfigList, index) => {
-      if (index !== 0 && seriesConfigList.length === 0) {
+    .flatMap((seriesConfigList, chartIndex) => {
+      if (chartIndex !== 0 && seriesConfigList.length === 0) {
         return [];
       }
 
       const div = document.createElement("div");
 
-      div.className = "w-full cursor-crosshair min-h-0 border-lighter";
+      div.className = "w-full cursor-crosshair min-h-0 border-lighter h-full";
 
       parentDiv.appendChild(div);
 
       const chart = createChart(scale, div, {
         dark,
-        priceScaleOptions: {
-          ...priceScaleOptions,
-        },
+        priceScaleOptions,
       });
 
       if (!chart) {
@@ -170,8 +119,28 @@ export function applySeriesList<Scale extends ResourceScale>({
 
       const whitespace = setWhitespace(chart, scale);
 
-      if (exactRange()) {
-        chart.timeScale().setVisibleRange(exactRange());
+      const range = exactRange();
+
+      if (range) {
+        chart.timeScale().setVisibleRange(range);
+      }
+
+      if (chartIndex === 0) {
+        initTimeScale({
+          scale,
+          chart,
+          activeIds: activeIds,
+          exactRange,
+        });
+
+        if (range) {
+          updateVisiblePriceSeriesType({
+            scale,
+            chart,
+            priceSeriesType,
+            timeRange: range,
+          });
+        }
       }
 
       // const whitespace = new Array<ISeriesApi<"Line"> | undefined>(
@@ -223,6 +192,10 @@ export function applySeriesList<Scale extends ResourceScale>({
 
       const chartLegend: SeriesLegend[] = [];
 
+      onCleanup(() => {
+        chartLegend.length = 0;
+      });
+
       const markerCallback = () =>
         setMinMaxMarkers({
           scale,
@@ -241,12 +214,11 @@ export function applySeriesList<Scale extends ResourceScale>({
 
       createEffect(on([exactRange, dark], debouncedSetMinMaxMarkers));
 
-      if (index === 0) {
-        const dataset =
-          priceDataset ||
-          (datasets[preset.scale as Scale].price as unknown as NonNullable<
-            typeof priceDataset
-          >);
+      if (chartIndex === 0) {
+        const datasetPath =
+          priceDataset || (`/${scale}-to-ohlc` satisfies AnyDatasetPath);
+
+        const dataset = datasets.getOrImport(scale, datasetPath);
 
         activeDatasets.push(dataset);
 
@@ -258,11 +230,12 @@ export function applySeriesList<Scale extends ResourceScale>({
         };
 
         function createPriceSeries(seriesType: PriceSeriesType) {
-          let seriesConfig: SeriesConfig<Scale>;
+          let seriesConfig: SeriesConfig;
 
           if (seriesType === "Candlestick") {
             seriesConfig = {
-              dataset,
+              // @ts-ignore
+              datasetPath,
               title,
               seriesType: SeriesType.Candlestick,
               options: priceOptions,
@@ -270,7 +243,8 @@ export function applySeriesList<Scale extends ResourceScale>({
             };
           } else {
             seriesConfig = {
-              dataset,
+              // @ts-ignore
+              datasetPath,
               title,
               color: colors.white,
               options: priceOptions?.seriesOptions,
@@ -279,6 +253,8 @@ export function applySeriesList<Scale extends ResourceScale>({
           }
 
           const priceSeries = createSeriesGroup({
+            scale,
+            datasets,
             index: -1,
             activeIds,
             seriesConfig,
@@ -319,9 +295,13 @@ export function applySeriesList<Scale extends ResourceScale>({
       }
 
       seriesConfigList.reverse().forEach((seriesConfig, index) => {
-        activeDatasets.push(seriesConfig.dataset);
+        const dataset = datasets.getOrImport(scale, seriesConfig.datasetPath);
+
+        activeDatasets.push(dataset);
 
         createSeriesGroup({
+          scale,
+          datasets,
           activeIds: activeIds,
           index,
           seriesConfig,
@@ -358,10 +338,11 @@ export function applySeriesList<Scale extends ResourceScale>({
     charts.forEach((chart) => {
       if (chart.legendList.some((legend) => legend.drawn())) {
         chart.div.style.border = "";
+        chart.div.style.maxHeight = "100%";
         visibleCharts.push(chart);
       } else {
-        chart.div.style.height = "100%";
-        // chart.div.style.height = "0px";
+        // chart.div.style.height = "100%";
+        chart.div.style.maxHeight = "0px";
         chart.div.style.border = "none";
       }
     });
@@ -384,13 +365,6 @@ export function applySeriesList<Scale extends ResourceScale>({
     50,
   );
 
-  initTimeScale({
-    scale,
-    charts,
-    activeIds: activeIds,
-    exactRange,
-  });
-
   const activeDatasetsLength = activeDatasets.length;
   createEffect(() => {
     const range = activeIds();
@@ -410,21 +384,22 @@ export function applySeriesList<Scale extends ResourceScale>({
   for (let i = 0; i < charts.length; i++) {
     const chart = charts[i].chart;
 
-    chart.timeScale().subscribeVisibleLogicalRangeChange((timeRange) => {
-      if (!timeRange) return;
+    chart.timeScale().subscribeVisibleLogicalRangeChange((logicalRange) => {
+      if (!logicalRange) return;
 
       // Must be the chart with the visible timeScale
       if (i === lastChartIndex) {
-        debouncedUpdateVisiblePriceSeriesType(
+        debouncedUpdateVisiblePriceSeriesType({
+          scale,
           chart,
-          timeRange,
+          logicalRange,
           priceSeriesType,
-        );
+        });
       }
 
       for (let j = 0; j <= lastChartIndex; j++) {
         if (i !== j) {
-          charts[j].chart.timeScale().setVisibleLogicalRange(timeRange);
+          charts[j].chart.timeScale().setVisibleLogicalRange(logicalRange);
         }
       }
     });
@@ -454,15 +429,38 @@ export function applySeriesList<Scale extends ResourceScale>({
   reactiveChartList.set(() => charts.map(({ chart }) => chart));
 }
 
-function updateVisiblePriceSeriesType(
-  chart: IChartApi,
-  range: LogicalRange,
-  priceSeriesType: RWS<PriceSeriesType>,
-) {
+export function updateVisiblePriceSeriesType({
+  scale,
+  chart,
+  logicalRange,
+  timeRange,
+  priceSeriesType,
+}: {
+  scale: ResourceScale;
+  chart: IChartApi;
+  logicalRange?: LogicalRange;
+  timeRange?: TimeRange;
+  priceSeriesType: RWS<PriceSeriesType>;
+}) {
   try {
     const width = chart.timeScale().width();
 
-    const ratio = (range.to - range.from) / width;
+    let ratio: number;
+
+    if (logicalRange) {
+      ratio = (logicalRange.to - logicalRange.from) / width;
+    } else if (timeRange) {
+      if (scale === "date") {
+        ratio = getNumberOfDaysBetweenTwoDates(
+          dateFromTime(timeRange.from),
+          dateFromTime(timeRange.to),
+        );
+      } else {
+        ratio = ((timeRange.to as number) - (timeRange.from as number)) / width;
+      }
+    } else {
+      throw Error();
+    }
 
     if (ratio <= 0.5) {
       priceSeriesType.set("Candlestick");
@@ -473,6 +471,8 @@ function updateVisiblePriceSeriesType(
 }
 
 function createSeriesGroup<Scale extends ResourceScale>({
+  scale,
+  datasets,
   activeIds,
   seriesConfig,
   preset,
@@ -484,8 +484,10 @@ function createSeriesGroup<Scale extends ResourceScale>({
   debouncedSetMinMaxMarkers,
   dark,
 }: {
+  scale: Scale;
+  datasets: Datasets;
   activeIds: Accessor<number[]>;
-  seriesConfig: SeriesConfig<Scale>;
+  seriesConfig: SeriesConfig;
   preset: Preset;
   chart: IChartApi;
   index: number;
@@ -496,7 +498,7 @@ function createSeriesGroup<Scale extends ResourceScale>({
   dark: Accessor<boolean>;
 }) {
   const {
-    dataset,
+    datasetPath,
     title,
     colors,
     color,
@@ -506,13 +508,17 @@ function createSeriesGroup<Scale extends ResourceScale>({
     priceScaleOptions,
   } = seriesConfig;
 
-  const scale = preset.scale;
+  const dataset = datasets.getOrImport(
+    scale,
+    datasetPath as DatasetPath<Scale>,
+  );
 
   const seriesList: RWS<
     ISeriesApi<"Baseline" | "Line" | "Histogram" | "Candlestick"> | undefined
   >[] = new Array(dataset.fetchedJSONs.length);
 
   const legend = createSeriesLegend({
+    scale,
     id: stringToId(title),
     presetId: preset.id,
     title,
@@ -532,12 +538,15 @@ function createSeriesGroup<Scale extends ResourceScale>({
 
     createEffect(() => {
       const values = json.vec();
+
       if (!values) return;
 
       if (seriesIndex > 0) {
         let previous = chartLegend.at(seriesIndex - 1)?.seriesList[index];
 
-        if (!previous?.()) return;
+        if (!previous?.()) {
+          return;
+        }
       }
 
       untrack(() => {

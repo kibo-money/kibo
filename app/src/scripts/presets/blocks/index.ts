@@ -1,5 +1,4 @@
 import { colors } from "../../utils/colors";
-import { applySeriesList, SeriesType } from "../apply";
 
 export function createPresets() {
   const scale: ResourceScale = "date";
@@ -13,18 +12,13 @@ export function createPresets() {
         name: "Height",
         title: "Block Height",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: "Height",
-                color: colors.bitcoin,
-                dataset: params.datasets.date.last_height,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: "Height",
+            color: colors.bitcoin,
+            datasetPath: `/date-to-last-height`,
+          },
+        ],
       },
       {
         scale,
@@ -36,37 +30,32 @@ export function createPresets() {
             name: "Daily Sum",
             title: "Daily Sum Of Blocks Mined",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Target",
-                    color: colors.white,
-                    dataset: params.datasets.date.blocks_mined_1d_target,
-                    options: {
-                      lineStyle: 3,
-                    },
-                  },
-                  {
-                    title: "1W Avg.",
-                    color: colors.momentumYellow,
-                    dataset: params.datasets.date.blocks_mined_1w_sma,
-                    defaultVisible: false,
-                  },
-                  {
-                    title: "1M Avg.",
-                    color: colors.bitcoin,
-                    dataset: params.datasets.date.blocks_mined_1m_sma,
-                  },
-                  {
-                    title: "Mined",
-                    color: colors.darkBitcoin,
-                    dataset: params.datasets.date.blocks_mined,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Target",
+                color: colors.white,
+                datasetPath: `/date-to-blocks-mined-1d-target`,
+                options: {
+                  lineStyle: 3,
+                },
+              },
+              {
+                title: "1W Avg.",
+                color: colors.momentumYellow,
+                datasetPath: `/date-to-blocks-mined-1w-sma`,
+                defaultVisible: false,
+              },
+              {
+                title: "1M Avg.",
+                color: colors.bitcoin,
+                datasetPath: `/date-to-blocks-mined-1m-sma`,
+              },
+              {
+                title: "Mined",
+                color: colors.darkBitcoin,
+                datasetPath: `/date-to-blocks-mined`,
+              },
+            ],
           },
           {
             scale,
@@ -74,26 +63,21 @@ export function createPresets() {
             name: "Weekly Sum",
             title: "Weekly Sum Of Blocks Mined",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Target",
-                    color: colors.white,
-                    dataset: params.datasets.date.blocks_mined_1w_target,
-                    options: {
-                      lineStyle: 3,
-                    },
-                  },
-                  {
-                    title: "Sum Mined",
-                    color: colors.bitcoin,
-                    dataset: params.datasets.date.blocks_mined_1w_sum,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Target",
+                color: colors.white,
+                datasetPath: `/date-to-blocks-mined-1w-target`,
+                options: {
+                  lineStyle: 3,
+                },
+              },
+              {
+                title: "Sum Mined",
+                color: colors.bitcoin,
+                datasetPath: `/date-to-blocks-mined-1w-sum`,
+              },
+            ],
           },
           {
             scale,
@@ -101,26 +85,21 @@ export function createPresets() {
             name: "Monthly Sum",
             title: "Monthly Sum Of Blocks Mined",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Target",
-                    color: colors.white,
-                    dataset: params.datasets.date.blocks_mined_1m_target,
-                    options: {
-                      lineStyle: 3,
-                    },
-                  },
-                  {
-                    title: "Sum Mined",
-                    color: colors.bitcoin,
-                    dataset: params.datasets.date.blocks_mined_1m_sum,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Target",
+                color: colors.white,
+                datasetPath: `/date-to-blocks-mined-1m-target`,
+                options: {
+                  lineStyle: 3,
+                },
+              },
+              {
+                title: "Sum Mined",
+                color: colors.bitcoin,
+                datasetPath: `/date-to-blocks-mined-1m-sum`,
+              },
+            ],
           },
           {
             scale,
@@ -128,26 +107,21 @@ export function createPresets() {
             name: "Yearly Sum",
             title: "Yearly Sum Of Blocks Mined",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Target",
-                    color: colors.white,
-                    dataset: params.datasets.date.blocks_mined_1y_target,
-                    options: {
-                      lineStyle: 3,
-                    },
-                  },
-                  {
-                    title: "Sum Mined",
-                    color: colors.bitcoin,
-                    dataset: params.datasets.date.blocks_mined_1y_sum,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Target",
+                color: colors.white,
+                datasetPath: `/date-to-blocks-mined-1y-target`,
+                options: {
+                  lineStyle: 3,
+                },
+              },
+              {
+                title: "Sum Mined",
+                color: colors.bitcoin,
+                datasetPath: `/date-to-blocks-mined-1y-sum`,
+              },
+            ],
           },
           {
             scale,
@@ -155,18 +129,13 @@ export function createPresets() {
             name: "Total",
             title: "Total Blocks Mined",
             description: "",
-            applyPreset(params) {
-              return applySeriesList({
-                ...params,
-                bottom: [
-                  {
-                    title: "Mined",
-                    color: colors.bitcoin,
-                    dataset: params.datasets.date.total_blocks_mined,
-                  },
-                ],
-              });
-            },
+            bottom: [
+              {
+                title: "Mined",
+                color: colors.bitcoin,
+                datasetPath: `/date-to-total-blocks-mined`,
+              },
+            ],
           },
         ],
       },
@@ -176,18 +145,13 @@ export function createPresets() {
         name: "Cumulative Size",
         title: "Cumulative Block Size",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: "Size (MB)",
-                color: colors.darkWhite,
-                dataset: params.datasets.date.cumulative_block_size,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: "Size (MB)",
+            color: colors.darkWhite,
+            datasetPath: `/date-to-cumulative-block-size`,
+          },
+        ],
       },
     ],
   } satisfies PartialPresetFolder;

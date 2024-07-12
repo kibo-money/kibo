@@ -1,6 +1,7 @@
 import { colors } from "/src/scripts/utils/colors";
 
 import { chunkIdToIndex } from "../datasets/resource";
+import { dateFromTime } from "../utils/date";
 import { valueToString } from "../utils/locale";
 
 export function setMinMaxMarkers({
@@ -55,11 +56,7 @@ export function setMinMaxMarkers({
           let number;
 
           if (scale === "date") {
-            const date =
-              typeof data.time === "string"
-                ? new Date(data.time)
-                : // @ts-ignore
-                  new Date(data.time.year, data.time.month, data.time.day);
+            const date = dateFromTime(data.time);
 
             number = date.getTime();
 

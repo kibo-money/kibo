@@ -2,7 +2,7 @@
 
 // https://github.com/tradingview/lightweight-charts/blob/master/tests/e2e/graphics/test-cases/horizontal-price-scale.js
 
-import { type IHorzScaleBehavior } from "lightweight-charts";
+import type { IHorzScaleBehavior } from "lightweight-charts";
 
 export class HorzScaleBehaviorHeight implements IHorzScaleBehavior<number> {
   options() {}

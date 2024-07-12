@@ -129,7 +129,10 @@ impl UTXOCohortsDurableStates {
         self.initial_filtered_apply(&days_old, &year, |state| {
             state
                 .decrement(amount, utxo_count, block_data.price)
-                .unwrap();
+                .unwrap_or_else(|report| {
+                    dbg!(report, block_data, sent_data, previous_last_block_data);
+                    panic!()
+                });
         })
     }
 

@@ -61,6 +61,8 @@ impl UTXOCohortDurableStates {
                     dbg!(
                         report,
                         "cents_to_amount decrement failed",
+                        rounded_price,
+                        price,
                         amount,
                         utxo_count
                     );

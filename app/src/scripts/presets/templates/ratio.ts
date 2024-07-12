@@ -22,7 +22,7 @@
 //   scale,
 //   id,
 //   title,
-//   datasetKey,
+//   datasetId,
 //   color,
 // }: {
 //   datasets: Record<`${Key}${RatioKey}`, Dataset<ResourceScale>>;
@@ -30,7 +30,7 @@
 //   id: string;
 //   title: string;
 //   color: string;
-//   datasetKey: Key;
+//   datasetId: Key;
 // }): PartialPresetFolder {
 //   return {
 //     id: `${scale}-${id}-ratio`,
@@ -52,7 +52,7 @@
 //               {
 //                 title: "Ratio",
 //                 seriesType: SeriesType.Based,
-//                 dataset: datasets[`${datasetKey}Ratio`],
+//                 dataset: datasets[`${datasetId}Ratio`],
 //                 options: {
 //                   base: 1,
 //                 },
@@ -83,7 +83,7 @@
 //                     title: "Ratio",
 //                     seriesType: SeriesType.Based,
 //                     color: colors.gray,
-//                     dataset: datasets[`${datasetKey}Ratio`],
+//                     dataset: datasets[`${datasetId}Ratio`],
 //                     options: {
 //                       base: 1,
 //                     },
@@ -91,12 +91,12 @@
 //                   {
 //                     title: "7 Day Moving Average",
 //                     color: colors.closes7DMA,
-//                     dataset: datasets[`${datasetKey}Ratio7DayMovingAverage`],
+//                     dataset: datasets[`${datasetId}Ratio7DayMovingAverage`],
 //                   },
 //                   {
 //                     title: "1 Year Moving Average",
 //                     color: colors.closes1YMA,
-//                     dataset: datasets[`${datasetKey}Ratio1YearMovingAverage`],
+//                     dataset: datasets[`${datasetId}Ratio1YearMovingAverage`],
 //                   },
 //                 ],
 //               });
@@ -108,7 +108,7 @@
 //             scale,
 //             id: `${scale}-${id}-ratio-averages`,
 //             title: `${title} Ratio Moving Averages`,
-//             datasetKey: `${datasetKey}Ratio`,
+//             datasetId: `${datasetId}Ratio`,
 //           }),
 //         ],
 //       },
@@ -135,7 +135,7 @@
 //                     title: "Ratio",
 //                     color: colors.white,
 //                     seriesType: SeriesType.Based,
-//                     dataset: datasets[`${datasetKey}Ratio`],
+//                     dataset: datasets[`${datasetId}Ratio`],
 //                     options: {
 //                       base: 1,
 //                       options: {
@@ -147,20 +147,20 @@
 //                   {
 //                     id: "99.9-percentile",
 //                     title: "99.9th Percentile",
-//                     dataset: datasets[`${datasetKey}Ratio99.9Percentile`],
+//                     dataset: datasets[`${datasetId}Ratio99.9Percentile`],
 //                     color: colors.extremeMax,
 //                   },
 //                   {
 //                     id: "99.5-percentile",
 //                     title: "99.5th Percentile",
 //                     color: colors.extremeMiddle,
-//                     dataset: datasets[`${datasetKey}Ratio99.5Percentile`],
+//                     dataset: datasets[`${datasetId}Ratio99.5Percentile`],
 //                   },
 //                   {
 //                     id: "99-percentile",
 //                     title: "99th Percentile",
 //                     color: colors.extremeMin,
-//                     dataset: datasets[`${datasetKey}Ratio99Percentile`],
+//                     dataset: datasets[`${datasetId}Ratio99Percentile`],
 //                   },
 //                 ],
 //               });
@@ -185,7 +185,7 @@
 //                     title: "Ratio",
 //                     color: colors.white,
 //                     seriesType: SeriesType.Based,
-//                     dataset: datasets[`${datasetKey}Ratio`],
+//                     dataset: datasets[`${datasetId}Ratio`],
 //                     options: {
 //                       base: 1,
 //                       options: {
@@ -198,19 +198,19 @@
 //                     id: "1-percentile",
 //                     title: "1st Percentile",
 //                     color: colors.extremeMin,
-//                     dataset: datasets[`${datasetKey}Ratio1Percentile`],
+//                     dataset: datasets[`${datasetId}Ratio1Percentile`],
 //                   },
 //                   {
 //                     id: "0.5-percentile",
 //                     title: "0.5th Percentile",
 //                     color: colors.extremeMiddle,
-//                     dataset: datasets[`${datasetKey}Ratio0.5Percentile`],
+//                     dataset: datasets[`${datasetId}Ratio0.5Percentile`],
 //                   },
 //                   {
 //                     id: "0.1-percentile",
 //                     title: "0.1th Percentile",
 //                     color: colors.extremeMax,
-//                     dataset: datasets[`${datasetKey}Ratio0.1Percentile`],
+//                     dataset: datasets[`${datasetId}Ratio0.1Percentile`],
 //                   },
 //                 ],
 //               });
@@ -231,19 +231,19 @@
 //                     id: "99.9-percentile",
 //                     title: "99.9th Percentile",
 //                     color: colors.extremeMax,
-//                     dataset: datasets[`${datasetKey}Ratio99.9Price`],
+//                     dataset: datasets[`${datasetId}Ratio99.9Price`],
 //                   },
 //                   {
 //                     id: "99.5-percentile",
 //                     title: "99.5th Percentile",
 //                     color: colors.extremeMiddle,
-//                     dataset: datasets[`${datasetKey}Ratio99.5Price`],
+//                     dataset: datasets[`${datasetId}Ratio99.5Price`],
 //                   },
 //                   {
 //                     id: "99-percentile",
 //                     title: "99th Percentile",
 //                     color: colors.extremeMin,
-//                     dataset: datasets[`${datasetKey}Ratio99Price`],
+//                     dataset: datasets[`${datasetId}Ratio99Price`],
 //                   },
 //                 ],
 //               });
@@ -264,19 +264,19 @@
 //                     id: "1-percentile",
 //                     title: "1st Percentile",
 //                     color: colors.extremeMin,
-//                     dataset: datasets[`${datasetKey}Ratio1Price`],
+//                     dataset: datasets[`${datasetId}Ratio1Price`],
 //                   },
 //                   {
 //                     id: "0.5-percentile",
 //                     title: "0.5th Percentile",
 //                     color: colors.extremeMiddle,
-//                     dataset: datasets[`${datasetKey}Ratio0.5Price`],
+//                     dataset: datasets[`${datasetId}Ratio0.5Price`],
 //                   },
 //                   {
 //                     id: "0.1-percentile",
 //                     title: "0.1th Percentile",
 //                     color: colors.extremeMax,
-//                     dataset: datasets[`${datasetKey}Ratio0.1Price`],
+//                     dataset: datasets[`${datasetId}Ratio0.1Price`],
 //                   },
 //                 ],
 //               });

@@ -1,5 +1,5 @@
 import { colors } from "../../utils/colors";
-import { applySeriesList, SeriesType } from "../apply";
+import { SeriesType } from "../enums";
 
 export function createPresets(scale: ResourceScale) {
   return {
@@ -19,18 +19,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Last Coinbase (In Bitcoin)",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Last",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].last_coinbase,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Last",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-last-coinbase`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -38,19 +33,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Last Coinbase (In Dollars)",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Last",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale].last_coinbase_in_dollars,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Last",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-last-coinbase-in-dollars`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -64,18 +53,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Daily Sum Of Bitcoin Coinbases",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Coinbases (Bitcoin)",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].coinbase,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Coinbases (Bitcoin)",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-coinbase`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -83,19 +67,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Daily Sum Of Dollar Coinbases",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Coinbases (Dollars)",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale].coinbase_in_dollars,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Coinbases (Dollars)",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-coinbase-in-dollars`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -109,18 +87,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Yearly Sum Of Bitcoin Coinbases",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Coinbases (Bitcoin)",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].coinbase_1y_sum,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Coinbases (Bitcoin)",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-coinbase-1y-sum`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -128,20 +101,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Yearly Sum Of Dollar Coinbases",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Coinbases (Dollars)",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale]
-                                  .coinbase_in_dollars_1y_sum,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Coinbases (Dollars)",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-coinbase-in-dollars-1y-sum`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -155,19 +121,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Cumulative Bitcoin Coinbases",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Coinbases (Bitcoin)",
-                              color: colors.bitcoin,
-                              dataset:
-                                params.datasets[scale].cumulative_coinbase,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Coinbases (Bitcoin)",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-cumulative-coinbase`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -175,20 +135,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Cumulative Dollar Coinbases",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Coinbases (Dollars)",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale]
-                                  .cumulative_coinbase_in_dollars,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Coinbases (Dollars)",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-cumulative-coinbase-in-dollars`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -211,19 +164,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Last Subsidy (In Bitcoin)",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-
-                          bottom: [
-                            {
-                              title: "Last",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].last_subsidy,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Last",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-last-subsidy`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -231,19 +178,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Last Subsidy (In Dollars)",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Last",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale].last_subsidy_in_dollars,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Last",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-last-subsidy-in-dollars`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -257,18 +198,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Daily Sum Of Bitcoin Subsidies",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Subsidies (Bitcoin)",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].subsidy,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Subsidies (Bitcoin)",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-subsidy`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -276,19 +212,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Daily Sum Of Dollar Subsidies",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Subsidies (Dollars)",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale].subsidy_in_dollars,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Subsidies (Dollars)",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-subsidy-in-dollars`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -302,18 +232,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Yearly Sum Of Bitcoin Subsidies",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Subsidies (Bitcoin)",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].subsidy_1y_sum,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Subsidies (Bitcoin)",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-subsidy-1y-sum`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -321,20 +246,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Yearly Sum Of Dollar Subsidies",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Subsidies (Dollars)",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale]
-                                  .subsidy_in_dollars_1y_sum,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Subsidies (Dollars)",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-subsidy-in-dollars-1y-sum`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -348,19 +266,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Cumulative Bitcoin Subsidies",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Subsidies (Bitcoin)",
-                              color: colors.bitcoin,
-                              dataset:
-                                params.datasets[scale].cumulative_subsidy,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Subsidies (Bitcoin)",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-cumulative-subsidy`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -368,20 +280,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Cumulative Dollar Subsidies",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Subsidies (Dollars)",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale]
-                                  .cumulative_subsidy_in_dollars,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Subsidies (Dollars)",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-cumulative-subsidy-in-dollars`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -404,18 +309,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Last Fees (In Bitcoin)",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Last",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].last_fees,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Last",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-last-fees`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -423,19 +323,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Last Fees (In Dollars)",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Last",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale].last_fees_in_dollars,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Last",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-last-fees-in-dollars`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -449,18 +343,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Daily Sum Of Bitcoin Fees",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Fees (Bitcoin)",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].fees,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Fees (Bitcoin)",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-fees`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -468,18 +357,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Daily Sum Of Dollar Fees",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Fees (Dollars)",
-                              color: colors.dollars,
-                              dataset: params.datasets[scale].fees_in_dollars,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Fees (Dollars)",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-fees-in-dollars`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -493,18 +377,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Yearly Sum Of Bitcoin Fees",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Fees (Bitcoin)",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].fees_1y_sum,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Fees (Bitcoin)",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-fees-1y-sum`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -512,19 +391,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Yearly Sum Of Dollar Fees",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Fees (Dollars)",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale].fees_in_dollars_1y_sum,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Fees (Dollars)",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-fees-in-dollars-1y-sum`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -538,18 +411,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Bitcoin",
                       title: "Cumulative Bitcoin Fees",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Fees (Bitcoin)",
-                              color: colors.bitcoin,
-                              dataset: params.datasets[scale].cumulative_fees,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Fees (Bitcoin)",
+                          color: colors.bitcoin,
+                          datasetPath: `/${scale}-to-cumulative-fees`,
+                        },
+                      ],
                     },
                     {
                       scale,
@@ -557,20 +425,13 @@ export function createPresets(scale: ResourceScale) {
                       name: "In Dollars",
                       title: "Cumulative Dollar Fees",
                       description: "",
-                      applyPreset(params) {
-                        return applySeriesList({
-                          ...params,
-                          bottom: [
-                            {
-                              title: "Fees (Dollars)",
-                              color: colors.dollars,
-                              dataset:
-                                params.datasets[scale]
-                                  .cumulative_fees_in_dollars,
-                            },
-                          ],
-                        });
-                      },
+                      bottom: [
+                        {
+                          title: "Fees (Dollars)",
+                          color: colors.dollars,
+                          datasetPath: `/${scale}-to-cumulative-fees-in-dollars`,
+                        },
+                      ],
                     },
                   ],
                 },
@@ -585,23 +446,18 @@ export function createPresets(scale: ResourceScale) {
         name: "Subsidy V. Fees",
         title: "Subsidy V. Fees",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: "Subsidy (%)",
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].subsidy_to_coinbase_ratio,
-              },
-              {
-                title: "Fees (%)",
-                color: colors.darkBitcoin,
-                dataset: params.datasets[scale].fees_to_coinbase_ratio,
-              },
-            ],
-          });
-        },
+        bottom: [
+          {
+            title: "Subsidy (%)",
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-subsidy-to-coinbase-ratio`,
+          },
+          {
+            title: "Fees (%)",
+            color: colors.darkBitcoin,
+            datasetPath: `/${scale}-to-fees-to-coinbase-ratio`,
+          },
+        ],
       },
 
       ...(scale === "date"
@@ -612,21 +468,16 @@ export function createPresets(scale: ResourceScale) {
               name: "Puell Multiple",
               title: "Puell Multiple",
               description: "",
-              applyPreset(params) {
-                return applySeriesList({
-                  ...params,
-                  priceScaleOptions: {
-                    mode: 1,
-                  },
-                  bottom: [
-                    {
-                      title: "Multiple",
-                      color: colors.bitcoin,
-                      dataset: params.datasets.date.puell_multiple,
-                    },
-                  ],
-                });
+              priceScaleOptions: {
+                mode: 1,
               },
+              bottom: [
+                {
+                  title: "Multiple",
+                  color: colors.bitcoin,
+                  datasetPath: `/date-to-puell-multiple`,
+                },
+              ],
             },
 
             {
@@ -635,79 +486,62 @@ export function createPresets(scale: ResourceScale) {
               name: "Hash Rate",
               title: "Hash Rate (EH/s)",
               description: "",
-              applyPreset(params) {
-                return applySeriesList({
-                  ...params,
-                  priceScaleOptions: {
-                    mode: 1,
-                  },
-                  bottom: [
-                    {
-                      title: "1M SMA",
-                      color: colors.momentumYellow,
-                      dataset: params.datasets.date.hash_rate_1m_sma,
-                    },
-                    {
-                      title: "1W SMA",
-                      color: colors.bitcoin,
-                      dataset: params.datasets.date.hash_rate_1w_sma,
-                    },
-                    {
-                      title: "Rate",
-                      color: colors.darkBitcoin,
-                      dataset: params.datasets.date.hash_rate,
-                    },
-                  ],
-                });
+              priceScaleOptions: {
+                mode: 1,
               },
+              bottom: [
+                {
+                  title: "1M SMA",
+                  color: colors.momentumYellow,
+                  datasetPath: `/date-to-hash-rate-1m-sma`,
+                },
+                {
+                  title: "1W SMA",
+                  color: colors.bitcoin,
+                  datasetPath: `/date-to-hash-rate-1w-sma`,
+                },
+                {
+                  title: "Rate",
+                  color: colors.darkBitcoin,
+                  datasetPath: `/date-to-hash-rate`,
+                },
+              ],
             },
-
             {
               scale,
               icon: IconTablerRibbonHealth,
               name: "Hash Ribbon",
               title: "Hash Ribbon (EH/s)",
               description: "",
-              applyPreset(params) {
-                return applySeriesList({
-                  ...params,
-                  priceScaleOptions: {
-                    mode: 1,
-                  },
-                  bottom: [
-                    {
-                      title: "1M SMA",
-                      color: colors.profit,
-                      dataset: params.datasets.date.hash_rate_1m_sma,
-                    },
-                    {
-                      title: "2M SMA",
-                      color: colors.loss,
-                      dataset: params.datasets.date.hash_rate_2m_sma,
-                    },
-                  ],
-                });
+              priceScaleOptions: {
+                mode: 1,
               },
+              bottom: [
+                {
+                  title: "1M SMA",
+                  color: colors.profit,
+                  datasetPath: `/date-to-hash-rate-1m-sma`,
+                },
+                {
+                  title: "2M SMA",
+                  color: colors.loss,
+                  datasetPath: `/date-to-hash-rate-2m-sma`,
+                },
+              ],
             },
-
             {
               scale,
               icon: IconTablerTag,
               name: "Hash Price",
               title: "Hash Price",
               description: "",
-              applyPreset(params) {
-                return applySeriesList({
-                  ...params,
-                  bottom: [
-                    {
-                      title: "Price ($/PH/s)",
-                      color: colors.dollars,
-                      dataset: params.datasets.date.hash_price,
-                    },
-                  ],
-                });
-              },
+              bottom: [
+                {
+                  title: "Price ($/PH/s)",
+                  color: colors.dollars,
+                  datasetPath: `/date-to-hash-price`,
+                },
+              ],
             },
           ] satisfies PartialPreset[])
         : []),
@@ -718,21 +552,16 @@ export function createPresets(scale: ResourceScale) {
         name: "Difficulty",
         title: "Difficulty",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            priceScaleOptions: {
-              mode: 1,
-            },
-            bottom: [
-              {
-                title: "Difficulty",
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].difficulty,
-              },
-            ],
-          });
+        priceScaleOptions: {
+          mode: 1,
         },
+        bottom: [
+          {
+            title: "Difficulty",
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-difficulty`,
+          },
+        ],
       },
 
       ...(scale === "date"
@@ -743,18 +572,13 @@ export function createPresets(scale: ResourceScale) {
               name: "Difficulty Adjustment",
               title: "Difficulty Adjustment",
               description: "",
-              applyPreset(params) {
-                return applySeriesList({
-                  ...params,
-                  bottom: [
-                    {
-                      title: "Adjustment (%)",
-                      seriesType: SeriesType.Based,
-                      dataset: params.datasets[scale].difficulty_adjustment,
-                    },
-                  ],
-                });
-              },
+              bottom: [
+                {
+                  title: "Adjustment (%)",
+                  seriesType: SeriesType.Based,
+                  datasetPath: `/${scale}-to-difficulty-adjustment`,
+                },
+              ],
             },
           ] satisfies PartialPreset[])
         : []),
@@ -765,21 +589,16 @@ export function createPresets(scale: ResourceScale) {
         name: "Annualized Issuance",
         title: "Annualized Issuance",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            priceScaleOptions: {
-              mode: 1,
-            },
-            bottom: [
-              {
-                title: "Issuance",
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].annualized_issuance,
-              },
-            ],
-          });
+        priceScaleOptions: {
+          mode: 1,
         },
+        bottom: [
+          {
+            title: "Issuance",
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-annualized-issuance`,
+          },
+        ],
       },
 
       {
@@ -788,21 +607,16 @@ export function createPresets(scale: ResourceScale) {
         name: "Yearly Inflation Rate",
         title: "Yearly Inflation Rate",
         description: "",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            priceScaleOptions: {
-              mode: 1,
-            },
-            bottom: [
-              {
-                title: "Rate (%)",
-                color: colors.bitcoin,
-                dataset: params.datasets[scale].yearly_inflation_rate,
-              },
-            ],
-          });
+        priceScaleOptions: {
+          mode: 1,
         },
+        bottom: [
+          {
+            title: "Rate (%)",
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-yearly-inflation-rate`,
+          },
+        ],
       },
 
       // For scale === "height"

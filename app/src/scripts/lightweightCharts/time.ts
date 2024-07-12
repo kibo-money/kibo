@@ -64,34 +64,21 @@ export function initTimeScale({
   scale,
   activeIds,
   exactRange,
-  charts,
+  chart,
 }: {
   scale: ResourceScale;
   activeIds: RWS<number[]>;
   exactRange: RWS<TimeRange>;
-  charts: ChartObject[];
+  chart: IChartApi;
 }) {
-  const firstChart = charts.at(0)?.chart;
-
-  if (!firstChart) return;
-
-  firstChart.timeScale().subscribeVisibleTimeRangeChange((range) => {
+  chart.timeScale().subscribeVisibleTimeRangeChange((range) => {
     if (!range) return;
 
     exactRange.set(range);
 
-    debouncedsetActiveIds({ exactRange: range, activeIds: activeIds });
+    debouncedSetActiveIds({ exactRange: range, activeIds: activeIds });
 
     debouncedSaveTimeRange({ scale, range });
-  });
-
-  const range = exactRange();
-
-  run(async () => {
-    if (range) {
-      await tick();
-      firstChart.timeScale().setVisibleRange(range);
-    }
   });
 }
 
@@ -142,7 +129,7 @@ export function setActiveIds({
   }
 }
 
-const debouncedsetActiveIds = debounce(setActiveIds, 100);
+const debouncedSetActiveIds = debounce(setActiveIds, 100);
 
 function saveTimeRange({
   scale,

@@ -1,5 +1,4 @@
 import { colors } from "../../utils/colors";
-import { applySeriesList } from "../apply";
 import { createPresets as createAveragesPresets } from "./averages";
 import { createPresets as createIndicatorsPresets } from "./indicators";
 import { createPresets as createReturnsPresets } from "./returns";
@@ -13,9 +12,6 @@ export function createPresets(scale: ResourceScale) {
         icon: IconTablerCurrencyDollar,
         name: "Price",
         title: "Market Price",
-        applyPreset(params) {
-          return applySeriesList(params);
-        },
         description: "",
       },
       {
@@ -23,19 +19,14 @@ export function createPresets(scale: ResourceScale) {
         icon: IconTablerInfinity,
         name: "Capitalization",
         title: "Market Capitalization",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            bottom: [
-              {
-                title: "Market Cap.",
-                dataset: params.datasets[scale].market_cap,
-                color: colors.bitcoin,
-              },
-            ],
-          });
-        },
         description: "",
+        bottom: [
+          {
+            title: "Market Cap.",
+            datasetPath: `/${scale}-to-market-cap`,
+            color: colors.bitcoin,
+          },
+        ],
       },
       ...(scale === "date"
         ? ([

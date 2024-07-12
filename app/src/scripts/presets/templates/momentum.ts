@@ -24,13 +24,13 @@
 //   scale,
 //   id,
 //   title,
-//   datasetKey,
+//   datasetId,
 // }: {
 //   datasets: Record<`${Key}${MomentumKey}`, Dataset<ResourceScale>>;
 //   scale: Scale;
 //   id: string;
 //   title: string;
-//   datasetKey: Key;
+//   datasetId: Key;
 // }): PartialPresetFolder {
 //   return {
 //     id: `${scale}-${id}-momentum`,
@@ -50,7 +50,7 @@
 //                 title: "Momentum",
 //                 colors: colors.momentum,
 //                 seriesType: SeriesType.Histogram,
-//                 dataset: datasets[`${datasetKey}Momentum`],
+//                 dataset: datasets[`${datasetId}Momentum`],
 //                 options: {
 //                   priceScaleId: PRICE_SCALE_MOMENTUM_ID,
 //                   lastValueVisible: false,
@@ -82,7 +82,7 @@
 //                   {
 //                     title: "Bitcoin Returns",
 //                     dataset:
-//                       datasets[`${datasetKey}MomentumBLSHBitcoinReturns`],
+//                       datasets[`${datasetId}MomentumBLSHBitcoinReturns`],
 //                     color: colors.bitcoin,
 //                   },
 //                 ],
@@ -106,7 +106,7 @@
 //                 list: [
 //                   {
 //                     title: "Dollar Returns",
-//                     dataset: datasets[`${datasetKey}MomentumBLSHDollarReturns`],
+//                     dataset: datasets[`${datasetId}MomentumBLSHDollarReturns`],
 //                     color: colors.dollars,
 //                   },
 //                 ],

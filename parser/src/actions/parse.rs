@@ -12,6 +12,7 @@ use crate::{
         Databases, TxidToTxData, TxoutIndexToAddressIndex, TxoutIndexToAmount,
     },
     datasets::{AllDatasets, InsertData},
+    log,
     states::{
         AddressCohortsInputStates, AddressCohortsOutputStates, AddressCohortsRealizedStates,
         States, UTXOCohortsOneShotStates, UTXOCohortsSentStates,
@@ -53,6 +54,8 @@ pub fn parse(
         timestamp,
     }: ParseData,
 ) {
+    // log(&format!("{height}"));
+
     // If false, expect that the code is flawless
     // or create a 0 value txid database
     let enable_check_if_txout_value_is_zero_in_db: bool = true;
@@ -538,10 +541,6 @@ pub fn parse(
             }
         }
     });
-
-    // if !txin_ordered_tx_datas.is_empty() {
-    //     panic!("txin_ordered_tx_indexes should've been fully consumed");
-    // }
 
     let mut utxo_cohorts_sent_states = UTXOCohortsSentStates::default();
     let mut utxo_cohorts_one_shot_states = UTXOCohortsOneShotStates::default();

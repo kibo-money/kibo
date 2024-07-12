@@ -1,8 +1,6 @@
 import { averages } from "/src/scripts/datasets/date";
 import { colors } from "/src/scripts/utils/colors";
 
-import { applySeriesList } from "../../apply";
-
 export function createPresets(): PartialPresetFolder {
   const scale: ResourceScale = "date";
 
@@ -14,17 +12,12 @@ export function createPresets(): PartialPresetFolder {
         icon: IconTablerMathAvg,
         name: "All",
         title: "All Averages",
-        applyPreset(params) {
-          return applySeriesList({
-            ...params,
-            top: averages.map((average) => ({
-              title: average.key.toUpperCase(),
-              color: colors[`_${average.key}`],
-              dataset: params.datasets.date[`price_${average.key}_sma`],
-            })),
-          });
-        },
         description: "",
+        top: averages.map((average) => ({
+          title: average.key.toUpperCase(),
+          color: colors[`_${average.key}`],
+          datasetPath: `/date-to-price-${average.key}-sma`,
+        })),
       },
       ...averages.map(({ name, key }) =>
         createPresetFolder({
@@ -55,17 +48,12 @@ function createPresetFolder({
     description: "",
     icon: IconTablerMathAvg,
     title: `${name} Moving Average`,
-    applyPreset(params) {
-      return applySeriesList({
-        ...params,
-        top: [
-          {
-            title: `SMA`,
-            color,
-            dataset: params.datasets.date[`price_${key}_sma`],
-          },
-        ],
-      });
-    },
+    top: [
+      {
+        title: `SMA`,
+        color,
+        datasetPath: `/date-to-price-${key}-sma`,
+      },
+    ],
   } satisfies PartialPreset;
 }

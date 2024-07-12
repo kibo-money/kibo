@@ -1,18 +1,24 @@
-type AgeCohortKey = (typeof import("./age").ageCohorts)[number]["key"];
+type AgeCohortId = (typeof import("./age").ageCohorts)[number]["id"];
 
-type AddressCohortKey =
+type AgeCohortIdSub = Exclude<AgeCohortId, "">;
+
+type AddressCohortId =
   (typeof import("./address").addressCohorts)[number]["key"];
 
-type LiquidityKey = (typeof import("./liquidities").liquidities)[number]["key"];
+type LiquidityId = (typeof import("./liquidities").liquidities)[number]["id"];
 
-type AddressCohortKeySplitByLiquidity = `${LiquidityKey}_${AddressCohortKey}`;
+type AddressCohortIdSplitByLiquidity = `${LiquidityId}-${AddressCohortId}`;
 
-type AnyCohortKey = AgeCohortKey | AddressCohortKey;
+type AnyCohortId = AgeCohortId | AddressCohortId;
 
-type AnyPossibleCohortKey =
-  | AnyCohortKey
-  | AddressCohortKeySplitByLiquidity
-  | LiquidityKey;
+type AnyPossibleCohortId =
+  | AnyCohortId
+  | AddressCohortIdSplitByLiquidity
+  | LiquidityId;
+
+type AnyDatasetPrefix =
+  | ""
+  | `${AgeCohortIdSub | AddressCohortId | AddressCohortIdSplitByLiquidity | LiquidityId}-`;
 
 type AverageName = (typeof import("./averages").averages)[number]["key"];
 
@@ -20,3 +26,5 @@ type TotalReturnKey = (typeof import("./returns").totalReturns)[number]["key"];
 
 type CompoundReturnKey =
   (typeof import("./returns").compoundReturns)[number]["key"];
+
+type PercentileId = (typeof import("./percentiles").percentiles)[number]["id"];
