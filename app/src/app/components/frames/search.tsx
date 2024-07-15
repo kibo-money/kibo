@@ -6,7 +6,7 @@ import { createRWS } from "/src/solid/rws";
 
 import { INPUT_PRESET_SEARCH_ID } from "../..";
 import { Box } from "./box";
-import { Button } from "./button";
+import { Button, ButtonRandomChart } from "./button";
 import { Line } from "./line";
 
 const PER_PAGE = 100;
@@ -131,7 +131,15 @@ export function SearchFrame({
     >
       <div class="flex-1 space-y-1 overflow-y-auto p-4 pt-16">
         <p class="py-2 text-orange-100/75">
-          <Show when={search()} fallback={"Write in the top bar to search."}>
+          <Show
+            when={search()}
+            fallback={
+              <p>
+                If you can't think of anything, you might want to try to{" "}
+                <ButtonRandomChart presets={presets} />
+              </p>
+            }
+          >
             Found{" "}
             <span class="font-medium text-orange-400/75">
               {resultCount().toLocaleString("en-us")}
@@ -178,7 +186,7 @@ export function SearchFrame({
             id={INPUT_PRESET_SEARCH_ID}
             ref={inputRef.set}
             class="w-full bg-transparent p-1 caret-orange-500 placeholder:text-orange-200/50 focus:outline-none"
-            placeholder="Search by name or path"
+            placeholder="Search by name or path - / to focus"
             value={search()}
             onFocus={initHaystackIfNeeded}
             onInput={(event) => search.set(event.target.value)}
@@ -196,7 +204,7 @@ export function SearchFrame({
             inputRef()?.focus();
           }}
         >
-          Clear search
+          Reset search
         </Button>
       </Box>
     </div>

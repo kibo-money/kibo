@@ -1,3 +1,5 @@
+import { Box } from "./box";
+import { Button, ButtonRandomChart } from "./button";
 import { Header } from "./header";
 import { Line } from "./line";
 import { Number } from "./number";
@@ -11,7 +13,7 @@ export function FavoritesFrame({
 }) {
   return (
     <div
-      class="flex-1 overflow-y-auto overflow-x-hidden"
+      class="relative flex-1 overflow-y-auto overflow-x-hidden"
       style={{
         display: selectedFrame() !== "Favorites" ? "none" : undefined,
       }}
@@ -26,25 +28,46 @@ export function FavoritesFrame({
 
         <div
           class="space-y-0.5 py-1"
-          style={{
-            display: !presets.favorites().length ? "none" : undefined,
-          }}
+          // style={{
+          //   display: !presets.favorites().length ? "none" : undefined,
+          // }}
         >
-          <For each={presets.favorites()}>
-            {(preset) => (
-              <Line
-                id={`favorite-${preset.id}`}
-                name={preset.title}
-                onClick={() => presets.select(preset)}
-                active={() => presets.selected() === preset}
-                header={`/ ${[...preset.path.map(({ name }) => name), preset.name].join(" / ")}`}
-              />
-            )}
-          </For>
+          <Show
+            when={presets.favorites().length}
+            fallback={
+              <p>
+                It seems like you couldn't find any interesting chart for your
+                favorites ! You might want to try to{" "}
+                <ButtonRandomChart presets={presets} />
+              </p>
+            }
+          >
+            <For each={presets.favorites()}>
+              {(preset) => (
+                <Line
+                  id={`favorite-${preset.id}`}
+                  name={preset.title}
+                  onClick={() => presets.select(preset)}
+                  active={() => presets.selected() === preset}
+                  header={`/ ${[...preset.path.map(({ name }) => name), preset.name].join(" / ")}`}
+                />
+              )}
+            </For>
+          </Show>
         </div>
 
         <div class="h-[25dvh] flex-none" />
       </div>
+
+      <Box absolute="bottom">
+        <Button onClick={() => presets.selected().isFavorite.set((b) => !b)}>
+          <span>
+            {presets.selected().isFavorite()
+              ? "Remove from favorites"
+              : "Add to favorites"}
+          </span>
+        </Button>
+      </Box>
     </div>
   );
 }

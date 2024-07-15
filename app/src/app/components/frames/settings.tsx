@@ -151,6 +151,10 @@ export function SettingsFrame({
                   url: "https://primal.net/p/npub1730y5k2s9u82w9snx3hl37r8gpsrmqetc2y3xyx9h65yfpf28rtq0y635y",
                   amount: 17_471,
                 },
+                {
+                  name: "Anon",
+                  amount: 210_000,
+                },
               ]
                 .sort((a, b) =>
                   b.amount !== a.amount
@@ -159,7 +163,7 @@ export function SettingsFrame({
                 )
                 .slice(0, 10)}
             >
-              {({ name, url, amount }, index) => (
+              {({ name, url, amount }) => (
                 <li>
                   <a href={url} target="_blank">
                     {name}
