@@ -16,10 +16,6 @@ fn main() -> color_eyre::Result<()> {
 
     config.write()?;
 
-    if true {
-        panic!();
-    }
-
     let daemon = BitcoinDaemon::new(&config);
 
     loop {

@@ -1,4 +1,4 @@
-use std::fs::{self, File};
+use std::fs::{self};
 
 use clap::Parser;
 use serde::{Deserialize, Serialize};
@@ -27,13 +27,12 @@ impl Config {
     const PATH: &'static str = "config.toml";
 
     pub fn read() -> Self {
-        fs::write(Self::PATH, "").unwrap();
-
-        let string = fs::read_to_string(Self::PATH).unwrap();
+        let mut config_saved = fs::read_to_string(Self::PATH)
+            .map_or(Config::default(), |contents| {
+                toml::from_str(&contents).unwrap_or_default()
+            });
 
         let config_args = Config::parse();
-
-        let mut config_saved: Config = toml::from_str(&string).unwrap_or_default();
 
         if let Some(datadir) = config_args.datadir {
             config_saved.datadir = Some(datadir);
