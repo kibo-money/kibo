@@ -13,4 +13,6 @@ flamegraph.svg
 /exports*/
 /imports*/
 benches
-node.args
+
+parser.log
+config.toml

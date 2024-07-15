@@ -186,7 +186,7 @@ export function SearchFrame({
             id={INPUT_PRESET_SEARCH_ID}
             ref={inputRef.set}
             class="w-full bg-transparent p-1 caret-orange-500 placeholder:text-orange-200/50 focus:outline-none"
-            placeholder="Search by name or path - / to focus"
+            placeholder="Search by name or path"
             value={search()}
             onFocus={initHaystackIfNeeded}
             onInput={(event) => search.set(event.target.value)}
@@ -243,7 +243,7 @@ function ListSection({
   );
 
   return (
-    <div>
+    <div class="pb-16">
       <For each={list()}>
         {({ preset, path, title }) => (
           <Line

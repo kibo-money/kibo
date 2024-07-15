@@ -16,6 +16,7 @@ import {
   getInitialTimeRange,
   initTimeScale,
   setActiveIds,
+  setInitialTimeRange,
 } from "../lightweightCharts/time";
 import { setWhitespace } from "../lightweightCharts/whitespace";
 import { colors } from "../utils/colors";
@@ -121,9 +122,7 @@ export function applySeriesList({
 
       const range = exactRange();
 
-      if (range) {
-        chart.timeScale().setVisibleRange(range);
-      }
+      setInitialTimeRange({ chart, range });
 
       if (chartIndex === 0) {
         initTimeScale({

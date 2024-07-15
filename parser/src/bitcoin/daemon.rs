@@ -3,7 +3,10 @@ use std::{process::Command, thread::sleep, time::Duration};
 use color_eyre::eyre::eyre;
 use serde_json::Value;
 
-use crate::utils::{log, log_output, retry};
+use crate::{
+    utils::{log, log_output, retry},
+    Config,
+};
 
 struct BlockchainInfo {
     pub headers: u64,
@@ -11,15 +14,13 @@ struct BlockchainInfo {
 }
 
 pub struct BitcoinDaemon {
-    path: String,
-    other_args: Vec<String>,
+    config: Config,
 }
 
 impl BitcoinDaemon {
-    pub fn new(bitcoin_dir_path: String, other_bitcoin_args: Vec<String>) -> Self {
+    pub fn new(config: &Config) -> Self {
         Self {
-            path: bitcoin_dir_path,
-            other_args: other_bitcoin_args,
+            config: config.clone(),
         }
     }
 
@@ -30,13 +31,16 @@ impl BitcoinDaemon {
 
         command
             .arg(self.datadir_arg())
-            .arg("-blocksonly")
             .arg("-txindex=1")
             .arg("-daemon");
 
-        self.other_args.iter().for_each(|arg| {
-            command.arg(arg);
-        });
+        if self.config.blocksonly.unwrap() {
+            command.arg("-blocksonly");
+        }
+
+        if let Some(ip) = self.config.rpcconnect.as_ref() {
+            command.arg(format!("-rpcconnect={}", ip));
+        }
 
         // bitcoind -datadir=/Users/k/Developer/bitcoin -blocksonly -txindex=1 -daemon
         let output = command
@@ -123,6 +127,10 @@ impl BitcoinDaemon {
     }
 
     fn datadir_arg(&self) -> String {
-        format!("-datadir={}", self.path)
+        if self.config.datadir.is_none() {
+            unreachable!();
+        }
+
+        format!("-datadir={}", self.config.datadir.as_ref().unwrap())
     }
 }

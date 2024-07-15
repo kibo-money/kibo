@@ -1,23 +1,29 @@
-use std::{env::args, path::Path};
+use std::{path::Path, thread::sleep, time::Duration};
 
-use itertools::Itertools;
-use parser::{iter_blocks, log, BitcoinDB, BitcoinDaemon};
+use color_eyre::eyre::eyre;
+use parser::{iter_blocks, log, BitcoinDB, BitcoinDaemon, Config};
 
 fn main() -> color_eyre::Result<()> {
-    let mut args = args().collect_vec();
-    let bitcoin_dir_path = args.get(1).unwrap().to_owned();
-    args.drain(0..2);
-
     color_eyre::install()?;
 
-    let deamon = BitcoinDaemon::new(bitcoin_dir_path.to_owned(), args);
+    let config = Config::read();
+
+    if config.datadir.is_none() {
+        return Err(eyre!(
+            "You need to set the --datadir parameter at least once to run the parser"
+        ));
+    }
+
+    config.write()?;
+
+    let daemon = BitcoinDaemon::new(&config);
 
     loop {
-        deamon.stop();
+        daemon.stop();
 
         // Scoped to free bitcoin's lock
         let block_count = {
-            let bitcoin_db = BitcoinDB::new(Path::new(&bitcoin_dir_path), true)?;
+            let bitcoin_db = BitcoinDB::new(Path::new(&config.datadir.as_ref().unwrap()), true)?;
 
             // let block_count = 200_000;
             let block_count = bitcoin_db.get_block_count();
@@ -29,12 +35,16 @@ fn main() -> color_eyre::Result<()> {
             block_count
         };
 
-        deamon.start();
+        daemon.start();
 
-        if deamon.check_if_fully_synced() {
-            deamon.wait_for_new_block(block_count - 1);
+        if daemon.check_if_fully_synced() {
+            daemon.wait_for_new_block(block_count - 1);
         } else {
-            deamon.wait_sync();
+            daemon.wait_sync();
+        }
+
+        if let Some(delay) = config.delay {
+            sleep(Duration::from_secs(delay))
         }
     }
 

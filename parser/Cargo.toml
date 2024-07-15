@@ -1,6 +1,9 @@
 [package]
 name = "parser"
+description = "A better, FOSS, Bitcoin-only, self-hostable Glassnode"
+homepage = "https://satonomics.xyz"
 version = "0.2.1"
+repository = "https://github.com/satonomics-org/satonomics"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
@@ -12,16 +15,14 @@ bitcoin = { version = "0.32.2", features = ["serde"] }
 bitcoin_hashes = { version = "0.14.0" }
 byteorder = "1.5.0"
 chrono = { version = "0.4.38", features = ["serde"] }
+clap = { version = "4.5.9", features = ["derive"] }
 color-eyre = "0.6.3"
 db-key = "=0.0.5"
 derive_deref = "1.1.1"
-divan = "0.1.14"
-fastrand = "2.1.0"
-inferno = "0.11.19"
+inferno = "0.11.20"
 itertools = "0.13.0"
 leveldb = "0.8.6"
 memory-stats = "1.2.0"
-nohash = "0.2.0"
 ordered-float = "4.2.1"
 par-iter-sync = "0.1.11"
 rayon = "1.10.0"
@@ -29,3 +30,4 @@ reqwest = { version = "0.12.5", features = ["blocking", "json"] }
 sanakirja = "1.4.2"
 serde = { version = "1.0.204", features = ["derive"] }
 serde_json = "1.0.120"
+toml = "0.8.14"

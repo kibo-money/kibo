@@ -18,14 +18,14 @@ export function createResourceDataset<
 
   const baseURL = `${
     location.hostname === "localhost"
-      ? "http://localhost:3111"
+      ? "http://localhost:3110"
       : "https://api.satonomics.xyz"
     // "https://api.satonomics.xyz"
   }${path}`;
 
   const backupURL = `${
     location.hostname === "localhost"
-      ? "http://localhost:3111"
+      ? "http://localhost:3110"
       : "https://api-bkp.satonomics.xyz"
   }${path}`;
 

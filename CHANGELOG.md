@@ -26,7 +26,7 @@
     - Realized Price 0.5th Percentile
     - Realized Price 0.1th Percentile
 - Node
-  - Added a `node.args` file where you can set the path to your node `datadir` and where you can add additional args (you can see the syntax in `parser/README.md`)
+  - Added an argument parser for improved UX with several options
 - Price
   - Improved error message when price cannot be found
 
@@ -40,10 +40,14 @@
     - + Better Lighthouse score
     - - Slower Typescript server
   - Fixed datasets with null values crashing their fetch function
+  - Added a 'Go to a random chart' button in several places
 - Chart
   - Fixed series color being set to default ones after hovering the legend
   - Fixed chart starting showing candlesticks and quickly switching to a line when it should've started directly with the line
   - Separated the QRCode generator library from the main chunk and made it imported on click
+  - Fixed timescale changing on small screen after changing charts
+- Favorites
+  - Added a 'favorite' and 'unfavorite' button at the bottom
 - Settings
   - Removed the horizontal scroll bar which was unintended
 

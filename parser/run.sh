@@ -18,9 +18,8 @@ if [ "$(uname)" == "Darwin" ]; then
         sudo mdutil -a -i off &> /dev/null
     fi
 
-    echo "Cleaning local TimeMachine snapshots..."
-    # If not enough: tmutil thinlocalsnapshots / 500000000000 4
+    echo "Thinning local TimeMachine snapshots..."
     tmutil thinlocalsnapshots / &> /dev/null
 fi
 
-eval $(echo "cargo run -r -- $(cat node.args)")
+cargo run -r -- "$@"

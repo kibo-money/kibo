@@ -8,6 +8,27 @@ const LOCAL_STORAGE_RANGE_KEY = "chart-range";
 const URL_PARAMS_RANGE_FROM_KEY = "from";
 const URL_PARAMS_RANGE_TO_KEY = "to";
 
+export function setInitialTimeRange({
+  chart,
+  range,
+}: {
+  chart: IChartApi;
+  range: TimeRange;
+}) {
+  if (range) {
+    chart.timeScale().setVisibleRange(range);
+
+    // On small screen it doesn't it might not set it  in time
+    const timeout = setTimeout(() => {
+      chart.timeScale().setVisibleRange(range);
+    }, 50);
+
+    onCleanup(() => {
+      clearTimeout(timeout);
+    });
+  }
+}
+
 export function getInitialTimeRange(scale: ResourceScale): TimeRange {
   const urlParams = new URLSearchParams(window.location.search);
 
@@ -145,4 +166,4 @@ function saveTimeRange({
   localStorage.setItem(getLocalStorageKey(scale), JSON.stringify(range));
 }
 
-const debouncedSaveTimeRange = debounce(saveTimeRange, 500);
+const debouncedSaveTimeRange = debounce(saveTimeRange, 250);

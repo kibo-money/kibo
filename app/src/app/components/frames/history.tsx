@@ -1,6 +1,7 @@
 import { run } from "/src/scripts/utils/run";
 
-import { ButtonRandomChart } from "./button";
+import { Box } from "./box";
+import { Button, ButtonRandomChart } from "./button";
 import { Header } from "./header";
 import { Line } from "./line";
 
@@ -94,6 +95,25 @@ export function HistoryFrame({
 
         <div class="h-[25dvh] flex-none" />
       </div>
+
+      {/* <Box absolute="bottom">
+        <Button
+          onClick={() => {
+            // search.set("");
+            // inputRef()?.focus();
+          }}
+        >
+          Previous day
+        </Button>
+        <Button
+          onClick={() => {
+            // search.set("");
+            // inputRef()?.focus();
+          }}
+        >
+          Next day
+        </Button>
+      </Box> */}
     </div>
   );
 }

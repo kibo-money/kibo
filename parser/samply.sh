@@ -1,5 +1,5 @@
 echo "Increasing limit of opened files..."
-ulimit -n $(ulimit -Hn)
+ulimit -n 1000000
 
 # Needed because the datasets tree is too big lol
 echo "Increasing stack size..."

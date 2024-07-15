@@ -11,11 +11,7 @@ The backbone of the project, it does most of the work by parsing and then comput
 ## Run
 
 ```bash
-# Update the 'node.args' file with the path to your bitcoin folder and optional bitcoind arguments
-# Examples:
-# "$HOME/.bitcoin"
-# "$HOME/.bitcoin" -rpcconnect=1.2.3.4
-./run.sh
+./run.sh --datadir=$HOME/Developer/bitcoin
 ```
 
 ## Limitations
