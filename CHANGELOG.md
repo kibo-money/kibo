@@ -4,6 +4,8 @@
 
 ### Parser
 
+- CLI
+  - Added an argument parser for improved UX with several options
 - Datasets
   - Added the following datasets for all entities:
     - Value destroyed
@@ -25,8 +27,6 @@
     - Realized Price 1st Percentile
     - Realized Price 0.5th Percentile
     - Realized Price 0.1th Percentile
-- Node
-  - Added an argument parser for improved UX with several options
 - Price
   - Improved error message when price cannot be found
 
@@ -46,6 +46,8 @@
   - Fixed chart starting showing candlesticks and quickly switching to a line when it should've started directly with the line
   - Separated the QRCode generator library from the main chunk and made it imported on click
   - Fixed timescale changing on small screen after changing charts
+- Folders
+  - Added the size in the "filename" of address cohorts grouped by size
 - Favorites
   - Added a 'favorite' and 'unfavorite' button at the bottom
 - Settings

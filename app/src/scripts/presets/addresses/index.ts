@@ -68,11 +68,12 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
       },
       {
         name: "By Size",
-        tree: addressCohortsBySize.map(({ key, name }) =>
+        tree: addressCohortsBySize.map(({ key, name, size }) =>
           createAddressPresetFolder({
             scale,
             color: colors[key],
             name,
+            filenameAddon: size,
             datasetId: key,
           }),
         ),
@@ -97,15 +98,17 @@ function createAddressPresetFolder({
   scale,
   color,
   name,
+  filenameAddon,
   datasetId,
 }: {
   scale: ResourceScale;
   name: string;
+  filenameAddon?: string;
   datasetId: AddressCohortId;
   color: Color;
 }): PartialPresetFolder {
   return {
-    name,
+    name: filenameAddon ? `${name} - ${filenameAddon}` : name,
     tree: [
       createAddressCountPreset({ scale, name, datasetId, color }),
       ...createCohortPresetList({

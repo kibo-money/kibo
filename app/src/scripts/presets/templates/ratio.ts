@@ -1,21 +1,5 @@
-// import {
-//   applyMultipleSeries,
-//   colors,
-//   createMomentumPresetFolder,
-//   SeriesType,
-// } from "/src/scripts";
-
 import { colors } from "../../utils/colors";
 import { SeriesType } from "../enums";
-
-// // type HeightRatioKey =
-// //   | `${AnyPossibleCohortKey}RealizedPrice`
-// //   | "activePrice"
-// //   | "vaultedPrice"
-// //   | "trueMarketMean";
-
-// // // type DateRatioKey = HeightRatioKey;
-// // type DateRatioKey = HeightRatioKey | `price${AverageName}MA`;
 
 export function createRatioFolder({
   scale,
@@ -83,25 +67,22 @@ export function createRatioFolder({
           {
             title: `1Y`,
             color: colors._1y,
-            datasetPath: `${ratioDatasetPath}-1y-sma`,
+            datasetPath: `${ratioDatasetPath}-1y-sma` as any,
           },
           {
             title: `1M`,
             color: colors._1m,
-            datasetPath: `${ratioDatasetPath}-1m-sma`,
+            datasetPath: `${ratioDatasetPath}-1m-sma` as any,
           },
           {
             title: `1W`,
             color: colors._1w,
-            datasetPath: `${ratioDatasetPath}-1w-sma`,
+            datasetPath: `${ratioDatasetPath}-1w-sma` as any,
           },
           {
             title: `Raw`,
             color: colors.white,
-            datasetPath: ratioDatasetPath,
-            options: {
-              base: 1,
-            },
+            datasetPath: ratioDatasetPath as any,
           },
           {
             title: `Even`,
@@ -131,7 +112,8 @@ export function createRatioFolder({
           {
             title: `Momentum`,
             seriesType: SeriesType.Based,
-            datasetPath: `${ratioDatasetPath}-1y-sma-momentum-oscillator`,
+            datasetPath:
+              `${ratioDatasetPath}-1y-sma-momentum-oscillator` as any,
           },
           {
             title: `Base`,
@@ -161,25 +143,22 @@ export function createRatioFolder({
           {
             title: `99.9%`,
             color: colors.extremeMax,
-            datasetPath: `${ratioDatasetPath}-99-9p`,
+            datasetPath: `${ratioDatasetPath}-99-9p` as any,
           },
           {
             title: `99.5%`,
             color: colors.extremeMiddle,
-            datasetPath: `${ratioDatasetPath}-99-5p`,
+            datasetPath: `${ratioDatasetPath}-99-5p` as any,
           },
           {
             title: `99%`,
             color: colors.extremeMin,
-            datasetPath: `${ratioDatasetPath}-99p`,
+            datasetPath: `${ratioDatasetPath}-99p` as any,
           },
           {
             title: `Raw`,
             color: colors.white,
             datasetPath: ratioDatasetPath,
-            options: {
-              base: 1,
-            },
           },
         ],
       },
@@ -200,25 +179,22 @@ export function createRatioFolder({
           {
             title: `1%`,
             color: colors.extremeMin,
-            datasetPath: `${ratioDatasetPath}-1p`,
+            datasetPath: `${ratioDatasetPath}-1p` as any,
           },
           {
             title: `0.5%`,
             color: colors.extremeMiddle,
-            datasetPath: `${ratioDatasetPath}-0-5p`,
+            datasetPath: `${ratioDatasetPath}-0-5p` as any,
           },
           {
             title: `0.1%`,
             color: colors.extremeMax,
-            datasetPath: `${ratioDatasetPath}-0-1p`,
+            datasetPath: `${ratioDatasetPath}-0-1p` as any,
           },
           {
             title: `Raw`,
             color: colors.white,
             datasetPath: ratioDatasetPath,
-            options: {
-              base: 1,
-            },
           },
         ],
       },
@@ -232,17 +208,17 @@ export function createRatioFolder({
           {
             title: `99.9%`,
             color: colors.extremeMax,
-            datasetPath: `${valueDatasetPath}-99-9p`,
+            datasetPath: `${valueDatasetPath}-99-9p` as any,
           },
           {
             title: `99.5%`,
             color: colors.extremeMiddle,
-            datasetPath: `${valueDatasetPath}-99-5p`,
+            datasetPath: `${valueDatasetPath}-99-5p` as any,
           },
           {
             title: `99%`,
             color: colors.extremeMin,
-            datasetPath: `${valueDatasetPath}-99p`,
+            datasetPath: `${valueDatasetPath}-99p` as any,
           },
         ],
       },
@@ -256,17 +232,17 @@ export function createRatioFolder({
           {
             title: `0.1%`,
             color: colors.extremeMax,
-            datasetPath: `${valueDatasetPath}-0-1p`,
+            datasetPath: `${valueDatasetPath}-0-1p` as any,
           },
           {
             title: `0.5%`,
             color: colors.extremeMiddle,
-            datasetPath: `${valueDatasetPath}-0-5p`,
+            datasetPath: `${valueDatasetPath}-0-5p` as any,
           },
           {
             title: `1%`,
             color: colors.extremeMin,
-            datasetPath: `${valueDatasetPath}-1p`,
+            datasetPath: `${valueDatasetPath}-1p` as any,
           },
         ],
       },
