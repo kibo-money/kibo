@@ -1,6 +1,5 @@
 use std::{path::Path, thread::sleep, time::Duration};
 
-use color_eyre::eyre::eyre;
 use parser::{iter_blocks, log, BitcoinDB, BitcoinDaemon, Config};
 
 fn main() -> color_eyre::Result<()> {
@@ -9,12 +8,17 @@ fn main() -> color_eyre::Result<()> {
     let config = Config::read();
 
     if config.datadir.is_none() {
-        return Err(eyre!(
-            "You need to set the --datadir parameter at least once to run the parser"
-        ));
+        println!(
+            "You need to set the --datadir parameter at least once to run the parser.\nRun the program with '-h' for help."
+        );
+        std::process::exit(1);
     }
 
     config.write()?;
+
+    if true {
+        panic!();
+    }
 
     let daemon = BitcoinDaemon::new(&config);
 

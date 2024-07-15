@@ -27,7 +27,7 @@ impl Config {
     const PATH: &'static str = "config.toml";
 
     pub fn read() -> Self {
-        File::open(Self::PATH).unwrap();
+        fs::write(Self::PATH, "").unwrap();
 
         let string = fs::read_to_string(Self::PATH).unwrap();
 
