@@ -65,8 +65,8 @@ export function createChart(
   chart.priceScale("right").applyOptions({
     ...priceScaleOptions,
     scaleMargins: {
-      top: 0.05,
-      bottom: 0.05,
+      top: 0.075,
+      bottom: 0.075,
       ...priceScaleOptions?.scaleMargins,
     },
     minimumWidth: 78,
