@@ -118,7 +118,7 @@ impl AddressCohortsDurableStates {
     }
 
     pub fn compute_one_shot_states(
-        &mut self,
+        &self,
         block_price: Price,
         date_price: Option<Price>,
     ) -> AddressCohortsOneShotStates {

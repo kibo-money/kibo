@@ -12,7 +12,7 @@ pub struct AddressCohortDurableStates {
     pub price_to_split_amount: PriceToValue<SplitByLiquidity<WAmount>>,
 }
 
-const ONE_THIRD: f64 = 0.33333333333;
+const ONE_THIRD: f64 = 1.0 / 3.0;
 
 // TODO: Clean that mess, move to a generic liquidity split and somehow support rest for non floats
 impl AddressCohortDurableStates {

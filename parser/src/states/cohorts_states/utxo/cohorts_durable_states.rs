@@ -20,7 +20,10 @@ impl UTXOCohortsDurableStates {
         let mut s = Self::default();
 
         if let Some(last_date_data) = date_data_vec.last() {
-            let last_block_data = last_date_data.blocks.last().unwrap();
+            let last_block_data = last_date_data.blocks.last().unwrap_or_else(|| {
+                dbg!(&last_date_data);
+                panic!()
+            });
 
             date_data_vec.iter().for_each(|date_data| {
                 let year = date_data.date.year() as u32;
@@ -137,7 +140,7 @@ impl UTXOCohortsDurableStates {
     }
 
     pub fn compute_one_shot_states(
-        &mut self,
+        &self,
         block_price: Price,
         date_price: Option<Price>,
     ) -> UTXOCohortsOneShotStates {

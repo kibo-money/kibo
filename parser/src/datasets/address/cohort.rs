@@ -88,19 +88,19 @@ impl CohortDataset {
             .any(|sub| sub.price_paid.needs_insert(height, date))
     }
 
-    fn needs_insert_realized(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_realized(&self, height: usize, date: WNaiveDate) -> bool {
         self.sub_datasets_vec()
             .iter()
             .any(|sub| sub.realized.needs_insert(height, date))
     }
 
-    fn needs_insert_unrealized(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_unrealized(&self, height: usize, date: WNaiveDate) -> bool {
         self.sub_datasets_vec()
             .iter()
             .any(|sub| sub.unrealized.needs_insert(height, date))
     }
 
-    fn needs_insert_input(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_input(&self, height: usize, date: WNaiveDate) -> bool {
         self.sub_datasets_vec()
             .iter()
             .any(|sub| sub.input.needs_insert(height, date))
@@ -112,7 +112,7 @@ impl CohortDataset {
     //         .any(|sub| sub.output.needs_insert(height, date))
     // }
 
-    fn insert_realized_data(&mut self, insert_data: &InsertData) {
+    pub fn insert_realized_data(&mut self, insert_data: &InsertData) {
         let split_realized_state = insert_data
             .address_cohorts_realized_states
             .as_ref()
@@ -141,6 +141,8 @@ impl CohortDataset {
         let address_count = insert_data
             .states
             .address_cohorts_durable_states
+            .as_ref()
+            .unwrap()
             .get(&self.split)
             .unwrap()
             .address_count;
@@ -377,6 +379,8 @@ impl CohortDataset {
         let liquidity_split_processed_address_state = insert_data
             .states
             .address_cohorts_durable_states
+            .as_ref()
+            .unwrap()
             .get(&self.split);
 
         if liquidity_split_processed_address_state.is_none() {

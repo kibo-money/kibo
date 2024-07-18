@@ -570,11 +570,15 @@ pub fn parse(
                                 states.date_data_vec.get_block_data(block_path).unwrap();
 
                             if block_data.height != height as u32 {
-                                states.utxo_cohorts_durable_states.subtract_moved(
-                                    block_data,
-                                    sent_data,
-                                    previous_last_block_data,
-                                );
+                                states
+                                    .utxo_cohorts_durable_states
+                                    .as_mut()
+                                    .unwrap()
+                                    .subtract_moved(
+                                        block_data,
+                                        sent_data,
+                                        previous_last_block_data,
+                                    );
                             }
                         });
                 }
@@ -590,17 +594,24 @@ pub fn parse(
                     .iter()
                     .flat_map(|date_data| &date_data.blocks)
                     .for_each(|block_data| {
-                        states.utxo_cohorts_durable_states.udpate_age_if_needed(
-                            block_data,
-                            last_block_data,
-                            previous_last_block_data,
-                        );
+                        states
+                            .utxo_cohorts_durable_states
+                            .as_mut()
+                            .unwrap()
+                            .udpate_age_if_needed(
+                                block_data,
+                                last_block_data,
+                                previous_last_block_data,
+                            );
                     });
             }
 
             if datasets.utxo.needs_one_shot_states(height, date) {
-                utxo_cohorts_one_shot_states =
-                    states.utxo_cohorts_durable_states.compute_one_shot_states(
+                utxo_cohorts_one_shot_states = states
+                    .utxo_cohorts_durable_states
+                    .as_ref()
+                    .unwrap()
+                    .compute_one_shot_states(
                         block_price,
                         if is_date_last_block {
                             Some(date_price)
@@ -646,6 +657,8 @@ pub fn parse(
 
                         states
                             .address_cohorts_durable_states
+                            .as_mut()
+                            .unwrap()
                             .iterate(address_realized_data, current_address_data)
                             .unwrap_or_else(|report| {
                                 dbg!(report.to_string(), address_index);
@@ -686,6 +699,8 @@ pub fn parse(
                 address_cohorts_one_shot_states.replace(
                     states
                         .address_cohorts_durable_states
+                        .as_ref()
+                        .unwrap()
                         .compute_one_shot_states(
                             block_price,
                             if is_date_last_block {

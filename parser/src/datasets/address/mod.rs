@@ -6,7 +6,7 @@ use allocative::Allocative;
 use itertools::Itertools;
 use rayon::prelude::*;
 
-use crate::{states::SplitByAddressCohort, structs::BiMap};
+use crate::{states::SplitByAddressCohort, structs::BiMap, WNaiveDate};
 
 use self::{all_metadata::AllAddressesMetadataDataset, cohort::CohortDataset};
 
@@ -59,53 +59,73 @@ impl AddressDatasets {
             .for_each(|(cohort, _)| cohort.insert(insert_data))
     }
 
-    // pub fn needs_insert_utxo(&self, height: usize, date: WNaiveDate) -> bool {
-    //     self.cohorts
-    //         .as_vec()
-    //         .iter()
-    //         .any(|(dataset, _)| dataset.utxo.needs_insert(height, date))
+    pub fn needs_durable_states(&self, height: usize, date: WNaiveDate) -> bool {
+        let needs_insert_utxo = self.needs_insert_utxo(height, date);
+        let needs_insert_capitalization = self.needs_insert_capitalization(height, date);
+        let needs_insert_supply = self.needs_insert_supply(height, date);
+        let needs_one_shot_states = self.needs_one_shot_states(height, date);
+
+        needs_insert_utxo
+            || needs_insert_capitalization
+            || needs_insert_supply
+            || needs_one_shot_states
+    }
+
+    pub fn needs_one_shot_states(&self, height: usize, date: WNaiveDate) -> bool {
+        self.needs_insert_price_paid(height, date) || self.needs_insert_unrealized(height, date)
+    }
+
+    // pub fn needs_sent_states(&self, height: usize, date: WNaiveDate) -> bool {
+    //     self.needs_insert_input(height, date) || self.needs_insert_realized(height, date)
     // }
 
-    // pub fn needs_insert_capitalization(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_utxo(&self, height: usize, date: WNaiveDate) -> bool {
+        self.cohorts
+            .as_vec()
+            .iter()
+            .any(|(dataset, _)| dataset.needs_insert_utxo(height, date))
+    }
+
+    pub fn needs_insert_capitalization(&self, height: usize, date: WNaiveDate) -> bool {
+        self.cohorts
+            .as_vec()
+            .iter()
+            .any(|(dataset, _)| dataset.needs_insert_capitalization(height, date))
+    }
+
+    pub fn needs_insert_supply(&self, height: usize, date: WNaiveDate) -> bool {
+        self.cohorts
+            .as_vec()
+            .iter()
+            .any(|(dataset, _)| dataset.needs_insert_supply(height, date))
+    }
+
+    pub fn needs_insert_price_paid(&self, height: usize, date: WNaiveDate) -> bool {
+        self.cohorts
+            .as_vec()
+            .iter()
+            .any(|(dataset, _)| dataset.needs_insert_price_paid(height, date))
+    }
+
+    // pub fn needs_insert_realized(&self, height: usize, date: WNaiveDate) -> bool {
     //     self.cohorts
     //         .as_vec()
     //         .iter()
-    //         .any(|(dataset, _)| dataset.capitalization.needs_insert(height, date))
+    //         .any(|(dataset, _)| dataset.needs_insert_realized(height, date))
     // }
 
-    // pub fn needs_insert_supply(&self, height: usize, date: WNaiveDate) -> bool {
-    //     self.cohorts
-    //         .as_vec()
-    //         .iter()
-    //         .any(|(dataset, _)| dataset.supply.needs_insert(height, date))
-    // }
+    pub fn needs_insert_unrealized(&self, height: usize, date: WNaiveDate) -> bool {
+        self.cohorts
+            .as_vec()
+            .iter()
+            .any(|(dataset, _)| dataset.needs_insert_unrealized(height, date))
+    }
 
-    // pub fn needs_insert_price_paid(&self, height: usize, date: WNaiveDate) -> bool {
+    // pub fn needs_insert_input(&self, height: usize, date: WNaiveDate) -> bool {
     //     self.cohorts
     //         .as_vec()
     //         .iter()
-    //         .any(|(dataset, _)| dataset.price_paid.needs_insert(height, date))
-    // }
-
-    // fn needs_insert_realized(&self, height: usize, date: WNaiveDate) -> bool {
-    //     self.cohorts
-    //         .as_vec()
-    //         .iter()
-    //         .any(|(dataset, _)| dataset.realized.needs_insert(height, date))
-    // }
-
-    // fn needs_insert_unrealized(&self, height: usize, date: WNaiveDate) -> bool {
-    //     self.cohorts
-    //         .as_vec()
-    //         .iter()
-    //         .any(|(dataset, _)| dataset.unrealized.needs_insert(height, date))
-    // }
-
-    // fn needs_insert_input(&self, height: usize, date: WNaiveDate) -> bool {
-    //     self.cohorts
-    //         .as_vec()
-    //         .iter()
-    //         .any(|(dataset, _)| dataset.input.needs_insert(height, date))
+    //         .any(|(dataset, _)| dataset.needs_insert_input(height, date))
     // }
 
     pub fn compute(

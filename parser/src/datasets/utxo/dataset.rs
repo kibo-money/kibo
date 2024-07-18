@@ -48,6 +48,8 @@ impl UTXODataset {
                 insert_data,
                 &states
                     .utxo_cohorts_durable_states
+                    .as_ref()
+                    .unwrap()
                     .get(&self.id)
                     .durable_states
                     .supply_state,
@@ -59,6 +61,8 @@ impl UTXODataset {
                 insert_data,
                 &states
                     .utxo_cohorts_durable_states
+                    .as_ref()
+                    .unwrap()
                     .get(&self.id)
                     .durable_states
                     .utxo_state,
@@ -70,6 +74,8 @@ impl UTXODataset {
                 insert_data,
                 &states
                     .utxo_cohorts_durable_states
+                    .as_ref()
+                    .unwrap()
                     .get(&self.id)
                     .durable_states
                     .capitalization_state,
