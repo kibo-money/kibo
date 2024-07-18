@@ -142,17 +142,17 @@ export function createRatioFolder({
         bottom: [
           {
             title: `99.9%`,
-            color: colors.extremeMax,
+            color: colors.probability0_1p,
             datasetPath: `${ratioDatasetPath}-99-9p` as any,
           },
           {
             title: `99.5%`,
-            color: colors.extremeMiddle,
+            color: colors.probability0_5p,
             datasetPath: `${ratioDatasetPath}-99-5p` as any,
           },
           {
             title: `99%`,
-            color: colors.extremeMin,
+            color: colors.probability1p,
             datasetPath: `${ratioDatasetPath}-99p` as any,
           },
           {
@@ -178,17 +178,17 @@ export function createRatioFolder({
         bottom: [
           {
             title: `1%`,
-            color: colors.extremeMin,
+            color: colors.probability1p,
             datasetPath: `${ratioDatasetPath}-1p` as any,
           },
           {
             title: `0.5%`,
-            color: colors.extremeMiddle,
+            color: colors.probability0_5p,
             datasetPath: `${ratioDatasetPath}-0-5p` as any,
           },
           {
             title: `0.1%`,
-            color: colors.extremeMax,
+            color: colors.probability0_1p,
             datasetPath: `${ratioDatasetPath}-0-1p` as any,
           },
           {
@@ -200,48 +200,48 @@ export function createRatioFolder({
       },
       {
         scale,
-        name: "Extreme Tops",
+        name: "Top Probabilities",
         description: "",
         icon: IconTablerRocket,
-        title: `${title} Extreme Tops`,
+        title: `${title} Top Probabilities`,
         top: [
           {
-            title: `99.9%`,
-            color: colors.extremeMax,
+            title: `0.1%`,
+            color: colors.probability0_1p,
             datasetPath: `${valueDatasetPath}-99-9p` as any,
           },
           {
-            title: `99.5%`,
-            color: colors.extremeMiddle,
+            title: `0.5%`,
+            color: colors.probability0_5p,
             datasetPath: `${valueDatasetPath}-99-5p` as any,
           },
           {
-            title: `99%`,
-            color: colors.extremeMin,
+            title: `1%`,
+            color: colors.probability1p,
             datasetPath: `${valueDatasetPath}-99p` as any,
           },
         ],
       },
       {
         scale,
-        name: "Extreme Bottoms",
+        name: "Bottom Probabilities",
         description: "",
         icon: IconTablerSubmarine,
-        title: `${title} Extreme Bottoms`,
+        title: `${title} Bottom Probabilities`,
         top: [
           {
             title: `0.1%`,
-            color: colors.extremeMax,
+            color: colors.probability0_1p,
             datasetPath: `${valueDatasetPath}-0-1p` as any,
           },
           {
             title: `0.5%`,
-            color: colors.extremeMiddle,
+            color: colors.probability0_5p,
             datasetPath: `${valueDatasetPath}-0-5p` as any,
           },
           {
             title: `1%`,
-            color: colors.extremeMin,
+            color: colors.probability1p,
             datasetPath: `${valueDatasetPath}-1p` as any,
           },
         ],

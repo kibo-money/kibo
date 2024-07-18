@@ -34,6 +34,7 @@ declare global {
   const IconTablerAsterisk: typeof import('~icons/tabler/asterisk.jsx')['default']
   const IconTablerAt: (typeof import("~icons/tabler/at.jsx"))["default"]
   const IconTablerBalance: (typeof import("~icons/tabler/balance.jsx"))["default"]
+  const IconTablerBinary: typeof import('~icons/tabler/binary.jsx')['default']
   const IconTablerBitcoin: typeof import('~icons/tabler/bitcoin.jsx')['default']
   const IconTablerBitcoinCoin: typeof import('~icons/tabler/bitcoin-coin.jsx')['default']
   const IconTablerBolt: (typeof import("~icons/tabler/bolt.jsx"))["default"]

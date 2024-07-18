@@ -57,8 +57,8 @@ impl CapitalizationDataset {
         &mut self,
         &InsertData {
             height,
-            is_date_last_block,
             date,
+            is_date_last_block,
             ..
         }: &InsertData,
         state: &CapitalizationState,

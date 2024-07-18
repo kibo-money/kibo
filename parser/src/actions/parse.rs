@@ -92,8 +92,13 @@ pub fn parse(
     let block_size = block.total_size();
     let block_weight = block.weight().to_wu();
     let block_vbytes = block.weight().to_vbytes_floor();
-    let block_interval =
-        previous_timestamp.map_or(0, |previous_timestamp| timestamp - previous_timestamp);
+    let block_interval = previous_timestamp.map_or(0, |previous_timestamp| {
+        if previous_timestamp <= timestamp {
+            0
+        } else {
+            timestamp - previous_timestamp
+        }
+    });
 
     states
         .date_data_vec

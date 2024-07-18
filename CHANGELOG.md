@@ -11,22 +11,24 @@
     - Value destroyed
     - Value created
     - Spent Output Profit Ratio (SOPR)
-    - Market Price to Realized Price
-    - Market Price to Realized Price Ratio
-    - Market Price to Realized Price Ratio 1 Week SMA
-    - Market Price to Realized Price Ratio 1 Month SMA
-    - Market Price to Realized Price Ratio 1 Year SMA
-    - Market Price to Realized Price Ratio 99th Percentile
-    - Market Price to Realized Price Ratio 99.5th Percentile
-    - Market Price to Realized Price Ratio 99.9th Percentile
-    - Market Price to Realized Price Ratio 1st Percentile
-    - Market Price to Realized Price Ratio 0.5th Percentile
-    - Realized Price 0.1th Percentile
-    - Realized Price 99.5th Percentile
-    - Realized Price 99.9th Percentile
-    - Realized Price 1st Percentile
-    - Realized Price 0.5th Percentile
-    - Realized Price 0.1th Percentile
+  - Added the following datasets to all realized prices, price moving averages and cointime prices:
+    - Market Price to {X}
+    - Market Price to {X} Ratio
+    - Market Price to {X} Ratio 1 Week SMA
+    - Market Price to {X} Ratio 1 Month SMA
+    - Market Price to {X} Ratio 1 Year SMA
+    - Market Price to {X} Ratio 1 Year SMA Momentum Oscillator
+    - Market Price to {X} Ratio 99th Percentile
+    - Market Price to {X} Ratio 99.5th Percentile
+    - Market Price to {X} Ratio 99.9th Percentile
+    - Market Price to {X} Ratio 1st Percentile
+    - Market Price to {X} Ratio 0.5th Percentile
+    - {X} 1% Top Probability
+    - {X} 0.5% Top Probability
+    - {X} 0.1% Top Probability
+    - {X} 1% Bottom Probability
+    - {X} 0.5% Bottom Probability
+    - {X} 0.1% Bottom Probability
 - Price
   - Improved error message when price cannot be found
 

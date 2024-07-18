@@ -36,7 +36,7 @@ export function createPresets(): Presets {
           name: "By Block Date",
           tree: [
             createMarketPresets("date"),
-            createBlocksPresets(),
+            createBlocksPresets("date"),
             createMinersPresets("date"),
             createTransactionsPresets("date"),
             ...createCohortPresetList({
@@ -62,6 +62,7 @@ export function createPresets(): Presets {
           tree: !phone
             ? [
                 createMarketPresets("height"),
+                createBlocksPresets("height"),
                 createMinersPresets("height"),
                 createTransactionsPresets("height"),
                 ...createCohortPresetList({

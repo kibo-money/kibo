@@ -51,7 +51,7 @@ pub struct MiningDataset {
     pub block_size: HeightMap<f32>,   // in MB
     pub block_weight: HeightMap<f32>, // in MB
     pub block_vbytes: HeightMap<u64>,
-    pub block_interval: HeightMap<u32>, // in ms
+    pub block_interval: HeightMap<u32>, // in s
 
     // Computed
     pub annualized_issuance: BiMap<f64>, // Same as subsidy_1y_sum
@@ -88,10 +88,14 @@ pub struct MiningDataset {
     pub hash_price: DateMap<f64>,
     pub difficulty_adjustment: DateMap<f64>,
     pub puell_multiple: DateMap<f32>,
-    // pub average_block_size: DateMap<f32>,   // in MB
-    // pub average_block_weight: DateMap<f32>, // in MB
-    // pub average_block_vbytes: DateMap<u64>,
-    // pub average_block_interval: DateMap<u32>, // in ms
+    // pub block_size_1d_sma: DateMap<f32>,   // in MB
+    // pub block_weight_1d_sma: DateMap<f32>, // in MB
+    // pub block_vbytes_1d_sma: DateMap<u64>,
+    // pub block_interval_1d_sma: DateMap<u32>,  // in s
+    // pub block_size_1d_median: DateMap<f32>,   // in MB
+    // pub block_weight_1d_median: DateMap<f32>, // in MB
+    // pub block_vbytes_1d_median: DateMap<u64>,
+    // pub block_interval_1d_median: DateMap<u32>,
     // pub blocks_size: DateMap<f32>,
     // pub average_block_size: DateMap<f32>,
     // pub median_block_size: DateMap<f32>,
@@ -167,11 +171,19 @@ impl MiningDataset {
             difficulty: BiMap::new_bin(1, &f("difficulty")),
             difficulty_adjustment: DateMap::new_bin(1, &f("difficulty_adjustment")),
             block_size: HeightMap::new_bin(1, &f("block_size")),
+            //
+            // block_size_1d_sma: HeightMap::new_bin(1, &f("block_size")),
+            // block_size_1d_median: HeightMap::new_bin(1, &f("block_size")),
+            //
             cumulative_block_size: BiMap::new_bin(1, &f("cumulative_block_size")),
             block_weight: HeightMap::new_bin(1, &f("block_weight")),
+            //
+            // block_weight_1d_sma: HeightMap::new_bin(1, &f("block_weight")),
             block_vbytes: HeightMap::new_bin(1, &f("block_vbytes")),
-            block_interval: HeightMap::new_bin(1, &f("block_interval")),
-
+            // block_vbytes_1d_sma: HeightMap::new_bin(1, &f("block_vbytes")),
+            block_interval: HeightMap::new_bin(2, &f("block_interval")),
+            // block_interval_1d_sma: HeightMap::new_bin(2, &f("block_interval")),
+            //
             hash_rate: DateMap::new_bin(1, &f("hash_rate")),
             hash_rate_1w_sma: DateMap::new_bin(1, &f("hash_rate_1w_sma")),
             hash_rate_1m_sma: DateMap::new_bin(1, &f("hash_rate_1m_sma")),
