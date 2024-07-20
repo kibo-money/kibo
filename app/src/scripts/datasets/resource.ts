@@ -5,7 +5,7 @@ import { createRWS } from "/src/solid/rws";
 import { HEIGHT_CHUNK_SIZE } from ".";
 
 const USE_LOCAL_URL = true;
-const LOCAL_URL = "http://localhost:3111";
+const LOCAL_URL = "http://localhost:3110";
 const WEB_URL = "https://api.satonomics.xyz";
 const BACKUP_WEB_URL = "https://api-bkp.satonomics.xyz";
 

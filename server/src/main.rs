@@ -56,7 +56,7 @@ async fn main() -> color_eyre::Result<()> {
         .with_state(state)
         .layer(compression_layer);
 
-    let port = 3111;
+    let port = 3110;
 
     log(&format!("Starting server on port {port}..."));
 
