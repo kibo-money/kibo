@@ -70,7 +70,7 @@ impl SupplySubDataset {
     #[allow(unused_variables)]
     pub fn compute(
         &mut self,
-        &ComputeData { heights, dates }: &ComputeData,
+        &ComputeData { heights, dates, .. }: &ComputeData,
         circulating_supply: &mut BiMap<f64>,
     ) {
         self.supply_to_circulating_supply_ratio

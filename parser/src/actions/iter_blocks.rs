@@ -8,11 +8,11 @@ use parse::ParseData;
 
 use crate::{
     actions::{export, find_first_inserted_unsafe_height, parse},
-    bitcoin::{check_if_height_safe, BitcoinDB, NUMBER_OF_UNSAFE_BLOCKS},
+    bitcoin::BitcoinDB,
     databases::Databases,
     datasets::{AllDatasets, ComputeData},
     states::{AddressCohortsDurableStates, States, UTXOCohortsDurableStates},
-    structs::{DateData, WNaiveDate},
+    structs::{Date, DateData, MapKey},
     utils::{generate_allocation_files, log, time},
 };
 
@@ -44,7 +44,7 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
 
     log(&format!("Starting parsing at height: {height}"));
 
-    let mut block_iter = bitcoin_db.iter_block(height, block_count);
+    let mut block_iter = bitcoin_db.iter_block(height.to_usize(), block_count);
 
     let mut next_block_opt = None;
     let mut blocks_loop_date = None;
@@ -70,7 +70,7 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
                 if let Some(current_block) = current_block_opt {
                     let timestamp = current_block.header.time;
 
-                    let current_block_date = WNaiveDate::from_timestamp(timestamp);
+                    let current_block_date = Date::from_timestamp(timestamp);
                     let current_block_height = height + blocks_loop_i;
 
                     if states.address_cohorts_durable_states.is_none()
@@ -95,10 +95,14 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
 
                     let next_block_date = next_block_opt
                         .as_ref()
-                        .map(|next_block| WNaiveDate::from_timestamp(next_block.header.time));
+                        .map(|next_block| Date::from_timestamp(next_block.header.time));
 
                     // Always run for the first block of the loop
                     if blocks_loop_date.is_none() {
+                        log(&format!(
+                            "Processing {current_block_date} (height: {height})..."
+                        ));
+
                         blocks_loop_date.replace(current_block_date);
 
                         if states
@@ -112,9 +116,7 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
                                 .push(DateData::new(current_block_date, vec![]));
                         }
 
-                        log(&format!(
-                            "Processing {current_block_date} (height: {height})..."
-                        ));
+                        processed_dates.insert(current_block_date);
                     }
 
                     let blocks_loop_date = blocks_loop_date.unwrap();
@@ -154,17 +156,12 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
                     blocks_loop_i += 1;
 
                     if is_date_last_block {
-                        processed_dates.insert(blocks_loop_date);
-
                         height += blocks_loop_i;
 
                         let is_new_month = next_block_date
                             .map_or(true, |next_block_date| next_block_date.day() == 1);
 
-                        let is_close_to_the_end =
-                            height > (block_count - (NUMBER_OF_UNSAFE_BLOCKS * 3));
-
-                        if is_new_month || is_close_to_the_end {
+                        if is_new_month || height.is_close_to_end(block_count) {
                             break 'days;
                         }
 
@@ -177,7 +174,7 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
         }
 
         // Don't remember why -1
-        let last_height = height - 1;
+        let last_height = height - 1_u32;
 
         log(&format!(
             "Parsing month took {} seconds (last height: {last_height})\n",
@@ -186,15 +183,19 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
 
         if first_unsafe_heights.computed <= last_height {
             time("Computing datasets", || {
+                let dates = processed_dates.into_iter().collect_vec();
+
+                let heights = processed_heights.into_iter().collect_vec();
+
                 datasets.compute(ComputeData {
-                    dates: &processed_dates.into_iter().collect_vec(),
-                    heights: &processed_heights.into_iter().collect_vec(),
+                    dates: &dates,
+                    heights: &heights,
                 })
             });
         }
 
         if should_export {
-            let is_safe = check_if_height_safe(height, block_count);
+            let is_safe = height.is_safe(block_count);
 
             export(ExportedData {
                 databases: is_safe.then_some(&mut databases),

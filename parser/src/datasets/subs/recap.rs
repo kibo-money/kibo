@@ -6,33 +6,40 @@ use crate::{
     DateMap, HeightMap,
 };
 
-#[derive(Default, Allocative)]
+#[derive(Allocative)]
+pub enum RecapTime {
+    Insert,
+    Compute,
+}
+
+#[derive(Allocative)]
 pub struct RecapDataset<T> {
     min_initial_states: MinInitialStates,
+    time: RecapTime,
 
     // Computed
-    min: Option<DateMap<T>>,
-    max: Option<DateMap<T>>,
-    median: Option<DateMap<T>>,
     average: Option<DateMap<T>>,
     sum: Option<DateMap<T>>,
+    max: Option<DateMap<T>>,
     _90p: Option<DateMap<T>>,
     _75p: Option<DateMap<T>>,
+    median: Option<DateMap<T>>,
     _25p: Option<DateMap<T>>,
     _10p: Option<DateMap<T>>,
+    min: Option<DateMap<T>>,
 }
 
 #[derive(Default)]
-struct RecapOptions {
-    min: bool,
-    max: bool,
-    median: bool,
+pub struct RecapOptions {
     average: bool,
     sum: bool,
+    max: bool,
     _90p: bool,
     _75p: bool,
+    median: bool,
     _25p: bool,
     _10p: bool,
+    min: bool,
 }
 
 impl RecapOptions {
@@ -77,11 +84,16 @@ impl<T> RecapDataset<T>
 where
     T: MapValue,
 {
-    pub fn import(parent_path: &str, options: RecapOptions) -> color_eyre::Result<Self> {
+    pub fn import(
+        parent_path: &str,
+        time: RecapTime,
+        options: RecapOptions,
+    ) -> color_eyre::Result<Self> {
         let f = |s: &str| format!("{parent_path}/{s}");
 
         let mut s = Self {
             min_initial_states: MinInitialStates::default(),
+            time,
 
             min: options.min.then(|| DateMap::new_bin(1, &f("min"))),
             max: options.max.then(|| DateMap::new_bin(1, &f("max"))),
@@ -102,44 +114,48 @@ where
 
     pub fn compute(
         &mut self,
-        &ComputeData { heights, dates }: &ComputeData,
+        &ComputeData { heights, dates, .. }: &ComputeData,
         source: &mut HeightMap<f32>,
     ) {
-        if let Some(min) = self.min.as_ref() {
-            // v.push(min);
-        }
+        dates.iter().enumerate().for_each(|(index, date)| {
+            // let heights = heights_by_date.get(index).unwrap();
 
-        if let Some(max) = self.max.as_ref() {
-            // v.push(max);
-        }
+            if let Some(sum) = self.sum.as_ref() {
+                // v.push(sum);
+            }
 
-        if let Some(median) = self.median.as_ref() {
-            // v.push(median);
-        }
+            if let Some(average) = self.average.as_ref() {
+                // v.push(average);
+            }
 
-        if let Some(average) = self.average.as_ref() {
-            // v.push(average);
-        }
+            if let Some(max) = self.max.as_ref() {
+                // v.push(max);
+            }
 
-        if let Some(sum) = self.sum.as_ref() {
-            // v.push(sum);
-        }
+            if let Some(_90p) = self._90p.as_ref() {
+                // v.push(_90p);
+            }
 
-        if let Some(_90p) = self._90p.as_ref() {
-            // v.push(_90p);
-        }
+            if let Some(_75p) = self._75p.as_ref() {
+                // v.push(_75p);
+            }
 
-        if let Some(_75p) = self._75p.as_ref() {
-            // v.push(_75p);
-        }
+            if let Some(median) = self.median.as_ref() {
+                // v.push(median);
+            }
 
-        if let Some(_25p) = self._25p.as_ref() {
-            // v.push(_25p);
-        }
+            if let Some(_25p) = self._25p.as_ref() {
+                // v.push(_25p);
+            }
 
-        if let Some(_10p) = self._10p.as_ref() {
-            // v.push(_10p);
-        }
+            if let Some(_10p) = self._10p.as_ref() {
+                // v.push(_10p);
+            }
+
+            if let Some(min) = self.min.as_ref() {
+                // v.push(min);
+            }
+        });
     }
 }
 

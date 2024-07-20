@@ -22,7 +22,10 @@ pub use txid_to_tx_data::*;
 pub use txout_index_to_address_index::*;
 pub use txout_index_to_amount::*;
 
-use crate::{structs::WNaiveDate, utils::time};
+use crate::{
+    structs::{Date, Height},
+    utils::time,
+};
 
 #[derive(Allocative)]
 pub struct Databases {
@@ -58,7 +61,7 @@ impl Databases {
         }
     }
 
-    pub fn export(&mut self, height: usize, date: WNaiveDate) -> color_eyre::Result<()> {
+    pub fn export(&mut self, height: Height, date: Date) -> color_eyre::Result<()> {
         thread::scope(|s| {
             s.spawn(|| {
                 time("> Database txid_to_tx_data", || {
@@ -115,13 +118,13 @@ impl Databases {
         let _ = self.txout_index_to_amount.reset();
     }
 
-    pub fn check_if_needs_to_compute_addresses(&self, height: usize, date: WNaiveDate) -> bool {
-        let check_height = |last_height: Option<usize>| {
+    pub fn check_if_needs_to_compute_addresses(&self, height: Height, date: Date) -> bool {
+        let check_height = |last_height: Option<Height>| {
             last_height.map_or(true, |last_height| last_height < height)
         };
 
         let check_date =
-            |last_date: Option<WNaiveDate>| last_date.map_or(true, |last_date| last_date < date);
+            |last_date: Option<Date>| last_date.map_or(true, |last_date| last_date < date);
 
         let check_metadata = |metadata: &Metadata| {
             check_height(metadata.last_height) || check_date(metadata.last_date)
@@ -133,8 +136,8 @@ impl Databases {
 
     pub fn check_if_usable(
         &self,
-        min_initial_last_address_height: Option<usize>,
-        min_initial_last_address_date: Option<WNaiveDate>,
+        min_initial_last_address_height: Option<Height>,
+        min_initial_last_address_date: Option<Date>,
     ) -> bool {
         let are_tx_databases_in_sync = self
             .txout_index_to_amount

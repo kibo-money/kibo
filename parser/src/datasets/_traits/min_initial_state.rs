@@ -1,6 +1,6 @@
 use allocative::Allocative;
 
-use crate::structs::{AnyDateMap, AnyHeightMap, WNaiveDate};
+use crate::structs::{AnyDateMap, AnyHeightMap, Date, Height};
 
 use super::{AnyDataset, AnyDatasets};
 
@@ -33,10 +33,10 @@ impl MinInitialStates {
 
 #[derive(Default, Debug, Clone, Copy, Allocative)]
 pub struct MinInitialState {
-    pub first_unsafe_date: Option<WNaiveDate>,
-    pub first_unsafe_height: Option<usize>,
-    pub last_date: Option<WNaiveDate>,
-    pub last_height: Option<usize>,
+    pub first_unsafe_date: Option<Date>,
+    pub first_unsafe_height: Option<Height>,
+    pub last_date: Option<Date>,
+    pub last_height: Option<Height>,
 }
 
 enum Mode {
@@ -172,8 +172,8 @@ impl MinInitialState {
     fn min_datasets_date(
         datasets: &dyn AnyDatasets,
         is_not_empty: impl Fn(&&(dyn AnyDataset + Sync + Send)) -> bool,
-        map: impl Fn(&(dyn AnyDataset + Sync + Send)) -> Option<WNaiveDate>,
-    ) -> Option<WNaiveDate> {
+        map: impl Fn(&(dyn AnyDataset + Sync + Send)) -> Option<Date>,
+    ) -> Option<Date> {
         Self::min_date(
             datasets
                 .to_any_dataset_vec()
@@ -186,8 +186,8 @@ impl MinInitialState {
     fn min_datasets_height(
         datasets: &dyn AnyDatasets,
         is_not_empty: impl Fn(&&(dyn AnyDataset + Sync + Send)) -> bool,
-        map: impl Fn(&(dyn AnyDataset + Sync + Send)) -> Option<usize>,
-    ) -> Option<usize> {
+        map: impl Fn(&(dyn AnyDataset + Sync + Send)) -> Option<Height>,
+    ) -> Option<Height> {
         Self::min_height(
             datasets
                 .to_any_dataset_vec()
@@ -235,38 +235,38 @@ impl MinInitialState {
     #[inline(always)]
     fn compute_min_initial_last_date_from_dataset(
         arr: &[&(dyn AnyDateMap + Sync + Send)],
-    ) -> Option<WNaiveDate> {
+    ) -> Option<Date> {
         Self::min_date(arr.iter().map(|map| map.get_initial_last_date()))
     }
 
     #[inline(always)]
     fn compute_min_initial_last_height_from_dataset(
         arr: &[&(dyn AnyHeightMap + Sync + Send)],
-    ) -> Option<usize> {
+    ) -> Option<Height> {
         Self::min_height(arr.iter().map(|map| map.get_initial_last_height()))
     }
 
     #[inline(always)]
     fn compute_min_initial_first_unsafe_date_from_dataset(
         arr: &[&(dyn AnyDateMap + Sync + Send)],
-    ) -> Option<WNaiveDate> {
+    ) -> Option<Date> {
         Self::min_date(arr.iter().map(|map| map.get_initial_first_unsafe_date()))
     }
 
     #[inline(always)]
     fn compute_min_initial_first_unsafe_height_from_dataset(
         arr: &[&(dyn AnyHeightMap + Sync + Send)],
-    ) -> Option<usize> {
+    ) -> Option<Height> {
         Self::min_height(arr.iter().map(|map| map.get_initial_first_unsafe_height()))
     }
 
     #[inline(always)]
-    fn min_date(iter: impl Iterator<Item = Option<WNaiveDate>>) -> Option<WNaiveDate> {
+    fn min_date(iter: impl Iterator<Item = Option<Date>>) -> Option<Date> {
         iter.min().and_then(|opt| opt)
     }
 
     #[inline(always)]
-    fn min_height(iter: impl Iterator<Item = Option<usize>>) -> Option<usize> {
+    fn min_height(iter: impl Iterator<Item = Option<Height>>) -> Option<Height> {
         iter.min().and_then(|opt| opt)
     }
 }

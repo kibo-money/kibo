@@ -7,7 +7,7 @@ use std::{
 use allocative::Allocative;
 use rayon::prelude::*;
 
-use crate::structs::{TxoutIndex, WNaiveDate};
+use crate::structs::{Date, Height, TxoutIndex};
 
 use super::{AnyDatabaseGroup, Metadata, SizedDatabase};
 
@@ -94,7 +94,7 @@ impl AnyDatabaseGroup for TxoutIndexToAddressIndex {
         }
     }
 
-    fn export(&mut self, height: usize, date: WNaiveDate) -> color_eyre::Result<()> {
+    fn export(&mut self, height: Height, date: Date) -> color_eyre::Result<()> {
         mem::take(&mut self.map)
             .into_par_iter()
             .try_for_each(|(_, db)| db.export())?;

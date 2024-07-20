@@ -1,4 +1,4 @@
-use crate::structs::{Price, WAmount};
+use crate::structs::{Amount, Price};
 
 #[derive(Default, Debug)]
 pub struct PricePaidState {
@@ -22,11 +22,11 @@ pub struct PricePaidState {
     pub pp_90p: Option<Price>,
     pub pp_95p: Option<Price>,
 
-    pub processed_amount: WAmount,
+    pub processed_amount: Amount,
 }
 
 impl PricePaidState {
-    pub fn iterate(&mut self, price: Price, amount: WAmount, total_supply: WAmount) {
+    pub fn iterate(&mut self, price: Price, amount: Amount, total_supply: Amount) {
         let PricePaidState {
             processed_amount,
             pp_05p,

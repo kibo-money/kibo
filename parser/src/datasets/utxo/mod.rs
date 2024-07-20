@@ -9,7 +9,7 @@ use itertools::Itertools;
 use crate::{
     datasets::AnyDatasets,
     states::{SplitByUTXOCohort, UTXOCohortId},
-    structs::{BiMap, WNaiveDate},
+    structs::{BiMap, Date, Height},
 };
 
 use super::{AnyDataset, ComputeData, InsertData, MinInitialStates};
@@ -55,7 +55,7 @@ impl UTXODatasets {
             .for_each(|(cohort, _)| cohort.insert(insert_data))
     }
 
-    pub fn needs_durable_states(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_durable_states(&self, height: Height, date: Date) -> bool {
         let needs_insert_utxo = self.needs_insert_utxo(height, date);
         let needs_insert_capitalization = self.needs_insert_capitalization(height, date);
         let needs_insert_supply = self.needs_insert_supply(height, date);
@@ -67,51 +67,51 @@ impl UTXODatasets {
             || needs_one_shot_states
     }
 
-    pub fn needs_one_shot_states(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_one_shot_states(&self, height: Height, date: Date) -> bool {
         self.needs_insert_price_paid(height, date) || self.needs_insert_unrealized(height, date)
     }
 
-    pub fn needs_sent_states(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_sent_states(&self, height: Height, date: Date) -> bool {
         self.needs_insert_input(height, date) || self.needs_insert_realized(height, date)
     }
 
-    pub fn needs_insert_utxo(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_utxo(&self, height: Height, date: Date) -> bool {
         self.as_vec()
             .iter()
             .any(|(dataset, _)| dataset.needs_insert_utxo(height, date))
     }
 
-    pub fn needs_insert_capitalization(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_capitalization(&self, height: Height, date: Date) -> bool {
         self.as_vec()
             .iter()
             .any(|(dataset, _)| dataset.needs_insert_capitalization(height, date))
     }
 
-    pub fn needs_insert_supply(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_supply(&self, height: Height, date: Date) -> bool {
         self.as_vec()
             .iter()
             .any(|(dataset, _)| dataset.needs_insert_supply(height, date))
     }
 
-    pub fn needs_insert_price_paid(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_price_paid(&self, height: Height, date: Date) -> bool {
         self.as_vec()
             .iter()
             .any(|(dataset, _)| dataset.needs_insert_price_paid(height, date))
     }
 
-    pub fn needs_insert_realized(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_realized(&self, height: Height, date: Date) -> bool {
         self.as_vec()
             .iter()
             .any(|(dataset, _)| dataset.needs_insert_realized(height, date))
     }
 
-    pub fn needs_insert_unrealized(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_unrealized(&self, height: Height, date: Date) -> bool {
         self.as_vec()
             .iter()
             .any(|(dataset, _)| dataset.needs_insert_unrealized(height, date))
     }
 
-    pub fn needs_insert_input(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_input(&self, height: Height, date: Date) -> bool {
         self.as_vec()
             .iter()
             .any(|(dataset, _)| dataset.needs_insert_input(height, date))

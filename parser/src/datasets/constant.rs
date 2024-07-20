@@ -34,7 +34,7 @@ impl ConstantDataset {
         Ok(s)
     }
 
-    pub fn compute(&mut self, &ComputeData { heights, dates }: &ComputeData) {
+    pub fn compute(&mut self, &ComputeData { heights, dates, .. }: &ComputeData) {
         self._0.multi_insert_const(heights, dates, 0);
         self._1.multi_insert_const(heights, dates, 1);
         self._50.multi_insert_const(heights, dates, 50);

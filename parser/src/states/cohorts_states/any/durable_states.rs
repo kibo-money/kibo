@@ -1,7 +1,7 @@
 use allocative::Allocative;
 use color_eyre::eyre::eyre;
 
-use crate::structs::{Price, WAmount};
+use crate::structs::{Amount, Price};
 
 use super::{CapitalizationState, SupplyState, UTXOState};
 
@@ -15,11 +15,11 @@ pub struct DurableStates {
 impl DurableStates {
     pub fn increment(
         &mut self,
-        amount: WAmount,
+        amount: Amount,
         utxo_count: usize,
         realized_cap: Price,
     ) -> color_eyre::Result<()> {
-        if amount == WAmount::ZERO {
+        if amount == Amount::ZERO {
             if utxo_count != 0 {
                 dbg!(amount, utxo_count);
                 return Err(eyre!("Shouldn't be possible"));
@@ -35,11 +35,11 @@ impl DurableStates {
 
     pub fn decrement(
         &mut self,
-        amount: WAmount,
+        amount: Amount,
         utxo_count: usize,
         realized_cap: Price,
     ) -> color_eyre::Result<()> {
-        if amount == WAmount::ZERO {
+        if amount == Amount::ZERO {
             if utxo_count != 0 {
                 dbg!(amount, utxo_count);
                 unreachable!("Shouldn't be possible")

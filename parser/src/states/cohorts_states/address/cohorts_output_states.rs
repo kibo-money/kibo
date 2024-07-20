@@ -2,7 +2,7 @@ use derive_deref::{Deref, DerefMut};
 
 use crate::{
     states::OutputState,
-    structs::{AddressRealizedData, LiquidityClassification, SplitByLiquidity, WAmount},
+    structs::{AddressRealizedData, Amount, LiquidityClassification, SplitByLiquidity},
 };
 
 use super::SplitByAddressCohort;
@@ -27,17 +27,17 @@ impl AddressCohortsOutputStates {
 
             state.illiquid.iterate(
                 split_count.illiquid,
-                WAmount::from_sat(split_volume.illiquid.round() as u64),
+                Amount::from_sat(split_volume.illiquid.round() as u64),
             );
 
             state.liquid.iterate(
                 split_count.liquid,
-                WAmount::from_sat(split_volume.liquid.round() as u64),
+                Amount::from_sat(split_volume.liquid.round() as u64),
             );
 
             state.highly_liquid.iterate(
                 split_count.highly_liquid,
-                WAmount::from_sat(split_volume.highly_liquid.round() as u64),
+                Amount::from_sat(split_volume.highly_liquid.round() as u64),
             );
 
             Ok(())

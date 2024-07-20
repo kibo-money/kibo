@@ -79,7 +79,7 @@ impl CapitalizationDataset {
         closes: &mut BiMap<f32>,
         cohort_supply: &mut BiMap<f64>,
     ) {
-        let &ComputeData { heights, dates } = compute_data;
+        let &ComputeData { heights, dates, .. } = compute_data;
 
         self.realized_price.multi_insert_divide(
             heights,

@@ -68,7 +68,7 @@ impl RatioDataset {
 
     pub fn compute(
         &mut self,
-        &ComputeData { heights, dates }: &ComputeData,
+        &ComputeData { heights, dates, .. }: &ComputeData,
         market_price: &mut BiMap<f32>,
         other_price: &mut BiMap<f32>,
     ) {
@@ -112,9 +112,13 @@ impl RatioDataset {
 
         self.ratio_1y_sma_momentum_oscillator
             .height
-            .multi_insert_complex_transform(heights, &mut self.ratio.height, |(ratio, height)| {
-                (ratio / self.ratio_1y_sma.height.get_or_import(height)) - 1.0
-            });
+            .multi_insert_complex_transform(
+                heights,
+                &mut self.ratio.height,
+                |(ratio, height, ..)| {
+                    (ratio / self.ratio_1y_sma.height.get_or_import(height).unwrap()) - 1.0
+                },
+            );
 
         self.ratio_1y_sma_momentum_oscillator
             .date

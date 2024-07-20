@@ -107,7 +107,7 @@ impl TransactionDataset {
 
     pub fn compute(
         &mut self,
-        &ComputeData { heights, dates }: &ComputeData,
+        &ComputeData { heights, dates, .. }: &ComputeData,
         circulating_supply: &mut BiMap<f64>,
         block_interval: &mut HeightMap<u32>,
     ) {

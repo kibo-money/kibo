@@ -1,6 +1,6 @@
 use std::{path::Path, thread::sleep, time::Duration};
 
-use parser::{iter_blocks, log, BitcoinDB, BitcoinDaemon, Config};
+use parser::{iter_blocks, log, BitcoinDB, BitcoinDaemon, Config, Height};
 
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
@@ -38,7 +38,7 @@ fn main() -> color_eyre::Result<()> {
         daemon.start();
 
         if daemon.check_if_fully_synced() {
-            daemon.wait_for_new_block(block_count - 1);
+            daemon.wait_for_new_block(Height::new(block_count as u32 - 1));
         } else {
             daemon.wait_sync();
         }

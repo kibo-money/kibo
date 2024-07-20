@@ -1,6 +1,6 @@
 use allocative::Allocative;
 
-use super::WAmount;
+use super::Amount;
 
 #[derive(PartialEq, PartialOrd, Ord, Eq, Debug, Allocative)]
 pub enum AddressSize {
@@ -16,7 +16,7 @@ pub enum AddressSize {
 }
 
 impl AddressSize {
-    pub fn from_amount(amount: WAmount) -> Self {
+    pub fn from_amount(amount: Amount) -> Self {
         match amount.to_sat() {
             0 => Self::Empty,
             1..=9_999_999 => Self::Plankton,

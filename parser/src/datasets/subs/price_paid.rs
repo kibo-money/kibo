@@ -4,7 +4,7 @@ use itertools::Itertools;
 use crate::{
     datasets::{AnyDataset, InsertData, MinInitialStates},
     states::PricePaidState,
-    structs::{AnyBiMap, BiMap, WNaiveDate},
+    structs::{AnyBiMap, BiMap, Date, Height},
 };
 
 #[derive(Default, Allocative)]
@@ -217,13 +217,13 @@ impl PricePaidSubDataset {
         }
     }
 
-    fn insert_height_default(&mut self, height: usize) {
+    fn insert_height_default(&mut self, height: Height) {
         self.inserted_as_mut_vec().into_iter().for_each(|bi| {
             bi.height.insert_default(height);
         })
     }
 
-    fn insert_date_default(&mut self, date: WNaiveDate) {
+    fn insert_date_default(&mut self, date: Date) {
         self.inserted_as_mut_vec().into_iter().for_each(|bi| {
             bi.date.insert_default(date);
         })

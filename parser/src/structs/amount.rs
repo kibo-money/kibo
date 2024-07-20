@@ -10,10 +10,12 @@ use bincode::{
     error::{DecodeError, EncodeError},
     BorrowDecode, Decode, Encode,
 };
-use bitcoin::Amount;
+use bitcoin::Amount as BitcoinAmount;
 use derive_deref::{Deref, DerefMut};
 use sanakirja::{direct_repr, Storable, UnsizedStorable};
 use serde::{Deserialize, Serialize};
+
+use super::Height;
 
 #[derive(
     Debug,
@@ -29,98 +31,106 @@ use serde::{Deserialize, Serialize};
     Serialize,
     Deserialize,
 )]
-pub struct WAmount(Amount);
-direct_repr!(WAmount);
+pub struct Amount(BitcoinAmount);
+direct_repr!(Amount);
 
-impl WAmount {
-    pub const ZERO: Self = Self(Amount::ZERO);
+impl Amount {
+    pub const ZERO: Self = Self(BitcoinAmount::ZERO);
     pub const ONE_BTC_F64: f64 = 100_000_000.0;
 
     #[inline(always)]
-    pub fn wrap(amount: Amount) -> Self {
+    pub fn wrap(amount: BitcoinAmount) -> Self {
         Self(amount)
     }
 
     #[inline(always)]
     pub fn from_sat(sats: u64) -> Self {
-        Self(Amount::from_sat(sats))
+        Self(BitcoinAmount::from_sat(sats))
     }
 }
 
-impl Add for WAmount {
-    type Output = WAmount;
+impl Add for Amount {
+    type Output = Amount;
 
-    fn add(self, rhs: WAmount) -> Self::Output {
-        WAmount::from_sat(self.to_sat() + rhs.to_sat())
+    fn add(self, rhs: Amount) -> Self::Output {
+        Amount::from_sat(self.to_sat() + rhs.to_sat())
     }
 }
 
-impl AddAssign for WAmount {
+impl AddAssign for Amount {
     fn add_assign(&mut self, rhs: Self) {
-        *self = WAmount::from_sat(self.to_sat() + rhs.to_sat());
+        *self = Amount::from_sat(self.to_sat() + rhs.to_sat());
     }
 }
 
-impl Sub for WAmount {
-    type Output = WAmount;
+impl Sub for Amount {
+    type Output = Amount;
 
-    fn sub(self, rhs: WAmount) -> Self::Output {
-        WAmount::from_sat(self.to_sat() - rhs.to_sat())
+    fn sub(self, rhs: Amount) -> Self::Output {
+        Amount::from_sat(self.to_sat() - rhs.to_sat())
     }
 }
 
-impl SubAssign for WAmount {
+impl SubAssign for Amount {
     fn sub_assign(&mut self, rhs: Self) {
-        *self = WAmount::from_sat(self.to_sat() - rhs.to_sat());
+        *self = Amount::from_sat(self.to_sat() - rhs.to_sat());
     }
 }
 
-impl Mul<WAmount> for WAmount {
-    type Output = WAmount;
+impl Mul<Amount> for Amount {
+    type Output = Amount;
 
-    fn mul(self, rhs: WAmount) -> Self::Output {
-        WAmount::from_sat(self.to_sat() * rhs.to_sat())
+    fn mul(self, rhs: Amount) -> Self::Output {
+        Amount::from_sat(self.to_sat() * rhs.to_sat())
     }
 }
 
-impl Mul<u64> for WAmount {
-    type Output = WAmount;
+impl Mul<u64> for Amount {
+    type Output = Amount;
 
     fn mul(self, rhs: u64) -> Self::Output {
-        WAmount::from_sat(self.to_sat() * rhs)
+        Amount::from_sat(self.to_sat() * rhs)
     }
 }
 
-impl Sum for WAmount {
+impl Mul<Height> for Amount {
+    type Output = Amount;
+
+    fn mul(self, rhs: Height) -> Self::Output {
+        Amount::from_sat(self.to_sat() * *rhs as u64)
+    }
+}
+
+impl Sum for Amount {
     fn sum<I: Iterator<Item = Self>>(iter: I) -> Self {
         let sats = iter.map(|amt| amt.to_sat()).sum();
-        WAmount::from_sat(sats)
+        Amount::from_sat(sats)
     }
 }
 
-impl Encode for WAmount {
+impl Encode for Amount {
     fn encode<E: Encoder>(&self, encoder: &mut E) -> Result<(), EncodeError> {
         Encode::encode(&self.to_sat(), encoder)
     }
 }
 
-impl Decode for WAmount {
+impl Decode for Amount {
     fn decode<D: Decoder>(decoder: &mut D) -> core::result::Result<Self, DecodeError> {
         let sats: u64 = Decode::decode(decoder)?;
 
-        Ok(WAmount::from_sat(sats))
+        Ok(Amount::from_sat(sats))
     }
 }
 
-impl<'de> BorrowDecode<'de> for WAmount {
+impl<'de> BorrowDecode<'de> for Amount {
     fn borrow_decode<D: BorrowDecoder<'de>>(decoder: &mut D) -> Result<Self, DecodeError> {
         let sats: u64 = BorrowDecode::borrow_decode(decoder)?;
 
-        Ok(WAmount::from_sat(sats))
+        Ok(Amount::from_sat(sats))
     }
 }
 
-impl Allocative for WAmount {
+impl Allocative for Amount {
     fn visit<'a, 'b: 'a>(&self, visitor: &'a mut Visitor<'b>) {
         visitor.visit_simple_sized::<Self>();
     }

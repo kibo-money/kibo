@@ -2,7 +2,7 @@ use allocative::Allocative;
 
 use crate::{
     datasets::AnyDataset,
-    structs::{AnyDateMap, DateMap},
+    structs::{AnyDateMap, DateMap, Height},
 };
 
 use super::{InsertData, MinInitialStates};
@@ -12,8 +12,8 @@ pub struct DateMetadataDataset {
     min_initial_states: MinInitialStates,
 
     // Inserted
-    pub first_height: DateMap<usize>,
-    pub last_height: DateMap<usize>,
+    pub first_height: DateMap<Height>,
+    pub last_height: DateMap<Height>,
 }
 
 impl DateMetadataDataset {

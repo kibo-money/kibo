@@ -2,14 +2,14 @@ use allocative::Allocative;
 
 use crate::{
     states::{DurableStates, OneShotStates, PriceToValue, UnrealizedState},
-    structs::{LiquiditySplitResult, Price, SplitByLiquidity, WAmount},
+    structs::{Amount, LiquiditySplitResult, Price, SplitByLiquidity},
 };
 
 #[derive(Default, Debug, Allocative)]
 pub struct AddressCohortDurableStates {
     pub address_count: usize,
     pub split_durable_states: SplitByLiquidity<DurableStates>,
-    pub price_to_split_amount: PriceToValue<SplitByLiquidity<WAmount>>,
+    pub price_to_split_amount: PriceToValue<SplitByLiquidity<Amount>>,
 }
 
 const ONE_THIRD: f64 = 1.0 / 3.0;
@@ -19,7 +19,7 @@ impl AddressCohortDurableStates {
     #[allow(clippy::too_many_arguments)]
     pub fn increment(
         &mut self,
-        amount: WAmount,
+        amount: Amount,
         utxo_count: usize,
         realized_cap: Price,
         mean_price_paid: Price,
@@ -44,7 +44,7 @@ impl AddressCohortDurableStates {
     #[allow(clippy::too_many_arguments)]
     pub fn decrement(
         &mut self,
-        amount: WAmount,
+        amount: Amount,
         utxo_count: usize,
         realized_cap: Price,
         mean_price_paid: Price,
@@ -69,7 +69,7 @@ impl AddressCohortDurableStates {
     #[allow(clippy::too_many_arguments)]
     pub fn _crement(
         &mut self,
-        amount: WAmount,
+        amount: Amount,
         utxo_count: usize,
         realized_cap: Price,
         mean_price_paid: Price,
@@ -98,7 +98,7 @@ impl AddressCohortDurableStates {
 
         let illiquid_amount = split_sat_amount_result.illiquid.trunc();
         let illiquid_amount_rest = split_sat_amount_result.illiquid - illiquid_amount;
-        let mut illiquid_amount = WAmount::from_sat(illiquid_amount as u64);
+        let mut illiquid_amount = Amount::from_sat(illiquid_amount as u64);
         let mut illiquid_utxo_count = split_utxo_count_result.illiquid.trunc() as usize;
         let illiquid_utxo_count_rest = split_utxo_count_result.illiquid.fract();
         let mut illiquid_realized_cap =
@@ -107,7 +107,7 @@ impl AddressCohortDurableStates {
 
         let liquid_amount = split_sat_amount_result.liquid.trunc();
         let liquid_amount_rest = split_sat_amount_result.liquid - liquid_amount;
-        let mut liquid_amount = WAmount::from_sat(liquid_amount as u64);
+        let mut liquid_amount = Amount::from_sat(liquid_amount as u64);
         let mut liquid_utxo_count = split_utxo_count_result.liquid.trunc() as usize;
         let liquid_utxo_count_rest = split_utxo_count_result.liquid.fract();
         let mut liquid_realized_cap =
@@ -120,7 +120,7 @@ impl AddressCohortDurableStates {
             realized_cap - illiquid_realized_cap - liquid_realized_cap;
 
         let amount_diff = amount - illiquid_amount - liquid_amount - highly_liquid_amount;
-        if amount_diff > WAmount::ZERO {
+        if amount_diff > Amount::ZERO {
             if illiquid_amount_rest >= ONE_THIRD && illiquid_amount_rest > liquid_amount_rest {
                 illiquid_amount += amount_diff;
             } else if illiquid_amount_rest >= ONE_THIRD {
@@ -337,7 +337,7 @@ impl AddressCohortDurableStates {
                     );
                 }
 
-                if split_amount.illiquid > WAmount::ZERO {
+                if split_amount.illiquid > Amount::ZERO {
                     one_shot_states_ref.illiquid.price_paid_state.iterate(
                         price_paid,
                         split_amount.illiquid,
@@ -359,7 +359,7 @@ impl AddressCohortDurableStates {
                     }
                 }
 
-                if split_amount.liquid > WAmount::ZERO {
+                if split_amount.liquid > Amount::ZERO {
                     one_shot_states_ref.liquid.price_paid_state.iterate(
                         price_paid,
                         split_amount.liquid,
@@ -381,7 +381,7 @@ impl AddressCohortDurableStates {
                     }
                 }
 
-                if split_amount.highly_liquid > WAmount::ZERO {
+                if split_amount.highly_liquid > Amount::ZERO {
                     one_shot_states_ref.highly_liquid.price_paid_state.iterate(
                         price_paid,
                         split_amount.highly_liquid,

@@ -8,7 +8,7 @@ use ordered_float::FloatCore;
 
 use crate::{bitcoin::TARGET_BLOCKS_PER_DAY, utils::LossyFrom};
 
-use super::{AnyDateMap, AnyHeightMap, AnyMap, DateMap, HeightMap, MapValue, WNaiveDate};
+use super::{AnyDateMap, AnyHeightMap, AnyMap, Date, DateMap, Height, HeightMap, MapValue};
 
 #[derive(Default, Allocative)]
 pub struct BiMap<T>
@@ -37,11 +37,8 @@ where
         }
     }
 
-    pub fn date_insert_sum_range(
-        &mut self,
-        date: WNaiveDate,
-        date_blocks_range: &RangeInclusive<usize>,
-    ) where
+    pub fn date_insert_sum_range(&mut self, date: Date, date_blocks_range: &RangeInclusive<u32>)
+    where
         T: Sum,
     {
         self.date
@@ -50,22 +47,22 @@ where
 
     pub fn multi_date_insert_sum_range(
         &mut self,
-        dates: &[WNaiveDate],
-        first_height: &mut DateMap<usize>,
-        last_height: &mut DateMap<usize>,
+        dates: &[Date],
+        first_height: &mut DateMap<Height>,
+        last_height: &mut DateMap<Height>,
     ) where
         T: Sum,
     {
         dates.iter().for_each(|date| {
             let first_height = first_height.get_or_import(date).unwrap();
             let last_height = last_height.get_or_import(date).unwrap();
-            let range = first_height..=last_height;
+            let range = (*first_height)..=(*last_height);
 
             self.date.insert(*date, self.height.sum_range(&range));
         })
     }
 
-    pub fn multi_insert_const(&mut self, heights: &[usize], dates: &[WNaiveDate], constant: T) {
+    pub fn multi_insert_const(&mut self, heights: &[Height], dates: &[Date], constant: T) {
         self.height.multi_insert_const(heights, constant);
 
         self.date.multi_insert_const(dates, constant);
@@ -73,8 +70,8 @@ where
 
     pub fn multi_insert_simple_transform<F, K>(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         source: &mut BiMap<K>,
         transform: &F,
     ) where
@@ -91,8 +88,8 @@ where
     #[allow(unused)]
     pub fn multi_insert_add<A, B>(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         added: &mut BiMap<A>,
         adder: &mut BiMap<B>,
     ) where
@@ -109,8 +106,8 @@ where
 
     pub fn multi_insert_subtract<A, B>(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         subtracted: &mut BiMap<A>,
         subtracter: &mut BiMap<B>,
     ) where
@@ -128,8 +125,8 @@ where
 
     pub fn multi_insert_multiply<A, B>(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         multiplied: &mut BiMap<A>,
         multiplier: &mut BiMap<B>,
     ) where
@@ -146,8 +143,8 @@ where
 
     pub fn multi_insert_divide<A, B>(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         divided: &mut BiMap<A>,
         divider: &mut BiMap<B>,
     ) where
@@ -164,8 +161,8 @@ where
 
     pub fn multi_insert_percentage<A, B>(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         divided: &mut BiMap<A>,
         divider: &mut BiMap<B>,
     ) where
@@ -182,8 +179,8 @@ where
 
     pub fn multi_insert_cumulative<K>(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         source: &mut BiMap<K>,
     ) where
         K: MapValue,
@@ -198,8 +195,8 @@ where
 
     pub fn multi_insert_last_x_sum<K>(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         source: &mut BiMap<K>,
         days: usize,
     ) where
@@ -219,8 +216,8 @@ where
 
     pub fn multi_insert_simple_average<K>(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         source: &mut BiMap<K>,
         days: usize,
     ) where
@@ -239,8 +236,8 @@ where
 
     pub fn multi_insert_net_change(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         source: &mut BiMap<T>,
         days: usize,
     ) where
@@ -257,8 +254,8 @@ where
 
     pub fn multi_insert_median(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         source: &mut BiMap<T>,
         days: Option<usize>,
     ) where
@@ -275,8 +272,8 @@ where
     #[allow(unused)]
     pub fn multi_insert_percentile(
         &mut self,
-        heights: &[usize],
-        dates: &[WNaiveDate],
+        heights: &[Height],
+        dates: &[Date],
         mut map_and_percentiles: Vec<(&mut BiMap<T>, f32)>,
         days: Option<usize>,
     ) where

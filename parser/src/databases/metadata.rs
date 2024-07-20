@@ -8,7 +8,7 @@ use std::{
 
 use crate::{
     io::Binary,
-    structs::{Counter, WNaiveDate},
+    structs::{Counter, Date, Height},
 };
 
 #[derive(Default, Debug, Encode, Decode, Allocative)]
@@ -39,7 +39,7 @@ impl Metadata {
         }
     }
 
-    pub fn export(&mut self, height: usize, date: WNaiveDate) -> color_eyre::Result<()> {
+    pub fn export(&mut self, height: Height, date: Date) -> color_eyre::Result<()> {
         if self.last_height.unwrap_or_default() < height {
             self.last_height.replace(height);
         }
@@ -77,8 +77,8 @@ impl Metadata {
 pub struct MetadataData {
     pub serial: usize,
     pub len: Counter,
-    pub last_height: Option<usize>,
-    pub last_date: Option<WNaiveDate>,
+    pub last_height: Option<Height>,
+    pub last_date: Option<Date>,
 }
 
 impl MetadataData {

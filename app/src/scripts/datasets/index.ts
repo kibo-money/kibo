@@ -22,7 +22,7 @@ export function createDatasets() {
 
     let dataset: ResourceDataset<Scale, any>;
 
-    if (path === `/${scale}-to-ohlc`) {
+    if (path === `/${scale}-to-price`) {
       dataset = createResourceDataset<Scale, OHLC>({
         scale,
         path,

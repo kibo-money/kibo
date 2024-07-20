@@ -5,7 +5,7 @@ use std::{
 
 use allocative::Allocative;
 
-use super::WAmount;
+use super::Amount;
 
 #[derive(Debug)]
 pub struct LiquidityClassification {
@@ -18,8 +18,8 @@ impl LiquidityClassification {
     /// Following this:
     /// https://insights.glassnode.com/bitcoin-liquid-supply/
     /// https://www.desmos.com/calculator/dutgni5rtj
-    pub fn new(sent: WAmount, received: WAmount) -> Self {
-        if received == WAmount::ZERO {
+    pub fn new(sent: Amount, received: Amount) -> Self {
+        if received == Amount::ZERO {
             dbg!(sent, received);
             panic!()
         }
@@ -29,7 +29,7 @@ impl LiquidityClassification {
                 panic!("Shouldn't be possible");
             }
 
-            if sent == WAmount::ZERO {
+            if sent == Amount::ZERO {
                 0.0
             } else {
                 let liquidity = sent.to_sat() as f64 / received.to_sat() as f64;

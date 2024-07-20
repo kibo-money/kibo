@@ -8,7 +8,7 @@ use allocative::Allocative;
 use color_eyre::eyre::eyre;
 use derive_deref::{Deref, DerefMut};
 
-use crate::structs::{Price, SplitByLiquidity, WAmount};
+use crate::structs::{Amount, Price, SplitByLiquidity};
 
 #[derive(Deref, DerefMut, Default, Debug, Allocative)]
 pub struct PriceToValue<T>(BTreeMap<u32, T>);
@@ -82,13 +82,13 @@ pub trait CanSubtract {
     fn can_subtract(&self, other: &Self) -> bool;
 }
 
-impl CanSubtract for WAmount {
+impl CanSubtract for Amount {
     fn can_subtract(&self, other: &Self) -> bool {
         self >= other
     }
 }
 
-impl CanSubtract for SplitByLiquidity<WAmount> {
+impl CanSubtract for SplitByLiquidity<Amount> {
     fn can_subtract(&self, other: &Self) -> bool {
         self.all >= other.all
             && self.illiquid >= other.illiquid
@@ -101,23 +101,23 @@ pub trait IsZero {
     fn is_zero(&self) -> color_eyre::Result<bool>;
 }
 
-impl IsZero for WAmount {
+impl IsZero for Amount {
     fn is_zero(&self) -> color_eyre::Result<bool> {
-        Ok(*self == WAmount::ZERO)
+        Ok(*self == Amount::ZERO)
     }
 }
 
-impl IsZero for SplitByLiquidity<WAmount> {
+impl IsZero for SplitByLiquidity<Amount> {
     fn is_zero(&self) -> color_eyre::Result<bool> {
-        if self.all == WAmount::ZERO
-            && (self.illiquid != WAmount::ZERO
-                || self.liquid != WAmount::ZERO
-                || self.highly_liquid != WAmount::ZERO)
+        if self.all == Amount::ZERO
+            && (self.illiquid != Amount::ZERO
+                || self.liquid != Amount::ZERO
+                || self.highly_liquid != Amount::ZERO)
         {
             dbg!(&self);
             Err(eyre!("Bad split"))
         } else {
-            Ok(self.all == WAmount::ZERO)
+            Ok(self.all == Amount::ZERO)
         }
     }
 }

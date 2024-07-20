@@ -130,7 +130,7 @@ impl RealizedSubDataset {
 
     pub fn compute(
         &mut self,
-        &ComputeData { heights, dates }: &ComputeData,
+        &ComputeData { heights, dates, .. }: &ComputeData,
         market_cap: &mut BiMap<f32>,
     ) {
         self.negative_realized_loss.multi_insert_simple_transform(

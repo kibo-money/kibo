@@ -2,17 +2,18 @@ use crate::{
     databases::Databases,
     datasets::{AllDatasets, AnyDatasets},
     states::States,
+    structs::Height,
     utils::log,
 };
 
 #[derive(Default, Debug)]
 pub struct Heights {
-    pub inserted: usize,
-    pub computed: usize,
+    pub inserted: Height,
+    pub computed: Height,
 }
 
 impl Heights {
-    pub fn min(&self) -> usize {
+    pub fn min(&self) -> Height {
         self.inserted.min(self.computed)
     }
 }
@@ -93,13 +94,13 @@ pub fn find_first_inserted_unsafe_height(
                                     }) {
                                         None
                                     } else {
-                                        Some(last_date_height + 1)
+                                        Some(last_date_height + 1_u32)
                                     }
                                 })
                         ).unwrap_or_default();
 
                         Some(Heights {
-                            inserted: last_safe_height + 1,
+                            inserted: last_safe_height + 1_u32,
                             computed,
                         })
                     }

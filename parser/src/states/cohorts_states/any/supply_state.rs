@@ -1,19 +1,19 @@
 use allocative::Allocative;
 use color_eyre::eyre::eyre;
 
-use crate::structs::WAmount;
+use crate::structs::Amount;
 
 #[derive(Debug, Default, Allocative)]
 pub struct SupplyState {
-    pub supply: WAmount,
+    pub supply: Amount,
 }
 
 impl SupplyState {
-    pub fn increment(&mut self, amount: WAmount) {
+    pub fn increment(&mut self, amount: Amount) {
         self.supply += amount;
     }
 
-    pub fn decrement(&mut self, amount: WAmount) -> color_eyre::Result<()> {
+    pub fn decrement(&mut self, amount: Amount) -> color_eyre::Result<()> {
         if self.supply < amount {
             dbg!(self.supply, amount);
 

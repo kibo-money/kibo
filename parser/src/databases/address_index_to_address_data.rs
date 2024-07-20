@@ -8,7 +8,7 @@ use allocative::Allocative;
 use rayon::prelude::*;
 
 use crate::{
-    structs::{AddressData, WNaiveDate},
+    structs::{AddressData, Date, Height},
     utils::time,
 };
 
@@ -97,7 +97,11 @@ impl AddressIndexToAddressData {
     }
 
     fn open_all(&mut self) {
-        fs::read_dir(databases_folder_path(Self::folder()))
+        let path = Self::full_path();
+
+        fs::create_dir_all(&path).unwrap();
+
+        fs::read_dir(path)
             .unwrap()
             .map(|entry| {
                 entry
@@ -128,7 +132,7 @@ impl AnyDatabaseGroup for AddressIndexToAddressData {
         }
     }
 
-    fn export(&mut self, height: usize, date: WNaiveDate) -> color_eyre::Result<()> {
+    fn export(&mut self, height: Height, date: Date) -> color_eyre::Result<()> {
         mem::take(&mut self.map)
             .into_par_iter()
             .try_for_each(|(_, db)| db.export())?;

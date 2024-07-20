@@ -1,7 +1,7 @@
 use allocative::Allocative;
 
 use crate::{
-    structs::{AnyBiMap, BiMap, DateMap},
+    structs::{AnyBiMap, BiMap, DateMap, Height},
     utils::{ONE_DAY_IN_DAYS, ONE_YEAR_IN_DAYS, THREE_MONTHS_IN_DAYS, TWO_WEEK_IN_DAYS},
 };
 
@@ -166,8 +166,8 @@ impl CointimeDataset {
     pub fn compute(
         &mut self,
         compute_data: &ComputeData,
-        first_height: &mut DateMap<usize>,
-        last_height: &mut DateMap<usize>,
+        first_height: &mut DateMap<Height>,
+        last_height: &mut DateMap<Height>,
         closes: &mut BiMap<f32>,
         circulating_supply: &mut BiMap<f64>,
         realized_cap: &mut BiMap<f32>,
@@ -176,7 +176,7 @@ impl CointimeDataset {
         annualized_transaction_volume: &mut BiMap<f32>,
         cumulative_subsidy_in_dollars: &mut BiMap<f32>,
     ) {
-        let &ComputeData { heights, dates } = compute_data;
+        let &ComputeData { heights, dates, .. } = compute_data;
 
         self.cumulative_coinblocks_destroyed
             .multi_insert_cumulative(heights, dates, &mut self.coinblocks_destroyed);
@@ -403,7 +403,7 @@ impl CointimeDataset {
             .multi_insert_complex_transform(
                 heights,
                 &mut self.active_cap.height,
-                |(active_cap, height)| {
+                |(active_cap, height, ..)| {
                     let investor_cap = self.investor_cap.height.get(height).unwrap();
 
                     (active_cap - investor_cap) / active_cap

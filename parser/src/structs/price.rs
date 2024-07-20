@@ -3,7 +3,7 @@ use std::ops::{Add, AddAssign, Div, Mul, Sub, SubAssign};
 use allocative::Allocative;
 use bincode::{Decode, Encode};
 
-use super::WAmount;
+use super::Amount;
 
 #[derive(
     Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Encode, Decode, Allocative,
@@ -76,18 +76,18 @@ impl SubAssign for Price {
     }
 }
 
-impl Mul<WAmount> for Price {
+impl Mul<Amount> for Price {
     type Output = Self;
 
-    fn mul(self, rhs: WAmount) -> Self::Output {
-        Self((self.to_cent() as f64 * rhs.to_sat() as f64 / WAmount::ONE_BTC_F64).round() as u64)
+    fn mul(self, rhs: Amount) -> Self::Output {
+        Self((self.to_cent() as f64 * rhs.to_sat() as f64 / Amount::ONE_BTC_F64).round() as u64)
     }
 }
 
-impl Div<WAmount> for Price {
+impl Div<Amount> for Price {
     type Output = Self;
 
-    fn div(self, rhs: WAmount) -> Self::Output {
-        Self((self.to_cent() as f64 * WAmount::ONE_BTC_F64 / rhs.to_sat() as f64).round() as u64)
+    fn div(self, rhs: Amount) -> Self::Output {
+        Self((self.to_cent() as f64 * Amount::ONE_BTC_F64 / rhs.to_sat() as f64).round() as u64)
     }
 }

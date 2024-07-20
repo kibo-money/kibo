@@ -9,7 +9,7 @@ use serde_json::Value;
 use crate::{
     datasets::OHLC,
     io::{Json, IMPORTS_FOLDER_PATH},
-    structs::WNaiveDate,
+    structs::Date,
     utils::{log, retry},
 };
 
@@ -150,7 +150,7 @@ impl Binance {
         )
     }
 
-    pub fn fetch_daily_prices() -> color_eyre::Result<BTreeMap<WNaiveDate, OHLC>> {
+    pub fn fetch_daily_prices() -> color_eyre::Result<BTreeMap<Date, OHLC>> {
         log("binance: fetch 1d");
 
         retry(
@@ -168,7 +168,7 @@ impl Binance {
                         // [timestamp, open, high, low, close, volume, ...]
                         let array = value.as_array().unwrap();
 
-                        let date = WNaiveDate::from_timestamp(
+                        let date = Date::from_timestamp(
                             array.first().unwrap().as_u64().unwrap() as u32 / 1000,
                         );
 

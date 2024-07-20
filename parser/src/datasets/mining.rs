@@ -3,7 +3,9 @@ use allocative::Allocative;
 use crate::{
     bitcoin::TARGET_BLOCKS_PER_DAY,
     datasets::AnyDataset,
-    structs::{AnyBiMap, AnyDateMap, AnyHeightMap, BiMap, DateMap, HeightMap, WAmount},
+    structs::{
+        Amount, AnyBiMap, AnyDateMap, AnyHeightMap, BiMap, DateMap, Height, HeightMap, MapKey,
+    },
     utils::{BYTES_IN_MB, ONE_DAY_IN_DAYS, ONE_MONTH_IN_DAYS, ONE_WEEK_IN_DAYS, ONE_YEAR_IN_DAYS},
 };
 
@@ -224,7 +226,7 @@ impl MiningDataset {
             .height
             .insert(height, (block_price * coinbase).to_dollar() as f32);
 
-        let sumed_fees = WAmount::from_sat(fees.iter().map(|amount| amount.to_sat()).sum());
+        let sumed_fees = Amount::from_sat(fees.iter().map(|amount| amount.to_sat()).sum());
 
         self.fees.height.insert(height, sumed_fees.to_btc());
 
@@ -281,10 +283,10 @@ impl MiningDataset {
             self.last_fees_in_dollars
                 .insert(date, sumed_fees_in_dollars);
 
-            let total_blocks_mined = self.total_blocks_mined.insert(date, height + 1);
+            let total_blocks_mined = self.total_blocks_mined.insert(date, height.to_usize() + 1);
 
             self.blocks_mined
-                .insert(date, total_blocks_mined - date_first_height);
+                .insert(date, total_blocks_mined - date_first_height.to_usize());
 
             self.difficulty.date.insert(date, difficulty);
         }
@@ -292,8 +294,8 @@ impl MiningDataset {
 
     pub fn compute(
         &mut self,
-        &ComputeData { heights, dates }: &ComputeData,
-        last_height: &mut DateMap<usize>,
+        &ComputeData { heights, dates, .. }: &ComputeData,
+        last_height: &mut DateMap<Height>,
     ) {
         self.blocks_mined_1w_sum.multi_insert_last_x_sum(
             dates,

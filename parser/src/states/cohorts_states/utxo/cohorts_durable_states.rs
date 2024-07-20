@@ -5,9 +5,9 @@ use rayon::prelude::*;
 
 use crate::{
     states::DateDataVec,
-    structs::{BlockData, Price, SentData, WAmount},
+    structs::{Amount, BlockData, Price, SentData},
     utils::difference_in_days_between_timestamps,
-    WNaiveDate,
+    Date,
 };
 
 use super::{SplitByUTXOCohort, UTXOCohortDurableStates, UTXOCohortsOneShotStates};
@@ -33,7 +33,7 @@ impl UTXOCohortsDurableStates {
                     let utxo_count = block_data.utxos as usize;
 
                     // No need to either insert or remove if 0
-                    if amount == WAmount::ZERO {
+                    if amount == Amount::ZERO {
                         return;
                     }
 
@@ -65,12 +65,12 @@ impl UTXOCohortsDurableStates {
         let price = block_data.price;
 
         // No need to either insert or remove if 0
-        if amount == WAmount::ZERO {
+        if amount == Amount::ZERO {
             return;
         }
 
         if block_data.height == last_block_data.height {
-            let year = WNaiveDate::from_timestamp(block_data.timestamp).year() as u32;
+            let year = Date::from_timestamp(block_data.timestamp).year() as u32;
 
             self.initial_filtered_apply(&0, &year, |state| {
                 state.increment(amount, utxo_count, price).unwrap();
@@ -118,7 +118,7 @@ impl UTXOCohortsDurableStates {
         let utxo_count = sent_data.count as usize;
 
         // No need to either insert or remove if 0
-        if amount == WAmount::ZERO {
+        if amount == Amount::ZERO {
             return;
         }
 
@@ -127,7 +127,7 @@ impl UTXOCohortsDurableStates {
             previous_last_block_data.timestamp,
         );
 
-        let year = WNaiveDate::from_timestamp(block_data.timestamp).year() as u32;
+        let year = Date::from_timestamp(block_data.timestamp).year() as u32;
 
         self.initial_filtered_apply(&days_old, &year, |state| {
             state

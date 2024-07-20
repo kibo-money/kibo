@@ -4,6 +4,7 @@ use color_eyre::eyre::eyre;
 use serde_json::Value;
 
 use crate::{
+    structs::Height,
     utils::{log, log_output, retry},
     Config,
 };
@@ -71,10 +72,10 @@ impl BitcoinDaemon {
         }
     }
 
-    pub fn wait_for_new_block(&self, last_block_height: usize) {
+    pub fn wait_for_new_block(&self, last_block_height: Height) {
         log("Waiting for new block...");
 
-        while self.get_blockchain_info().headers as usize == last_block_height {
+        while last_block_height == self.get_blockchain_info().headers {
             sleep(Duration::from_secs(5))
         }
     }

@@ -4,29 +4,27 @@ import { createRWS } from "/src/solid/rws";
 
 import { HEIGHT_CHUNK_SIZE } from ".";
 
+const USE_LOCAL_URL = true;
+const LOCAL_URL = "http://localhost:3111";
+const WEB_URL = "https://api.satonomics.xyz";
+const BACKUP_WEB_URL = "https://api-bkp.satonomics.xyz";
+
 export function createResourceDataset<
   Scale extends ResourceScale,
   Type extends OHLC | number = number,
 >({ scale, path }: { scale: Scale; path: string }) {
-  type Dataset = Scale extends "date"
-    ? FetchedDateDataset<Type>
-    : FetchedHeightDataset<Type>;
-
   type Value = DatasetValue<
     Type extends number ? SingleValueData : CandlestickData
   >;
 
   const baseURL = `${
-    location.hostname === "localhost"
-      ? "http://localhost:3110"
-      : "https://api.satonomics.xyz"
-    // "https://api.satonomics.xyz"
+    USE_LOCAL_URL && location.hostname === "localhost" ? LOCAL_URL : WEB_URL
   }${path}`;
 
   const backupURL = `${
-    location.hostname === "localhost"
-      ? "http://localhost:3110"
-      : "https://api-bkp.satonomics.xyz"
+    USE_LOCAL_URL && location.hostname === "localhost"
+      ? LOCAL_URL
+      : BACKUP_WEB_URL
   }${path}`;
 
   return createRoot((dispose) => {
@@ -36,14 +34,14 @@ export function createResourceDataset<
     )
       .fill(null)
       .map((): FetchedResult<Scale, Type> => {
-        const json = createRWS<FetchedJSON<Scale, Type, Dataset> | null>(null);
+        const json = createRWS<FetchedJSON<Scale, Type> | null>(null);
 
         return {
           at: null,
           json,
           loading: false,
           vec: createMemo(() => {
-            const map = json()?.dataset.map || null;
+            const map = json()?.dataset.map;
 
             if (!map) {
               return null;
@@ -186,7 +184,7 @@ export function createResourceDataset<
 
       console.log(`fetch: ${path}?chunk=${id}`);
 
-      const previousMap = fetched.json()?.dataset.map;
+      const previousMap = fetched.json()?.dataset;
       const newMap = json.dataset.map;
 
       const previousLength = Object.keys(previousMap || []).length;

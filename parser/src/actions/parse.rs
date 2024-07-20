@@ -17,8 +17,8 @@ use crate::{
         States, UTXOCohortsOneShotStates, UTXOCohortsSentStates,
     },
     structs::{
-        Address, AddressData, AddressRealizedData, BlockData, BlockPath, Counter, EmptyAddressData,
-        PartialTxoutData, Price, SentData, TxData, TxoutIndex, WAmount, WNaiveDate,
+        Address, AddressData, AddressRealizedData, Amount, BlockData, BlockPath, Counter, Date,
+        EmptyAddressData, Height, PartialTxoutData, Price, SentData, TxData, TxoutIndex,
     },
 };
 
@@ -29,9 +29,9 @@ pub struct ParseData<'a> {
     pub compute_addresses: bool,
     pub databases: &'a mut Databases,
     pub datasets: &'a mut AllDatasets,
-    pub date: WNaiveDate,
-    pub first_date_height: usize,
-    pub height: usize,
+    pub date: Date,
+    pub first_date_height: Height,
+    pub height: Height,
     pub is_date_last_block: bool,
     pub states: &'a mut States,
     pub timestamp: u32,
@@ -61,13 +61,11 @@ pub fn parse(
 
     let date_index = states.date_data_vec.len() - 1;
 
-    let previous_timestamp = if height > 0 {
-        Some(
-            datasets
-                .block_metadata
-                .timestamp
-                .get_or_import(&(height - 1)),
-        )
+    let previous_timestamp = if let Some(previous_height) = height.checked_sub(1) {
+        datasets
+            .block_metadata
+            .timestamp
+            .get_or_import(&Height::new(previous_height))
     } else {
         None
     };
@@ -105,20 +103,20 @@ pub fn parse(
         .last_mut()
         .unwrap()
         .blocks
-        .push(BlockData::new(height as u32, block_price, timestamp));
+        .push(BlockData::new(height, block_price, timestamp));
 
     let mut block_path_to_sent_data: BTreeMap<BlockPath, SentData> = BTreeMap::default();
     // let mut received_data: ReceivedData = ReceivedData::default();
     let mut address_index_to_address_realized_data: BTreeMap<u32, AddressRealizedData> =
         BTreeMap::default();
 
-    let mut coinbase = WAmount::ZERO;
-    let mut satblocks_destroyed = WAmount::ZERO;
-    let mut satdays_destroyed = WAmount::ZERO;
-    let mut amount_sent = WAmount::ZERO;
+    let mut coinbase = Amount::ZERO;
+    let mut satblocks_destroyed = Amount::ZERO;
+    let mut satdays_destroyed = Amount::ZERO;
+    let mut amount_sent = Amount::ZERO;
     let mut transaction_count = 0;
     let mut fees = vec![];
-    let mut fees_total = WAmount::ZERO;
+    let mut fees_total = Amount::ZERO;
 
     let (
         TxoutsParsingResults {
@@ -183,7 +181,7 @@ pub fn parse(
             // ---
 
             let mut utxos = BTreeMap::new();
-            let mut spendable_amount = WAmount::ZERO;
+            let mut spendable_amount = Amount::ZERO;
 
             let is_coinbase = tx.is_coinbase();
 
@@ -191,8 +189,8 @@ pub fn parse(
                 unreachable!();
             }
 
-            let mut inputs_sum = WAmount::ZERO;
-            let mut outputs_sum = WAmount::ZERO;
+            let mut inputs_sum = Amount::ZERO;
+            let mut outputs_sum = Amount::ZERO;
 
             let last_block = states.date_data_vec.last_mut_block().unwrap();
 
@@ -205,7 +203,7 @@ pub fn parse(
                         panic!("vout can indeed be bigger than u16::MAX !");
                     }
 
-                    let amount = WAmount::wrap(tx_out.value);
+                    let amount = Amount::wrap(tx_out.value);
 
                     if is_coinbase {
                         coinbase += amount;
@@ -440,8 +438,7 @@ pub fn parse(
                             .or_default()
                             .send(input_amount);
 
-                        satblocks_destroyed +=
-                            input_amount * (height as u64 - input_block_data.height as u64);
+                        satblocks_destroyed += input_amount * (height - input_block_data.height);
 
                         satdays_destroyed += input_amount
                             * date.signed_duration_since(*input_date_data.date).num_days() as u64;
@@ -569,7 +566,7 @@ pub fn parse(
                             let block_data =
                                 states.date_data_vec.get_block_data(block_path).unwrap();
 
-                            if block_data.height != height as u32 {
+                            if block_data.height != height {
                                 states
                                     .utxo_cohorts_durable_states
                                     .as_mut()
@@ -585,7 +582,7 @@ pub fn parse(
 
                 let last_block_data = states.date_data_vec.last_block().unwrap();
 
-                if last_block_data.height != height as u32 {
+                if last_block_data.height != height {
                     unreachable!()
                 }
 
@@ -744,7 +741,7 @@ pub fn parse(
         compute_addresses,
         databases,
         date,
-        date_blocks_range: &(first_date_height..=height),
+        date_blocks_range: &(*first_date_height..=*height),
         date_first_height: first_date_height,
         difficulty,
         fees: &fees,
@@ -763,7 +760,7 @@ pub fn parse(
 
 pub struct TxoutsParsingResults {
     partial_txout_data_vec: Vec<Option<PartialTxoutData>>,
-    provably_unspendable: WAmount,
+    provably_unspendable: Amount,
     op_returns: usize,
 }
 
@@ -776,7 +773,7 @@ fn pre_process_outputs(
     empty_addresses: &mut Counter,
     address_to_address_index: &mut AddressToAddressIndex,
 ) -> TxoutsParsingResults {
-    let mut provably_unspendable = WAmount::ZERO;
+    let mut provably_unspendable = Amount::ZERO;
     let mut op_returns = 0;
 
     let mut partial_txout_data_vec = block
@@ -785,12 +782,12 @@ fn pre_process_outputs(
         .flat_map(|tx| &tx.output)
         .map(|txout| {
             let script = &txout.script_pubkey;
-            let amount = WAmount::wrap(txout.value);
+            let amount = Amount::wrap(txout.value);
 
             // 0 sats outputs are possible and allowed !
             // https://mempool.space/tx/2f2442f68e38b980a6c4cec21e71851b0d8a5847d85208331a27321a9967bbd6
             // https://bitcoin.stackexchange.com/questions/104937/transaction-outputs-with-value-0
-            if amount == WAmount::ZERO {
+            if amount == Amount::ZERO {
                 return None;
             }
 
@@ -859,7 +856,7 @@ fn pre_process_inputs<'a>(
     compute_addresses: bool,
 ) -> (
     BTreeMap<&'a Txid, Option<TxData>>,
-    BTreeMap<TxoutIndex, (WAmount, Option<u32>)>,
+    BTreeMap<TxoutIndex, (Amount, Option<u32>)>,
 ) {
     let mut txid_to_tx_data: BTreeMap<&Txid, Option<TxData>> = block
         .txdata
@@ -937,7 +934,7 @@ fn compute_address_index_to_address_data(
     address_index_to_address_data_db: &mut AddressIndexToAddressData,
     address_index_to_empty_address_data_db: &mut AddressIndexToEmptyAddressData,
     partial_txout_data_vec: &[Option<PartialTxoutData>],
-    txout_index_to_amount_and_address_index: &BTreeMap<TxoutIndex, (WAmount, Option<u32>)>,
+    txout_index_to_amount_and_address_index: &BTreeMap<TxoutIndex, (Amount, Option<u32>)>,
     compute_addresses: bool,
 ) -> BTreeMap<u32, AddressData> {
     if !compute_addresses {

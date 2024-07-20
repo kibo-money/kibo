@@ -10,13 +10,13 @@ export function createDateDatasets({
   type Key = keyof typeof groupedKeysToURLPath;
   type ResourceData = ReturnType<typeof createResourceDataset<"date">>;
 
-  type ResourceDatasets = Record<Exclude<Key, "ohlc">, ResourceData>;
+  type ResourceDatasets = Record<Exclude<Key, "price">, ResourceData>;
 
   const datasets = groupedKeysToURLPath as any as ResourceDatasets;
 
   for (const key in groupedKeysToURLPath) {
-    if ((key as Key) !== "ohlc") {
-      datasets[key as Exclude<Key, "ohlc">] = createResourceDataset<"date">({
+    if ((key as Key) !== "price") {
+      datasets[key as Exclude<Key, "price">] = createResourceDataset<"date">({
         scale: "date",
         path: groupedKeysToURLPath[key as Key],
       });
@@ -25,7 +25,7 @@ export function createDateDatasets({
 
   const price = createResourceDataset<"date", OHLC>({
     scale: "date",
-    path: "/date-to-ohlc",
+    path: "/date-to-price",
   });
 
   Object.assign(datasets, { price });

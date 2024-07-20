@@ -115,7 +115,7 @@ impl UnrealizedSubDataset {
 
     pub fn compute(
         &mut self,
-        &ComputeData { heights, dates }: &ComputeData,
+        &ComputeData { heights, dates, .. }: &ComputeData,
         own_supply: &mut BiMap<f64>,
         circulating_supply: &mut BiMap<f64>,
         market_cap: &mut BiMap<f32>,

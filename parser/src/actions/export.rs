@@ -4,15 +4,15 @@ use crate::{
     databases::Databases,
     datasets::AllDatasets,
     states::States,
-    structs::WNaiveDate,
+    structs::{Date, Height},
     utils::{log, time},
 };
 
 pub struct ExportedData<'a> {
     pub databases: Option<&'a mut Databases>,
     pub datasets: &'a mut AllDatasets,
-    pub date: WNaiveDate,
-    pub height: usize,
+    pub date: Date,
+    pub height: Height,
     pub states: Option<&'a States>,
 }
 

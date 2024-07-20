@@ -7,12 +7,12 @@ use std::{
 use allocative::Allocative;
 use rayon::prelude::*;
 
-use crate::structs::{TxoutIndex, WAmount, WNaiveDate};
+use crate::structs::{Amount, Date, Height, TxoutIndex};
 
 use super::{AnyDatabaseGroup, Metadata, SizedDatabase};
 
 type Key = TxoutIndex;
-type Value = WAmount;
+type Value = Amount;
 type Database = SizedDatabase<Key, Value>;
 
 #[derive(Allocative)]
@@ -94,7 +94,7 @@ impl AnyDatabaseGroup for TxoutIndexToAmount {
         }
     }
 
-    fn export(&mut self, height: usize, date: WNaiveDate) -> color_eyre::Result<()> {
+    fn export(&mut self, height: Height, date: Date) -> color_eyre::Result<()> {
         mem::take(&mut self.map)
             .into_par_iter()
             .try_for_each(|(_, db)| db.export())?;

@@ -1,16 +1,16 @@
 use allocative::Allocative;
 use bincode::{Decode, Encode};
 
-use super::{BlockData, BlockPath, WNaiveDate};
+use super::{BlockData, BlockPath, Date};
 
 #[derive(Debug, Encode, Decode, Allocative)]
 pub struct DateData {
-    pub date: WNaiveDate,
+    pub date: Date,
     pub blocks: Vec<BlockData>,
 }
 
 impl DateData {
-    pub fn new(date: WNaiveDate, blocks: Vec<BlockData>) -> Self {
+    pub fn new(date: Date, blocks: Vec<BlockData>) -> Self {
         Self { date, blocks }
     }
 

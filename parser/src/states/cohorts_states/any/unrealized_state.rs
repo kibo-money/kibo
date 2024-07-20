@@ -1,17 +1,17 @@
 use std::{cmp::Ordering, ops::Add};
 
-use crate::structs::{Price, WAmount};
+use crate::structs::{Amount, Price};
 
 #[derive(Debug, Default)]
 pub struct UnrealizedState {
-    pub supply_in_profit: WAmount,
+    pub supply_in_profit: Amount,
     pub unrealized_profit: Price,
     pub unrealized_loss: Price,
 }
 
 impl UnrealizedState {
     #[inline]
-    pub fn iterate(&mut self, price_then: Price, price_now: Price, amount: WAmount) {
+    pub fn iterate(&mut self, price_then: Price, price_now: Price, amount: Amount) {
         match price_then.cmp(&price_now) {
             Ordering::Less => {
                 self.unrealized_profit += (price_now - price_then) * amount;

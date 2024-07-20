@@ -62,7 +62,7 @@ impl AllAddressesMetadataDataset {
         }
     }
 
-    pub fn compute(&mut self, &ComputeData { heights, dates }: &ComputeData) {
+    pub fn compute(&mut self, &ComputeData { heights, dates, .. }: &ComputeData) {
         self.new_addresses
             .multi_insert_net_change(heights, dates, &mut self.created_addreses, 1)
     }

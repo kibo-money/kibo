@@ -33,10 +33,16 @@ impl Routes {
             let mut split_key = key.split('/').collect_vec();
 
             let mut split_last = split_key.pop().unwrap().split('.').rev().collect_vec();
+
             let last = split_last.pop().unwrap().to_owned();
+
+            let mut skip = 2;
+
             let serialization = split_last.pop().map_or_else(
                 || {
                     if *split_key.get(1).unwrap() == "price" {
+                        skip = 1;
+
                         Serialization::Json
                     } else {
                         Serialization::Binary
@@ -44,8 +50,11 @@ impl Routes {
                 },
                 Serialization::from_extension,
             );
-            let split_key = split_key.iter().skip(2).collect_vec();
+
+            let split_key = split_key.iter().skip(skip).collect_vec();
+
             let map_key = split_key.iter().join("_");
+
             let url_path = split_key.iter().join("-");
 
             let file_path = key.to_owned();

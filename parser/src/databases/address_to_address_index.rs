@@ -3,7 +3,7 @@ use std::{collections::BTreeMap, mem, thread};
 use allocative::Allocative;
 use rayon::prelude::*;
 
-use crate::structs::{Address, WNaiveDate};
+use crate::structs::{Address, Date, Height};
 
 use super::{
     AnyDatabaseGroup, Database, Metadata, SizedDatabase, U8x19, U8x31,
@@ -261,7 +261,7 @@ impl AnyDatabaseGroup for AddressToAddressIndex {
         }
     }
 
-    fn export(&mut self, height: usize, date: WNaiveDate) -> color_eyre::Result<()> {
+    fn export(&mut self, height: Height, date: Date) -> color_eyre::Result<()> {
         thread::scope(|s| {
             s.spawn(|| {
                 mem::take(&mut self.p2pk)

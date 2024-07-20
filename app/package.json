@@ -26,7 +26,7 @@
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
-    "@iconify-json/tabler": "^1.1.117",
+    "@iconify-json/tabler": "^1.1.118",
     "@tailwindcss/container-queries": "^0.1.1",
     "autoprefixer": "^10.4.19",
     "postcss": "^8.4.39",
@@ -42,6 +42,6 @@
     "vite-plugin-pwa": "^0.20.0",
     "vite-plugin-solid": "^2.10.2",
     "workbox-window": "^7.1.0",
-    "wrangler": "^3.65.0"
+    "wrangler": "^3.65.1"
   }
 }

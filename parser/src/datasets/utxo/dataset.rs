@@ -6,7 +6,7 @@ use crate::{
         AnyDataset, AnyDatasetGroup, ComputeData, InsertData, MinInitialStates, SubDataset,
     },
     states::UTXOCohortId,
-    structs::{AnyBiMap, AnyDateMap, AnyHeightMap, BiMap, WNaiveDate},
+    structs::{AnyBiMap, AnyDateMap, AnyHeightMap, BiMap, Date, Height},
 };
 
 #[derive(Default, Allocative)]
@@ -122,31 +122,31 @@ impl UTXODataset {
         // }
     }
 
-    pub fn needs_insert_utxo(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_utxo(&self, height: Height, date: Date) -> bool {
         self.subs.utxo.needs_insert(height, date)
     }
 
-    pub fn needs_insert_capitalization(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_capitalization(&self, height: Height, date: Date) -> bool {
         self.subs.capitalization.needs_insert(height, date)
     }
 
-    pub fn needs_insert_supply(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_supply(&self, height: Height, date: Date) -> bool {
         self.subs.supply.needs_insert(height, date)
     }
 
-    pub fn needs_insert_price_paid(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_price_paid(&self, height: Height, date: Date) -> bool {
         self.subs.price_paid.needs_insert(height, date)
     }
 
-    pub fn needs_insert_realized(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_realized(&self, height: Height, date: Date) -> bool {
         self.subs.realized.needs_insert(height, date)
     }
 
-    pub fn needs_insert_unrealized(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_unrealized(&self, height: Height, date: Date) -> bool {
         self.subs.unrealized.needs_insert(height, date)
     }
 
-    pub fn needs_insert_input(&self, height: usize, date: WNaiveDate) -> bool {
+    pub fn needs_insert_input(&self, height: Height, date: Date) -> bool {
         self.subs.input.needs_insert(height, date)
     }
 

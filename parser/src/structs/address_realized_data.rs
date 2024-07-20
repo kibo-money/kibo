@@ -1,10 +1,10 @@
-use super::{AddressData, Price, WAmount};
+use super::{AddressData, Amount, Price};
 
 #[derive(Debug)]
 pub struct AddressRealizedData {
     pub initial_address_data: AddressData,
-    pub received: WAmount,
-    pub sent: WAmount,
+    pub received: Amount,
+    pub sent: Amount,
     pub profit: Price,
     pub loss: Price,
     pub value_created: Price,
@@ -16,8 +16,8 @@ pub struct AddressRealizedData {
 impl AddressRealizedData {
     pub fn default(initial_address_data: &AddressData) -> Self {
         Self {
-            received: WAmount::ZERO,
-            sent: WAmount::ZERO,
+            received: Amount::ZERO,
+            sent: Amount::ZERO,
             profit: Price::ZERO,
             loss: Price::ZERO,
             utxos_created: 0,
@@ -28,12 +28,12 @@ impl AddressRealizedData {
         }
     }
 
-    pub fn receive(&mut self, amount: WAmount) {
+    pub fn receive(&mut self, amount: Amount) {
         self.received += amount;
         self.utxos_created += 1;
     }
 
-    pub fn send(&mut self, amount: WAmount, current_price: Price, previous_price: Price) {
+    pub fn send(&mut self, amount: Amount, current_price: Price, previous_price: Price) {
         self.sent += amount;
 
         self.utxos_destroyed += 1;

@@ -215,7 +215,7 @@ export function applySeriesList({
 
       if (chartIndex === 0) {
         const datasetPath =
-          priceDataset || (`/${scale}-to-ohlc` satisfies AnyDatasetPath);
+          priceDataset || (`/${scale}-to-price` satisfies AnyDatasetPath);
 
         const dataset = datasets.getOrImport(scale, datasetPath);
 

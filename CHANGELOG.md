@@ -6,6 +6,9 @@
 
 - Global
   - Fixed an incredibly annoying bug that made the program panic because of a wrong utxo/address durable state after a or many new datasets were added/changed after a first successful parse of the chain
+  - Fixed bug that would crash program if launched for the first time ever
+  - Merged the core of `HeightMap` and `DateMap` structs into `GenericMap`
+  - Added `Height` struct
 - CLI
   - Added an argument parser for improved UX with several options
 - Datasets

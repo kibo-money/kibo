@@ -8,7 +8,7 @@ use allocative::Allocative;
 use bitcoin::Txid;
 use rayon::prelude::*;
 
-use crate::structs::{TxData, WNaiveDate};
+use crate::structs::{Date, Height, TxData};
 
 use super::{AnyDatabaseGroup, Metadata, SizedDatabase, U8x31};
 
@@ -127,7 +127,7 @@ impl AnyDatabaseGroup for TxidToTxData {
         }
     }
 
-    fn export(&mut self, height: usize, date: WNaiveDate) -> color_eyre::Result<()> {
+    fn export(&mut self, height: Height, date: Date) -> color_eyre::Result<()> {
         mem::take(&mut self.map)
             .into_par_iter()
             .try_for_each(|(_, db)| db.export())?;

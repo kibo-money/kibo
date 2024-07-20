@@ -2,13 +2,13 @@ use std::{fs, path::PathBuf};
 
 use chrono::Local;
 
-use crate::{databases::Databases, datasets::AllDatasets, states::States};
+use crate::{databases::Databases, datasets::AllDatasets, states::States, structs::Height};
 
 pub fn generate_allocation_files(
     datasets: &AllDatasets,
     databases: &Databases,
     states: &States,
-    last_height: usize,
+    last_height: Height,
 ) -> color_eyre::Result<()> {
     let mut flamegraph = allocative::FlameGraphBuilder::default();
     flamegraph.visit_root(datasets);

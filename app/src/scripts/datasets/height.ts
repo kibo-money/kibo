@@ -8,13 +8,13 @@ export function createHeightDatasets({
   type Key = keyof typeof groupedKeysToURLPath;
   type ResourceData = ReturnType<typeof createResourceDataset<"height">>;
 
-  type ResourceDatasets = Record<Exclude<Key, "ohlc">, ResourceData>;
+  type ResourceDatasets = Record<Exclude<Key, "price">, ResourceData>;
 
   const datasets = groupedKeysToURLPath as any as ResourceDatasets;
 
   for (const key in groupedKeysToURLPath) {
-    if ((key as Key) !== "ohlc") {
-      datasets[key as Exclude<Key, "ohlc">] = createResourceDataset<"height">({
+    if ((key as Key) !== "price") {
+      datasets[key as Exclude<Key, "price">] = createResourceDataset<"height">({
         scale: "height",
         path: groupedKeysToURLPath[key as Key],
       });
@@ -23,7 +23,7 @@ export function createHeightDatasets({
 
   const price = createResourceDataset<"height", OHLC>({
     scale: "height",
-    path: "/height-to-ohlc",
+    path: "/height-to-price",
   });
 
   Object.assign(datasets, { price });

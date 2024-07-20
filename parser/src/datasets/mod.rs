@@ -44,31 +44,31 @@ use crate::{
         // UTXOCohortsReceivedStates,
         UTXOCohortsSentStates,
     },
-    structs::{Price, WAmount, WNaiveDate},
+    structs::{Amount, Date, Height, Price},
 };
 
 pub struct InsertData<'a> {
     pub address_cohorts_input_states: &'a Option<AddressCohortsInputStates>,
     pub address_cohorts_one_shot_states: &'a Option<AddressCohortsOneShotStates>,
     pub address_cohorts_realized_states: &'a Option<AddressCohortsRealizedStates>,
-    pub amount_sent: WAmount,
+    pub amount_sent: Amount,
     pub block_interval: u32,
     pub block_price: Price,
     pub block_size: usize,
     pub block_vbytes: u64,
     pub block_weight: u64,
-    pub coinbase: WAmount,
+    pub coinbase: Amount,
     pub compute_addresses: bool,
     pub databases: &'a Databases,
-    pub date: WNaiveDate,
-    pub date_blocks_range: &'a RangeInclusive<usize>,
-    pub date_first_height: usize,
+    pub date: Date,
+    pub date_blocks_range: &'a RangeInclusive<u32>,
+    pub date_first_height: Height,
     pub difficulty: f64,
-    pub fees: &'a Vec<WAmount>,
-    pub height: usize,
+    pub fees: &'a Vec<Amount>,
+    pub height: Height,
     pub is_date_last_block: bool,
-    pub satblocks_destroyed: WAmount,
-    pub satdays_destroyed: WAmount,
+    pub satblocks_destroyed: Amount,
+    pub satdays_destroyed: Amount,
     pub states: &'a States,
     pub timestamp: u32,
     pub transaction_count: usize,
@@ -78,8 +78,8 @@ pub struct InsertData<'a> {
 }
 
 pub struct ComputeData<'a> {
-    pub heights: &'a [usize],
-    pub dates: &'a [WNaiveDate],
+    pub heights: &'a [Height],
+    pub dates: &'a [Date],
 }
 
 #[derive(Allocative)]

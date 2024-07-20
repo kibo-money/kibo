@@ -2,14 +2,14 @@ use allocative::Allocative;
 use color_eyre::eyre::eyre;
 use sanakirja::{direct_repr, Storable, UnsizedStorable};
 
-use super::{AddressType, EmptyAddressData, LiquidityClassification, Price, WAmount};
+use super::{AddressType, Amount, EmptyAddressData, LiquidityClassification, Price};
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Default, Allocative)]
 pub struct AddressData {
     pub address_type: AddressType,
-    pub amount: WAmount,
-    pub sent: WAmount,
-    pub received: WAmount,
+    pub amount: Amount,
+    pub sent: Amount,
+    pub received: Amount,
     pub realized_cap: Price,
     pub outputs_len: u32,
 }
@@ -19,15 +19,15 @@ impl AddressData {
     pub fn new(address_type: AddressType) -> Self {
         Self {
             address_type,
-            amount: WAmount::ZERO,
-            sent: WAmount::ZERO,
-            received: WAmount::ZERO,
+            amount: Amount::ZERO,
+            sent: Amount::ZERO,
+            received: Amount::ZERO,
             realized_cap: Price::ZERO,
             outputs_len: 0,
         }
     }
 
-    pub fn receive(&mut self, amount: WAmount, price: Price) {
+    pub fn receive(&mut self, amount: Amount, price: Price) {
         let previous_amount = self.amount;
 
         let new_amount = previous_amount + amount;
@@ -43,7 +43,7 @@ impl AddressData {
         self.realized_cap += received_value;
     }
 
-    pub fn send(&mut self, amount: WAmount, previous_price: Price) -> color_eyre::Result<()> {
+    pub fn send(&mut self, amount: Amount, previous_price: Price) -> color_eyre::Result<()> {
         let previous_amount = self.amount;
 
         if previous_amount < amount {
@@ -66,7 +66,7 @@ impl AddressData {
 
     #[inline(always)]
     pub fn is_empty(&self) -> bool {
-        if self.amount == WAmount::ZERO {
+        if self.amount == Amount::ZERO {
             if self.outputs_len != 0 {
                 unreachable!();
             }
@@ -80,7 +80,7 @@ impl AddressData {
     pub fn from_empty(empty: &EmptyAddressData) -> Self {
         Self {
             address_type: empty.address_type,
-            amount: WAmount::ZERO,
+            amount: Amount::ZERO,
             sent: empty.transfered,
             received: empty.transfered,
             realized_cap: Price::ZERO,

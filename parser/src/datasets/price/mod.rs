@@ -10,7 +10,7 @@ pub use ohlc::*;
 
 use crate::{
     price::{Binance, Kraken},
-    structs::{AnyBiMap, AnyDateMap, BiMap, DateMap, WNaiveDate},
+    structs::{AnyBiMap, AnyDateMap, BiMap, Date, DateMap, Height, MapKey},
     utils::{ONE_MONTH_IN_DAYS, ONE_WEEK_IN_DAYS, ONE_YEAR_IN_DAYS},
 };
 
@@ -20,7 +20,7 @@ use super::{AnyDataset, ComputeData, MinInitialStates, RatioDataset};
 pub struct PriceDatasets {
     min_initial_states: MinInitialStates,
 
-    kraken_daily: Option<BTreeMap<WNaiveDate, OHLC>>,
+    kraken_daily: Option<BTreeMap<Date, OHLC>>,
     kraken_1mn: Option<BTreeMap<u32, OHLC>>,
     binance_1mn: Option<BTreeMap<u32, OHLC>>,
     binance_har: Option<BTreeMap<u32, OHLC>>,
@@ -90,8 +90,8 @@ impl PriceDatasets {
             kraken_daily: None,
             satonomics_by_height: BTreeMap::default(),
 
-            ohlcs: BiMap::new_json(1, &format!("{price_path}/ohlc")),
-            closes: BiMap::new_json(1, &f("close")),
+            ohlcs: BiMap::new_json(1, price_path),
+            closes: BiMap::new_bin(1, &f("close")),
             market_cap: BiMap::new_bin(1, &f("market_cap")),
             price_1w_sma: BiMap::new_bin(1, &f("price_1w_sma")),
             price_1w_sma_ratio: RatioDataset::import(datasets_path, "price_1w_sma")?,
@@ -139,7 +139,7 @@ impl PriceDatasets {
     }
 
     pub fn compute(&mut self, compute_data: &ComputeData, circulating_supply: &mut BiMap<f64>) {
-        let &ComputeData { dates, heights } = compute_data;
+        let &ComputeData { dates, heights, .. } = compute_data;
 
         self.closes
             .multi_insert_simple_transform(heights, dates, &mut self.ohlcs, &|ohlc| ohlc.close);
@@ -265,7 +265,7 @@ impl PriceDatasets {
                 |(last_value, date, closes)| {
                     let previous_value = date
                         .checked_sub_days(Days::new(4 * ONE_YEAR_IN_DAYS as u64))
-                        .and_then(|date| closes.get_or_import(&WNaiveDate::wrap(date)))
+                        .and_then(|date| closes.get_or_import(&Date::wrap(date)))
                         .unwrap_or_default();
 
                     (((last_value / previous_value).powf(1.0 / 4.0)) - 1.0) * 100.0
@@ -300,8 +300,8 @@ impl PriceDatasets {
             .compute(compute_data, &mut self.closes, &mut self.price_200w_sma);
     }
 
-    pub fn get_date_ohlc(&mut self, date: WNaiveDate) -> color_eyre::Result<OHLC> {
-        if self.ohlcs.date.is_date_safe(date) {
+    pub fn get_date_ohlc(&mut self, date: Date) -> color_eyre::Result<OHLC> {
+        if self.ohlcs.date.is_key_safe(date) {
             Ok(self.ohlcs.date.get(&date).unwrap().to_owned())
         } else {
             let ohlc = self.get_from_daily_kraken(&date)?;
@@ -312,7 +312,7 @@ impl PriceDatasets {
         }
     }
 
-    fn get_from_daily_kraken(&mut self, date: &WNaiveDate) -> color_eyre::Result<OHLC> {
+    fn get_from_daily_kraken(&mut self, date: &Date) -> color_eyre::Result<OHLC> {
         if self.kraken_daily.is_none() {
             self.kraken_daily.replace(
                 Kraken::fetch_daily_prices()
@@ -330,7 +330,7 @@ impl PriceDatasets {
 
     pub fn get_height_ohlc(
         &mut self,
-        height: usize,
+        height: Height,
         timestamp: u32,
         previous_timestamp: Option<u32>,
     ) -> color_eyre::Result<OHLC> {
@@ -351,7 +351,7 @@ impl PriceDatasets {
 
         let timestamp = clean_timestamp(timestamp);
 
-        if previous_timestamp.is_none() && height > 0 {
+        if previous_timestamp.is_none() && !height.is_first() {
             panic!("Shouldn't be possible");
         }
 
@@ -364,7 +364,7 @@ impl PriceDatasets {
                     .unwrap_or_else(|_| {
                         self.get_from_har_binance(timestamp, previous_timestamp)
                             .unwrap_or_else(|_| {
-                                let date = WNaiveDate::from_timestamp(timestamp);
+                                let date = Date::from_timestamp(timestamp);
 
                                 panic!(
                                     "Can't find the price for: height: {height} - date: {date}

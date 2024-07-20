@@ -2,19 +2,19 @@ use allocative::Allocative;
 
 use crate::{
     states::{DurableStates, OneShotStates, PriceToValue, UnrealizedState},
-    structs::{Price, WAmount},
+    structs::{Amount, Price},
 };
 
 #[derive(Default, Debug, Allocative)]
 pub struct UTXOCohortDurableStates {
     pub durable_states: DurableStates,
-    pub price_to_amount: PriceToValue<WAmount>,
+    pub price_to_amount: PriceToValue<Amount>,
 }
 
 impl UTXOCohortDurableStates {
     pub fn increment(
         &mut self,
-        amount: WAmount,
+        amount: Amount,
         utxo_count: usize,
         price: Price,
     ) -> color_eyre::Result<()> {
@@ -23,7 +23,7 @@ impl UTXOCohortDurableStates {
 
     pub fn decrement(
         &mut self,
-        amount: WAmount,
+        amount: Amount,
         utxo_count: usize,
         price: Price,
     ) -> color_eyre::Result<()> {
@@ -32,7 +32,7 @@ impl UTXOCohortDurableStates {
 
     pub fn _crement(
         &mut self,
-        amount: WAmount,
+        amount: Amount,
         utxo_count: usize,
         price: Price,
         increment: bool,

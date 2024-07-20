@@ -1,12 +1,12 @@
 use allocative::Allocative;
 use sanakirja::{direct_repr, Storable, UnsizedStorable};
 
-use super::{AddressData, AddressType, WAmount};
+use super::{AddressData, AddressType, Amount};
 
 #[derive(Debug, PartialEq, Eq, PartialOrd, Ord, Clone, Copy, Default, Allocative)]
 pub struct EmptyAddressData {
     pub address_type: AddressType,
-    pub transfered: WAmount,
+    pub transfered: Amount,
 }
 direct_repr!(EmptyAddressData);
 

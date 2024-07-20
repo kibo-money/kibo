@@ -3,7 +3,7 @@ use rayon::prelude::*;
 
 use crate::{
     datasets::ComputeData,
-    structs::{AnyBiMap, AnyDateMap, AnyHeightMap, AnyMap, WNaiveDate},
+    structs::{AnyBiMap, AnyDateMap, AnyHeightMap, AnyMap, Date, Height},
 };
 
 use super::MinInitialStates;
@@ -11,23 +11,23 @@ use super::MinInitialStates;
 pub trait AnyDataset {
     fn get_min_initial_states(&self) -> &MinInitialStates;
 
-    fn needs_insert(&self, height: usize, date: WNaiveDate) -> bool {
+    fn needs_insert(&self, height: Height, date: Date) -> bool {
         self.needs_insert_height(height) || self.needs_insert_date(date)
     }
 
     #[inline(always)]
-    fn needs_insert_height(&self, height: usize) -> bool {
+    fn needs_insert_height(&self, height: Height) -> bool {
         !self.to_all_inserted_height_map_vec().is_empty()
             && self
                 .get_min_initial_states()
                 .inserted
                 .first_unsafe_height
-                .unwrap_or(0)
+                .unwrap_or(Height::ZERO)
                 <= height
     }
 
     #[inline(always)]
-    fn needs_insert_date(&self, date: WNaiveDate) -> bool {
+    fn needs_insert_date(&self, date: Date) -> bool {
         !self.to_all_inserted_date_map_vec().is_empty()
             && self
                 .get_min_initial_states()
@@ -117,18 +117,18 @@ pub trait AnyDataset {
     }
 
     #[inline(always)]
-    fn should_compute_height(&self, height: usize) -> bool {
+    fn should_compute_height(&self, height: Height) -> bool {
         !self.to_all_computed_height_map_vec().is_empty()
             && self
                 .get_min_initial_states()
                 .computed
                 .first_unsafe_height
-                .unwrap_or(0)
+                .unwrap_or(Height::ZERO)
                 <= height
     }
 
     #[inline(always)]
-    fn should_compute_date(&self, date: WNaiveDate) -> bool {
+    fn should_compute_date(&self, date: Date) -> bool {
         !self.to_all_computed_date_map_vec().is_empty()
             && self
                 .get_min_initial_states()

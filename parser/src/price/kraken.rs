@@ -5,7 +5,7 @@ use serde_json::Value;
 
 use crate::{
     datasets::OHLC,
-    structs::WNaiveDate,
+    structs::Date,
     utils::{log, retry},
 };
 
@@ -66,7 +66,7 @@ impl Kraken {
         )
     }
 
-    pub fn fetch_daily_prices() -> color_eyre::Result<BTreeMap<WNaiveDate, OHLC>> {
+    pub fn fetch_daily_prices() -> color_eyre::Result<BTreeMap<Date, OHLC>> {
         log("fetch kraken daily");
 
         retry(
@@ -91,9 +91,8 @@ impl Kraken {
                     .map(|value| {
                         let array = value.as_array().unwrap();
 
-                        let date = WNaiveDate::from_timestamp(
-                            array.first().unwrap().as_u64().unwrap() as u32,
-                        );
+                        let date =
+                            Date::from_timestamp(array.first().unwrap().as_u64().unwrap() as u32);
 
                         let get_f32 = |index: usize| {
                             array
