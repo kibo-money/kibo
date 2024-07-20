@@ -212,6 +212,51 @@ export function createCohortPresetRealizedFolder({
           },
         ],
       },
+      {
+        scale,
+        name: `Value Created`,
+        title: `${title} Value Created`,
+        description: "",
+        icon: () => IconTablerPlus,
+        bottom: [
+          {
+            title: "Value",
+            color: colors.profit,
+            datasetPath: `/${scale}-to-${datasetPrefix}value-created`,
+          },
+        ],
+      },
+      {
+        scale,
+        name: `Value Destroyed`,
+        title: `${title} Value Destroyed`,
+        description: "",
+        icon: () => IconTablerMinus,
+        bottom: [
+          {
+            title: "Value",
+            color: colors.loss,
+            datasetPath: `/${scale}-to-${datasetPrefix}value-destroyed`,
+          },
+        ],
+      },
+      {
+        scale,
+        name: `Spent Output Profit Ratio - SOPR`,
+        title: `${title} Spent Output Profit Ratio`,
+        description: "",
+        icon: () => IconTablerMathXDivideY,
+        bottom: [
+          {
+            title: "SOPR",
+            datasetPath: `/${scale}-to-${datasetPrefix}spent-output-profit-ratio`,
+            seriesType: SeriesType.Based,
+            options: {
+              base: 1,
+            },
+          },
+        ],
+      },
     ],
   };
 }
