@@ -4,6 +4,8 @@
 
 ### Parser
 
+- Global
+  - Fixed an incredibly annoying bug that made the program panic because of a wrong utxo/address durable state after a or many new datasets were added/changed after a first successful parse of the chain
 - CLI
   - Added an argument parser for improved UX with several options
 - Datasets
@@ -11,7 +13,7 @@
     - Value destroyed
     - Value created
     - Spent Output Profit Ratio (SOPR)
-  - Added the following datasets to all realized prices, price moving averages and cointime prices:
+  - Added the following ratio datasets and their variations to all prices {realized, moving average, any cointime, etc}:
     - Market Price to {X}
     - Market Price to {X} Ratio
     - Market Price to {X} Ratio 1 Week SMA

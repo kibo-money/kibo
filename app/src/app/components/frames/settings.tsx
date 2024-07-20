@@ -155,6 +155,11 @@ export function SettingsFrame({
                   name: "Anon",
                   amount: 210_000,
                 },
+                {
+                  name: "Daniel ∞/21M",
+                  url: "https://twitter.com/DanielAngelovBG",
+                  amount: 21_000,
+                },
               ]
                 .sort((a, b) =>
                   b.amount !== a.amount

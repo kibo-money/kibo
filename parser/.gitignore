@@ -16,3 +16,4 @@ benches
 
 parser.log
 config.toml
+*\ copy.rs
