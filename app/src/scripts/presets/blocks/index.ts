@@ -139,6 +139,45 @@ export function createPresets(scale: ResourceScale) {
                 },
               ],
             },
+            {
+              scale,
+              name: "Mined",
+              tree: [
+                {
+                  scale,
+                  icon: IconTablerCube,
+                  name: "Daily Sum",
+                  title: "Daily Sum Of Blocks Mined",
+                  description: "",
+                  bottom: [
+                    {
+                      title: "Target",
+                      color: colors.white,
+                      datasetPath: `/date-to-blocks-mined-1d-target`,
+                      options: {
+                        lineStyle: 3,
+                      },
+                    },
+                    {
+                      title: "1W Avg.",
+                      color: colors.momentumYellow,
+                      datasetPath: `/date-to-blocks-mined-1w-sma`,
+                      defaultVisible: false,
+                    },
+                    {
+                      title: "1M Avg.",
+                      color: colors.bitcoin,
+                      datasetPath: `/date-to-blocks-mined-1m-sma`,
+                    },
+                    {
+                      title: "Mined",
+                      color: colors.darkBitcoin,
+                      datasetPath: `/date-to-blocks-mined`,
+                    },
+                  ],
+                },
+              ],
+            },
           ]
         : [
             {

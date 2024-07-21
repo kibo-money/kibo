@@ -35,6 +35,27 @@ pub trait AnyDateMap: AnyMap {
     fn as_any_mut_map(&mut self) -> &mut dyn AnyMap;
 }
 
+#[inline(always)]
+pub fn date_map_vec_to_any_date_map_vec<T>(
+    vec: Vec<&DateMap<T>>,
+) -> impl Iterator<Item = &(dyn AnyDateMap + Send + Sync)>
+where
+    T: MapValue,
+{
+    vec.into_iter()
+        .map(|map| map as &(dyn AnyDateMap + Send + Sync))
+}
+
+#[inline(always)]
+pub fn date_map_vec_to_mut_any_date_map_vec<T>(
+    vec: Vec<&mut DateMap<T>>,
+) -> impl Iterator<Item = &mut (dyn AnyDateMap)>
+where
+    T: MapValue,
+{
+    vec.into_iter().map(|map| map as &mut dyn AnyDateMap)
+}
+
 impl<T> AnyDateMap for DateMap<T>
 where
     T: MapValue,

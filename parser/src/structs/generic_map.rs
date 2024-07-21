@@ -11,10 +11,14 @@ use std::{
 use allocative::Allocative;
 use bincode::{Decode, Encode};
 use itertools::Itertools;
-use ordered_float::{FloatCore, OrderedFloat};
+use ordered_float::OrderedFloat;
 use serde::{de::DeserializeOwned, Serialize};
 
-use crate::{log, utils::LossyFrom, Serialization};
+use crate::{
+    log,
+    utils::{get_percentile, LossyFrom},
+    Serialization,
+};
 
 use super::{AnyMap, MapValue};
 
@@ -693,28 +697,31 @@ where
 
     pub fn multi_insert_percentage_change(&mut self, keys: &[Key], source: &mut Self, len: usize)
     where
-        Value: Sub<Output = Value> + FloatCore,
+        Value: Sub<Output = Value> + LossyFrom<f32>,
+        f32: LossyFrom<Value>,
     {
-        let one = Value::from(1.0).unwrap();
-        let hundred = Value::from(100.0).unwrap();
+        let one = 1.0;
+        let hundred = 100.0;
 
         keys.iter().for_each(|key| {
-            let previous_value = key
-                .checked_sub(len)
-                .and_then(|previous_key| source.get_or_import(&previous_key))
-                .unwrap_or_default();
+            let previous_value = f32::lossy_from(
+                key.checked_sub(len)
+                    .and_then(|previous_key| source.get_or_import(&previous_key))
+                    .unwrap_or_default(),
+            );
 
-            let last_value = source.get_or_import(key).unwrap();
+            let last_value = f32::lossy_from(source.get_or_import(key).unwrap());
 
             let percentage_change = ((last_value / previous_value) - one) * hundred;
 
-            self.insert(*key, percentage_change);
+            self.insert(*key, Value::lossy_from(percentage_change));
         });
     }
 
     pub fn multi_insert_median(&mut self, keys: &[Key], source: &mut Self, len: Option<usize>)
     where
-        Value: FloatCore,
+        Value: LossyFrom<f32>,
+        f32: LossyFrom<Value>,
     {
         source.multi_insert_percentile(keys, vec![(self, 0.5)], len);
     }
@@ -725,7 +732,8 @@ where
         mut map_and_percentiles: Vec<(&mut Self, f32)>,
         len: Option<usize>,
     ) where
-        Value: FloatCore,
+        Value: LossyFrom<f32>,
+        f32: LossyFrom<Value>,
     {
         if len.map_or(false, |size| size < 3) {
             panic!("Computing a percentile for a size lower than 3 is useless");
@@ -736,8 +744,7 @@ where
 
         let min_percentile_key = Key::min_percentile_key();
 
-        let nan = Value::from(f32::NAN).unwrap();
-        let two = Value::from(2.0).unwrap();
+        let nan = Value::lossy_from(f32::NAN);
 
         keys.iter().cloned().try_for_each(|key| {
             if key < min_percentile_key {
@@ -753,8 +760,9 @@ where
                     let mut vec = start
                         .iter_up_to(&key)
                         .flat_map(|key| self.get_or_import(&key))
+                        .map(|v| f32::lossy_from(v))
                         .filter(|f| !f.is_nan())
-                        .map(|f| OrderedFloat(f))
+                        .map(OrderedFloat)
                         .collect_vec();
 
                     if len.is_some() {
@@ -765,7 +773,7 @@ where
 
                     sorted_vec.replace(vec);
                 } else {
-                    let float_value = self.get_or_import(&key).unwrap();
+                    let float_value = f32::lossy_from(self.get_or_import(&key).unwrap());
 
                     if !float_value.is_nan() {
                         let float_value = OrderedFloat(float_value);
@@ -797,8 +805,6 @@ where
 
                 let vec = sorted_vec.as_ref().unwrap();
 
-                let len = vec.len();
-
                 map_and_percentiles
                     .iter_mut()
                     .for_each(|(map, percentile)| {
@@ -806,47 +812,9 @@ where
                             panic!("The percentile should be between 0.0 and 1.0");
                         }
 
-                        let value = {
-                            if len < 2 {
-                                nan
-                            } else {
-                                let index = (len - 1) as f32 * *percentile;
+                        let float_value = get_percentile::<OrderedFloat<f32>>(vec, *percentile).0;
 
-                                let fract = index.fract();
-
-                                if fract != 0.0 {
-                                    (vec.get(index.ceil() as usize)
-                                        .unwrap_or_else(|| {
-                                            dbg!(vec, index, &self.path_all, &self.path_all, len);
-                                            panic!()
-                                        })
-                                        .0
-                                        + vec
-                                            .get(index as usize)
-                                            .unwrap_or_else(|| {
-                                                dbg!(
-                                                    vec,
-                                                    index,
-                                                    &self.path_all,
-                                                    &self.path_all,
-                                                    len
-                                                );
-                                                panic!()
-                                            })
-                                            .0)
-                                        / two
-                                } else {
-                                    vec.get(index as usize)
-                                        .unwrap_or_else(|| {
-                                            dbg!(vec, index);
-                                            panic!();
-                                        })
-                                        .0
-                                }
-                            }
-                        };
-
-                        (*map).insert(key, value);
+                        (*map).insert(key, Value::lossy_from(float_value));
                     });
             } else {
                 map_and_percentiles.iter_mut().for_each(|(map, _)| {

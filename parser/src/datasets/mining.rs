@@ -1,15 +1,20 @@
 use allocative::Allocative;
+use itertools::Itertools;
+use ordered_float::OrderedFloat;
 
 use crate::{
     bitcoin::TARGET_BLOCKS_PER_DAY,
     datasets::AnyDataset,
     structs::{
-        Amount, AnyBiMap, AnyDateMap, AnyHeightMap, BiMap, DateMap, Height, HeightMap, MapKey,
+        date_map_vec_to_any_date_map_vec, date_map_vec_to_mut_any_date_map_vec, Amount, AnyBiMap,
+        AnyDateMap, AnyHeightMap, BiMap, DateMap, Height, HeightMap, MapKey,
     },
     utils::{BYTES_IN_MB, ONE_DAY_IN_DAYS, ONE_MONTH_IN_DAYS, ONE_WEEK_IN_DAYS, ONE_YEAR_IN_DAYS},
 };
 
-use super::{ComputeData, InsertData, MinInitialStates};
+use super::{
+    ComputeData, DateRecapDataset, InsertData, MinInitialStates, RecapDataset, RecapOptions,
+};
 
 #[derive(Allocative)]
 pub struct MiningDataset {
@@ -50,10 +55,14 @@ pub struct MiningDataset {
     pub last_subsidy: DateMap<f64>,
     pub last_subsidy_in_dollars: DateMap<f32>,
     pub difficulty: BiMap<f64>,
-    pub block_size: HeightMap<f32>,   // in MB
-    pub block_weight: HeightMap<f32>, // in MB
+    pub block_size: HeightMap<f32>,                // in MB
+    pub block_size_recap: DateRecapDataset<f32>,   // in MB
+    pub block_weight: HeightMap<f32>,              // in MB
+    pub block_weight_recap: DateRecapDataset<f32>, // in MB
     pub block_vbytes: HeightMap<u64>,
-    pub block_interval: HeightMap<u32>, // in s
+    pub block_vbytes_recap: DateRecapDataset<u64>,
+    pub block_interval: HeightMap<u32>,              // in s
+    pub block_interval_recap: DateRecapDataset<u32>, // in s
 
     // Computed
     pub annualized_issuance: BiMap<f64>, // Same as subsidy_1y_sum
@@ -173,19 +182,59 @@ impl MiningDataset {
             difficulty: BiMap::new_bin(1, &f("difficulty")),
             difficulty_adjustment: DateMap::new_bin(1, &f("difficulty_adjustment")),
             block_size: HeightMap::new_bin(1, &f("block_size")),
-            //
-            // block_size_1d_sma: HeightMap::new_bin(1, &f("block_size")),
-            // block_size_1d_median: HeightMap::new_bin(1, &f("block_size")),
-            //
+            block_size_recap: RecapDataset::import(
+                &f("block_size_1d"),
+                RecapOptions::default()
+                    .add_average()
+                    .add_max()
+                    .add_90p()
+                    .add_75p()
+                    .add_median()
+                    .add_25p()
+                    .add_10p()
+                    .add_min(),
+            )?,
             cumulative_block_size: BiMap::new_bin(1, &f("cumulative_block_size")),
             block_weight: HeightMap::new_bin(1, &f("block_weight")),
-            //
-            // block_weight_1d_sma: HeightMap::new_bin(1, &f("block_weight")),
+            block_weight_recap: RecapDataset::import(
+                &f("block_weight_1d"),
+                RecapOptions::default()
+                    .add_average()
+                    .add_max()
+                    .add_90p()
+                    .add_75p()
+                    .add_median()
+                    .add_25p()
+                    .add_10p()
+                    .add_min(),
+            )?,
             block_vbytes: HeightMap::new_bin(1, &f("block_vbytes")),
+            block_vbytes_recap: RecapDataset::import(
+                &f("block_vbytes_1d"),
+                RecapOptions::default()
+                    .add_average()
+                    .add_max()
+                    .add_90p()
+                    .add_75p()
+                    .add_median()
+                    .add_25p()
+                    .add_10p()
+                    .add_min(),
+            )?,
             // block_vbytes_1d_sma: HeightMap::new_bin(1, &f("block_vbytes")),
             block_interval: HeightMap::new_bin(2, &f("block_interval")),
-            // block_interval_1d_sma: HeightMap::new_bin(2, &f("block_interval")),
-            //
+            block_interval_recap: RecapDataset::import(
+                &f("block_interval_1d"),
+                RecapOptions::default()
+                    .add_average()
+                    .add_max()
+                    .add_90p()
+                    .add_75p()
+                    .add_median()
+                    .add_25p()
+                    .add_10p()
+                    .add_min(),
+            )?,
             hash_rate: DateMap::new_bin(1, &f("hash_rate")),
             hash_rate_1w_sma: DateMap::new_bin(1, &f("hash_rate_1w_sma")),
             hash_rate_1m_sma: DateMap::new_bin(1, &f("hash_rate_1m_sma")),
@@ -295,6 +344,7 @@ impl MiningDataset {
     pub fn compute(
         &mut self,
         &ComputeData { heights, dates, .. }: &ComputeData,
+        first_height: &mut DateMap<Height>,
         last_height: &mut DateMap<Height>,
     ) {
         self.blocks_mined_1w_sum.multi_insert_last_x_sum(
@@ -491,6 +541,38 @@ impl MiningDataset {
             &mut self.difficulty.date,
             ONE_DAY_IN_DAYS,
         );
+
+        dates.iter().for_each(|date| {
+            let first = first_height.get_or_import(date).unwrap();
+            let last = last_height.get_or_import(date).unwrap();
+
+            self.block_size_recap.compute(
+                *date,
+                &mut self.block_vbytes.get_or_import_range_inclusive(first, last),
+            );
+
+            self.block_weight_recap.compute(
+                *date,
+                &mut self
+                    .block_weight
+                    .get_or_import_range_inclusive(first, last)
+                    .into_iter()
+                    .map(OrderedFloat)
+                    .collect_vec(),
+            );
+
+            self.block_vbytes_recap.compute(
+                *date,
+                &mut self.block_vbytes.get_or_import_range_inclusive(first, last),
+            );
+
+            self.block_interval_recap.compute(
+                *date,
+                &mut self
+                    .block_interval
+                    .get_or_import_range_inclusive(first, last),
+            );
+        })
     }
 }
 
@@ -600,8 +682,8 @@ impl AnyDataset for MiningDataset {
     }
 
     fn to_computed_date_map_vec(&self) -> Vec<&(dyn AnyDateMap + Send + Sync)> {
-        vec![
-            &self.blocks_mined_1d_target,
+        [
+            &self.blocks_mined_1d_target as &(dyn AnyDateMap + Send + Sync),
             &self.blocks_mined_1w_sma,
             &self.blocks_mined_1m_sma,
             &self.blocks_mined_1w_sum,
@@ -625,11 +707,25 @@ impl AnyDataset for MiningDataset {
             &self.puell_multiple,
             &self.difficulty_adjustment,
         ]
+        .into_iter()
+        .chain(date_map_vec_to_any_date_map_vec(
+            self.block_size_recap.as_vec(),
+        ))
+        .chain(date_map_vec_to_any_date_map_vec(
+            self.block_vbytes_recap.as_vec(),
+        ))
+        .chain(date_map_vec_to_any_date_map_vec(
+            self.block_weight_recap.as_vec(),
+        ))
+        .chain(date_map_vec_to_any_date_map_vec(
+            self.block_interval_recap.as_vec(),
+        ))
+        .collect_vec()
     }
 
     fn to_computed_mut_date_map_vec(&mut self) -> Vec<&mut dyn AnyDateMap> {
-        vec![
-            &mut self.blocks_mined_1d_target,
+        [
+            &mut self.blocks_mined_1d_target as &mut dyn AnyDateMap,
             &mut self.blocks_mined_1w_sma,
             &mut self.blocks_mined_1m_sma,
             &mut self.blocks_mined_1w_sum,
@@ -653,5 +749,19 @@ impl AnyDataset for MiningDataset {
             &mut self.puell_multiple,
             &mut self.difficulty_adjustment,
         ]
+        .into_iter()
+        .chain(date_map_vec_to_mut_any_date_map_vec(
+            self.block_size_recap.as_mut_vec(),
+        ))
+        .chain(date_map_vec_to_mut_any_date_map_vec(
+            self.block_vbytes_recap.as_mut_vec(),
+        ))
+        .chain(date_map_vec_to_mut_any_date_map_vec(
+            self.block_weight_recap.as_mut_vec(),
+        ))
+        .chain(date_map_vec_to_mut_any_date_map_vec(
+            self.block_interval_recap.as_mut_vec(),
+        ))
+        .collect_vec()
     }
 }

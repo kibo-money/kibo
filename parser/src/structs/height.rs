@@ -45,6 +45,12 @@ impl Height {
     pub fn is_safe(&self, block_count: usize) -> bool {
         **self < (block_count - NUMBER_OF_UNSAFE_BLOCKS) as u32
     }
+
+    pub fn iter_range_inclusive(first: Height, last: Height) -> impl Iterator<Item = Height> {
+        let range = (*first)..=(*last);
+
+        range.into_iter().map(Height::new)
+    }
 }
 
 impl PartialEq<u64> for Height {

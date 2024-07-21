@@ -1,32 +1,26 @@
+use std::{iter::Sum, ops::Add};
+
 use allocative::Allocative;
 
 use crate::{
-    datasets::{AnyDataset, ComputeData, MinInitialStates},
-    structs::{AnyDateMap, MapValue},
-    DateMap, HeightMap,
+    structs::{DateMapChunkId, GenericMap, MapKey, MapSerialized, MapValue},
+    utils::{get_percentile, LossyFrom},
+    Date, MapChunkId, SerializedBTreeMap,
 };
 
-#[derive(Allocative)]
-pub enum RecapTime {
-    Insert,
-    Compute,
-}
+pub type DateRecapDataset<T> = RecapDataset<Date, T, DateMapChunkId, SerializedBTreeMap<Date, T>>;
 
 #[derive(Allocative)]
-pub struct RecapDataset<T> {
-    min_initial_states: MinInitialStates,
-    time: RecapTime,
-
-    // Computed
-    average: Option<DateMap<T>>,
-    sum: Option<DateMap<T>>,
-    max: Option<DateMap<T>>,
-    _90p: Option<DateMap<T>>,
-    _75p: Option<DateMap<T>>,
-    median: Option<DateMap<T>>,
-    _25p: Option<DateMap<T>>,
-    _10p: Option<DateMap<T>>,
-    min: Option<DateMap<T>>,
+pub struct RecapDataset<Key, Value, ChunkId, Serialized> {
+    average: Option<GenericMap<Key, Value, ChunkId, Serialized>>,
+    sum: Option<GenericMap<Key, Value, ChunkId, Serialized>>,
+    max: Option<GenericMap<Key, Value, ChunkId, Serialized>>,
+    _90p: Option<GenericMap<Key, Value, ChunkId, Serialized>>,
+    _75p: Option<GenericMap<Key, Value, ChunkId, Serialized>>,
+    median: Option<GenericMap<Key, Value, ChunkId, Serialized>>,
+    _25p: Option<GenericMap<Key, Value, ChunkId, Serialized>>,
+    _10p: Option<GenericMap<Key, Value, ChunkId, Serialized>>,
+    min: Option<GenericMap<Key, Value, ChunkId, Serialized>>,
 }
 
 #[derive(Default)]
@@ -43,132 +37,141 @@ pub struct RecapOptions {
 }
 
 impl RecapOptions {
-    pub fn add_min(&mut self) {
+    pub fn add_min(mut self) -> Self {
         self.min = true;
+        self
     }
 
-    pub fn add_max(&mut self) {
+    pub fn add_max(mut self) -> Self {
         self.max = true;
+        self
     }
 
-    pub fn add_median(&mut self) {
+    pub fn add_median(mut self) -> Self {
         self.median = true;
+        self
     }
 
-    pub fn add_average(&mut self) {
+    pub fn add_average(mut self) -> Self {
         self.average = true;
+        self
     }
 
-    pub fn add_sum(&mut self) {
+    #[allow(unused)]
+    pub fn add_sum(mut self) -> Self {
         self.sum = true;
+        self
     }
 
-    pub fn add_90p(&mut self) {
+    pub fn add_90p(mut self) -> Self {
         self._90p = true;
+        self
     }
 
-    pub fn add_75p(&mut self) {
+    pub fn add_75p(mut self) -> Self {
         self._75p = true;
+        self
     }
 
-    pub fn add_25p(&mut self) {
+    pub fn add_25p(mut self) -> Self {
         self._25p = true;
+        self
     }
 
-    pub fn add_10p(&mut self) {
+    pub fn add_10p(mut self) -> Self {
         self._10p = true;
+        self
     }
 }
 
-impl<T> RecapDataset<T>
+impl<Key, Value, ChunkId, Serialized> RecapDataset<Key, Value, ChunkId, Serialized>
 where
-    T: MapValue,
+    Value: MapValue,
+    ChunkId: MapChunkId,
+    Key: MapKey<ChunkId>,
+    Serialized: MapSerialized<Key, Value, ChunkId>,
 {
-    pub fn import(
-        parent_path: &str,
-        time: RecapTime,
-        options: RecapOptions,
-    ) -> color_eyre::Result<Self> {
+    pub fn import(parent_path: &str, options: RecapOptions) -> color_eyre::Result<Self> {
         let f = |s: &str| format!("{parent_path}/{s}");
 
-        let mut s = Self {
-            min_initial_states: MinInitialStates::default(),
-            time,
-
-            min: options.min.then(|| DateMap::new_bin(1, &f("min"))),
-            max: options.max.then(|| DateMap::new_bin(1, &f("max"))),
-            median: options.median.then(|| DateMap::new_bin(1, &f("median"))),
-            average: options.average.then(|| DateMap::new_bin(1, &f("average"))),
-            sum: options.sum.then(|| DateMap::new_bin(1, &f("sum"))),
-            _90p: options._90p.then(|| DateMap::new_bin(1, &f("90p"))),
-            _75p: options._75p.then(|| DateMap::new_bin(1, &f("75p"))),
-            _25p: options._25p.then(|| DateMap::new_bin(1, &f("25p"))),
-            _10p: options._10p.then(|| DateMap::new_bin(1, &f("10p"))),
+        let s = Self {
+            min: options.min.then(|| GenericMap::new_bin(1, &f("min"))),
+            max: options.max.then(|| GenericMap::new_bin(1, &f("max"))),
+            median: options.median.then(|| GenericMap::new_bin(1, &f("median"))),
+            average: options
+                .average
+                .then(|| GenericMap::new_bin(1, &f("average"))),
+            sum: options.sum.then(|| GenericMap::new_bin(1, &f("sum"))),
+            _90p: options._90p.then(|| GenericMap::new_bin(1, &f("90p"))),
+            _75p: options._75p.then(|| GenericMap::new_bin(1, &f("75p"))),
+            _25p: options._25p.then(|| GenericMap::new_bin(1, &f("25p"))),
+            _10p: options._10p.then(|| GenericMap::new_bin(1, &f("10p"))),
         };
-
-        s.min_initial_states
-            .consume(MinInitialStates::compute_from_dataset(&s));
 
         Ok(s)
     }
 
-    pub fn compute(
-        &mut self,
-        &ComputeData { heights, dates, .. }: &ComputeData,
-        source: &mut HeightMap<f32>,
-    ) {
-        dates.iter().enumerate().for_each(|(index, date)| {
-            // let heights = heights_by_date.get(index).unwrap();
+    pub fn compute<'a, Value2>(&mut self, key: Key, values: &'a mut [Value2])
+    where
+        Value: LossyFrom<f32> + LossyFrom<Value2>,
+        Value2: Sum<&'a Value2> + Ord + Add<Output = Value2> + Clone + Copy + LossyFrom<f32>,
+        f32: LossyFrom<Value> + LossyFrom<Value2>,
+    {
+        if self.max.is_some()
+            || self._90p.is_some()
+            || self._75p.is_some()
+            || self.median.is_some()
+            || self._25p.is_some()
+            || self._10p.is_some()
+            || self.min.is_some()
+        {
+            values.sort_unstable();
 
-            if let Some(sum) = self.sum.as_ref() {
-                // v.push(sum);
+            if let Some(max) = self.max.as_mut() {
+                max.insert(key, Value::lossy_from(*values.last().unwrap()));
             }
 
-            if let Some(average) = self.average.as_ref() {
-                // v.push(average);
+            if let Some(_90p) = self._90p.as_mut() {
+                _90p.insert(key, Value::lossy_from(get_percentile(values, 0.90)));
             }
 
-            if let Some(max) = self.max.as_ref() {
-                // v.push(max);
+            if let Some(_75p) = self._75p.as_mut() {
+                _75p.insert(key, Value::lossy_from(get_percentile(values, 0.75)));
             }
 
-            if let Some(_90p) = self._90p.as_ref() {
-                // v.push(_90p);
+            if let Some(median) = self.median.as_mut() {
+                median.insert(key, Value::lossy_from(get_percentile(values, 0.50)));
             }
 
-            if let Some(_75p) = self._75p.as_ref() {
-                // v.push(_75p);
+            if let Some(_25p) = self._25p.as_mut() {
+                _25p.insert(key, Value::lossy_from(get_percentile(values, 0.25)));
             }
 
-            if let Some(median) = self.median.as_ref() {
-                // v.push(median);
+            if let Some(_10p) = self._10p.as_mut() {
+                _10p.insert(key, Value::lossy_from(get_percentile(values, 0.10)));
             }
 
-            if let Some(_25p) = self._25p.as_ref() {
-                // v.push(_25p);
+            if let Some(min) = self.min.as_mut() {
+                min.insert(key, Value::lossy_from(*values.first().unwrap()));
+            }
+        }
+
+        if self.sum.is_some() || self.average.is_some() {
+            let sum = Value::lossy_from(values.iter().sum::<Value2>());
+
+            if let Some(sum_map) = self.sum.as_mut() {
+                sum_map.insert(key, sum);
             }
 
-            if let Some(_10p) = self._10p.as_ref() {
-                // v.push(_10p);
+            if let Some(average) = self.average.as_mut() {
+                let len = values.len() as f32;
+                average.insert(key, Value::lossy_from(f32::lossy_from(sum) / len));
             }
-
-            if let Some(min) = self.min.as_ref() {
-                // v.push(min);
-            }
-        });
+        }
     }
-}
 
-impl<T> AnyDataset for RecapDataset<T>
-where
-    T: MapValue,
-{
-    fn get_min_initial_states(&self) -> &MinInitialStates {
-        &self.min_initial_states
-    }
-
-    fn to_computed_date_map_vec(&self) -> Vec<&(dyn AnyDateMap + Send + Sync)> {
-        let mut v: Vec<&(dyn AnyDateMap + Send + Sync)> = vec![];
+    pub fn as_vec(&self) -> Vec<&GenericMap<Key, Value, ChunkId, Serialized>> {
+        let mut v = vec![];
 
         if let Some(min) = self.min.as_ref() {
             v.push(min);
@@ -209,8 +212,8 @@ where
         v
     }
 
-    fn to_computed_mut_date_map_vec(&mut self) -> Vec<&mut dyn AnyDateMap> {
-        let mut v: Vec<&mut dyn AnyDateMap> = vec![];
+    pub fn as_mut_vec(&mut self) -> Vec<&mut GenericMap<Key, Value, ChunkId, Serialized>> {
+        let mut v = vec![];
 
         if let Some(min) = self.min.as_mut() {
             v.push(min);
@@ -251,3 +254,99 @@ where
         v
     }
 }
+
+// impl<Key, Value, ChunkId, Serialized> AnyDataset for RecapDataset<Key, Value, ChunkId, Serialized>
+// where
+//     Value: MapValue,
+//     ChunkId: MapChunkId,
+//     Key: MapKey<ChunkId>,
+//     Serialized: MapSerialized<Key, Value, ChunkId>,
+// {
+//     fn get_min_initial_states(&self) -> &MinInitialStates {
+//         &self.min_initial_states
+//     }
+
+//     fn to_computed_date_map_vec(&self) -> Vec<&(dyn AnyDateMap + Send + Sync)> {
+//         let mut v: Vec<&(dyn AnyDateMap + Send + Sync)> = vec![];
+
+//         if let Some(min) = self.min.as_ref() {
+//             v.push(min);
+//         }
+
+//         if let Some(max) = self.max.as_ref() {
+//             v.push(max);
+//         }
+
+//         if let Some(median) = self.median.as_ref() {
+//             v.push(median);
+//         }
+
+//         if let Some(average) = self.average.as_ref() {
+//             v.push(average);
+//         }
+
+//         if let Some(sum) = self.sum.as_ref() {
+//             v.push(sum);
+//         }
+
+//         if let Some(_90p) = self._90p.as_ref() {
+//             v.push(_90p);
+//         }
+
+//         if let Some(_75p) = self._75p.as_ref() {
+//             v.push(_75p);
+//         }
+
+//         if let Some(_25p) = self._25p.as_ref() {
+//             v.push(_25p);
+//         }
+
+//         if let Some(_10p) = self._10p.as_ref() {
+//             v.push(_10p);
+//         }
+
+//         v
+//     }
+
+//     fn to_computed_mut_date_map_vec(&mut self) -> Vec<&mut dyn AnyDateMap> {
+//         let mut v: Vec<&mut dyn AnyDateMap> = vec![];
+
+//         if let Some(min) = self.min.as_mut() {
+//             v.push(min);
+//         }
+
+//         if let Some(max) = self.max.as_mut() {
+//             v.push(max);
+//         }
+
+//         if let Some(median) = self.median.as_mut() {
+//             v.push(median);
+//         }
+
+//         if let Some(average) = self.average.as_mut() {
+//             v.push(average);
+//         }
+
+//         if let Some(sum) = self.sum.as_mut() {
+//             v.push(sum);
+//         }
+
+//         if let Some(_90p) = self._90p.as_mut() {
+//             v.push(_90p);
+//         }
+
+//         if let Some(_75p) = self._75p.as_mut() {
+//             v.push(_75p);
+//         }
+
+//         if let Some(_25p) = self._25p.as_mut() {
+//             v.push(_25p);
+//         }
+
+//         if let Some(_10p) = self._10p.as_mut() {
+//             v.push(_10p);
+//         }
+
+//         v
+//     }
+// }

@@ -4,24 +4,23 @@ use std::{
 };
 
 use allocative::Allocative;
-use ordered_float::FloatCore;
 
 use crate::{bitcoin::TARGET_BLOCKS_PER_DAY, utils::LossyFrom};
 
 use super::{AnyDateMap, AnyHeightMap, AnyMap, Date, DateMap, Height, HeightMap, MapValue};
 
 #[derive(Default, Allocative)]
-pub struct BiMap<T>
+pub struct BiMap<Value>
 where
-    T: MapValue,
+    Value: MapValue,
 {
-    pub height: HeightMap<T>,
-    pub date: DateMap<T>,
+    pub height: HeightMap<Value>,
+    pub date: DateMap<Value>,
 }
 
-impl<T> BiMap<T>
+impl<Value> BiMap<Value>
 where
-    T: MapValue,
+    Value: MapValue,
 {
     pub fn new_bin(version: u32, path: &str) -> Self {
         Self {
@@ -39,7 +38,7 @@ where
 
     pub fn date_insert_sum_range(&mut self, date: Date, date_blocks_range: &RangeInclusive<u32>)
     where
-        T: Sum,
+        Value: Sum,
     {
         self.date
             .insert(date, self.height.sum_range(date_blocks_range));
@@ -51,7 +50,7 @@ where
         first_height: &mut DateMap<Height>,
         last_height: &mut DateMap<Height>,
     ) where
-        T: Sum,
+        Value: Sum,
     {
         dates.iter().for_each(|date| {
             let first_height = first_height.get_or_import(date).unwrap();
@@ -62,7 +61,7 @@ where
         })
     }
 
-    pub fn multi_insert_const(&mut self, heights: &[Height], dates: &[Date], constant: T) {
+    pub fn multi_insert_const(&mut self, heights: &[Height], dates: &[Date], constant: Value) {
         self.height.multi_insert_const(heights, constant);
 
         self.date.multi_insert_const(dates, constant);
@@ -75,8 +74,8 @@ where
         source: &mut BiMap<K>,
         transform: &F,
     ) where
-        T: Div<Output = T>,
-        F: Fn(K) -> T,
+        Value: Div<Output = Value>,
+        F: Fn(K) -> Value,
         K: MapValue,
     {
         self.height
@@ -95,8 +94,8 @@ where
     ) where
         A: MapValue,
         B: MapValue,
-        T: LossyFrom<A> + LossyFrom<B>,
-        T: Add<Output = T>,
+        Value: LossyFrom<A> + LossyFrom<B>,
+        Value: Add<Output = Value>,
     {
         self.height
             .multi_insert_add(heights, &mut added.height, &mut adder.height);
@@ -113,8 +112,8 @@ where
     ) where
         A: MapValue,
         B: MapValue,
-        T: LossyFrom<A> + LossyFrom<B>,
-        T: Sub<Output = T>,
+        Value: LossyFrom<A> + LossyFrom<B>,
+        Value: Sub<Output = Value>,
     {
         self.height
             .multi_insert_subtract(heights, &mut subtracted.height, &mut subtracter.height);
@@ -132,8 +131,8 @@ where
     ) where
         A: MapValue,
         B: MapValue,
-        T: LossyFrom<A> + LossyFrom<B>,
-        T: Mul<Output = T>,
+        Value: LossyFrom<A> + LossyFrom<B>,
+        Value: Mul<Output = Value>,
     {
         self.height
             .multi_insert_multiply(heights, &mut multiplied.height, &mut multiplier.height);
@@ -150,8 +149,8 @@ where
     ) where
         A: MapValue,
         B: MapValue,
-        T: LossyFrom<A> + LossyFrom<B>,
-        T: Div<Output = T> + Mul<Output = T> + From<u8>,
+        Value: LossyFrom<A> + LossyFrom<B>,
+        Value: Div<Output = Value> + Mul<Output = Value> + From<u8>,
     {
         self.height
             .multi_insert_divide(heights, &mut divided.height, &mut divider.height);
@@ -168,8 +167,8 @@ where
     ) where
         A: MapValue,
         B: MapValue,
-        T: LossyFrom<A> + LossyFrom<B>,
-        T: Div<Output = T> + Mul<Output = T> + From<u8>,
+        Value: LossyFrom<A> + LossyFrom<B>,
+        Value: Div<Output = Value> + Mul<Output = Value> + From<u8>,
     {
         self.height
             .multi_insert_percentage(heights, &mut divided.height, &mut divider.height);
@@ -184,8 +183,8 @@ where
         source: &mut BiMap<K>,
     ) where
         K: MapValue,
-        T: LossyFrom<K>,
-        T: Add<Output = T> + Sub<Output = T>,
+        Value: LossyFrom<K>,
+        Value: Add<Output = Value> + Sub<Output = Value>,
     {
         self.height
             .multi_insert_cumulative(heights, &mut source.height);
@@ -201,8 +200,8 @@ where
         days: usize,
     ) where
         K: MapValue,
-        T: LossyFrom<K>,
-        T: Add<Output = T> + Sub<Output = T>,
+        Value: LossyFrom<K>,
+        Value: Add<Output = Value> + Sub<Output = Value>,
     {
         self.height.multi_insert_last_x_sum(
             heights,
@@ -221,7 +220,7 @@ where
         source: &mut BiMap<K>,
         days: usize,
     ) where
-        T: Into<f32> + From<f32>,
+        Value: Into<f32> + From<f32>,
         K: MapValue + Sum,
         f32: LossyFrom<K>,
     {
@@ -238,10 +237,10 @@ where
         &mut self,
         heights: &[Height],
         dates: &[Date],
-        source: &mut BiMap<T>,
+        source: &mut BiMap<Value>,
         days: usize,
     ) where
-        T: Sub<Output = T>,
+        Value: Sub<Output = Value>,
     {
         self.height.multi_insert_net_change(
             heights,
@@ -256,10 +255,11 @@ where
         &mut self,
         heights: &[Height],
         dates: &[Date],
-        source: &mut BiMap<T>,
+        source: &mut BiMap<Value>,
         days: Option<usize>,
     ) where
-        T: FloatCore,
+        Value: LossyFrom<f32>,
+        f32: LossyFrom<Value>,
     {
         self.height.multi_insert_median(
             heights,
@@ -274,10 +274,11 @@ where
         &mut self,
         heights: &[Height],
         dates: &[Date],
-        mut map_and_percentiles: Vec<(&mut BiMap<T>, f32)>,
+        mut map_and_percentiles: Vec<(&mut BiMap<Value>, f32)>,
         days: Option<usize>,
     ) where
-        T: FloatCore,
+        Value: LossyFrom<f32>,
+        f32: LossyFrom<Value>,
     {
         let mut date_map_and_percentiles = vec![];
         let mut height_map_and_percentiles = vec![];

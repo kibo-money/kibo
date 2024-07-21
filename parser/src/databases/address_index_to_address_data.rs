@@ -12,7 +12,7 @@ use crate::{
     utils::time,
 };
 
-use super::{databases_folder_path, AnyDatabaseGroup, Metadata, SizedDatabase};
+use super::{AnyDatabaseGroup, Metadata, SizedDatabase};
 
 type Key = u32;
 type Value = AddressData;

@@ -199,8 +199,11 @@ impl AllDatasets {
         }
 
         if self.mining.should_compute(&compute_data) {
-            self.mining
-                .compute(&compute_data, &mut self.date_metadata.last_height);
+            self.mining.compute(
+                &compute_data,
+                &mut self.date_metadata.first_height,
+                &mut self.date_metadata.last_height,
+            );
         }
 
         // No compute needed for now
