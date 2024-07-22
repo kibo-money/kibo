@@ -5,10 +5,11 @@
 ### Parser
 
 - Global
-  - Fixed an incredibly annoying bug that made the program panic because of a wrong utxo/address durable state after a or many new datasets were added/changed after a first successful parse of the chain
-  - Fixed bug that would crash program if launched for the first time ever
+  - Improved self-hosting by:
+    - Fixing an incredibly annoying bug that made the program panic because of a wrong utxo/address durable state after a or many new datasets were added/changed after a first successful parse of the chain
+    - Fixing a bug that would crash the program if launched for the first time ever
   - Merged the core of `HeightMap` and `DateMap` structs into `GenericMap`
-  - Added `Height` struct
+  - Added `Height` struct and many others
 - CLI
   - Added an argument parser for improved UX with several options
 - Datasets
@@ -34,6 +35,11 @@
     - {X} 1% Bottom Probability
     - {X} 0.5% Bottom Probability
     - {X} 0.1% Bottom Probability
+  - Added block metadatasets and their variants (raw/sum/average/min/max/percentiles):
+    - Block size
+    - Block weight
+    - Block VBytes
+    - Block interval
 - Price
   - Improved error message when price cannot be found
 

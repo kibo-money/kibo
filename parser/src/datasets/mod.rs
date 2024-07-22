@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, ops::RangeInclusive};
+use std::{collections::BTreeMap, fs, ops::RangeInclusive};
 
 use allocative::Allocative;
 
@@ -140,7 +140,7 @@ impl AllDatasets {
         s.min_initial_states
             .consume(MinInitialStates::compute_from_datasets(&s));
 
-        s.export_path_to_type()?;
+        s.export_meta_files()?;
 
         Ok(s)
     }
@@ -263,7 +263,7 @@ impl AllDatasets {
         }
     }
 
-    pub fn export_path_to_type(&self) -> color_eyre::Result<()> {
+    pub fn export_meta_files(&self) -> color_eyre::Result<()> {
         let path_to_type: BTreeMap<&str, &str> = self
             .to_any_dataset_vec()
             .into_iter()
@@ -275,7 +275,27 @@ impl AllDatasets {
             })
             .collect();
 
-        Json::export("../datasets/disk_path_to_type.json", &path_to_type)
+        let datasets_len = path_to_type.len();
+
+        Json::export("../datasets/disk_path_to_type.json", &path_to_type)?;
+
+        let server_trigger_path = "../server/.trigger";
+
+        fs::create_dir_all(server_trigger_path)?;
+
+        let datasets_len_path = format!("{server_trigger_path}/datasets_len.txt");
+
+        if let Ok(len) = fs::read_to_string(&datasets_len_path) {
+            if let Ok(len) = len.parse::<usize>() {
+                if datasets_len == len {
+                    return Ok(());
+                }
+            }
+        }
+
+        fs::write(datasets_len_path, datasets_len.to_string())?;
+
+        Ok(())
     }
 
     pub fn export(&mut self) -> color_eyre::Result<()> {

@@ -1,4 +1,5 @@
 import { colors } from "../../utils/colors";
+import { createRecapPresets } from "../templates/recap";
 
 export function createPresets(scale: ResourceScale) {
   return {
@@ -141,42 +142,72 @@ export function createPresets(scale: ResourceScale) {
             },
             {
               scale,
-              name: "Mined",
-              tree: [
-                {
-                  scale,
-                  icon: IconTablerCube,
-                  name: "Daily Sum",
-                  title: "Daily Sum Of Blocks Mined",
-                  description: "",
-                  bottom: [
-                    {
-                      title: "Target",
-                      color: colors.white,
-                      datasetPath: `/date-to-blocks-mined-1d-target`,
-                      options: {
-                        lineStyle: 3,
-                      },
-                    },
-                    {
-                      title: "1W Avg.",
-                      color: colors.momentumYellow,
-                      datasetPath: `/date-to-blocks-mined-1w-sma`,
-                      defaultVisible: false,
-                    },
-                    {
-                      title: "1M Avg.",
-                      color: colors.bitcoin,
-                      datasetPath: `/date-to-blocks-mined-1m-sma`,
-                    },
-                    {
-                      title: "Mined",
-                      color: colors.darkBitcoin,
-                      datasetPath: `/date-to-blocks-mined`,
-                    },
-                  ],
-                },
-              ],
+              name: "Size",
+              tree: createRecapPresets({
+                scale,
+                title: "Block Size",
+                color: colors.darkWhite,
+                keySum: "/date-to-block-size-1d-sum",
+                keyAverage: "/date-to-block-size-1d-average",
+                keyMax: "/date-to-block-size-1d-max",
+                key90p: "/date-to-block-size-1d-90p",
+                key75p: "/date-to-block-size-1d-75p",
+                keyMedian: "/date-to-block-size-1d-median",
+                key25p: "/date-to-block-size-1d-25p",
+                key10p: "/date-to-block-size-1d-10p",
+                keyMin: "/date-to-block-size-1d-min",
+              }),
+            },
+            {
+              scale,
+              name: "Weight",
+              tree: createRecapPresets({
+                scale,
+                title: "Block Weight",
+                color: colors.darkWhite,
+                keyAverage: "/date-to-block-weight-1d-average",
+                keyMax: "/date-to-block-weight-1d-max",
+                key90p: "/date-to-block-weight-1d-90p",
+                key75p: "/date-to-block-weight-1d-75p",
+                keyMedian: "/date-to-block-weight-1d-median",
+                key25p: "/date-to-block-weight-1d-25p",
+                key10p: "/date-to-block-weight-1d-10p",
+                keyMin: "/date-to-block-weight-1d-min",
+              }),
+            },
+            {
+              scale,
+              name: "VBytes",
+              tree: createRecapPresets({
+                scale,
+                title: "Block VBytes",
+                color: colors.darkWhite,
+                keyAverage: "/date-to-block-vbytes-1d-average",
+                keyMax: "/date-to-block-vbytes-1d-max",
+                key90p: "/date-to-block-vbytes-1d-90p",
+                key75p: "/date-to-block-vbytes-1d-75p",
+                keyMedian: "/date-to-block-vbytes-1d-median",
+                key25p: "/date-to-block-vbytes-1d-25p",
+                key10p: "/date-to-block-vbytes-1d-10p",
+                keyMin: "/date-to-block-vbytes-1d-min",
+              }),
+            },
+            {
+              scale,
+              name: "Interval",
+              tree: createRecapPresets({
+                scale,
+                title: "Block Interval",
+                color: colors.darkWhite,
+                keyAverage: "/date-to-block-interval-1d-average",
+                keyMax: "/date-to-block-interval-1d-max",
+                key90p: "/date-to-block-interval-1d-90p",
+                key75p: "/date-to-block-interval-1d-75p",
+                keyMedian: "/date-to-block-interval-1d-median",
+                key25p: "/date-to-block-interval-1d-25p",
+                key10p: "/date-to-block-interval-1d-10p",
+                keyMin: "/date-to-block-interval-1d-min",
+              }),
             },
           ]
         : [

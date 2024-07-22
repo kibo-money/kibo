@@ -185,6 +185,7 @@ impl MiningDataset {
             block_size_recap: RecapDataset::import(
                 &f("block_size_1d"),
                 RecapOptions::default()
+                    .add_sum()
                     .add_average()
                     .add_max()
                     .add_90p()
@@ -548,7 +549,12 @@ impl MiningDataset {
 
             self.block_size_recap.compute(
                 *date,
-                &mut self.block_vbytes.get_or_import_range_inclusive(first, last),
+                &mut self
+                    .block_size
+                    .get_or_import_range_inclusive(first, last)
+                    .into_iter()
+                    .map(OrderedFloat)
+                    .collect_vec(),
             );
 
             self.block_weight_recap.compute(

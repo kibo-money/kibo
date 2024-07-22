@@ -61,14 +61,10 @@ pub fn parse(
 
     let date_index = states.date_data_vec.len() - 1;
 
-    let previous_timestamp = if let Some(previous_height) = height.checked_sub(1) {
-        datasets
-            .block_metadata
-            .timestamp
-            .get_or_import(&Height::new(previous_height))
-    } else {
-        None
-    };
+    let previous_timestamp = height
+        .checked_sub(1)
+        .map(Height::new)
+        .and_then(|height| datasets.block_metadata.timestamp.get_or_import(&height));
 
     let block_price = Price::from_dollar(
         datasets
@@ -91,7 +87,7 @@ pub fn parse(
     let block_weight = block.weight().to_wu();
     let block_vbytes = block.weight().to_vbytes_floor();
     let block_interval = previous_timestamp.map_or(0, |previous_timestamp| {
-        if previous_timestamp <= timestamp {
+        if previous_timestamp >= timestamp {
             0
         } else {
             timestamp - previous_timestamp
