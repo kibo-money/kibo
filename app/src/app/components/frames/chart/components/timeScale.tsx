@@ -1,9 +1,15 @@
 import { ONE_DAY_IN_MS } from "/src/scripts/utils/time";
 import { classPropToString } from "/src/solid/classes";
+import { createRWS } from "/src/solid/rws";
 
 import { GENESIS_DAY } from "../../../../../scripts/lightweightCharts/whitespace";
 import { Box } from "../../box";
 import { Scrollable } from "../../scrollable";
+
+const MULTIPLIER = 0.002;
+const DELAY = 10;
+const LEFT = -1;
+const RIGHT = 1;
 
 export function TimeScale({
   scale,
@@ -16,30 +22,82 @@ export function TimeScale({
 
   const disabled = createMemo(() => charts().length === 0);
 
+  const scrollDirection = createRWS(0);
+
+  const timeScale = createMemo(() => {
+    const chart = charts().at(0);
+    if (!chart) return undefined;
+    return chart.timeScale();
+  });
+
+  const interval = setInterval(() => {
+    const time = timeScale();
+
+    if (!time) return;
+
+    const direction = scrollDirection();
+
+    if (!direction) return;
+
+    const range = time.getVisibleLogicalRange();
+
+    if (!range) return;
+
+    const speed = (range.to - range.from) * MULTIPLIER * direction;
+
+    // @ts-ignore
+    range.from += speed;
+    // @ts-ignore
+    range.to += speed;
+
+    time.setVisibleLogicalRange(range);
+  }, DELAY);
+
+  onCleanup(() => clearInterval(interval));
+
   return (
-    <Box dark padded={false} classes="short:hidden">
+    <Box dark padded={false} spaced={false} classes="short:hidden">
+      <div class="flex items-center p-1.5">
+        <Button
+          square
+          disabled={disabled}
+          onClick={() => scrollDirection.set((v) => (v === LEFT ? 0 : LEFT))}
+        >
+          <Show
+            when={scrollDirection() === LEFT}
+            fallback={<IconTablerPlayerTrackPrevFilled />}
+          >
+            <IconTablerPlayerPauseFilled />
+          </Show>
+        </Button>
+      </div>
+      <div class="border-lighter border-l" />
       <Scrollable classes="p-1.5 space-x-2">
         <Switch>
           <Match when={scale() === "date"}>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() => setTimeScale({ scale: scale(), charts })}
             >
               All Time
             </Button>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() => setTimeScale({ scale: scale(), charts, days: 7 })}
             >
               1 Week
             </Button>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() => setTimeScale({ scale: scale(), charts, days: 30 })}
             >
               1 Month
             </Button>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() =>
                 setTimeScale({ scale: scale(), charts, days: 3 * 30 })
@@ -48,6 +106,7 @@ export function TimeScale({
               3 Months
             </Button>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() =>
                 setTimeScale({ scale: scale(), charts, days: 6 * 30 })
@@ -56,6 +115,7 @@ export function TimeScale({
               6 Months
             </Button>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() =>
                 setTimeScale({
@@ -72,6 +132,7 @@ export function TimeScale({
               Year To Date
             </Button>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() =>
                 setTimeScale({ scale: scale(), charts, days: 365 })
@@ -80,6 +141,7 @@ export function TimeScale({
               1 Year
             </Button>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() =>
                 setTimeScale({ scale: scale(), charts, days: 2 * 365 })
@@ -88,6 +150,7 @@ export function TimeScale({
               2 Years
             </Button>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() =>
                 setTimeScale({ scale: scale(), charts, days: 4 * 365 })
@@ -96,6 +159,7 @@ export function TimeScale({
               4 Years
             </Button>
             <Button
+              minWidth
               disabled={disabled}
               onClick={() =>
                 setTimeScale({ scale: scale(), charts, days: 8 * 365 })
@@ -113,6 +177,7 @@ export function TimeScale({
             >
               {(year) => (
                 <Button
+                  minWidth
                   disabled={disabled}
                   onClick={() => setTimeScale({ scale: scale(), charts, year })}
                 >
@@ -122,10 +187,10 @@ export function TimeScale({
             </For>
           </Match>
           <Match when={scale() === "height"}>
-            <Button disabled={() => true} onClick={() => {}}>
+            <Button minWidth disabled={() => true} onClick={() => {}}>
               24h
             </Button>
-            <Button disabled={() => true} onClick={() => {}}>
+            <Button minWidth disabled={() => true} onClick={() => {}}>
               48h
             </Button>
             <For
@@ -136,6 +201,7 @@ export function TimeScale({
             >
               {(i) => (
                 <Button
+                  minWidth
                   disabled={disabled}
                   onClick={() =>
                     setTimeScale({
@@ -155,6 +221,21 @@ export function TimeScale({
           </Match>
         </Switch>
       </Scrollable>
+      <div class="border-lighter border-l" />
+      <div class="flex items-center p-1.5">
+        <Button
+          square
+          disabled={disabled}
+          onClick={() => scrollDirection.set((v) => (v === RIGHT ? 0 : RIGHT))}
+        >
+          <Show
+            when={scrollDirection() === RIGHT}
+            fallback={<IconTablerPlayerTrackNextFilled />}
+          >
+            <IconTablerPlayerPauseFilled />
+          </Show>
+        </Button>
+      </div>
     </Box>
   );
 }
@@ -163,17 +244,26 @@ function Button({
   onClick,
   disabled,
   children,
-}: ParentProps & { onClick: VoidFunction; disabled: Accessor<boolean> }) {
+  minWidth,
+  square,
+}: ParentProps & {
+  onClick: VoidFunction;
+  disabled?: Accessor<boolean>;
+  minWidth?: boolean;
+  square?: boolean;
+}) {
   return (
     <button
       class={classPropToString([
-        disabled()
+        minWidth && "min-w-20",
+        square ? "p-2" : "px-2 py-1.5",
+        disabled?.()
           ? "text-low-contrast"
           : "hover:bg-orange-50/20 active:scale-95",
-        "min-w-20 flex-shrink-0 flex-grow whitespace-nowrap rounded-lg px-2 py-1.5",
+        "flex-shrink-0 flex-grow whitespace-nowrap rounded-lg",
       ])}
       onClick={onClick}
-      disabled={disabled()}
+      disabled={disabled?.()}
     >
       {children}
     </button>

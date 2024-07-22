@@ -4,6 +4,7 @@ export function Box({
   flex = true,
   absolute,
   padded = true,
+  spaced = true,
   children,
   dark,
   classes,
@@ -11,6 +12,7 @@ export function Box({
   flex?: boolean;
   absolute?: "top" | "bottom";
   padded?: boolean;
+  spaced?: boolean;
   dark?: boolean;
   classes?: string;
 } & ParentProps) {
@@ -39,7 +41,8 @@ export function Box({
       >
         <div
           class={classPropToString([
-            flex && "flex w-full space-x-2",
+            flex && "flex w-full",
+            spaced && "space-x-2",
             padded && "p-1.5",
           ])}
         >
