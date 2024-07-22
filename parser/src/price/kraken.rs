@@ -16,7 +16,7 @@ impl Kraken {
         log("kraken: fetch 1mn");
 
         retry(
-            || {
+            |_| {
                 let body: Value = reqwest::blocking::get(
                     "https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1",
                 )?
@@ -70,7 +70,7 @@ impl Kraken {
         log("fetch kraken daily");
 
         retry(
-            || {
+            |_| {
                 let body: Value = reqwest::blocking::get(
                     "https://api.kraken.com/0/public/OHLC?pair=XBTUSD&interval=1440",
                 )?

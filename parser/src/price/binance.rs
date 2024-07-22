@@ -107,7 +107,7 @@ impl Binance {
         log("binance: fetch 1mn");
 
         retry(
-            || {
+            |_| {
                 let body: Value = reqwest::blocking::get(
                     "https://api.binance.com/api/v3/uiKlines?symbol=BTCUSDT&interval=1m&limit=1000",
                 )?
@@ -154,7 +154,7 @@ impl Binance {
         log("binance: fetch 1d");
 
         retry(
-            || {
+            |_| {
                 let body: Value = reqwest::blocking::get(
                     "https://api.binance.com/api/v3/uiKlines?symbol=BTCUSDT&interval=1d",
                 )?

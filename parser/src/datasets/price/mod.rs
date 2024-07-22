@@ -9,8 +9,11 @@ use color_eyre::eyre::Error;
 pub use ohlc::*;
 
 use crate::{
-    price::{Binance, Kraken},
-    structs::{AnyBiMap, AnyDateMap, BiMap, Date, DateMap, Height, MapKey},
+    price::{Binance, Kraken, Satonomics},
+    structs::{
+        AnyBiMap, AnyDateMap, BiMap, Date, DateMap, DateMapChunkId, Height, HeightMapChunkId,
+        MapKey,
+    },
     utils::{ONE_MONTH_IN_DAYS, ONE_WEEK_IN_DAYS, ONE_YEAR_IN_DAYS},
 };
 
@@ -24,7 +27,8 @@ pub struct PriceDatasets {
     kraken_1mn: Option<BTreeMap<u32, OHLC>>,
     binance_1mn: Option<BTreeMap<u32, OHLC>>,
     binance_har: Option<BTreeMap<u32, OHLC>>,
-    satonomics_by_height: BTreeMap<usize, Option<BTreeMap<usize, OHLC>>>,
+    satonomics_by_height: BTreeMap<HeightMapChunkId, Vec<OHLC>>,
+    satonomics_by_date: BTreeMap<DateMapChunkId, BTreeMap<Date, OHLC>>,
 
     // Inserted
     pub ohlcs: BiMap<OHLC>,
@@ -89,6 +93,7 @@ impl PriceDatasets {
             kraken_1mn: None,
             kraken_daily: None,
             satonomics_by_height: BTreeMap::default(),
+            satonomics_by_date: BTreeMap::default(),
 
             ohlcs: BiMap::new_json(1, price_path),
             closes: BiMap::new_bin(1, &f("close")),
@@ -304,7 +309,9 @@ impl PriceDatasets {
         if self.ohlcs.date.is_key_safe(date) {
             Ok(self.ohlcs.date.get(&date).unwrap().to_owned())
         } else {
-            let ohlc = self.get_from_daily_kraken(&date)?;
+            let ohlc = self
+                .get_from_date_satonomics(&date)
+                .or_else(|_| self.get_from_daily_kraken(&date))?;
 
             self.ohlcs.date.insert(date, ohlc);
 
@@ -312,12 +319,27 @@ impl PriceDatasets {
         }
     }
 
+    fn get_from_date_satonomics(&mut self, date: &Date) -> color_eyre::Result<OHLC> {
+        let chunk_id = date.to_chunk_id();
+
+        #[allow(clippy::map_entry)]
+        if !self.satonomics_by_date.contains_key(&chunk_id) {
+            self.satonomics_by_date
+                .insert(chunk_id, Satonomics::fetch_date_prices(chunk_id)?);
+        }
+
+        self.satonomics_by_date
+            .get(&chunk_id)
+            .unwrap()
+            .get(date)
+            .cloned()
+            .ok_or(Error::msg("Couldn't find date in satonomics"))
+    }
+
     fn get_from_daily_kraken(&mut self, date: &Date) -> color_eyre::Result<OHLC> {
         if self.kraken_daily.is_none() {
-            self.kraken_daily.replace(
-                Kraken::fetch_daily_prices()
-                    .unwrap_or_else(|_| Binance::fetch_daily_prices().unwrap()),
-            );
+            self.kraken_daily
+                .replace(Kraken::fetch_daily_prices().or_else(|_| Binance::fetch_daily_prices())?);
         }
 
         self.kraken_daily
@@ -325,7 +347,7 @@ impl PriceDatasets {
             .unwrap()
             .get(date)
             .cloned()
-            .ok_or(Error::msg("Couldn't find date in daily kraken"))
+            .ok_or(Error::msg("Couldn't find date"))
     }
 
     pub fn get_height_ohlc(
@@ -358,15 +380,17 @@ impl PriceDatasets {
         let previous_timestamp = previous_timestamp.map(clean_timestamp);
 
         let ohlc = self
-            .get_from_1mn_kraken(timestamp, previous_timestamp)
+            .get_from_height_satonomics(&height)
             .unwrap_or_else(|_| {
-                self.get_from_1mn_binance(timestamp, previous_timestamp)
+                self.get_from_1mn_kraken(timestamp, previous_timestamp)
                     .unwrap_or_else(|_| {
-                        self.get_from_har_binance(timestamp, previous_timestamp)
+                        self.get_from_1mn_binance(timestamp, previous_timestamp)
                             .unwrap_or_else(|_| {
-                                let date = Date::from_timestamp(timestamp);
+                                self.get_from_har_binance(timestamp, previous_timestamp)
+                                    .unwrap_or_else(|_| {
+                                        let date = Date::from_timestamp(timestamp);
 
-                                panic!(
+                                        panic!(
                                     "Can't find the price for: height: {height} - date: {date}
 1mn APIs are limited to the last 16 hours for Binance's and the last 10 hours for Kraken's
 How to fix this:
@@ -381,6 +405,7 @@ How to fix this:
 9. Move the file to 'parser/imports/binance.har'
 "
                                 )
+                                    })
                             })
                     })
             });
@@ -388,6 +413,23 @@ How to fix this:
         self.ohlcs.height.insert(height, ohlc);
 
         Ok(ohlc)
+    }
+
+    fn get_from_height_satonomics(&mut self, height: &Height) -> color_eyre::Result<OHLC> {
+        let chunk_id = height.to_chunk_id();
+
+        #[allow(clippy::map_entry)]
+        if !self.satonomics_by_height.contains_key(&chunk_id) {
+            self.satonomics_by_height
+                .insert(chunk_id, Satonomics::fetch_height_prices(chunk_id)?);
+        }
+
+        self.satonomics_by_height
+            .get(&chunk_id)
+            .unwrap()
+            .get(height.to_serialized_key().to_usize())
+            .cloned()
+            .ok_or(Error::msg("Couldn't find height in satonomics"))
     }
 
     fn get_from_1mn_kraken(

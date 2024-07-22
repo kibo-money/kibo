@@ -1,9 +1,9 @@
 use std::{thread::sleep, time::Duration};
 
 pub fn retry<T>(
-    function: impl Fn() -> color_eyre::Result<T>,
+    function: impl Fn(usize) -> color_eyre::Result<T>,
     sleep_in_s: u64,
-    retries: u64,
+    retries: usize,
 ) -> color_eyre::Result<T> {
     if retries < 1 {
         unreachable!()
@@ -12,7 +12,7 @@ pub fn retry<T>(
     let mut i = 0;
 
     loop {
-        let res = function();
+        let res = function(i);
 
         if i == retries || res.is_ok() {
             return res;

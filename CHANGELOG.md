@@ -8,6 +8,7 @@
   - Improved self-hosting by:
     - Fixing an incredibly annoying bug that made the program panic because of a wrong utxo/address durable state after a or many new datasets were added/changed after a first successful parse of the chain
     - Fixing a bug that would crash the program if launched for the first time ever
+    - Auto fetch prices from the main Satonomics instance if missing instead of only trying Kraken's and Binance's API which are limited to the last 16 hours
   - Merged the core of `HeightMap` and `DateMap` structs into `GenericMap`
   - Added `Height` struct and many others
 - CLI
@@ -70,6 +71,7 @@
 
 - Run file
   - Only run with a watcher if `cargo watch` is available
+- Added trigger folder to automatically restart when a new dataset has been added in the parser
 
 ## v. 0.2.0 | [851286](https://mempool.space/block/0000000000000000000281ca7f1bf8c50702bfca168c7af1bdc67c977c1ac8ed) - 2024/07/08
 

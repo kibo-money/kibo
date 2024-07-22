@@ -96,7 +96,7 @@ impl BitcoinDaemon {
 
     fn get_blockchain_info(&self) -> BlockchainInfo {
         retry(
-            || {
+            |_| {
                 // bitcoin-cli -datadir=/Users/k/Developer/bitcoin getblockchaininfo
                 let output = Command::new("bitcoin-cli")
                     .arg(self.datadir_arg())
@@ -122,7 +122,7 @@ impl BitcoinDaemon {
                 Ok(BlockchainInfo { headers, blocks })
             },
             1,
-            u64::MAX,
+            usize::MAX,
         )
         .unwrap()
     }
