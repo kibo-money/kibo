@@ -24,7 +24,6 @@ export function Chart({
   if (requestIdleCallbackPossible) {
     const idleCallback = requestIdleCallback(() => {
       wasIdle.set(true);
-      cancelIdleCallback(idleCallback);
     });
 
     onCleanup(() => {

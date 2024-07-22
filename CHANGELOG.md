@@ -1,6 +1,6 @@
 # Changelog
 
-## v. 0.2.1 | WIP
+## v. 0.3.0 | WIP
 
 ### Parser
 
@@ -47,6 +47,7 @@
 ### App
 
 - General
+  - Added chart scroll button for nice animations à la Wicked
   - Added a backup API in case the main one fails or is offline
   - Complete redesign of the datasets object
   - Removed import of routes in JSON in favor for hardcoded typed routes in string format which resulted in:
