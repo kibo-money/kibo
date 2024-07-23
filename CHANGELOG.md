@@ -53,9 +53,9 @@
   - Added a backup API in case the main one fails or is offline
   - Complete redesign of the datasets object
   - Removed import of routes in JSON in favor for hardcoded typed routes in string format which resulted in:
-    - + A much lighter app
-    - + Better Lighthouse score
-    - - Slower Typescript server
+    - \+ A much lighter app
+    - \+ Better Lighthouse score
+    - \- Slower Typescript server
   - Fixed datasets with null values crashing their fetch function
   - Added a 'Go to a random chart' button in several places
 - Chart

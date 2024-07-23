@@ -2,7 +2,7 @@
 name = "parser"
 description = "A better, FOSS, Bitcoin-only, self-hostable Glassnode"
 homepage = "https://satonomics.xyz"
-version = "0.2.1"
+version = "0.3.0"
 repository = "https://github.com/satonomics-org/satonomics"
 edition = "2021"
 
