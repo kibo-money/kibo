@@ -24,6 +24,7 @@ export function createCohortPresetUnrealizedFolder({
         name: `Profit`,
         title: `${title} Unrealized Profit`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerMoodDollar,
         bottom: [
           {
@@ -38,6 +39,7 @@ export function createCohortPresetUnrealizedFolder({
         name: "Loss",
         title: `${title} Unrealized Loss`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerMoodSadDizzy,
         bottom: [
           {
@@ -52,6 +54,7 @@ export function createCohortPresetUnrealizedFolder({
         name: `PNL`,
         title: `${title} Unrealized Profit And Loss`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerArrowsVertical,
         bottom: [
           {
@@ -73,6 +76,7 @@ export function createCohortPresetUnrealizedFolder({
         name: `Net PNL`,
         title: `${title} Net Unrealized Profit And Loss`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerScale,
         bottom: [
           {
@@ -87,6 +91,7 @@ export function createCohortPresetUnrealizedFolder({
         name: `Net PNL Relative To Market Cap`,
         title: `${title} Net Unrealized Profit And Loss Relative To Total Market Capitalization`,
         description: "",
+        unit: "Percentage",
         icon: () => IconTablerDivide,
         bottom: [
           {

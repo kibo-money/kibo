@@ -13,6 +13,7 @@ export function createPresets(scale: ResourceScale) {
         name: "Price",
         title: "Market Price",
         description: "",
+        unit: "US Dollars",
       },
       {
         scale,
@@ -20,6 +21,7 @@ export function createPresets(scale: ResourceScale) {
         name: "Capitalization",
         title: "Market Capitalization",
         description: "",
+        unit: "US Dollars",
         bottom: [
           {
             title: "Market Cap.",

@@ -20,9 +20,10 @@ export function createRatioFolder({
       {
         scale,
         name: "Basic",
-        description: "",
         icon: IconTablerMathXDivideY,
         title: `Market Price To ${title} Ratio`,
+        unit: "Ratio",
+        description: "",
         top: [
           {
             title: `SMA`,
@@ -55,6 +56,7 @@ export function createRatioFolder({
         name: "Averages",
         description: "",
         icon: IconTablerMathAvg,
+        unit: "Ratio",
         title: `Market Price To ${title} Ratio Averages`,
         top: [
           {
@@ -98,9 +100,10 @@ export function createRatioFolder({
       {
         scale,
         name: "Momentum Oscillator",
-        description: "",
-        icon: IconTablerWaveSine,
         title: `Market Price To ${title} Ratio 1Y SMA Momentum Oscillator`,
+        description: "",
+        unit: "Ratio",
+        icon: IconTablerWaveSine,
         top: [
           {
             title: `SMA`,
@@ -129,9 +132,10 @@ export function createRatioFolder({
       {
         scale,
         name: "Top Percentiles",
-        description: "",
         icon: IconTablerJetpack,
         title: `Market Price To ${title} Ratio Top Percentiles`,
+        description: "",
+        unit: "Ratio",
         top: [
           {
             title: `SMA`,
@@ -165,9 +169,10 @@ export function createRatioFolder({
       {
         scale,
         name: "Bottom Percentiles",
-        description: "",
         icon: IconTablerScubaMask,
         title: `Market Price To ${title} Ratio Bottom Percentiles`,
+        description: "",
+        unit: "Ratio",
         top: [
           {
             title: `SMA`,
@@ -201,9 +206,10 @@ export function createRatioFolder({
       {
         scale,
         name: "Top Probabilities",
-        description: "",
         icon: IconTablerRocket,
         title: `${title} Top Probabilities`,
+        description: "",
+        unit: "US Dollars",
         top: [
           {
             title: `0.1%`,
@@ -225,9 +231,10 @@ export function createRatioFolder({
       {
         scale,
         name: "Bottom Probabilities",
-        description: "",
         icon: IconTablerSubmarine,
         title: `${title} Bottom Probabilities`,
+        description: "",
+        unit: "US Dollars",
         top: [
           {
             title: `0.1%`,

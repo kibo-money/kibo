@@ -21,6 +21,7 @@ export function createCohortPresetUTXOFolder({
         name: `Count`,
         title: `${title} Unspent Transaction Outputs Count`,
         description: "",
+        unit: "Count",
         icon: () => IconTablerTicket,
         bottom: [
           {

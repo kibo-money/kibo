@@ -1,4 +1,5 @@
 import { classPropToString } from "/src/solid/classes";
+import { createWasIdleAccessor } from "/src/solid/idle";
 import { createRWS } from "/src/solid/rws";
 
 import { Box } from "../box";
@@ -24,18 +25,18 @@ export function ChartFrame({
   dark: Accessor<boolean>;
   standalone: boolean;
 }) {
-  const legend = createRWS<SeriesLegend[]>([]);
+  const legend = createRWS<SeriesLegend[]>([], { equals: false });
 
-  const charts = createRWS<IChartApi[]>([]);
-
-  const div = createRWS<HTMLDivElement | undefined>(undefined);
+  const firstChart = createRWS<IChartApi | undefined>(undefined);
 
   const scale = createMemo(() => presets.selected().scale);
 
   const activeIds = createRWS([] as number[], { equals: false });
 
-  const Chart = lazy(() =>
-    import("./components/chart").then((d) => ({ default: d.Chart })),
+  const wasIdle = createWasIdleAccessor();
+
+  const Charts = lazy(() =>
+    import("./components/charts").then((d) => ({ default: d.Charts })),
   );
 
   return (
@@ -49,7 +50,13 @@ export function ChartFrame({
         display: (hide ? hide() : false) ? "none" : undefined,
       }}
     >
-      <Box flex={false} dark padded={false} classes="short:hidden">
+      <Box
+        flex={false}
+        dark
+        padded={false}
+        spaced={false}
+        classes="short:hidden"
+      >
         <Title presets={presets} />
 
         <div class="border-lighter border-t" />
@@ -68,19 +75,20 @@ export function ChartFrame({
         </div>
       </Box>
 
-      <div ref={div.set} class="-mr-2 -mt-2 flex min-h-0 flex-1 flex-col">
-        <Chart
-          parentDiv={div}
-          charts={charts}
-          datasets={datasets}
-          legendSetter={legend.set}
-          presets={presets}
-          dark={dark}
-          activeIds={activeIds}
-        />
+      <div class="-mr-2 -mt-2 flex min-h-0 flex-1 flex-col">
+        <Show when={wasIdle()}>
+          <Charts
+            firstChartSetter={firstChart.set}
+            datasets={datasets}
+            legendSetter={legend.set}
+            preset={presets.selected}
+            dark={dark}
+            activeIds={activeIds}
+          />
+        </Show>
       </div>
 
-      <TimeScale charts={charts} scale={scale} />
+      <TimeScale firstChart={firstChart} scale={scale} />
     </div>
   );
 }

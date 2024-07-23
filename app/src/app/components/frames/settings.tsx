@@ -34,7 +34,7 @@ export function SettingsFrame({
         <div class="space-y-4">
           <Title>General</Title>
 
-          <RadioGroup
+          <FieldRadioGroup
             title="Theme"
             ariaTitle="App's theme"
             description="Options for the app's theme"
@@ -47,14 +47,14 @@ export function SettingsFrame({
         <div class="space-y-4">
           <Title>Background</Title>
 
-          <RadioGroup
+          <FieldRadioGroup
             title="Mode"
             ariaTitle="Background mode"
             description="Options for how the background in displayed"
             sl={backgroundMode}
           />
 
-          <RadioGroup
+          <FieldRadioGroup
             title="Opacity"
             ariaTitle="Background mode"
             description="Options for the opacity of the text in the background"
@@ -232,7 +232,7 @@ function Title({ children }: ParentProps) {
   return <p class="text-base font-medium">{children}</p>;
 }
 
-function RadioGroup<
+export function FieldRadioGroup<
   T extends
     | string
     | {
@@ -256,31 +256,54 @@ function RadioGroup<
 
       <p class="pb-1 text-sm opacity-50">{description}</p>
 
-      <div class="border-superlight -mx-2 mt-2 flex gap-1.5 rounded-lg border bg-stone-400/30 p-1.5 backdrop-blur-[2px] dark:bg-stone-950/75">
-        <For each={sl.list()}>
-          {(value) => (
-            <label
-              class={classPropToString([
-                value === sl.selected()
-                  ? "border-lighter bg-orange-50/75 shadow dark:bg-orange-200/10"
-                  : "border-transparent",
-                "flex flex-1 cursor-pointer select-none items-center justify-center rounded-md border px-3 py-1.5 font-medium hover:bg-orange-50 focus:outline-none active:scale-95 active:bg-orange-50 dark:hover:bg-orange-200/20 dark:active:bg-orange-200/10",
-              ])}
-            >
-              <input
-                type="radio"
-                name={`${title}-option`}
-                value={typeof value === "object" ? value.value : value}
-                class="sr-only"
-                onClick={() => {
-                  sl.select(value);
-                }}
-              />
-              <span>{typeof value === "object" ? value.text : value}</span>
-            </label>
-          )}
-        </For>
-      </div>
+      <RadioGroup sl={sl} title={title} />
     </fieldset>
+  );
+}
+
+export function RadioGroup<
+  T extends
+    | string
+    | {
+        text: string;
+        value: number;
+      },
+>({ title, sl, size }: { title: string; sl: SL<T>; size?: Size }) {
+  return (
+    <div
+      class={classPropToString([
+        size === "xs" && "gap-0.5 rounded-md border p-0.5 text-xs",
+        size === "sm" && "gap-1 rounded-md border p-1 text-sm",
+        (!size || size === "base") && "gap-1.5 rounded-lg border p-1.5",
+        "border-superlight -mx-2 mt-2 flex bg-stone-400/30 backdrop-blur-[2px] dark:bg-stone-950/75",
+      ])}
+    >
+      <For each={sl.list()}>
+        {(value) => (
+          <label
+            class={classPropToString([
+              size === "xs" && "rounded px-1.5 py-0",
+              size === "sm" && "rounded px-2 py-1",
+              (!size || size === "base") && "rounded-md px-3 py-1.5",
+              value === sl.selected()
+                ? "border-lighter bg-orange-50/75 shadow dark:bg-orange-200/10"
+                : "border-transparent",
+              "flex flex-1 cursor-pointer select-none items-center justify-center border font-medium hover:bg-orange-50 focus:outline-none active:scale-95 active:bg-orange-50 dark:hover:bg-orange-200/20 dark:active:bg-orange-200/10",
+            ])}
+          >
+            <input
+              type="radio"
+              name={`${title}-option`}
+              value={typeof value === "object" ? value.value : value}
+              class="sr-only"
+              onClick={() => {
+                sl.select(value);
+              }}
+            />
+            <span>{typeof value === "object" ? value.text : value}</span>
+          </label>
+        )}
+      </For>
+    </div>
   );
 }

@@ -21,6 +21,7 @@ export function createCohortPresetPricesPaidFolder({
         name: `Average`,
         title: `${title} Average Price Paid - Realized Price`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerMathAvg,
         top: [
           {
@@ -36,6 +37,7 @@ export function createCohortPresetPricesPaidFolder({
         title: `${title} deciles`,
         icon: () => IconTablerSquareHalf,
         description: "",
+        unit: "US Dollars",
         top: percentiles
           .filter(({ value }) => Number(value) % 10 === 0)
           .map(({ name, id }) => {
@@ -54,6 +56,7 @@ export function createCohortPresetPricesPaidFolder({
           name: percentile.name,
           title: `${title} ${percentile.title}`,
           description: "",
+          unit: "US Dollars",
           icon: () => IconTablerSquareHalf,
           top: [
             {

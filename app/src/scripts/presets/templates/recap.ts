@@ -1,5 +1,6 @@
 export function createRecapPresets({
   scale,
+  unit,
   title,
   keyAverage,
   color,
@@ -15,6 +16,7 @@ export function createRecapPresets({
   scale: ResourceScale;
   title: string;
   color: Color;
+  unit: Unit;
   keySum?: AnyDatasetPath;
   keyAverage?: AnyDatasetPath;
   keyMax?: AnyDatasetPath;
@@ -34,6 +36,7 @@ export function createRecapPresets({
             name: "Daily Sum",
             title: `${title} Daily Sum`,
             description: "",
+            unit,
             bottom: [
               {
                 title: "Sum",
@@ -52,6 +55,7 @@ export function createRecapPresets({
             name: "Daily Average",
             title: `${title} Daily Average`,
             description: "",
+            unit,
             bottom: [
               {
                 title: "Average",
@@ -70,6 +74,7 @@ export function createRecapPresets({
             name: "Daily Percentiles",
             title: `${title} Daily Percentiles`,
             description: "",
+            unit,
             bottom: [
               ...(keyMax
                 ? [
@@ -146,6 +151,7 @@ export function createRecapPresets({
             name: "Daily Max",
             title: `${title} Daily Max`,
             description: "",
+            unit,
             bottom: [
               {
                 title: "Max",
@@ -164,6 +170,7 @@ export function createRecapPresets({
             name: "Daily 90th Percentile",
             title: `${title} Daily 90th Percentile`,
             description: "",
+            unit,
             bottom: [
               {
                 title: "90%",
@@ -182,6 +189,7 @@ export function createRecapPresets({
             name: "Daily 75th Percentile",
             title: `${title} Size 75th Percentile`,
             description: "",
+            unit,
             bottom: [
               {
                 title: "75%",
@@ -200,6 +208,7 @@ export function createRecapPresets({
             name: "Daily Median",
             title: `${title} Daily Median`,
             description: "",
+            unit,
             bottom: [
               {
                 title: "Median",
@@ -218,6 +227,7 @@ export function createRecapPresets({
             name: "Daily 25th Percentile",
             title: `${title} Daily 25th Percentile`,
             description: "",
+            unit,
             bottom: [
               {
                 title: "25%",
@@ -236,6 +246,7 @@ export function createRecapPresets({
             name: "Daily 10th Percentile",
             title: `${title} Daily 10th Percentile`,
             description: "",
+            unit,
             bottom: [
               {
                 title: "10%",
@@ -254,6 +265,7 @@ export function createRecapPresets({
             name: "Daily Min",
             title: `${title} Daily Min`,
             description: "",
+            unit,
             bottom: [
               {
                 title: "Min",

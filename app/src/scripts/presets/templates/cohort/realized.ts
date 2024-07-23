@@ -25,6 +25,7 @@ export function createCohortPresetRealizedFolder({
         name: `Price`,
         title: `${title} Realized Price`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerTag,
         top: [
           {
@@ -46,6 +47,7 @@ export function createCohortPresetRealizedFolder({
         name: `Capitalization`,
         title: `${title} Realized Capitalization`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerPigMoney,
         bottom: [
           {
@@ -70,6 +72,7 @@ export function createCohortPresetRealizedFolder({
         name: `Capitalization 1M Net Change`,
         title: `${title} Realized Capitalization 1 Month Net Change`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerStatusChange,
         bottom: [
           {
@@ -84,6 +87,7 @@ export function createCohortPresetRealizedFolder({
         name: `Profit`,
         title: `${title} Realized Profit`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerCash,
         bottom: [
           {
@@ -98,6 +102,7 @@ export function createCohortPresetRealizedFolder({
         name: "Loss",
         title: `${title} Realized Loss`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerCoffin,
         bottom: [
           {
@@ -112,6 +117,7 @@ export function createCohortPresetRealizedFolder({
         name: `PNL`,
         title: `${title} Realized Profit And Loss`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerArrowsVertical,
         bottom: [
           {
@@ -133,6 +139,7 @@ export function createCohortPresetRealizedFolder({
         name: `Net PNL`,
         title: `${title} Net Realized Profit And Loss`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerScale,
         bottom: [
           {
@@ -147,6 +154,7 @@ export function createCohortPresetRealizedFolder({
         name: `Net PNL Relative To Market Cap`,
         title: `${title} Net Realized Profit And Loss Relative To Market Capitalization`,
         description: "",
+        unit: "Percentage",
         icon: () => IconTablerDivide,
         bottom: [
           {
@@ -161,6 +169,7 @@ export function createCohortPresetRealizedFolder({
         name: `Cumulative Profit`,
         title: `${title} Cumulative Realized Profit`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerSum,
         bottom: [
           {
@@ -175,6 +184,7 @@ export function createCohortPresetRealizedFolder({
         name: "Cumulative Loss",
         title: `${title} Cumulative Realized Loss`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerSum,
         bottom: [
           {
@@ -189,6 +199,7 @@ export function createCohortPresetRealizedFolder({
         name: `Cumulative Net PNL`,
         title: `${title} Cumulative Net Realized Profit And Loss`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerSum,
         bottom: [
           {
@@ -203,6 +214,7 @@ export function createCohortPresetRealizedFolder({
         name: `Cumulative Net PNL 30 Day Change`,
         title: `${title} Cumulative Net Realized Profit And Loss 30 Day Change`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerTimeDuration30,
         bottom: [
           {
@@ -217,6 +229,7 @@ export function createCohortPresetRealizedFolder({
         name: `Value Created`,
         title: `${title} Value Created`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerPlus,
         bottom: [
           {
@@ -231,6 +244,7 @@ export function createCohortPresetRealizedFolder({
         name: `Value Destroyed`,
         title: `${title} Value Destroyed`,
         description: "",
+        unit: "US Dollars",
         icon: () => IconTablerMinus,
         bottom: [
           {
@@ -245,6 +259,7 @@ export function createCohortPresetRealizedFolder({
         name: `Spent Output Profit Ratio - SOPR`,
         title: `${title} Spent Output Profit Ratio`,
         description: "",
+        unit: "Percentage",
         icon: () => IconTablerMathXDivideY,
         bottom: [
           {

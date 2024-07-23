@@ -13,6 +13,7 @@ export function createPresets(scale: ResourceScale) {
               name: "Height",
               title: "Block Height",
               description: "",
+              unit: "Height",
               bottom: [
                 {
                   title: "Height",
@@ -31,6 +32,7 @@ export function createPresets(scale: ResourceScale) {
                   name: "Daily Sum",
                   title: "Daily Sum Of Blocks Mined",
                   description: "",
+                  unit: "Count",
                   bottom: [
                     {
                       title: "Target",
@@ -64,6 +66,7 @@ export function createPresets(scale: ResourceScale) {
                   name: "Weekly Sum",
                   title: "Weekly Sum Of Blocks Mined",
                   description: "",
+                  unit: "Count",
                   bottom: [
                     {
                       title: "Target",
@@ -86,6 +89,7 @@ export function createPresets(scale: ResourceScale) {
                   name: "Monthly Sum",
                   title: "Monthly Sum Of Blocks Mined",
                   description: "",
+                  unit: "Count",
                   bottom: [
                     {
                       title: "Target",
@@ -108,6 +112,7 @@ export function createPresets(scale: ResourceScale) {
                   name: "Yearly Sum",
                   title: "Yearly Sum Of Blocks Mined",
                   description: "",
+                  unit: "Count",
                   bottom: [
                     {
                       title: "Target",
@@ -130,6 +135,7 @@ export function createPresets(scale: ResourceScale) {
                   name: "Total",
                   title: "Total Blocks Mined",
                   description: "",
+                  unit: "Count",
                   bottom: [
                     {
                       title: "Mined",
@@ -147,6 +153,7 @@ export function createPresets(scale: ResourceScale) {
                 scale,
                 title: "Block Size",
                 color: colors.darkWhite,
+                unit: "Megabytes",
                 keySum: "/date-to-block-size-1d-sum",
                 keyAverage: "/date-to-block-size-1d-average",
                 keyMax: "/date-to-block-size-1d-max",
@@ -165,6 +172,7 @@ export function createPresets(scale: ResourceScale) {
                 scale,
                 title: "Block Weight",
                 color: colors.darkWhite,
+                unit: "Weight",
                 keyAverage: "/date-to-block-weight-1d-average",
                 keyMax: "/date-to-block-weight-1d-max",
                 key90p: "/date-to-block-weight-1d-90p",
@@ -182,6 +190,7 @@ export function createPresets(scale: ResourceScale) {
                 scale,
                 title: "Block VBytes",
                 color: colors.darkWhite,
+                unit: "Virtual Bytes",
                 keyAverage: "/date-to-block-vbytes-1d-average",
                 keyMax: "/date-to-block-vbytes-1d-max",
                 key90p: "/date-to-block-vbytes-1d-90p",
@@ -199,6 +208,7 @@ export function createPresets(scale: ResourceScale) {
                 scale,
                 title: "Block Interval",
                 color: colors.darkWhite,
+                unit: "Seconds",
                 keyAverage: "/date-to-block-interval-1d-average",
                 keyMax: "/date-to-block-interval-1d-max",
                 key90p: "/date-to-block-interval-1d-90p",
@@ -217,9 +227,10 @@ export function createPresets(scale: ResourceScale) {
               name: "Size",
               title: "Block Size",
               description: "",
+              unit: "Megabytes",
               bottom: [
                 {
-                  title: "Size (MB)",
+                  title: "Size",
                   color: colors.darkWhite,
                   datasetPath: `/height-to-block-size`,
                 },
@@ -231,9 +242,10 @@ export function createPresets(scale: ResourceScale) {
               name: "Weight",
               title: "Block Weight",
               description: "",
+              unit: "Weight",
               bottom: [
                 {
-                  title: "Weight (MB)",
+                  title: "Weight",
                   color: colors.darkWhite,
                   datasetPath: `/height-to-block-weight`,
                 },
@@ -245,6 +257,7 @@ export function createPresets(scale: ResourceScale) {
               name: "VBytes",
               title: "Block VBytes",
               description: "",
+              unit: "Virtual Bytes",
               bottom: [
                 {
                   title: "VBytes",
@@ -259,9 +272,10 @@ export function createPresets(scale: ResourceScale) {
               name: "Interval",
               title: "Block Interval",
               description: "",
+              unit: "Seconds",
               bottom: [
                 {
-                  title: "Interval (s)",
+                  title: "Interval",
                   color: colors.darkWhite,
                   datasetPath: `/height-to-block-interval`,
                 },
@@ -274,9 +288,10 @@ export function createPresets(scale: ResourceScale) {
         name: "Cumulative Size",
         title: "Cumulative Block Size",
         description: "",
+        unit: "Megabytes",
         bottom: [
           {
-            title: "Size (MB)",
+            title: "Size",
             color: colors.darkWhite,
             datasetPath: `/${scale}-to-cumulative-block-size`,
           },

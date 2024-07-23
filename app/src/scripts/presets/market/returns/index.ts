@@ -56,9 +56,10 @@ function createPreset({
     description: "",
     icon: IconTablerReceiptTax,
     title: `${title} Return`,
+    unit: "Percentage",
     bottom: [
       {
-        title: `Return (%)`,
+        title: `Return`,
         seriesType: SeriesType.Based,
         datasetPath: `/date-to-price-${key}-return`,
       },

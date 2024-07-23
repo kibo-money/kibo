@@ -27,7 +27,7 @@ export function createCohortPresetSupplyFolder({
             title: `${title} Profit And Loss`,
             icon: () => IconTablerArrowsCross,
             description: "",
-
+            unit: "US Dollars",
             bottom: [
               {
                 title: "In Profit",
@@ -60,6 +60,7 @@ export function createCohortPresetSupplyFolder({
             title: `${title} Total supply`,
             icon: () => IconTablerSum,
             description: "",
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Supply",
@@ -73,6 +74,7 @@ export function createCohortPresetSupplyFolder({
             name: "In Profit",
             title: `${title} Supply In Profit`,
             description: "",
+            unit: "Bitcoin",
             icon: () => IconTablerTrendingUp,
             bottom: [
               {
@@ -87,6 +89,7 @@ export function createCohortPresetSupplyFolder({
             name: "In Loss",
             title: `${title} Supply In Loss`,
             description: "",
+            unit: "Bitcoin",
             icon: () => IconTablerTrendingDown,
             bottom: [
               {
@@ -106,6 +109,7 @@ export function createCohortPresetSupplyFolder({
             name: "All",
             title: `${title} Profit And Loss Relative To Circulating Supply`,
             description: "",
+            unit: "Percentage",
             icon: () => IconTablerArrowsCross,
             bottom: [
               {
@@ -138,6 +142,7 @@ export function createCohortPresetSupplyFolder({
             name: `Total`,
             title: `${title} Total supply Relative To Circulating Supply`,
             description: "",
+            unit: "Percentage",
             icon: () => IconTablerSum,
             bottom: [
               {
@@ -152,6 +157,7 @@ export function createCohortPresetSupplyFolder({
             name: "In Profit",
             title: `${title} Supply In Profit Relative To Circulating Supply`,
             description: "",
+            unit: "Percentage",
             icon: () => IconTablerTrendingUp,
             bottom: [
               {
@@ -166,6 +172,7 @@ export function createCohortPresetSupplyFolder({
             name: "In Loss",
             title: `${title} Supply In Loss Relative To Circulating Supply`,
             description: "",
+            unit: "Percentage",
             icon: () => IconTablerTrendingDown,
             bottom: [
               {
@@ -185,6 +192,7 @@ export function createCohortPresetSupplyFolder({
             name: "All",
             title: `${title} Supply In Profit And Loss Relative To Own Supply`,
             description: "",
+            unit: "Percentage",
             icon: () => IconTablerArrowsCross,
             bottom: [
               {
@@ -221,6 +229,7 @@ export function createCohortPresetSupplyFolder({
             name: "In Profit",
             title: `${title} Supply In Profit Relative To Own Supply`,
             description: "",
+            unit: "Percentage",
             icon: () => IconTablerTrendingUp,
             bottom: [
               {
@@ -235,6 +244,7 @@ export function createCohortPresetSupplyFolder({
             name: "In Loss",
             title: `${title} Supply In Loss Relative To Own Supply`,
             description: "",
+            unit: "Percentage",
             icon: () => IconTablerTrendingDown,
             bottom: [
               {

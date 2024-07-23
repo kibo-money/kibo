@@ -49,10 +49,10 @@ export const createStaticList = <T, L extends T[] = T[]>(
 
         return found;
       } else {
+        const index = savedIndex ?? parameters.selectedIndex;
+        const value = index !== undefined ? l.at(index) : undefined;
         return (
-          l.at(savedIndex ?? parameters.selectedIndex!) ??
-          parameters.defaultValue ??
-          l[parameters.defaultIndex || 0]
+          value ?? parameters.defaultValue ?? l[parameters.defaultIndex || 0]
         );
       }
     }),

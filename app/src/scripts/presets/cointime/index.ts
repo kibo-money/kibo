@@ -15,6 +15,7 @@ export function createPresets(scale: ResourceScale) {
             name: "All",
             title: "All Cointime Prices",
             description: "",
+            unit: "US Dollars",
             top: [
               {
                 title: "Vaulted Price",
@@ -52,6 +53,7 @@ export function createPresets(scale: ResourceScale) {
                 name: "Price",
                 title: "Active Price",
                 description: "",
+                unit: "US Dollars",
                 top: [
                   {
                     title: "Active Price",
@@ -78,6 +80,7 @@ export function createPresets(scale: ResourceScale) {
                 name: "Price",
                 title: "Vaulted Price",
                 description: "",
+                unit: "US Dollars",
                 top: [
                   {
                     title: "Vaulted Price",
@@ -104,6 +107,7 @@ export function createPresets(scale: ResourceScale) {
                 name: "Price",
                 title: "True Market Mean",
                 description: "",
+                unit: "US Dollars",
                 top: [
                   {
                     title: "True Market Mean",
@@ -130,6 +134,7 @@ export function createPresets(scale: ResourceScale) {
                 name: "Price",
                 title: "Cointime Price",
                 description: "",
+                unit: "US Dollars",
                 top: [
                   {
                     title: "Cointime",
@@ -158,9 +163,7 @@ export function createPresets(scale: ResourceScale) {
             name: "All",
             title: "Cointime Capitalizations",
             description: "",
-            priceScaleOptions: {
-              mode: 1,
-            },
+            unit: "US Dollars",
             bottom: [
               {
                 title: "Market Cap",
@@ -190,9 +193,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Thermo Cap",
             title: "Thermo Cap",
             description: "",
-            priceScaleOptions: {
-              mode: 1,
-            },
+            unit: "US Dollars",
             bottom: [
               {
                 title: "Thermo Cap",
@@ -207,10 +208,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Investor Cap",
             title: "Investor Cap",
             description: "",
-
-            priceScaleOptions: {
-              mode: 1,
-            },
+            unit: "US Dollars",
             bottom: [
               {
                 title: "Investor Cap",
@@ -223,8 +221,9 @@ export function createPresets(scale: ResourceScale) {
             scale,
             icon: IconTablerDivide,
             name: "Thermo Cap To Investor Cap Ratio",
-            title: "Thermo Cap To Investor Cap Ratio (%)",
+            title: "Thermo Cap To Investor Cap Ratio",
             description: "",
+            unit: "Percentage",
             bottom: [
               {
                 title: "Ratio",
@@ -244,6 +243,7 @@ export function createPresets(scale: ResourceScale) {
             name: "All",
             title: "All Coinblocks",
             description: "",
+            unit: "Coinblocks",
             bottom: [
               {
                 title: "Coinblocks Created",
@@ -268,6 +268,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Created",
             title: "Coinblocks Created",
             description: "",
+            unit: "Coinblocks",
             bottom: [
               {
                 title: "Coinblocks Created",
@@ -282,7 +283,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Destroyed",
             title: "Coinblocks Destroyed",
             description: "",
-
+            unit: "Coinblocks",
             bottom: [
               {
                 title: "Coinblocks Destroyed",
@@ -297,6 +298,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Stored",
             title: "Coinblocks Stored",
             description: "",
+            unit: "Coinblocks",
             bottom: [
               {
                 title: "Coinblocks Stored",
@@ -316,6 +318,7 @@ export function createPresets(scale: ResourceScale) {
             name: "All",
             title: "All Cumulative Coinblocks",
             description: "",
+            unit: "Coinblocks",
             bottom: [
               {
                 title: "Cumulative Coinblocks Created",
@@ -340,6 +343,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Created",
             title: "Cumulative Coinblocks Created",
             description: "",
+            unit: "Coinblocks",
             bottom: [
               {
                 title: "Cumulative Coinblocks Created",
@@ -354,6 +358,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Destroyed",
             title: "Cumulative Coinblocks Destroyed",
             description: "",
+            unit: "Coinblocks",
             bottom: [
               {
                 title: "Cumulative Coinblocks Destroyed",
@@ -368,6 +373,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Stored",
             title: "Cumulative Coinblocks Stored",
             description: "",
+            unit: "Coinblocks",
             bottom: [
               {
                 title: "Cumulative Coinblocks Stored",
@@ -387,6 +393,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Liveliness - Activity",
             title: "Liveliness (Activity)",
             description: "",
+            unit: "",
             bottom: [
               {
                 title: "Liveliness",
@@ -401,6 +408,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Vaultedness",
             title: "Vaultedness",
             description: "",
+            unit: "",
             bottom: [
               {
                 title: "Vaultedness",
@@ -415,6 +423,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Versus",
             title: "Liveliness V. Vaultedness",
             description: "",
+            unit: "",
             bottom: [
               {
                 title: "Liveliness",
@@ -434,6 +443,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Activity To Vaultedness Ratio",
             title: "Activity To Vaultedness Ratio",
             description: "",
+            unit: "Percentage",
             bottom: [
               {
                 title: "Activity To Vaultedness Ratio",
@@ -448,15 +458,16 @@ export function createPresets(scale: ResourceScale) {
             name: "Concurrent Liveliness - Supply Adjusted Coindays Destroyed",
             title: "Concurrent Liveliness - Supply Adjusted Coindays Destroyed",
             description: "",
+            unit: "",
             bottom: [
               {
                 title: "Concurrent Liveliness 14d Median",
-                color: colors.darkLiveliness,
+                color: colors.liveliness,
                 datasetPath: `/${scale}-to-concurrent-liveliness-2w-median`,
               },
               {
                 title: "Concurrent Liveliness",
-                color: colors.liveliness,
+                color: colors.darkLiveliness,
                 datasetPath: `/${scale}-to-concurrent-liveliness`,
               },
             ],
@@ -467,6 +478,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Liveliness Incremental Change",
             title: "Liveliness Incremental Change",
             description: "",
+            unit: "",
             bottom: [
               {
                 title: "Liveliness Incremental Change",
@@ -493,6 +505,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Vaulted",
             title: "Vaulted Supply",
             description: "",
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Vaulted Supply",
@@ -507,7 +520,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Active",
             title: "Active Supply",
             description: "",
-
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Active Supply",
@@ -522,7 +535,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Vaulted V. Active",
             title: "Vaulted V. Active",
             description: "",
-
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Circulating Supply",
@@ -577,6 +590,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Vaulted Net Change",
             title: "Vaulted Supply Net Change",
             description: "",
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Vaulted Supply Net Change",
@@ -591,6 +605,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Active Net Change",
             title: "Active Supply Net Change",
             description: "",
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Active Supply Net Change",
@@ -605,6 +620,7 @@ export function createPresets(scale: ResourceScale) {
             name: "Active VS. Vaulted 90D Net Change",
             title: "Active VS. Vaulted 90 Day Supply Net Change",
             description: "",
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Active Supply Net Change",
@@ -724,6 +740,7 @@ export function createPresets(scale: ResourceScale) {
             name: "In Profit",
             title: "Cointime Supply In Profit",
             description: "",
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Circulating Supply",
@@ -748,6 +765,7 @@ export function createPresets(scale: ResourceScale) {
             name: "In Loss",
             title: "Cointime Supply In Loss",
             description: "",
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Circulating Supply",
@@ -772,11 +790,9 @@ export function createPresets(scale: ResourceScale) {
         scale,
         icon: IconTablerBuildingFactory,
         name: "Cointime Yearly Inflation Rate",
-        title: "Cointime-Adjusted Yearly Inflation Rate (%)",
+        title: "Cointime-Adjusted Yearly Inflation Rate",
         description: "",
-        priceScaleOptions: {
-          mode: 1,
-        },
+        unit: "Percentage",
         bottom: [
           {
             title: "Cointime Adjusted",
@@ -796,9 +812,7 @@ export function createPresets(scale: ResourceScale) {
         name: "Cointime Velocity",
         title: "Cointime-Adjusted Transactions Velocity",
         description: "",
-        priceScaleOptions: {
-          mode: 1,
-        },
+        unit: "",
         bottom: [
           {
             title: "Cointime Adjusted",

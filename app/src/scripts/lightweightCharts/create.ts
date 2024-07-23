@@ -8,17 +8,15 @@ import { colors } from "../utils/colors";
 import { valueToString } from "../utils/locale";
 import { HorzScaleBehaviorHeight } from "./horzScaleBehavior";
 
-export function createChart(
-  scale: ResourceScale,
-  element: HTMLElement,
-  {
-    dark,
-    priceScaleOptions,
-  }: {
-    dark: Accessor<boolean>;
-    priceScaleOptions?: DeepPartialPriceScaleOptions;
-  },
-) {
+export function createChart({
+  scale,
+  element,
+  dark,
+}: {
+  scale: ResourceScale;
+  element: HTMLElement;
+  dark: Accessor<boolean>;
+}) {
   console.log(`chart: create (scale: ${scale})`);
 
   const options: DeepPartialChartOptions = {
@@ -63,11 +61,9 @@ export function createChart(
   }
 
   chart.priceScale("right").applyOptions({
-    ...priceScaleOptions,
     scaleMargins: {
       top: 0.075,
       bottom: 0.075,
-      ...priceScaleOptions?.scaleMargins,
     },
     minimumWidth: 78,
   });

@@ -4,6 +4,7 @@ type ISeriesApi<T extends SeriesType> =
   import("lightweight-charts").ISeriesApi<T>;
 type SeriesOptionsMap = import("lightweight-charts").SeriesOptionsMap;
 type ISeriesApiAny = ISeriesApi<keyof SeriesOptionsMap>;
+type ITimeScaleApi<Time> = import("lightweight-charts").ITimeScaleApi<Time>;
 type IPriceLine = import("lightweight-charts").IPriceLine;
 type ChartOptions = import("lightweight-charts").ChartOptions;
 type DeepPartial<T> = import("lightweight-charts").DeepPartial<T>;

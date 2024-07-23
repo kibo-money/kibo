@@ -15,6 +15,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
         name: `Total Non Empty Addresses`,
         title: `Total Non Empty Address`,
         description: "",
+        unit: "Count",
         icon: IconTablerWallet,
         bottom: [
           {
@@ -29,6 +30,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
         name: `New Addresses`,
         title: `New Addresses`,
         description: "",
+        unit: "Count",
         icon: IconTablerSparkles,
         bottom: [
           {
@@ -43,6 +45,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
         name: `Total Addresses Created`,
         title: `Total Addresses Created`,
         description: "",
+        unit: "Count",
         icon: IconTablerArchive,
         bottom: [
           {
@@ -57,6 +60,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
         name: `Total Empty Addresses`,
         title: `Total Empty Addresses`,
         description: "",
+        unit: "Count",
         icon: IconTablerTrash,
         bottom: [
           {
@@ -177,8 +181,9 @@ export function createAddressCountPreset({
     scale,
     name: `Address Count`,
     title: `${name} Address Count`,
-    icon: IconTablerAddressBook,
     description: "",
+    unit: "Count",
+    icon: IconTablerAddressBook,
     bottom: [addressCount],
   };
 }

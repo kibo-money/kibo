@@ -1,13 +1,30 @@
 interface PresetParams {
-  priceScaleOptions?: DeepPartialPriceScaleOptions;
   top?: SeriesConfig[];
   bottom?: SeriesConfig[];
 }
+
+type Unit =
+  | "US Dollars"
+  | "Bitcoin"
+  | "Percentage"
+  | "Height"
+  | "Count"
+  | "Megabytes"
+  | "Transactions"
+  | "Weight"
+  | "Ratio"
+  | "Virtual Bytes"
+  | "Seconds"
+  | "Coinblocks"
+  | "ExaHash / Second"
+  | "Dollars / (PetaHash / Second)"
+  | "";
 
 type PartialPreset = {
   scale: ResourceScale;
   icon?: () => JSXElement;
   name: string;
+  unit: Unit;
   title: string;
   description: string;
 } & PresetParams;
@@ -23,16 +40,6 @@ type FilePath = {
   id: string;
   name: string;
 }[];
-
-// type ApplyPreset = (params: {
-//   charts: RWS<IChartApi[]>;
-//   parentDiv: HTMLDivElement;
-//   datasets: Datasets;
-//   preset: Preset;
-//   legendSetter: Setter<SeriesLegend[]>;
-//   dark: Accessor<boolean>;
-//   activeIds: RWS<number[]>;
-// }) => void;
 
 interface PartialPresetFolder {
   name: string;

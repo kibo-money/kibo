@@ -18,6 +18,7 @@ export function createPresets(scale: ResourceScale) {
         title: `Hodl Supply`,
         description: "",
         icon: IconTablerRipple,
+        unit: "Bitcoin",
         bottom: [
           {
             title: `24h`,

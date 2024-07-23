@@ -48,6 +48,8 @@
 
 - General
   - Added chart scroll button for nice animations à la Wicked
+  - Added scale mode switch (Linear/Logarithmic) at the bottom right of all charts
+  - Added unit at the top left of all charts
   - Added a backup API in case the main one fails or is offline
   - Complete redesign of the datasets object
   - Removed import of routes in JSON in favor for hardcoded typed routes in string format which resulted in:

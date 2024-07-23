@@ -1,7 +1,6 @@
 import { averages } from "/src/scripts/datasets/date";
 import { colors } from "/src/scripts/utils/colors";
 
-import { SeriesType } from "../../enums";
 import { createRatioFolder } from "../../templates/ratio";
 
 export function createPresets(scale: ResourceScale): PartialPresetFolder {
@@ -14,6 +13,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
         name: "All",
         title: "All Moving Averages",
         description: "",
+        unit: "US Dollars",
         top: averages.map((average) => ({
           title: average.key.toUpperCase(),
           color: colors[`_${average.key}`],
@@ -52,9 +52,10 @@ function createPresetFolder({
       {
         scale,
         name: "Average",
-        description: "",
-        icon: IconTablerMathAvg,
         title,
+        description: "",
+        unit: "US Dollars",
+        icon: IconTablerMathAvg,
         top: [
           {
             title: `SMA`,

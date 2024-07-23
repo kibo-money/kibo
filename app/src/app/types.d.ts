@@ -5,3 +5,5 @@ type FrameName =
   | "Search"
   | "History"
   | "Settings";
+
+type Size = "xs" | "sm" | "base" | "lg" | "xl";

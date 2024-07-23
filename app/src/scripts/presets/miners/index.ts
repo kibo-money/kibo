@@ -17,8 +17,9 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCoinBitcoin,
                       name: "In Bitcoin",
-                      title: "Last Coinbase (In Bitcoin)",
+                      title: "Last Coinbase In Bitcoin",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
                           title: "Last",
@@ -31,8 +32,9 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCoin,
                       name: "In Dollars",
-                      title: "Last Coinbase (In Dollars)",
+                      title: "Last Coinbase In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
                           title: "Last",
@@ -51,11 +53,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerMoneybag,
                       name: "In Bitcoin",
-                      title: "Daily Sum Of Bitcoin Coinbases",
+                      title: "Daily Sum Of Coinbases In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
-                          title: "Coinbases (Bitcoin)",
+                          title: "Sum",
                           color: colors.bitcoin,
                           datasetPath: `/${scale}-to-coinbase`,
                         },
@@ -65,11 +68,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCash,
                       name: "In Dollars",
-                      title: "Daily Sum Of Dollar Coinbases",
+                      title: "Daily Sum Of Coinbases In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
-                          title: "Coinbases (Dollars)",
+                          title: "Sum",
                           color: colors.dollars,
                           datasetPath: `/${scale}-to-coinbase-in-dollars`,
                         },
@@ -85,11 +89,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerMoneybag,
                       name: "In Bitcoin",
-                      title: "Yearly Sum Of Bitcoin Coinbases",
+                      title: "Yearly Sum Of Coinbases In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
-                          title: "Coinbases (Bitcoin)",
+                          title: "Sum",
                           color: colors.bitcoin,
                           datasetPath: `/${scale}-to-coinbase-1y-sum`,
                         },
@@ -99,11 +104,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCash,
                       name: "In Dollars",
-                      title: "Yearly Sum Of Dollar Coinbases",
+                      title: "Yearly Sum Of Coinbases In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
-                          title: "Coinbases (Dollars)",
+                          title: "Sum",
                           color: colors.dollars,
                           datasetPath: `/${scale}-to-coinbase-in-dollars-1y-sum`,
                         },
@@ -119,11 +125,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerMoneybag,
                       name: "In Bitcoin",
-                      title: "Cumulative Bitcoin Coinbases",
+                      title: "Cumulative Coinbases In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
-                          title: "Coinbases (Bitcoin)",
+                          title: "Coinbases",
                           color: colors.bitcoin,
                           datasetPath: `/${scale}-to-cumulative-coinbase`,
                         },
@@ -133,11 +140,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCash,
                       name: "In Dollars",
-                      title: "Cumulative Dollar Coinbases",
+                      title: "Cumulative Coinbases In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
-                          title: "Coinbases (Dollars)",
+                          title: "Coinbases",
                           color: colors.dollars,
                           datasetPath: `/${scale}-to-cumulative-coinbase-in-dollars`,
                         },
@@ -162,8 +170,9 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCoinBitcoin,
                       name: "In Bitcoin",
-                      title: "Last Subsidy (In Bitcoin)",
+                      title: "Last Subsidy In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
                           title: "Last",
@@ -176,8 +185,9 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCoin,
                       name: "In Dollars",
-                      title: "Last Subsidy (In Dollars)",
+                      title: "Last Subsidy In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
                           title: "Last",
@@ -196,11 +206,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerMoneybag,
                       name: "In Bitcoin",
-                      title: "Daily Sum Of Bitcoin Subsidies",
+                      title: "Daily Sum Of Subsidies In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
-                          title: "Subsidies (Bitcoin)",
+                          title: "Sum",
                           color: colors.bitcoin,
                           datasetPath: `/${scale}-to-subsidy`,
                         },
@@ -210,11 +221,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCash,
                       name: "In Dollars",
-                      title: "Daily Sum Of Dollar Subsidies",
+                      title: "Daily Sum Of Subsidies In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
-                          title: "Subsidies (Dollars)",
+                          title: "Sum",
                           color: colors.dollars,
                           datasetPath: `/${scale}-to-subsidy-in-dollars`,
                         },
@@ -230,11 +242,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerMoneybag,
                       name: "In Bitcoin",
-                      title: "Yearly Sum Of Bitcoin Subsidies",
+                      title: "Yearly Sum Of Subsidies In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
-                          title: "Subsidies (Bitcoin)",
+                          title: "Sum",
                           color: colors.bitcoin,
                           datasetPath: `/${scale}-to-subsidy-1y-sum`,
                         },
@@ -244,11 +257,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCash,
                       name: "In Dollars",
-                      title: "Yearly Sum Of Dollar Subsidies",
+                      title: "Yearly Sum Of Subsidies In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
-                          title: "Subsidies (Dollars)",
+                          title: "Sum",
                           color: colors.dollars,
                           datasetPath: `/${scale}-to-subsidy-in-dollars-1y-sum`,
                         },
@@ -264,11 +278,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerMoneybag,
                       name: "In Bitcoin",
-                      title: "Cumulative Bitcoin Subsidies",
+                      title: "Cumulative Subsidies In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
-                          title: "Subsidies (Bitcoin)",
+                          title: "Subsidies",
                           color: colors.bitcoin,
                           datasetPath: `/${scale}-to-cumulative-subsidy`,
                         },
@@ -278,11 +293,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCash,
                       name: "In Dollars",
-                      title: "Cumulative Dollar Subsidies",
+                      title: "Cumulative Subsidies In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
-                          title: "Subsidies (Dollars)",
+                          title: "Subsidies",
                           color: colors.dollars,
                           datasetPath: `/${scale}-to-cumulative-subsidy-in-dollars`,
                         },
@@ -307,8 +323,9 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCoinBitcoin,
                       name: "In Bitcoin",
-                      title: "Last Fees (In Bitcoin)",
+                      title: "Last Fees In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
                           title: "Last",
@@ -321,8 +338,9 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCoin,
                       name: "In Dollars",
-                      title: "Last Fees (In Dollars)",
+                      title: "Last Fees In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
                           title: "Last",
@@ -341,11 +359,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerMoneybag,
                       name: "In Bitcoin",
-                      title: "Daily Sum Of Bitcoin Fees",
+                      title: "Daily Sum Of Fees In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
-                          title: "Fees (Bitcoin)",
+                          title: "Sum",
                           color: colors.bitcoin,
                           datasetPath: `/${scale}-to-fees`,
                         },
@@ -355,11 +374,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCash,
                       name: "In Dollars",
-                      title: "Daily Sum Of Dollar Fees",
+                      title: "Daily Sum Of Fees In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
-                          title: "Fees (Dollars)",
+                          title: "Sum",
                           color: colors.dollars,
                           datasetPath: `/${scale}-to-fees-in-dollars`,
                         },
@@ -375,11 +395,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerMoneybag,
                       name: "In Bitcoin",
-                      title: "Yearly Sum Of Bitcoin Fees",
+                      title: "Yearly Sum Of Fees In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
-                          title: "Fees (Bitcoin)",
+                          title: "Sum",
                           color: colors.bitcoin,
                           datasetPath: `/${scale}-to-fees-1y-sum`,
                         },
@@ -389,11 +410,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCash,
                       name: "In Dollars",
-                      title: "Yearly Sum Of Dollar Fees",
+                      title: "Yearly Sum Of Fees In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
-                          title: "Fees (Dollars)",
+                          title: "Sum",
                           color: colors.dollars,
                           datasetPath: `/${scale}-to-fees-in-dollars-1y-sum`,
                         },
@@ -409,11 +431,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerMoneybag,
                       name: "In Bitcoin",
-                      title: "Cumulative Bitcoin Fees",
+                      title: "Cumulative Fees In Bitcoin",
                       description: "",
+                      unit: "Bitcoin",
                       bottom: [
                         {
-                          title: "Fees (Bitcoin)",
+                          title: "Fees",
                           color: colors.bitcoin,
                           datasetPath: `/${scale}-to-cumulative-fees`,
                         },
@@ -423,11 +446,12 @@ export function createPresets(scale: ResourceScale) {
                       scale,
                       icon: IconTablerCash,
                       name: "In Dollars",
-                      title: "Cumulative Dollar Fees",
+                      title: "Cumulative Fees In Dollars",
                       description: "",
+                      unit: "US Dollars",
                       bottom: [
                         {
-                          title: "Fees (Dollars)",
+                          title: "Fees",
                           color: colors.dollars,
                           datasetPath: `/${scale}-to-cumulative-fees-in-dollars`,
                         },
@@ -446,14 +470,15 @@ export function createPresets(scale: ResourceScale) {
         name: "Subsidy V. Fees",
         title: "Subsidy V. Fees",
         description: "",
+        unit: "Percentage",
         bottom: [
           {
-            title: "Subsidy (%)",
+            title: "Subsidy",
             color: colors.bitcoin,
             datasetPath: `/${scale}-to-subsidy-to-coinbase-ratio`,
           },
           {
-            title: "Fees (%)",
+            title: "Fees",
             color: colors.darkBitcoin,
             datasetPath: `/${scale}-to-fees-to-coinbase-ratio`,
           },
@@ -468,9 +493,7 @@ export function createPresets(scale: ResourceScale) {
               name: "Puell Multiple",
               title: "Puell Multiple",
               description: "",
-              priceScaleOptions: {
-                mode: 1,
-              },
+              unit: "",
               bottom: [
                 {
                   title: "Multiple",
@@ -484,11 +507,9 @@ export function createPresets(scale: ResourceScale) {
               scale,
               icon: IconTablerPick,
               name: "Hash Rate",
-              title: "Hash Rate (EH/s)",
+              title: "Hash Rate",
               description: "",
-              priceScaleOptions: {
-                mode: 1,
-              },
+              unit: "ExaHash / Second",
               bottom: [
                 {
                   title: "1M SMA",
@@ -511,11 +532,9 @@ export function createPresets(scale: ResourceScale) {
               scale,
               icon: IconTablerRibbonHealth,
               name: "Hash Ribbon",
-              title: "Hash Ribbon (EH/s)",
+              title: "Hash Ribbon",
               description: "",
-              priceScaleOptions: {
-                mode: 1,
-              },
+              unit: "ExaHash / Second",
               bottom: [
                 {
                   title: "1M SMA",
@@ -535,15 +554,16 @@ export function createPresets(scale: ResourceScale) {
               name: "Hash Price",
               title: "Hash Price",
               description: "",
+              unit: "Dollars / (PetaHash / Second)",
               bottom: [
                 {
-                  title: "Price ($/PH/s)",
+                  title: "Price",
                   color: colors.dollars,
                   datasetPath: `/date-to-hash-price`,
                 },
               ],
             },
-          ] satisfies PartialPreset[])
+          ] as const satisfies PartialPreset[])
         : []),
 
       {
@@ -552,9 +572,7 @@ export function createPresets(scale: ResourceScale) {
         name: "Difficulty",
         title: "Difficulty",
         description: "",
-        priceScaleOptions: {
-          mode: 1,
-        },
+        unit: "",
         bottom: [
           {
             title: "Difficulty",
@@ -572,9 +590,10 @@ export function createPresets(scale: ResourceScale) {
               name: "Difficulty Adjustment",
               title: "Difficulty Adjustment",
               description: "",
+              unit: "Percentage",
               bottom: [
                 {
-                  title: "Adjustment (%)",
+                  title: "Adjustment",
                   seriesType: SeriesType.Based,
                   datasetPath: `/${scale}-to-difficulty-adjustment`,
                 },
@@ -589,9 +608,7 @@ export function createPresets(scale: ResourceScale) {
         name: "Annualized Issuance",
         title: "Annualized Issuance",
         description: "",
-        priceScaleOptions: {
-          mode: 1,
-        },
+        unit: "Bitcoin",
         bottom: [
           {
             title: "Issuance",
@@ -607,12 +624,10 @@ export function createPresets(scale: ResourceScale) {
         name: "Yearly Inflation Rate",
         title: "Yearly Inflation Rate",
         description: "",
-        priceScaleOptions: {
-          mode: 1,
-        },
+        unit: "Percentage",
         bottom: [
           {
-            title: "Rate (%)",
+            title: "Rate",
             color: colors.bitcoin,
             datasetPath: `/${scale}-to-yearly-inflation-rate`,
           },

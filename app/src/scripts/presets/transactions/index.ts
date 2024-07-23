@@ -10,6 +10,7 @@ export function createPresets(scale: ResourceScale) {
         name: "Count",
         title: "Transaction Count",
         description: "",
+        unit: "Count",
         bottom: [
           {
             title: "1M SMA",
@@ -38,6 +39,7 @@ export function createPresets(scale: ResourceScale) {
             name: "In Bitcoin",
             title: "Transaction Volume",
             description: "",
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "1M SMA",
@@ -62,9 +64,7 @@ export function createPresets(scale: ResourceScale) {
             name: "In Dollars",
             title: "Transaction Volume In Dollars",
             description: "",
-            priceScaleOptions: {
-              mode: 1,
-            },
+            unit: "US Dollars",
             bottom: [
               {
                 title: "1M SMA",
@@ -95,6 +95,7 @@ export function createPresets(scale: ResourceScale) {
             name: "In Bitcoin",
             title: "Annualized Transaction Volume",
             description: "",
+            unit: "Bitcoin",
             bottom: [
               {
                 title: "Volume",
@@ -109,6 +110,7 @@ export function createPresets(scale: ResourceScale) {
             name: "In Dollars",
             title: "Annualized Transaction Volume In Dollars",
             description: "",
+            unit: "US Dollars",
             bottom: [
               {
                 title: "Volume",
@@ -125,6 +127,7 @@ export function createPresets(scale: ResourceScale) {
         name: "Velocity",
         title: "Transactions Velocity",
         description: "",
+        unit: "",
         bottom: [
           {
             title: "Transactions Velocity",
@@ -139,6 +142,7 @@ export function createPresets(scale: ResourceScale) {
         name: "Per Second",
         title: "Transactions Per Second",
         description: "",
+        unit: "Transactions",
         bottom: [
           {
             title: "1M SMA",

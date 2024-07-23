@@ -6,26 +6,26 @@ import { GENESIS_DAY } from "../../../../../scripts/lightweightCharts/whitespace
 import { Box } from "../../box";
 import { Scrollable } from "../../scrollable";
 
-const MULTIPLIER = 0.0025;
-const DELAY = 25;
+const DELAY = 1;
+const MULTIPLIER = DELAY / 1000;
 const LEFT = -1;
 const RIGHT = 1;
 
 export function TimeScale({
   scale,
-  charts,
+  firstChart,
 }: {
   scale: Accessor<ResourceScale>;
-  charts: RWS<IChartApi[]>;
+  firstChart: RWS<IChartApi | undefined>;
 }) {
   const today = new Date();
 
-  const disabled = createMemo(() => charts().length === 0);
+  const disabled = createMemo(() => !firstChart());
 
   const scrollDirection = createRWS(0);
 
   const timeScale = createMemo(() => {
-    const chart = charts().at(0);
+    const chart = firstChart();
     if (!chart) return undefined;
     return chart.timeScale();
   });
@@ -86,21 +86,25 @@ export function TimeScale({
             <Button
               minWidth
               disabled={disabled}
-              onClick={() => setTimeScale({ scale: scale(), charts })}
+              onClick={() => setTimeScale({ scale: scale(), timeScale })}
             >
               All Time
             </Button>
             <Button
               minWidth
               disabled={disabled}
-              onClick={() => setTimeScale({ scale: scale(), charts, days: 7 })}
+              onClick={() =>
+                setTimeScale({ scale: scale(), timeScale, days: 7 })
+              }
             >
               1 Week
             </Button>
             <Button
               minWidth
               disabled={disabled}
-              onClick={() => setTimeScale({ scale: scale(), charts, days: 30 })}
+              onClick={() =>
+                setTimeScale({ scale: scale(), timeScale, days: 30 })
+              }
             >
               1 Month
             </Button>
@@ -108,7 +112,7 @@ export function TimeScale({
               minWidth
               disabled={disabled}
               onClick={() =>
-                setTimeScale({ scale: scale(), charts, days: 3 * 30 })
+                setTimeScale({ scale: scale(), timeScale, days: 3 * 30 })
               }
             >
               3 Months
@@ -117,7 +121,7 @@ export function TimeScale({
               minWidth
               disabled={disabled}
               onClick={() =>
-                setTimeScale({ scale: scale(), charts, days: 6 * 30 })
+                setTimeScale({ scale: scale(), timeScale, days: 6 * 30 })
               }
             >
               6 Months
@@ -128,7 +132,7 @@ export function TimeScale({
               onClick={() =>
                 setTimeScale({
                   scale: scale(),
-                  charts,
+                  timeScale,
                   days: Math.ceil(
                     (today.getTime() -
                       new Date(`${today.getUTCFullYear()}-01-01`).getTime()) /
@@ -143,7 +147,7 @@ export function TimeScale({
               minWidth
               disabled={disabled}
               onClick={() =>
-                setTimeScale({ scale: scale(), charts, days: 365 })
+                setTimeScale({ scale: scale(), timeScale, days: 365 })
               }
             >
               1 Year
@@ -152,7 +156,7 @@ export function TimeScale({
               minWidth
               disabled={disabled}
               onClick={() =>
-                setTimeScale({ scale: scale(), charts, days: 2 * 365 })
+                setTimeScale({ scale: scale(), timeScale, days: 2 * 365 })
               }
             >
               2 Years
@@ -161,7 +165,7 @@ export function TimeScale({
               minWidth
               disabled={disabled}
               onClick={() =>
-                setTimeScale({ scale: scale(), charts, days: 4 * 365 })
+                setTimeScale({ scale: scale(), timeScale, days: 4 * 365 })
               }
             >
               4 Years
@@ -170,7 +174,7 @@ export function TimeScale({
               minWidth
               disabled={disabled}
               onClick={() =>
-                setTimeScale({ scale: scale(), charts, days: 8 * 365 })
+                setTimeScale({ scale: scale(), timeScale, days: 8 * 365 })
               }
             >
               8 Years
@@ -187,7 +191,9 @@ export function TimeScale({
                 <Button
                   minWidth
                   disabled={disabled}
-                  onClick={() => setTimeScale({ scale: scale(), charts, year })}
+                  onClick={() =>
+                    setTimeScale({ scale: scale(), timeScale, year })
+                  }
                 >
                   {year}
                 </Button>
@@ -214,7 +220,7 @@ export function TimeScale({
                   onClick={() =>
                     setTimeScale({
                       scale: scale(),
-                      charts,
+                      timeScale,
                       range: {
                         from: i * 100_000,
                         to: (i + 0.5) * 100_000,
@@ -282,13 +288,13 @@ function Button({
 }
 
 function setTimeScale({
-  charts,
+  timeScale,
   scale,
   days,
   year,
   range,
 }: {
-  charts: RWS<IChartApi[]>;
+  timeScale: Accessor<ITimeScaleApi<Time> | undefined>;
   scale: ResourceScale;
   days?: number;
   year?: number;
@@ -307,22 +313,16 @@ function setTimeScale({
       from = new Date(GENESIS_DAY);
     }
 
-    charts()
-      .at(0)
-      ?.timeScale()
-      .setVisibleRange({
-        from: (from.getTime() / 1000) as Time,
-        to: (to.getTime() / 1000) as Time,
-      });
+    timeScale()?.setVisibleRange({
+      from: (from.getTime() / 1000) as Time,
+      to: (to.getTime() / 1000) as Time,
+    });
   } else if (scale === "height") {
     if (range) {
-      charts()
-        .at(0)
-        ?.timeScale()
-        .setVisibleRange({
-          from: range.from as Time,
-          to: range.to as Time,
-        });
+      timeScale()?.setVisibleRange({
+        from: range.from as Time,
+        to: range.to as Time,
+      });
     }
   }
 }
