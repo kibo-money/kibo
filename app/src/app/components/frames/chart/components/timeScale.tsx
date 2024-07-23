@@ -6,8 +6,8 @@ import { GENESIS_DAY } from "../../../../../scripts/lightweightCharts/whitespace
 import { Box } from "../../box";
 import { Scrollable } from "../../scrollable";
 
-const MULTIPLIER = 0.002;
-const DELAY = 10;
+const MULTIPLIER = 0.0025;
+const DELAY = 25;
 const LEFT = -1;
 const RIGHT = 1;
 
@@ -30,28 +30,33 @@ export function TimeScale({
     return chart.timeScale();
   });
 
-  const interval = setInterval(() => {
-    const time = timeScale();
+  let interval: number | undefined;
 
-    if (!time) return;
-
+  function createScrollLoop() {
+    clearInterval(interval);
     const direction = scrollDirection();
-
     if (!direction) return;
 
-    const range = time.getVisibleLogicalRange();
-
-    if (!range) return;
-
-    const speed = (range.to - range.from) * MULTIPLIER * direction;
-
     // @ts-ignore
-    range.from += speed;
-    // @ts-ignore
-    range.to += speed;
+    interval = setInterval(() => {
+      const time = timeScale();
 
-    time.setVisibleLogicalRange(range);
-  }, DELAY);
+      if (!time) return;
+
+      const range = time.getVisibleLogicalRange();
+
+      if (!range) return;
+
+      const speed = (range.to - range.from) * MULTIPLIER * direction;
+
+      // @ts-ignore
+      range.from += speed;
+      // @ts-ignore
+      range.to += speed;
+
+      time.setVisibleLogicalRange(range);
+    }, DELAY);
+  }
 
   onCleanup(() => clearInterval(interval));
 
@@ -61,7 +66,10 @@ export function TimeScale({
         <Button
           square
           disabled={disabled}
-          onClick={() => scrollDirection.set((v) => (v === LEFT ? 0 : LEFT))}
+          onClick={() => {
+            scrollDirection.set((v) => (v === LEFT ? 0 : LEFT));
+            createScrollLoop();
+          }}
         >
           <Show
             when={scrollDirection() === LEFT}
@@ -226,7 +234,10 @@ export function TimeScale({
         <Button
           square
           disabled={disabled}
-          onClick={() => scrollDirection.set((v) => (v === RIGHT ? 0 : RIGHT))}
+          onClick={() => {
+            scrollDirection.set((v) => (v === RIGHT ? 0 : RIGHT));
+            createScrollLoop();
+          }}
         >
           <Show
             when={scrollDirection() === RIGHT}

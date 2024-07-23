@@ -160,6 +160,11 @@ export function SettingsFrame({
                   url: "https://twitter.com/DanielAngelovBG",
                   amount: 21_000,
                 },
+                {
+                  name: "Ivo",
+                  url: "https://primal.net/p/npub1mnwjn40hr042rsmzu64rsnwsw07uegg4tjkv620c94p6e797wkvq3qeujc",
+                  amount: 5_000,
+                },
               ]
                 .sort((a, b) =>
                   b.amount !== a.amount
