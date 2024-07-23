@@ -2,6 +2,8 @@
 
 ## v. 0.3.0 | WIP
 
+![Image of the Satonomics Web App version 0.3.0](./assets/v0.3.0.jpg)
+
 ### Parser
 
 - Global
