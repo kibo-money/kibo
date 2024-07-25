@@ -81,11 +81,6 @@ export function Chart({
 
   createEffect(
     on([div, () => charts()[chartIndex]], ([div, chartConfig]) => {
-      console.log({
-        div,
-        chartConfig,
-      });
-
       if (!div || !chartConfig) return;
 
       const preset = presetAccessor();
@@ -359,7 +354,7 @@ export function Chart({
             bottom: `${isLastDrawn() ? 32 : 0}px`,
             right: `77px`,
           }}
-          class="text-low-contrast absolute z-50 px-3 py-0.5"
+          class="text-low-contrast absolute z-10 px-3 py-0.5"
         >
           <RadioGroup size="xs" title={chartPriceModeKey} sl={chartPriceMode} />
         </div>

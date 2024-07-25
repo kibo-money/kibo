@@ -19,12 +19,7 @@ impl UTXOCohortsDurableStates {
     pub fn init(date_data_vec: &DateDataVec) -> Self {
         let mut s = Self::default();
 
-        if let Some(last_date_data) = date_data_vec.last() {
-            let last_block_data = last_date_data.blocks.last().unwrap_or_else(|| {
-                dbg!(&last_date_data);
-                panic!()
-            });
-
+        if let Some(last_block_data) = date_data_vec.last_block() {
             date_data_vec.iter().for_each(|date_data| {
                 let year = date_data.date.year() as u32;
 

@@ -357,7 +357,7 @@ impl PriceDatasets {
                 .last_key_value()
                 .unwrap()
                 .0
-                <= date
+                < date
         {
             self.kraken_daily.replace(Kraken::fetch_daily_prices()?);
         }

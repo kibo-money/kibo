@@ -35,8 +35,8 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
         bottom: [
           {
             title: `New Addresses`,
-            color: colors.white,
-            datasetPath: `/${scale}-to-created-addresses`,
+            color: colors.bitcoin,
+            datasetPath: `/${scale}-to-new-addresses`,
           },
         ],
       },

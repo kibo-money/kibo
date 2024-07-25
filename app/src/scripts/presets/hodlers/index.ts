@@ -23,20 +23,20 @@ export function createPresets(scale: ResourceScale) {
           {
             title: `24h`,
             color: colors.up_to_1d,
-            datasetPath: `/date-to-up-to-1d-supply-to-circulating-supply-ratio`,
+            datasetPath: `/${scale}-to-up-to-1d-supply-to-circulating-supply-ratio`,
           },
 
           ...fromXToYCohorts.map(({ key, id, name, legend }) => ({
             title: legend,
             color: colors[key],
             datasetPath:
-              `/date-to-${id}-supply-to-circulating-supply-ratio` as const,
+              `/${scale}-to-${id}-supply-to-circulating-supply-ratio` as const,
           })),
 
           {
             title: `15y+`,
             color: colors.from_15y,
-            datasetPath: `/date-to-from-15y-supply-to-circulating-supply-ratio`,
+            datasetPath: `/${scale}-to-from-15y-supply-to-circulating-supply-ratio`,
           },
         ],
       },

@@ -11,12 +11,13 @@ pub struct DateDataVec(Vec<DateData>);
 
 impl DateDataVec {
     pub fn last_block(&self) -> Option<&BlockData> {
-        self.last().and_then(|date_data| date_data.blocks.last())
+        self.iter().flat_map(|date_data| &date_data.blocks).last()
     }
 
     pub fn last_mut_block(&mut self) -> Option<&mut BlockData> {
-        self.last_mut()
-            .and_then(|date_data| date_data.blocks.last_mut())
+        self.iter_mut()
+            .flat_map(|date_data| &mut date_data.blocks)
+            .last()
     }
 
     pub fn second_last_block(&self) -> Option<&BlockData> {
