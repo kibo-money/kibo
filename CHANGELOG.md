@@ -13,6 +13,7 @@
     - Auto fetch prices from the main Satonomics instance if missing instead of only trying Kraken's and Binance's API which are limited to the last 16 hours
   - Merged the core of `HeightMap` and `DateMap` structs into `GenericMap`
   - Added `Height` struct and many others
+  - Reorganized outputs of both the parser and the server for ease of use and easier sync compatibility
 - CLI
   - Added an argument parser for improved UX with several options
 - Datasets
@@ -76,7 +77,7 @@
 
 - Run file
   - Only run with a watcher if `cargo watch` is available
-- Added trigger folder to automatically restart when a new dataset has been added in the parser
+  - Removed id_to_path file in favor for only `paths.d.ts` in `app/src/types`
 
 ## v. 0.2.0 | [851286](https://mempool.space/block/0000000000000000000281ca7f1bf8c50702bfca168c7af1bdc67c977c1ac8ed) - 2024/07/08
 

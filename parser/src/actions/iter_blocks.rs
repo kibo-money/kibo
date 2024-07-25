@@ -73,26 +73,6 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
                     let current_block_date = Date::from_timestamp(timestamp);
                     let current_block_height = height + blocks_loop_i;
 
-                    if states.address_cohorts_durable_states.is_none()
-                        && datasets
-                            .address
-                            .needs_durable_states(current_block_height, current_block_date)
-                    {
-                        states.address_cohorts_durable_states =
-                            Some(AddressCohortsDurableStates::init(
-                                &mut databases.address_index_to_address_data,
-                            ));
-                    }
-
-                    if states.utxo_cohorts_durable_states.is_none()
-                        && datasets
-                            .utxo
-                            .needs_durable_states(current_block_height, current_block_date)
-                    {
-                        states.utxo_cohorts_durable_states =
-                            Some(UTXOCohortsDurableStates::init(&states.date_data_vec));
-                    }
-
                     let next_block_date = next_block_opt
                         .as_ref()
                         .map(|next_block| Date::from_timestamp(next_block.header.time));
@@ -136,6 +116,27 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
                             current_block_height,
                             blocks_loop_date,
                         );
+
+                        if states.address_cohorts_durable_states.is_none()
+                            && (compute_addresses
+                                || datasets
+                                    .address
+                                    .needs_durable_states(current_block_height, current_block_date))
+                        {
+                            states.address_cohorts_durable_states =
+                                Some(AddressCohortsDurableStates::init(
+                                    &mut databases.address_index_to_address_data,
+                                ));
+                        }
+
+                        if states.utxo_cohorts_durable_states.is_none()
+                            && datasets
+                                .utxo
+                                .needs_durable_states(current_block_height, current_block_date)
+                        {
+                            states.utxo_cohorts_durable_states =
+                                Some(UTXOCohortsDurableStates::init(&states.date_data_vec));
+                        }
 
                         parse(ParseData {
                             bitcoin_db,

@@ -26,6 +26,7 @@ pub struct PriceDatasets {
     kraken_daily: Option<BTreeMap<Date, OHLC>>,
     kraken_1mn: Option<BTreeMap<u32, OHLC>>,
     binance_1mn: Option<BTreeMap<u32, OHLC>>,
+    binance_daily: Option<BTreeMap<Date, OHLC>>,
     binance_har: Option<BTreeMap<u32, OHLC>>,
     satonomics_by_height: BTreeMap<HeightMapChunkId, Vec<OHLC>>,
     satonomics_by_date: BTreeMap<DateMapChunkId, BTreeMap<Date, OHLC>>,
@@ -89,6 +90,7 @@ impl PriceDatasets {
             min_initial_states: MinInitialStates::default(),
 
             binance_1mn: None,
+            binance_daily: None,
             binance_har: None,
             kraken_1mn: None,
             kraken_daily: None,
@@ -310,8 +312,9 @@ impl PriceDatasets {
             Ok(self.ohlcs.date.get(&date).unwrap().to_owned())
         } else {
             let ohlc = self
-                .get_from_date_satonomics(&date)
-                .or_else(|_| self.get_from_daily_kraken(&date))?;
+                .get_from_daily_kraken(&date)
+                .or_else(|_| self.get_from_daily_binance(&date))
+                .or_else(|_| self.get_from_date_satonomics(&date))?;
 
             self.ohlcs.date.insert(date, ohlc);
 
@@ -323,7 +326,16 @@ impl PriceDatasets {
         let chunk_id = date.to_chunk_id();
 
         #[allow(clippy::map_entry)]
-        if !self.satonomics_by_date.contains_key(&chunk_id) {
+        if !self.satonomics_by_date.contains_key(&chunk_id)
+            || self
+                .satonomics_by_date
+                .get(&chunk_id)
+                .unwrap()
+                .last_key_value()
+                .unwrap()
+                .0
+                <= date
+        {
             self.satonomics_by_date
                 .insert(chunk_id, Satonomics::fetch_date_prices(chunk_id)?);
         }
@@ -337,12 +349,42 @@ impl PriceDatasets {
     }
 
     fn get_from_daily_kraken(&mut self, date: &Date) -> color_eyre::Result<OHLC> {
-        if self.kraken_daily.is_none() {
-            self.kraken_daily
-                .replace(Kraken::fetch_daily_prices().or_else(|_| Binance::fetch_daily_prices())?);
+        if self.kraken_daily.is_none()
+            || self
+                .kraken_daily
+                .as_ref()
+                .unwrap()
+                .last_key_value()
+                .unwrap()
+                .0
+                <= date
+        {
+            self.kraken_daily.replace(Kraken::fetch_daily_prices()?);
         }
 
         self.kraken_daily
+            .as_ref()
+            .unwrap()
+            .get(date)
+            .cloned()
+            .ok_or(Error::msg("Couldn't find date"))
+    }
+
+    fn get_from_daily_binance(&mut self, date: &Date) -> color_eyre::Result<OHLC> {
+        if self.binance_daily.is_none()
+            || self
+                .binance_daily
+                .as_ref()
+                .unwrap()
+                .last_key_value()
+                .unwrap()
+                .0
+                <= date
+        {
+            self.binance_daily.replace(Binance::fetch_daily_prices()?);
+        }
+
+        self.binance_daily
             .as_ref()
             .unwrap()
             .get(date)
@@ -380,13 +422,13 @@ impl PriceDatasets {
         let previous_timestamp = previous_timestamp.map(clean_timestamp);
 
         let ohlc = self
-            .get_from_height_satonomics(&height)
+            .get_from_1mn_kraken(timestamp, previous_timestamp)
             .unwrap_or_else(|_| {
-                self.get_from_1mn_kraken(timestamp, previous_timestamp)
+                self.get_from_1mn_binance(timestamp, previous_timestamp)
                     .unwrap_or_else(|_| {
-                        self.get_from_1mn_binance(timestamp, previous_timestamp)
+                        self.get_from_har_binance(timestamp, previous_timestamp)
                             .unwrap_or_else(|_| {
-                                self.get_from_har_binance(timestamp, previous_timestamp)
+                                self.get_from_height_satonomics(&height)
                                     .unwrap_or_else(|_| {
                                         let date = Date::from_timestamp(timestamp);
 
@@ -419,7 +461,10 @@ How to fix this:
         let chunk_id = height.to_chunk_id();
 
         #[allow(clippy::map_entry)]
-        if !self.satonomics_by_height.contains_key(&chunk_id) {
+        if !self.satonomics_by_height.contains_key(&chunk_id)
+            || ((chunk_id.to_usize() + self.satonomics_by_height.get(&chunk_id).unwrap().len())
+                <= height.to_usize())
+        {
             self.satonomics_by_height
                 .insert(chunk_id, Satonomics::fetch_height_prices(chunk_id)?);
         }
@@ -437,7 +482,16 @@ How to fix this:
         timestamp: u32,
         previous_timestamp: Option<u32>,
     ) -> color_eyre::Result<OHLC> {
-        if self.kraken_1mn.is_none() {
+        if self.kraken_1mn.is_none()
+            || self
+                .kraken_1mn
+                .as_ref()
+                .unwrap()
+                .last_key_value()
+                .unwrap()
+                .0
+                <= &timestamp
+        {
             self.kraken_1mn.replace(Kraken::fetch_1mn_prices()?);
         }
 
@@ -449,7 +503,16 @@ How to fix this:
         timestamp: u32,
         previous_timestamp: Option<u32>,
     ) -> color_eyre::Result<OHLC> {
-        if self.binance_1mn.is_none() {
+        if self.binance_1mn.is_none()
+            || self
+                .binance_1mn
+                .as_ref()
+                .unwrap()
+                .last_key_value()
+                .unwrap()
+                .0
+                <= &timestamp
+        {
             self.binance_1mn.replace(Binance::fetch_1mn_prices()?);
         }
 

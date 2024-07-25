@@ -21,11 +21,11 @@ const RETRIES: usize = 10;
 
 impl Satonomics {
     fn get_base_url(try_index: usize) -> &'static str {
-        if try_index < RETRIES / 2 {
-            SATONOMICS_OFFICIAL_URL
-        } else {
-            SATONOMICS_OFFICIAL_BACKUP_URL
-        }
+        // if try_index < RETRIES / 2 {
+        SATONOMICS_OFFICIAL_URL
+        // } else {
+        //     SATONOMICS_OFFICIAL_BACKUP_URL
+        // }
     }
 
     pub fn fetch_height_prices(chunk_id: HeightMapChunkId) -> color_eyre::Result<Vec<OHLC>> {

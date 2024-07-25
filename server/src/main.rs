@@ -38,7 +38,7 @@ async fn main() -> color_eyre::Result<()> {
 
     let routes = Routes::build();
 
-    routes.generate_front_end_files();
+    routes.generate_dts_file();
 
     let state = AppState {
         routes: Arc::new(routes),

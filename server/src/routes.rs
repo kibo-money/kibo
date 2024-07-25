@@ -20,12 +20,13 @@ pub struct Route {
 #[derive(Clone, Default, Deref, DerefMut)]
 pub struct Routes(pub Grouped<HashMap<String, Route>>);
 
-const DATASETS_PATH: &str = "../datasets";
+const INPUTS_PATH: &str = "./in";
+const APP_TYPES_PATH: &str = "../app/src/types";
 
 impl Routes {
     pub fn build() -> Self {
         let path_to_type: BTreeMap<String, String> =
-            Json::import(&format!("{DATASETS_PATH}/disk_path_to_type.json")).unwrap();
+            Json::import(&format!("{INPUTS_PATH}/disk_path_to_type.json")).unwrap();
 
         let mut routes = Routes::default();
 
@@ -99,42 +100,14 @@ impl Routes {
         routes
     }
 
-    pub fn generate_front_end_files(&self) {
-        self.generate_json_group_files();
-        self.generate_definition_files();
-    }
-
-    fn generate_json_group_files(&self) {
-        let map_to_group = |map: &HashMap<String, Route>| -> BTreeMap<String, String> {
-            map.iter()
-                .map(|(key, route)| (key.to_owned(), route.url_path.to_owned()))
-                .collect()
-        };
-
-        let date_group = map_to_group(&self.date);
-        let height_group = map_to_group(&self.height);
-        let last_group = map_to_group(&self.last);
-
-        let groups = Paths(Grouped {
-            date: date_group,
-            height: height_group,
-            last: last_group,
-        });
-
-        let _ = Json::export(
-            &format!("{DATASETS_PATH}/grouped_keys_to_url_path.json"),
-            &groups,
-        );
-    }
-
-    fn generate_definition_files(&self) {
+    pub fn generate_dts_file(&self) {
         let map_to_type = |name: &str, map: &HashMap<String, Route>| -> String {
             let paths = map
                 .values()
                 .map(|route| format!("\"{}\"", route.url_path))
                 .join(" | ");
 
-            format!("export type {}Path = {};\n", name, paths)
+            format!("type {}Path = {};\n", name, paths)
         };
 
         let date_type = map_to_type("Date", &self.date);
@@ -144,7 +117,7 @@ impl Routes {
         let last_type = map_to_type("Last", &self.last);
 
         fs::write(
-            format!("{DATASETS_PATH}/paths.d.ts"),
+            format!("{APP_TYPES_PATH}/paths.d.ts"),
             format!("{date_type}\n{height_type}\n{last_type}"),
         )
         .unwrap();

@@ -1,6 +1,6 @@
 #![allow(dead_code)]
 
-use std::{collections::BTreeMap, path::Path};
+use std::{collections::BTreeMap, fs, path::Path};
 
 use color_eyre::eyre::ContextCompat;
 use itertools::Itertools;
@@ -8,7 +8,7 @@ use serde_json::Value;
 
 use crate::{
     datasets::OHLC,
-    io::{Json, IMPORTS_FOLDER_PATH},
+    io::{Json, INPUTS_FOLDER_PATH},
     structs::Date,
     utils::{log, retry},
 };
@@ -19,7 +19,9 @@ impl Binance {
     pub fn read_har_file() -> color_eyre::Result<BTreeMap<u32, OHLC>> {
         log("binance: read har file");
 
-        let path_binance_har = Path::new(IMPORTS_FOLDER_PATH).join("binance.har");
+        fs::create_dir_all(INPUTS_FOLDER_PATH)?;
+
+        let path_binance_har = Path::new(INPUTS_FOLDER_PATH).join("binance.har");
 
         let json: BTreeMap<String, Value> =
             Json::import(path_binance_har.to_str().unwrap()).unwrap_or_default();
@@ -195,7 +197,7 @@ impl Binance {
                     .collect::<BTreeMap<_, _>>())
             },
             10,
-            5,
+            10,
         )
     }
 }

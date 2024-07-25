@@ -68,17 +68,8 @@ interface OHLC {
   close: number;
 }
 
-type GroupedKeysToURLPath =
-  typeof import("/src/../../datasets/grouped_keys_to_url_path.json");
-
-type DateDatasetPath = import("/src/../../datasets/paths").DatePath;
-
-type HeightDatasetPath = import("/src/../../datasets/paths").HeightPath;
-
-type LastDataPath = import("/src/../../datasets/paths").LastPath;
-
 type DatasetPath<Scale extends ResourceScale> = Scale extends "date"
-  ? DateDatasetPath
-  : HeightDatasetPath;
+  ? DatePath
+  : HeightPath;
 
-type AnyDatasetPath = DateDatasetPath | HeightDatasetPath;
+type AnyDatasetPath = DatePath | HeightPath;

@@ -1,4 +1,4 @@
-import { averages } from "/src/scripts/datasets/date";
+import { averages } from "/src/scripts/datasets/consts/averages";
 import { colors } from "/src/scripts/utils/colors";
 
 import { createRatioFolder } from "../../templates/ratio";

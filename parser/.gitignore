@@ -8,7 +8,9 @@ flamegraph.svg
 /profile.json
 
 /inputs*/
+/in
 /outputs*/
+/out
 /snapshots*/
 /exports*/
 /imports*/

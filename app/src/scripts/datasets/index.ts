@@ -5,8 +5,8 @@ export const scales = ["date" as const, "height" as const];
 export const HEIGHT_CHUNK_SIZE = 10_000;
 
 export function createDatasets() {
-  const date = new Map<DateDatasetPath, ResourceDataset<"date">>();
-  const height = new Map<HeightDatasetPath, ResourceDataset<"height">>();
+  const date = new Map<DatePath, ResourceDataset<"date">>();
+  const height = new Map<HeightPath, ResourceDataset<"height">>();
 
   function getOrImport<Scale extends ResourceScale>(
     scale: Scale,

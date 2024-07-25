@@ -123,7 +123,9 @@ function TextWrapper({
   focused: Accessor<boolean>;
   joined: string;
 }) {
-  const seconds = joined.length * 2;
+  const p = createRWS(undefined as HTMLParagraphElement | undefined);
+
+  const seconds = createRWS(joined.length * 2);
 
   const wasOnceOn = createRWS(false);
 
@@ -133,13 +135,18 @@ function TextWrapper({
     }
   });
 
+  onMount(() => {
+    seconds.set(Math.round(p()!.clientWidth / 20));
+  });
+
   return (
     <p
+      ref={p.set}
       class="inline-block px-2 text-[5dvh] font-black uppercase leading-none"
       style={{
         ...(wasOnceOn()
           ? {
-              animation: `marquee ${seconds}s linear infinite`,
+              animation: `marquee ${seconds()}s linear infinite`,
               "animation-play-state":
                 focused() && mode.selected() === "Scroll"
                   ? "running"

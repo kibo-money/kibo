@@ -277,13 +277,16 @@ impl AllDatasets {
 
         let datasets_len = path_to_type.len();
 
-        Json::export("../datasets/disk_path_to_type.json", &path_to_type)?;
+        let server_inputs_path = "../server/in";
 
-        let server_trigger_path = "../server/.trigger";
+        fs::create_dir_all(server_inputs_path)?;
 
-        fs::create_dir_all(server_trigger_path)?;
+        Json::export(
+            &format!("{server_inputs_path}/disk_path_to_type.json"),
+            &path_to_type,
+        )?;
 
-        let datasets_len_path = format!("{server_trigger_path}/datasets_len.txt");
+        let datasets_len_path = format!("{server_inputs_path}/datasets_len.txt");
 
         if let Ok(len) = fs::read_to_string(&datasets_len_path) {
             if let Ok(len) = len.parse::<usize>() {
