@@ -1,5 +1,11 @@
 # Changelog
 
+## v. 0.X.Y | WIP
+
+![Image of the Satonomics Web App version 0.X.Y](./assets/v0.X.Y.jpg)
+
+
+
 ## v. 0.3.0 | [853930](https://mempool.space/block/00000000000000000002eb5e9a7950ca2d5d98bd1ed28fc9098aa630d417985d) - 2024/07/26
 
 ![Image of the Satonomics Web App version 0.3.0](./assets/v0.3.0.jpg)

@@ -36,7 +36,7 @@ devDependencies:
     version: 1.1.118
   '@tailwindcss/container-queries':
     specifier: ^0.1.1
-    version: 0.1.1(tailwindcss@3.4.6)
+    version: 0.1.1(tailwindcss@3.4.7)
   autoprefixer:
     specifier: ^10.4.19
     version: 10.4.19(postcss@8.4.40)
@@ -56,8 +56,8 @@ devDependencies:
     specifier: ^5.12.0
     version: 5.12.0(rollup@2.79.1)
   tailwindcss:
-    specifier: ^3.4.6
-    version: 3.4.6
+    specifier: ^3.4.7
+    version: 3.4.7
   typescript:
     specifier: ^5.5.4
     version: 5.5.4
@@ -80,8 +80,8 @@ devDependencies:
     specifier: ^7.1.0
     version: 7.1.0
   wrangler:
-    specifier: ^3.66.0
-    version: 3.66.0
+    specifier: ^3.67.0
+    version: 3.67.0
 
 packages:
 
@@ -2295,12 +2295,12 @@ packages:
       string.prototype.matchall: 4.0.11
     dev: true
 
-  /@tailwindcss/container-queries@0.1.1(tailwindcss@3.4.6):
+  /@tailwindcss/container-queries@0.1.1(tailwindcss@3.4.7):
     resolution: {integrity: sha512-p18dswChx6WnTSaJCSGx6lTmrGzNNvm2FtXmiO6AuA1V4U5REyoqwmT6kgAsIMdjo07QdAfYXHJ4hnMtfHzWgA==}
     peerDependencies:
       tailwindcss: '>=3.2.0'
     dependencies:
-      tailwindcss: 3.4.6
+      tailwindcss: 3.4.7
     dev: true
 
   /@types/babel__core@7.20.5:
@@ -2635,7 +2635,7 @@ packages:
     hasBin: true
     dependencies:
       caniuse-lite: 1.0.30001643
-      electron-to-chromium: 1.5.1
+      electron-to-chromium: 1.5.2
       node-releases: 2.0.18
       update-browserslist-db: 1.1.0(browserslist@4.23.2)
     dev: true
@@ -3101,8 +3101,8 @@ packages:
       jake: 10.9.2
     dev: true
 
-  /electron-to-chromium@1.5.1:
-    resolution: {integrity: sha512-FKbOCOQ5QRB3VlIbl1LZQefWIYwszlBloaXcY2rbfpu9ioJnNh3TK03YtIDKDo3WKBi8u+YV4+Fn2CkEozgf4w==}
+  /electron-to-chromium@1.5.2:
+    resolution: {integrity: sha512-kc4r3U3V3WLaaZqThjYz/Y6z8tJe+7K0bbjUVo3i+LWIypVdMx5nXCkwRe6SWbY6ILqLdc1rKcKmr3HoH7wjSQ==}
     dev: true
 
   /emoji-regex@8.0.0:
@@ -5469,8 +5469,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /tailwindcss@3.4.6:
-    resolution: {integrity: sha512-1uRHzPB+Vzu57ocybfZ4jh5Q3SdlH7XW23J5sQoM9LhE9eIOlzxer/3XPSsycvih3rboRsvt0QCmzSrqyOYUIA==}
+  /tailwindcss@3.4.7:
+    resolution: {integrity: sha512-rxWZbe87YJb4OcSopb7up2Ba4U82BoiSGUdoDr3Ydrg9ckxFS/YWsvhN323GMcddgU65QRy7JndC7ahhInhvlQ==}
     engines: {node: '>=14.0.0'}
     hasBin: true
     dependencies:
@@ -6184,8 +6184,8 @@ packages:
       '@cloudflare/workerd-windows-64': 1.20240718.0
     dev: true
 
-  /wrangler@3.66.0:
-    resolution: {integrity: sha512-5fEyXsP8qvrUeR13kCfA3OG1z/ABx+/a8hzIA55nCUM2/tjI67ZkfeN1VdOmG6cipZDvs4HfN8rp7j+e+21nKA==}
+  /wrangler@3.67.0:
+    resolution: {integrity: sha512-elun6p9rAmGr/CtnCixhUXWeKT+LnFbHDsLLizgAlFJbsgCPV/O1if7uMjTGD/fUJNXrwbTVRpxvInz5X9gE2Q==}
     engines: {node: '>=16.17.0'}
     hasBin: true
     peerDependencies:

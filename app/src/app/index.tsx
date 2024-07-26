@@ -12,6 +12,7 @@ import {
 import { readBooleanURLParam, writeURLParam } from "../scripts/utils/urlParams";
 import { webSockets } from "../scripts/ws";
 import { classPropToString } from "../solid/classes";
+import { createPreferredColorSchemeAccessor } from "../solid/prefferedColorScheme";
 import { Background } from "./components/background";
 import { ChartFrame } from "./components/frames/chart";
 import { FavoritesFrame } from "./components/frames/favorites";
@@ -20,6 +21,7 @@ import { HistoryFrame } from "./components/frames/history";
 import { SettingsFrame } from "./components/frames/settings";
 import { StripDesktop, StripMobile } from "./components/strip";
 import { Update } from "./components/update";
+import { createUserConfig } from "./scripts/user";
 
 const LOCAL_STORAGE_BAR_KEY = "bar-width";
 const LOCAL_STORAGE_FULLSCREEN = "fullscrenn";
@@ -29,89 +31,11 @@ export const INPUT_PRESET_SEARCH_ID = "input-search-preset";
 export function App() {
   const tabFocused = createRWS(true);
   const qrcode = createRWS("");
-
-  const appTheme = createSL(["System", "Dark", "Light"] as const, {
-    saveable: {
-      key: "app-theme",
-      mode: "localStorage",
-    },
-    defaultIndex: 0,
-  });
-
   const dark = createRWS(false);
 
-  const preferredColorSchemeMatchMedia = window.matchMedia(
-    "(prefers-color-scheme: dark)",
-  );
-
-  const preferredSystemTheme = createRWS<"light" | "dark">(
-    preferredColorSchemeMatchMedia.matches ? "dark" : "light",
-  );
-
-  function preferredColorSchemeListener(event: MediaQueryListEvent) {
-    return preferredSystemTheme.set(event.matches ? "dark" : "light");
-  }
-
-  preferredColorSchemeMatchMedia.addEventListener(
-    "change",
-    preferredColorSchemeListener,
-  );
-
-  onCleanup(() => {
-    preferredColorSchemeMatchMedia.removeEventListener(
-      "change",
-      preferredColorSchemeListener,
-    );
+  const userConfig = createUserConfig({
+    dark,
   });
-
-  createEffect(() => {
-    if (
-      appTheme.selected() === "Dark" ||
-      (appTheme.selected() === "System" && preferredSystemTheme() === "dark")
-    ) {
-      dark.set(true);
-      document.documentElement.classList.add("dark");
-    } else {
-      dark.set(false);
-      document.documentElement.classList.remove("dark");
-    }
-  });
-
-  const backgroundMode = createSL(["Scroll", "Static"] as const, {
-    saveable: {
-      key: "bg-mode",
-      mode: "localStorage",
-    },
-    defaultIndex: 0,
-  });
-
-  const backgroundOpacity = createSL(
-    [
-      {
-        text: "Strong",
-        value: 0.0444,
-      },
-      {
-        text: "Normal",
-        value: 0.0333,
-      },
-      {
-        text: "Light",
-        value: 0.0222,
-      },
-      {
-        text: "Subtle",
-        value: 0.0111,
-      },
-    ] as const,
-    {
-      saveable: {
-        key: "bg-text-opacity",
-        mode: "localStorage",
-      },
-      defaultIndex: 2,
-    },
-  );
 
   const fullscreen = createRWS(
     readBooleanURLParam(LOCAL_STORAGE_FULLSCREEN) ||
@@ -240,8 +164,8 @@ export function App() {
     <>
       <Background
         focused={tabFocused}
-        mode={backgroundMode}
-        opacity={backgroundOpacity}
+        mode={userConfig.settings.background.mode}
+        opacity={userConfig.settings.background.opacity}
       />
 
       <div
@@ -321,9 +245,9 @@ export function App() {
                 <HistoryFrame presets={presets} selectedFrame={selectedFrame} />
                 <SettingsFrame
                   selectedFrame={selectedFrame}
-                  appTheme={appTheme}
-                  backgroundMode={backgroundMode}
-                  backgroundOpacity={backgroundOpacity}
+                  appTheme={userConfig.settings.appTheme}
+                  backgroundMode={userConfig.settings.background.mode}
+                  backgroundOpacity={userConfig.settings.background.opacity}
                 />
               </div>
 

@@ -1,3 +1,4 @@
+import { phone, touchScreen } from "/src/env";
 import { createRWS } from "/src/solid/rws";
 
 const texts = [
@@ -135,9 +136,12 @@ function TextWrapper({
     }
   });
 
-  onMount(() => {
-    seconds.set(Math.round(p()!.clientWidth / 20));
-  });
+  // Bug in Safari iOS, not sure where else, works perfectly on Mac OS though
+  if (!touchScreen) {
+    onMount(() => {
+      seconds.set(Math.round(p()!.clientWidth / 20));
+    });
+  }
 
   return (
     <p
