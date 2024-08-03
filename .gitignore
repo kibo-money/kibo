@@ -11,3 +11,7 @@ TODO.md
 .stfolder
 /charts
 /price
+*\ copy*
+/dist
+
+/start-node.sh

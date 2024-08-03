@@ -1,10 +1,10 @@
-use bitcoin::TxOut;
 use bitcoin_hashes::{hash160, Hash};
+use biter::bitcoin::TxOut;
 use itertools::Itertools;
 
 use crate::{
-    bitcoin::multisig_addresses,
     databases::{U8x19, U8x31, SANAKIRJA_MAX_KEY_SIZE},
+    utils::multisig_addresses,
 };
 
 use super::{AddressType, Counter};

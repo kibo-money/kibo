@@ -1,50 +1,29 @@
-use std::{path::Path, thread::sleep, time::Duration};
+use std::{thread::sleep, time::Duration};
 
-use parser::{iter_blocks, log, BitcoinDB, BitcoinDaemon, Config, Height};
+use biter::bitcoincore_rpc::RpcApi;
+use parser::{create_rpc, iter_blocks, log, Config};
 
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
 
-    let config = Config::read();
+    let config = Config::import();
 
-    if config.datadir.is_none() {
-        println!(
-            "You need to set the --datadir parameter at least once to run the parser.\nRun the program with '-h' for help."
-        );
-        std::process::exit(1);
-    }
-
-    config.write()?;
-
-    let daemon = BitcoinDaemon::new(&config);
+    let rpc = create_rpc(&config).unwrap();
 
     loop {
-        daemon.stop();
+        let block_count = rpc.get_blockchain_info().unwrap().blocks as usize;
 
-        // Scoped to free bitcoin's lock
-        let block_count = {
-            let bitcoin_db = BitcoinDB::new(Path::new(&config.datadir.as_ref().unwrap()), true)?;
+        log(&format!("{block_count} blocks found."));
 
-            // let block_count = 200_000;
-            let block_count = bitcoin_db.get_block_count();
-
-            log(&format!("{block_count} blocks found."));
-
-            iter_blocks(&bitcoin_db, block_count)?;
-
-            block_count
-        };
-
-        daemon.start();
-
-        if daemon.check_if_fully_synced() {
-            daemon.wait_for_new_block(Height::new(block_count as u32 - 1));
-        } else {
-            daemon.wait_sync();
-        }
+        iter_blocks(&config, &rpc, block_count)?;
 
         if let Some(delay) = config.delay {
             sleep(Duration::from_secs(delay))
+        }
+
+        log("Waiting for new block...");
+        while block_count == rpc.get_blockchain_info().unwrap().blocks as usize {
+            sleep(Duration::from_secs(5))
         }
     }
 

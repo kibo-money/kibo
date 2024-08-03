@@ -1,4 +1,4 @@
-use std::{fs::OpenOptions, io::Write, process::Output};
+use std::{fs::OpenOptions, io::Write};
 
 use chrono::Local;
 use color_eyre::owo_colors::OwoColorize;
@@ -22,14 +22,4 @@ pub fn log(str: &str) {
 
             println!("{} {}", date_time.bright_black(), line);
         });
-}
-
-pub fn log_output(output: &Output) {
-    if !output.stdout.is_empty() {
-        log(&String::from_utf8_lossy(&output.stdout));
-    }
-
-    if !output.stderr.is_empty() {
-        log(&String::from_utf8_lossy(&output.stderr));
-    }
 }

@@ -6,17 +6,21 @@ use serde::{Deserialize, Serialize};
 #[derive(Parser, Debug, Clone, Default, Serialize, Deserialize)]
 #[command(version, about, long_about = None)]
 pub struct Config {
-    /// bitcoind `-datadir=<dir>` argument
+    /// Bitcoin data directory path
     #[arg(long, value_name = "DIR")]
     pub datadir: Option<String>,
 
-    /// bitcoind `-blocksonly` argument, default: true
-    #[arg(long)]
-    pub blocksonly: Option<bool>,
+    /// Bitcoin RPC port, default: 8332
+    #[arg(long, value_name = "PORT")]
+    pub rpcport: Option<u16>,
 
-    /// bitcoind `-rpcconnect=<ip>` argument
-    #[arg(long, value_name = "IP")]
-    pub rpcconnect: Option<String>,
+    /// Bitcoin RPC username
+    #[arg(long, value_name = "USERNAME")]
+    pub rpcuser: Option<String>,
+
+    /// Bitcoin RPC password
+    #[arg(long, value_name = "PASSWORD")]
+    pub rpcpassword: Option<String>,
 
     /// Delay between runs, default: 0
     #[arg(long, value_name = "SECONDS")]
@@ -26,7 +30,7 @@ pub struct Config {
 impl Config {
     const PATH: &'static str = "config.toml";
 
-    pub fn read() -> Self {
+    pub fn import() -> Self {
         let mut config_saved = fs::read_to_string(Self::PATH)
             .map_or(Config::default(), |contents| {
                 toml::from_str(&contents).unwrap_or_default()
@@ -38,24 +42,58 @@ impl Config {
             config_saved.datadir = Some(datadir);
         }
 
-        if let Some(blocksonly) = config_args.blocksonly {
-            config_saved.blocksonly = Some(blocksonly);
+        if let Some(rpcport) = config_args.rpcport {
+            config_saved.rpcport = Some(rpcport);
         } else {
-            config_saved.blocksonly = Some(true);
+            config_saved.rpcport = Some(8332);
         }
 
-        if let Some(rpcconnect) = config_args.rpcconnect {
-            config_saved.rpcconnect = Some(rpcconnect);
+        if let Some(rpcuser) = config_args.rpcuser {
+            config_saved.rpcuser = Some(rpcuser);
+        }
+
+        if let Some(rpcpassword) = config_args.rpcpassword {
+            config_saved.rpcpassword = Some(rpcpassword);
         }
 
         if let Some(delay) = config_args.delay {
             config_saved.delay = Some(delay);
         }
 
-        config_saved
+        // Done importing
+
+        let config = config_saved;
+
+        config.check();
+
+        config.write().unwrap();
+
+        config
     }
 
-    pub fn write(&self) -> std::io::Result<()> {
+    fn check(&self) {
+        if self.datadir.is_none() {
+            Self::exit("datadir");
+        }
+
+        if self.rpcuser.is_none() {
+            Self::exit("rpcuser");
+        }
+
+        if self.rpcpassword.is_none() {
+            Self::exit("rpcpassword");
+        }
+    }
+
+    fn exit(attribute: &str) {
+        println!(
+            "You need to set the --{} parameter at least once to run the parser.\nRun the program with '-h' for help.", attribute
+        );
+
+        std::process::exit(1);
+    }
+
+    fn write(&self) -> std::io::Result<()> {
         fs::write(Self::PATH, toml::to_string(self).unwrap())
     }
 }

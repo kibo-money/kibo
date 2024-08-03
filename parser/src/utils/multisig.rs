@@ -2,7 +2,7 @@
 // Code from bitcoin-explorer now deprecated
 //
 
-use bitcoin::{
+use biter::bitcoin::{
     blockdata::{
         opcodes::all,
         script::Instruction::{self, Op, PushBytes},

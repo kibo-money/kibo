@@ -3,13 +3,15 @@ use itertools::Itertools;
 use ordered_float::OrderedFloat;
 
 use crate::{
-    bitcoin::TARGET_BLOCKS_PER_DAY,
     datasets::AnyDataset,
     structs::{
         date_map_vec_to_any_date_map_vec, date_map_vec_to_mut_any_date_map_vec, Amount, AnyBiMap,
         AnyDateMap, AnyHeightMap, BiMap, DateMap, Height, HeightMap, MapKey,
     },
-    utils::{BYTES_IN_MB, ONE_DAY_IN_DAYS, ONE_MONTH_IN_DAYS, ONE_WEEK_IN_DAYS, ONE_YEAR_IN_DAYS},
+    utils::{
+        BYTES_IN_MB, ONE_DAY_IN_DAYS, ONE_MONTH_IN_DAYS, ONE_WEEK_IN_DAYS, ONE_YEAR_IN_DAYS,
+        TARGET_BLOCKS_PER_DAY,
+    },
 };
 
 use super::{

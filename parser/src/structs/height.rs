@@ -5,10 +5,11 @@ use std::{
 
 use allocative::Allocative;
 use bincode::{Decode, Encode};
+use biter::NUMBER_OF_UNSAFE_BLOCKS;
 use derive_deref::{Deref, DerefMut};
 use serde::{Deserialize, Serialize};
 
-use crate::{bitcoin::NUMBER_OF_UNSAFE_BLOCKS, HEIGHT_MAP_CHUNK_SIZE};
+use crate::HEIGHT_MAP_CHUNK_SIZE;
 
 use super::{HeightMapChunkId, MapKey};
 

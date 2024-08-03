@@ -5,7 +5,7 @@ use std::{
 
 use allocative::Allocative;
 
-use crate::{bitcoin::TARGET_BLOCKS_PER_DAY, utils::LossyFrom};
+use crate::utils::{LossyFrom, TARGET_BLOCKS_PER_DAY};
 
 use super::{AnyDateMap, AnyHeightMap, AnyMap, Date, DateMap, Height, HeightMap, MapValue};
 

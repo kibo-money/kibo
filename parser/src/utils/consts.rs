@@ -1,3 +1,7 @@
+pub const BYTES_IN_MB: usize = 1_000_000;
+
+pub const TARGET_BLOCKS_PER_DAY: usize = 144;
+
 pub const ONE_DAY_IN_DAYS: usize = 1;
 pub const ONE_WEEK_IN_DAYS: usize = 7;
 pub const TWO_WEEK_IN_DAYS: usize = 2 * ONE_WEEK_IN_DAYS;

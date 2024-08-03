@@ -4,7 +4,11 @@
 
 ![Image of the Satonomics Web App version 0.X.Y](./assets/v0.X.Y.jpg)
 
+### Parser
 
+- Change the block iterator from a custom version of [bitcoin-explorer](https://crates.io/crates/bitcoin-explorer) to the homemade [biter](https://crates.io/crates/biter) which allows the parser to run alongside `bitcoind`
+- Use the Bitcoin RPC server for various calls instead of running commands and then parsing the JSON from the output
+- Updated the config, run with `-h` to see
 
 ## v. 0.3.0 | [853930](https://mempool.space/block/00000000000000000002eb5e9a7950ca2d5d98bd1ed28fc9098aa630d417985d) - 2024/07/26
 

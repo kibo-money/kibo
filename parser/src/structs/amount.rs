@@ -10,7 +10,7 @@ use bincode::{
     error::{DecodeError, EncodeError},
     BorrowDecode, Decode, Encode,
 };
-use bitcoin::Amount as BitcoinAmount;
+use biter::bitcoin::Amount as BitcoinAmount;
 use derive_deref::{Deref, DerefMut};
 use sanakirja::{direct_repr, Storable, UnsizedStorable};
 use serde::{Deserialize, Serialize};

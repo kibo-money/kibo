@@ -8,15 +8,22 @@ use parse::ParseData;
 
 use crate::{
     actions::{export, find_first_inserted_unsafe_height, parse},
-    bitcoin::BitcoinDB,
+    create_rpc,
     databases::Databases,
     datasets::{AllDatasets, ComputeData},
     states::{AddressCohortsDurableStates, States, UTXOCohortsDurableStates},
     structs::{Date, DateData, MapKey},
     utils::{generate_allocation_files, log, time},
+    Config, Height,
 };
 
-pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Result<()> {
+pub fn iter_blocks(
+    config: &Config,
+    rpc: &biter::bitcoincore_rpc::Client,
+    approx_block_count: usize,
+) -> color_eyre::Result<()> {
+    let export_dir = "./target/outputs";
+
     let should_insert = true;
     let should_export = true;
     let study_ram_usage = false;
@@ -44,10 +51,18 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
 
     log(&format!("Starting parsing at height: {height}"));
 
-    let mut block_iter = bitcoin_db.iter_block(height.to_usize(), block_count);
-
     let mut next_block_opt = None;
     let mut blocks_loop_date = None;
+
+    let block_receiver = biter::new(
+        config.datadir.as_ref().unwrap(),
+        export_dir,
+        Some(height.to_usize()),
+        None,
+        create_rpc(config).unwrap(),
+    );
+
+    let mut block_iter = block_receiver.iter();
 
     'parsing: loop {
         let instant = Instant::now();
@@ -67,15 +82,22 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
 
                 next_block_opt = block_iter.next();
 
-                if let Some(current_block) = current_block_opt {
+                if let Some((_current_block_height, current_block, _current_block_hash)) =
+                    current_block_opt
+                {
                     let timestamp = current_block.header.time;
 
                     let current_block_date = Date::from_timestamp(timestamp);
-                    let current_block_height = height + blocks_loop_i;
+                    let current_block_height: Height = height + blocks_loop_i;
+
+                    if current_block_height.to_usize() != _current_block_height {
+                        dbg!(current_block_height, _current_block_height);
+                        panic!()
+                    }
 
                     let next_block_date = next_block_opt
                         .as_ref()
-                        .map(|next_block| Date::from_timestamp(next_block.header.time));
+                        .map(|(_, next_block, _)| Date::from_timestamp(next_block.header.time));
 
                     // Always run for the first block of the loop
                     if blocks_loop_date.is_none() {
@@ -139,7 +161,7 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
                         }
 
                         parse(ParseData {
-                            bitcoin_db,
+                            rpc,
                             block: current_block,
                             block_index: blocks_loop_i,
                             compute_addresses,
@@ -162,7 +184,7 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
                         let is_new_month = next_block_date
                             .map_or(true, |next_block_date| next_block_date.day() == 1);
 
-                        if is_new_month || height.is_close_to_end(block_count) {
+                        if is_new_month || height.is_close_to_end(approx_block_count) {
                             break 'days;
                         }
 
@@ -196,7 +218,7 @@ pub fn iter_blocks(bitcoin_db: &BitcoinDB, block_count: usize) -> color_eyre::Re
         }
 
         if should_export {
-            let is_safe = height.is_safe(block_count);
+            let is_safe = height.is_safe(approx_block_count);
 
             export(ExportedData {
                 databases: is_safe.then_some(&mut databases),

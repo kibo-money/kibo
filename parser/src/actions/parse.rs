@@ -1,12 +1,14 @@
 use std::{collections::BTreeMap, ops::ControlFlow, thread};
 
-use bitcoin::{Block, Txid};
+use biter::{
+    bitcoin::{Block, Txid},
+    bitcoincore_rpc::RpcApi,
+};
 
 use itertools::Itertools;
 use rayon::prelude::*;
 
 use crate::{
-    bitcoin::BitcoinDB,
     databases::{
         AddressIndexToAddressData, AddressIndexToEmptyAddressData, AddressToAddressIndex,
         Databases, TxidToTxData, TxoutIndexToAddressIndex, TxoutIndexToAmount,
@@ -23,7 +25,7 @@ use crate::{
 };
 
 pub struct ParseData<'a> {
-    pub bitcoin_db: &'a BitcoinDB,
+    // pub bitcoin_cli: &'a BitcoinCli,
     pub block: Block,
     pub block_index: usize,
     pub compute_addresses: bool,
@@ -33,13 +35,13 @@ pub struct ParseData<'a> {
     pub first_date_height: Height,
     pub height: Height,
     pub is_date_last_block: bool,
+    pub rpc: &'a biter::bitcoincore_rpc::Client,
     pub states: &'a mut States,
     pub timestamp: u32,
 }
 
 pub fn parse(
     ParseData {
-        bitcoin_db,
         block,
         block_index,
         compute_addresses,
@@ -49,6 +51,7 @@ pub fn parse(
         first_date_height,
         height,
         is_date_last_block,
+        rpc,
         states,
         timestamp,
     }: ParseData,
@@ -334,10 +337,16 @@ pub fn parse(
 
                         // Can be none because 0 sats inputs happen
                         // https://mempool.space/tx/f329e55c2de9b821356e6f2c4bba923ea7030cad61120f5ced5d4429f5c86fda#vin=27
+
                         if input_tx_data.is_none() {
                             if !enable_check_if_txout_value_is_zero_in_db
-                                || bitcoin_db
-                                    .check_if_txout_value_is_zero(&input_txid, input_vout as usize)
+                                || rpc
+                                    .get_tx_out(&input_txid, input_vout, None)
+                                    .unwrap()
+                                    .unwrap()
+                                    .value
+                                    .to_sat()
+                                    == 0
                             {
                                 return ControlFlow::Continue::<()>(());
                             }
@@ -374,8 +383,13 @@ pub fn parse(
 
                         if input_amount_and_address_index.is_none() {
                             if !enable_check_if_txout_value_is_zero_in_db
-                                || bitcoin_db
-                                    .check_if_txout_value_is_zero(&input_txid, input_vout as usize)
+                                || rpc
+                                    .get_tx_out(&input_txid, input_vout as u32, None)
+                                    .unwrap()
+                                    .unwrap()
+                                    .value
+                                    .to_sat()
+                                    == 0
                             {
                                 return ControlFlow::Continue::<()>(());
                             }

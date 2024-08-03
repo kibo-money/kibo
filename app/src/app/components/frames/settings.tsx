@@ -165,6 +165,20 @@ export function SettingsFrame({
                   url: "https://primal.net/p/npub1mnwjn40hr042rsmzu64rsnwsw07uegg4tjkv620c94p6e797wkvq3qeujc",
                   amount: 5_000,
                 },
+                {
+                  name: "lassdas",
+                  url: "https://primal.net/p/npub1gmhctt2hmjqz8ay2x8h5f8fl3h4fpfcezwqneal3usu3u65qca4s8094ea",
+                  amount: 210_000,
+                },
+                {
+                  name: "anon",
+                  amount: 21_000,
+                },
+                {
+                  name: "xplbzx",
+                  url: "https://primal.net/p/npub1e0f808a350rxrhppu4zylzljt3arfpvrrpqdg6ft78xy6u49kq5slf0g92",
+                  amount: 10_110,
+                },
               ]
                 .sort((a, b) =>
                   b.amount !== a.amount

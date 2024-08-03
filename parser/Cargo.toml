@@ -11,20 +11,16 @@ edition = "2021"
 [dependencies]
 allocative = "0.3.3"
 bincode = { git = "https://github.com/bincode-org/bincode.git" }
-bitcoin = { version = "0.32.2", features = ["serde"] }
+biter = "0.1.0"
 bitcoin_hashes = { version = "0.14.0" }
-byteorder = "1.5.0"
 chrono = { version = "0.4.38", features = ["serde"] }
 clap = { version = "4.5.11", features = ["derive"] }
 color-eyre = "0.6.3"
-db-key = "=0.0.5"
 derive_deref = "1.1.1"
 inferno = "0.11.20"
 itertools = "0.13.0"
-leveldb = "0.8.6"
 memory-stats = "1.2.0"
 ordered-float = "4.2.1"
-par-iter-sync = "0.1.11"
 rayon = "1.10.0"
 reqwest = { version = "0.12.5", features = ["blocking", "json"] }
 sanakirja = "1.4.2"

@@ -5,7 +5,7 @@ use std::{
 };
 
 use allocative::Allocative;
-use bitcoin::Txid;
+use biter::bitcoin::Txid;
 use rayon::prelude::*;
 
 use crate::structs::{Date, Height, TxData};
