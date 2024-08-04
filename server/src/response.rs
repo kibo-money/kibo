@@ -1,15 +1,16 @@
-use std::fmt::Debug;
+use std::{fmt::Debug, path::Path};
 
 use axum::response::{IntoResponse, Json, Response};
 use bincode::Decode;
+use parser::{Date, SerializedBTreeMap, SerializedVec};
 use serde::de::DeserializeOwned;
 use serde::Serialize;
 
 use crate::{
     chunk::Chunk,
     headers::{add_cache_control_to_headers, add_cors_to_headers, add_json_type_to_headers},
-    imports::{import_map, import_value, import_vec},
     kind::Kind,
+    routes::Route,
 };
 
 #[derive(Serialize)]
@@ -24,16 +25,30 @@ where
 
 pub fn typed_value_to_response<T>(
     kind: Kind,
-    relative_path: &str,
+    route: &Route,
     chunk: Option<Chunk>,
 ) -> color_eyre::Result<Response>
 where
     T: Serialize + Debug + DeserializeOwned + Decode,
 {
     Ok(match kind {
-        Kind::Date => dataset_to_response(import_map::<T>(relative_path)?, chunk.unwrap()),
-        Kind::Height => dataset_to_response(import_vec::<T>(relative_path)?, chunk.unwrap()),
-        Kind::Last => value_to_response(import_value::<T>(relative_path)?),
+        Kind::Date => dataset_to_response(
+            route
+                .serialization
+                .import::<SerializedBTreeMap<Date, T>>(Path::new(&route.file_path))?,
+            chunk.unwrap(),
+        ),
+        Kind::Height => dataset_to_response(
+            route
+                .serialization
+                .import::<SerializedVec<T>>(Path::new(&route.file_path))?,
+            chunk.unwrap(),
+        ),
+        Kind::Last => value_to_response(
+            route
+                .serialization
+                .import::<T>(Path::new(&route.file_path))?,
+        ),
     })
 }
 

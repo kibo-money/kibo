@@ -1,14 +1,16 @@
 use allocative::Allocative;
 use bincode::{Decode, Encode};
+use serde::{Deserialize, Serialize};
 use std::{
     fmt::Debug,
     fs, io,
     ops::{Deref, DerefMut},
+    path::Path,
 };
 
 use crate::{
-    io::Binary,
     structs::{Counter, Date, Height},
+    Serialization,
 };
 
 #[derive(Default, Debug, Encode, Decode, Allocative)]
@@ -73,7 +75,7 @@ impl Metadata {
     }
 }
 
-#[derive(Default, Debug, Encode, Decode, Allocative)]
+#[derive(Default, Debug, Encode, Decode, Serialize, Deserialize, Allocative)]
 pub struct MetadataData {
     pub serial: usize,
     pub len: Counter,
@@ -88,17 +90,17 @@ impl MetadataData {
 
     fn full_path(folder_path: &str) -> String {
         let name = Self::name();
-        format!("{folder_path}/{name}.bin")
+        format!("{folder_path}/{name}")
     }
 
     pub fn import(path: &str) -> color_eyre::Result<Self> {
         fs::create_dir_all(path)?;
 
-        Binary::import(&Self::full_path(path))
+        Serialization::Binary.import(Path::new(&Self::full_path(path)))
     }
 
     pub fn export(&self, path: &str) -> color_eyre::Result<()> {
-        Binary::export(&Self::full_path(path), self)
+        Serialization::Binary.export(Path::new(&Self::full_path(path)), self)
     }
 
     pub fn reset(&mut self, path: &str) -> color_eyre::Result<(), io::Error> {

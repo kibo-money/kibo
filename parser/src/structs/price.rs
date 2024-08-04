@@ -2,11 +2,24 @@ use std::ops::{Add, AddAssign, Div, Mul, Sub, SubAssign};
 
 use allocative::Allocative;
 use bincode::{Decode, Encode};
+use serde::{Deserialize, Serialize};
 
 use super::Amount;
 
 #[derive(
-    Debug, Default, Clone, Copy, PartialEq, Eq, PartialOrd, Ord, Encode, Decode, Allocative,
+    Debug,
+    Default,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    PartialOrd,
+    Ord,
+    Serialize,
+    Deserialize,
+    Encode,
+    Decode,
+    Allocative,
 )]
 pub struct Price(u64);
 

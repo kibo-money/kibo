@@ -42,7 +42,8 @@ const texts = [
   "absolute scarcity",
   "time is scarce",
   "ride or die",
-  "cyberpunk",
+  "cypherpunk",
+  "we like the coin",
 ];
 
 export function Background({

@@ -63,7 +63,7 @@ where
     Self: Ord + Debug + Copy + Clone,
 {
     fn to_name(&self) -> String;
-    fn from_name(name: &str) -> Self;
+    fn from_path(path: &Path) -> Self;
     fn to_usize(self) -> usize;
     fn from_usize(id: usize) -> Self;
 }
@@ -124,7 +124,7 @@ where
 
         let path_last = {
             if export_last {
-                Some(serialization.append_extension(&format!("{path}/last")))
+                Some(format!("{path}/last"))
             } else {
                 None
             }
@@ -188,22 +188,16 @@ where
         fs::read_dir(path)
             .unwrap()
             .map(|entry| entry.unwrap().path())
-            .filter(|path| {
-                let extension = path.extension().unwrap().to_str().unwrap();
-
-                path.is_file() && extension == serialization.to_extension()
-            })
+            .filter(|path| serialization.is_serializable(path))
             .map(|path| {
-                let chunk_id = ChunkId::from_name(path.file_stem().unwrap().to_str().unwrap());
-
+                let chunk_id = ChunkId::from_path(&path);
                 (chunk_id, path)
             })
             .collect()
     }
 
     fn import(&self, path: &Path) -> color_eyre::Result<Serialized> {
-        self.serialization
-            .import::<Serialized>(path.to_str().unwrap())
+        self.serialization.import::<Serialized>(path)
     }
 
     pub fn insert(&mut self, key: Key, value: Value) -> Value {
@@ -309,10 +303,7 @@ where
                         panic!();
                     });
 
-                    let serialized = self
-                        .serialization
-                        .import::<Serialized>(path.to_str().unwrap())
-                        .unwrap();
+                    let serialized = self.serialization.import::<Serialized>(path).unwrap();
 
                     self.imported.insert(*chunk_id, serialized);
                 }
@@ -334,23 +325,18 @@ where
                     unreachable!()
                 }
 
-                let path = self.serialization.append_extension(&format!(
-                    "{}/{}",
-                    self.path_all,
-                    chunk_id.to_name()
-                ));
-
                 let serialized = self.imported.get(chunk_id).unwrap_or_else(|| {
                     dbg!(&self.path_all, chunk_id, &self.imported);
                     panic!();
                 });
 
-                self.serialization.export(&path, serialized)?;
+                let path = format!("{}/{}", self.path_all, chunk_id.to_name());
+                self.serialization.export(Path::new(&path), serialized)?;
 
                 if index == len - 1 {
                     if let Some(path_last) = self.path_last.as_ref() {
                         self.serialization
-                            .export(path_last, serialized.last().unwrap())?;
+                            .export(Path::new(path_last), serialized.last().unwrap())?;
                     }
                 }
 

@@ -16,6 +16,12 @@ To promote even more transparency and trust in the network, this project is comm
 
 This project is in a very early stage. The web app will have bugs, the API might break and the data can definitely to be false or slightly false.
 
+## Donations
+
+The project is a lot of work and being worked on full-time. It doesn't have any ads and solely relies on donations. If you find this project useful, any sat would really help make it even better and would be really appreciated.
+
+You can donate on the project's [Geyser Fund](https://geyser.fund/project/satonomics/).
+
 ## Instances
 
 Web App:
@@ -88,7 +94,7 @@ _Maybe_:
 
 Aka: Previous iterations
 
-The initial idea was totally different yet morphed over time into what it is today: a fully FOSS self-hostable on-chain data generator
+The initial idea was totally different yet morphed over time into what it is today: a fully FOSS self-hostable on-chain data generator.
 
 - https://github.com/drgarlic/satonomics
 - https://github.com/drgarlic/satonomics-parser

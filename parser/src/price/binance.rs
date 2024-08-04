@@ -23,8 +23,7 @@ impl Binance {
 
         let path_binance_har = Path::new(INPUTS_FOLDER_PATH).join("binance.har");
 
-        let json: BTreeMap<String, Value> =
-            Json::import(path_binance_har.to_str().unwrap()).unwrap_or_default();
+        let json: BTreeMap<String, Value> = Json::import(&path_binance_har).unwrap_or_default();
 
         Ok(json
             .get("log")

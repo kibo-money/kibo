@@ -1,6 +1,7 @@
 use std::{
     collections::{BTreeMap, HashMap},
     fs,
+    path::Path,
 };
 
 use derive_deref::{Deref, DerefMut};
@@ -26,31 +27,22 @@ const APP_TYPES_PATH: &str = "../app/src/types";
 impl Routes {
     pub fn build() -> Self {
         let path_to_type: BTreeMap<String, String> =
-            Json::import(&format!("{INPUTS_PATH}/disk_path_to_type.json")).unwrap();
+            Json::import(Path::new(&format!("{INPUTS_PATH}/disk_path_to_type.json"))).unwrap();
 
         let mut routes = Routes::default();
 
         path_to_type.into_iter().for_each(|(key, value)| {
             let mut split_key = key.split('/').collect_vec();
-
-            let mut split_last = split_key.pop().unwrap().split('.').rev().collect_vec();
-
-            let last = split_last.pop().unwrap().to_owned();
+            let last = split_key.pop().unwrap().to_owned();
 
             let mut skip = 2;
 
-            let serialization = split_last.pop().map_or_else(
-                || {
-                    if *split_key.get(1).unwrap() == "price" {
-                        skip = 1;
+            let mut serialization = Serialization::Binary;
 
-                        Serialization::Json
-                    } else {
-                        Serialization::Binary
-                    }
-                },
-                Serialization::from_extension,
-            );
+            if *split_key.get(1).unwrap() == "price" {
+                skip = 1;
+                serialization = Serialization::Json;
+            }
 
             let split_key = split_key.iter().skip(skip).collect_vec();
 

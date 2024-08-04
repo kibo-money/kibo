@@ -1,9 +1,10 @@
 use allocative::Allocative;
 use bincode::{Decode, Encode};
+use serde::{Deserialize, Serialize};
 
 use super::{BlockData, BlockPath, Date};
 
-#[derive(Debug, Encode, Decode, Allocative)]
+#[derive(Debug, Serialize, Deserialize, Encode, Decode, Allocative)]
 pub struct DateData {
     pub date: Date,
     pub blocks: Vec<BlockData>,

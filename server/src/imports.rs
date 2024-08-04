@@ -1,27 +1,25 @@
-use std::fmt::Debug;
+use std::{fmt::Debug, path::Path};
 
 use bincode::Decode;
-use parser::{Date, Serialization, SerializedBTreeMap, SerializedVec};
+use parser::{Date, SerializedBTreeMap, SerializedVec};
 use serde::{de::DeserializeOwned, Serialize};
 
-pub fn import_map<T>(relative_path: &str) -> color_eyre::Result<SerializedBTreeMap<Date, T>>
+use crate::routes::Route;
+
+pub fn import_map<T>(route: &Route) -> color_eyre::Result
 where
     T: Serialize + Debug + DeserializeOwned + Decode,
 {
-    Serialization::from_extension(relative_path.split('.').last().unwrap()).import(relative_path)
 }
 
-pub fn import_vec<T>(relative_path: &str) -> color_eyre::Result<SerializedVec<T>>
+pub fn import_vec<T>(route: &Route) -> color_eyre::Result
 where
     T: Serialize + Debug + DeserializeOwned + Decode,
 {
-    Serialization::from_extension(relative_path.split('.').last().unwrap()).import(relative_path)
 }
 
-pub fn import_value<T>(relative_path: &str) -> color_eyre::Result<T>
+pub fn import_value<T>(route: &Route) -> color_eyre::Result<T>
 where
     T: Serialize + Debug + DeserializeOwned + Decode,
 {
-    Serialization::from_extension(relative_path.split('.').last().unwrap())
-        .import::<T>(relative_path)
 }

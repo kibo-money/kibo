@@ -1,9 +1,10 @@
 use allocative::Allocative;
 use bincode::{Decode, Encode};
+use serde::{Deserialize, Serialize};
 
 use super::{Amount, Height, Price};
 
-#[derive(Debug, Encode, Decode, Allocative)]
+#[derive(Debug, Serialize, Deserialize, Encode, Decode, Allocative)]
 pub struct BlockData {
     pub height: Height,
     pub price: Price,

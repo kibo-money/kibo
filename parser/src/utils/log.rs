@@ -1,7 +1,16 @@
-use std::{fs::OpenOptions, io::Write};
+use std::{
+    fs::{self, OpenOptions},
+    io::Write,
+};
 
 use chrono::Local;
 use color_eyre::owo_colors::OwoColorize;
+
+const LOG_PATH: &str = "./.log";
+
+pub fn reset_logs() {
+    let _ = fs::remove_file(LOG_PATH);
+}
 
 #[inline(always)]
 pub fn log(str: &str) {
@@ -13,7 +22,7 @@ pub fn log(str: &str) {
             let mut file = OpenOptions::new()
                 .create(true)
                 .append(true)
-                .open("./parser.log")
+                .open(LOG_PATH)
                 .unwrap();
 
             if let Err(e) = writeln!(file, "{} {}", date_time, line) {

@@ -1,4 +1,4 @@
-use std::{collections::BTreeMap, fs, ops::RangeInclusive};
+use std::{collections::BTreeMap, fs, ops::RangeInclusive, path::Path};
 
 use allocative::Allocative;
 
@@ -282,7 +282,7 @@ impl AllDatasets {
         fs::create_dir_all(server_inputs_path)?;
 
         Json::export(
-            &format!("{server_inputs_path}/disk_path_to_type.json"),
+            Path::new(&format!("{server_inputs_path}/disk_path_to_type.json")),
             &path_to_type,
         )?;
 

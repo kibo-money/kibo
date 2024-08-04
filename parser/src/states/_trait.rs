@@ -1,13 +1,14 @@
-use std::{fmt::Debug, fs, io};
+use std::{fmt::Debug, fs, io, path::Path};
 
 use bincode::{Decode, Encode};
+use serde::{de::DeserializeOwned, Serialize};
 
-use crate::io::{Binary, OUTPUTS_FOLDER_PATH};
+use crate::{io::OUTPUTS_FOLDER_PATH, Serialization};
 
 // https://github.com/djkoloski/rust_serialization_benchmark
 pub trait AnyState
 where
-    Self: Debug + Encode + Decode,
+    Self: Debug + Encode + Decode + Serialize + DeserializeOwned,
 {
     fn name<'a>() -> &'a str;
 
@@ -24,7 +25,7 @@ where
 
         let folder_path = Self::folder_path();
 
-        format!("{folder_path}/{name}.bin")
+        format!("{folder_path}/{name}")
     }
 
     fn reset(&mut self) -> color_eyre::Result<(), io::Error> {
@@ -36,11 +37,11 @@ where
     fn import() -> color_eyre::Result<Self> {
         Self::create_dir_all()?;
 
-        Binary::import(&Self::full_path())
+        Serialization::Binary.import(Path::new(&Self::full_path()))
     }
 
     fn export(&self) -> color_eyre::Result<()> {
-        Binary::export(&Self::full_path(), self)
+        Serialization::Binary.export(Path::new(&Self::full_path()), self)
     }
 
     fn clear(&mut self);

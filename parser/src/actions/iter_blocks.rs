@@ -11,6 +11,7 @@ use crate::{
     create_rpc,
     databases::Databases,
     datasets::{AllDatasets, ComputeData},
+    io::OUTPUTS_FOLDER_PATH,
     states::{AddressCohortsDurableStates, States, UTXOCohortsDurableStates},
     structs::{Date, DateData, MapKey},
     utils::{generate_allocation_files, log, time},
@@ -22,8 +23,6 @@ pub fn iter_blocks(
     rpc: &biter::bitcoincore_rpc::Client,
     approx_block_count: usize,
 ) -> color_eyre::Result<()> {
-    let export_dir = "./target/outputs";
-
     let should_insert = true;
     let should_export = true;
     let study_ram_usage = false;
@@ -56,7 +55,7 @@ pub fn iter_blocks(
 
     let block_receiver = biter::new(
         config.datadir.as_ref().unwrap(),
-        export_dir,
+        OUTPUTS_FOLDER_PATH,
         Some(height.to_usize()),
         None,
         create_rpc(config).unwrap(),

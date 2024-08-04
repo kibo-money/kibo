@@ -1,10 +1,12 @@
 use std::{thread::sleep, time::Duration};
 
 use biter::bitcoincore_rpc::RpcApi;
-use parser::{create_rpc, iter_blocks, log, Config};
+use parser::{create_rpc, iter_blocks, log, reset_logs, Config};
 
 fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
+
+    reset_logs();
 
     let config = Config::import();
 

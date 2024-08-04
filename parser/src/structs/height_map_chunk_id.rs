@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use allocative::Allocative;
 use derive_deref::{Deref, DerefMut};
 
@@ -26,9 +28,20 @@ impl MapChunkId for HeightMapChunkId {
         format!("{start}..{end}")
     }
 
-    fn from_name(name: &str) -> Self {
+    fn from_path(path: &Path) -> Self {
         Self(Height::new(
-            name.split("..").next().unwrap().parse::<u32>().unwrap(),
+            path.file_name()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .split("..")
+                .next()
+                .unwrap()
+                .parse::<u32>()
+                .unwrap_or_else(|_| {
+                    dbg!(path);
+                    panic!()
+                }),
         ))
     }
 

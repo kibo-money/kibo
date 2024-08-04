@@ -1,7 +1,7 @@
 use std::sync::Arc;
 
 use axum::{extract::State, http::HeaderMap, response::Response, routing::get, serve, Router};
-use parser::log;
+use parser::{log, reset_logs};
 use reqwest::header::HOST;
 use response::generic_to_reponse;
 use routes::Routes;
@@ -12,7 +12,6 @@ use tower_http::compression::CompressionLayer;
 mod chunk;
 mod handler;
 mod headers;
-mod imports;
 mod kind;
 mod paths;
 mod response;
@@ -35,6 +34,8 @@ pub struct AppState {
 #[tokio::main]
 async fn main() -> color_eyre::Result<()> {
     color_eyre::install()?;
+
+    reset_logs();
 
     let routes = Routes::build();
 

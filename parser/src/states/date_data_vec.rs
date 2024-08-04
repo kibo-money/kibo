@@ -1,12 +1,13 @@
 use allocative::Allocative;
 use bincode::{Decode, Encode};
 use derive_deref::{Deref, DerefMut};
+use serde::{Deserialize, Serialize};
 
 use crate::structs::{BlockData, BlockPath, DateData};
 
 use super::AnyState;
 
-#[derive(Default, Deref, DerefMut, Debug, Encode, Decode, Allocative)]
+#[derive(Default, Deref, DerefMut, Debug, Serialize, Deserialize, Encode, Decode, Allocative)]
 pub struct DateDataVec(Vec<DateData>);
 
 impl DateDataVec {

@@ -1,3 +1,5 @@
+use std::path::Path;
+
 use allocative::Allocative;
 use chrono::Datelike;
 
@@ -19,8 +21,18 @@ impl MapChunkId for DateMapChunkId {
         self.0.to_string()
     }
 
-    fn from_name(name: &str) -> Self {
-        Self(name.parse::<i32>().unwrap())
+    fn from_path(path: &Path) -> Self {
+        Self(
+            path.file_name()
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .split(".")
+                .next()
+                .unwrap()
+                .parse::<i32>()
+                .unwrap(),
+        )
     }
 
     fn to_usize(self) -> usize {

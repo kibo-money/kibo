@@ -1,11 +1,12 @@
 use allocative::Allocative;
 use bincode::{Decode, Encode};
+use serde::{Deserialize, Serialize};
 
 use crate::structs::Counter;
 
 use super::AnyState;
 
-#[derive(Default, Debug, Encode, Decode, Allocative)]
+#[derive(Default, Debug, Encode, Decode, Serialize, Deserialize, Allocative)]
 pub struct Counters {
     pub op_return_addresses: Counter,
     pub push_only_addresses: Counter,

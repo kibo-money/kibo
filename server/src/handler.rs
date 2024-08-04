@@ -109,16 +109,16 @@ fn _file_handler(
     let type_name = route.values_type.split("::").last().unwrap();
 
     let value = match type_name {
-        "u8" => typed_value_to_response::<u8>(kind, &route.file_path, chunk)?,
-        "u16" => typed_value_to_response::<u16>(kind, &route.file_path, chunk)?,
-        "u32" => typed_value_to_response::<u32>(kind, &route.file_path, chunk)?,
-        "u64" => typed_value_to_response::<u64>(kind, &route.file_path, chunk)?,
-        "usize" => typed_value_to_response::<usize>(kind, &route.file_path, chunk)?,
-        "f32" => typed_value_to_response::<f32>(kind, &route.file_path, chunk)?,
-        "f64" => typed_value_to_response::<f64>(kind, &route.file_path, chunk)?,
-        "OHLC" => typed_value_to_response::<OHLC>(kind, &route.file_path, chunk)?,
-        "Date" => typed_value_to_response::<Date>(kind, &route.file_path, chunk)?,
-        "Height" => typed_value_to_response::<Height>(kind, &route.file_path, chunk)?,
+        "u8" => typed_value_to_response::<u8>(kind, &route, chunk)?,
+        "u16" => typed_value_to_response::<u16>(kind, &route, chunk)?,
+        "u32" => typed_value_to_response::<u32>(kind, &route, chunk)?,
+        "u64" => typed_value_to_response::<u64>(kind, &route, chunk)?,
+        "usize" => typed_value_to_response::<usize>(kind, &route, chunk)?,
+        "f32" => typed_value_to_response::<f32>(kind, &route, chunk)?,
+        "f64" => typed_value_to_response::<f64>(kind, &route, chunk)?,
+        "OHLC" => typed_value_to_response::<OHLC>(kind, &route, chunk)?,
+        "Date" => typed_value_to_response::<Date>(kind, &route, chunk)?,
+        "Height" => typed_value_to_response::<Height>(kind, &route, chunk)?,
         _ => panic!("Incompatible type: {type_name}"),
     };
 

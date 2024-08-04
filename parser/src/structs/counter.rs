@@ -1,8 +1,11 @@
 use allocative::Allocative;
 use bincode::{Decode, Encode};
 use derive_deref::{Deref, DerefMut};
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deref, DerefMut, Default, Clone, Copy, Encode, Decode, Allocative)]
+#[derive(
+    Debug, Deref, DerefMut, Default, Clone, Copy, Encode, Decode, Serialize, Deserialize, Allocative,
+)]
 pub struct Counter(u32);
 
 impl Counter {

@@ -15,5 +15,5 @@ pub use crate::{
         Config, Date, DateMap, Height, HeightMap, MapChunkId, SerializedBTreeMap, SerializedVec,
         HEIGHT_MAP_CHUNK_SIZE,
     },
-    utils::{create_rpc, log},
+    utils::{create_rpc, log, reset_logs},
 };

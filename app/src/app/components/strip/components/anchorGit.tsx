@@ -5,7 +5,7 @@ export function AnchorGit() {
     <Anchor
       title="Git"
       icon={() => IconTablerBrandGithubFilled}
-      href="https://github.com/satonomics-org/satonomics"
+      href="https://github.com/satonomics-org"
     />
   );
 }
