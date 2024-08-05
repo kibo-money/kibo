@@ -11,6 +11,7 @@
 - Use the Bitcoin RPC server for various calls instead of running cli commands and then parsing the JSON from the output
 - Updated the config, run with `-h` to see possible args
 - Moved outputs from `/target/outputs` to `/out` to allow to run commands like `cargo clean` without side effects
+- Various first run fixes
 
 ### Server
 
