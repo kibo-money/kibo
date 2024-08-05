@@ -387,8 +387,10 @@ pub fn parse(
                         if input_amount_and_address_index.is_none() {
                             if !enable_check_if_txout_value_is_zero_in_db
                                 || rpc
-                                    .get_tx_out(&input_txid, input_vout as u32, None)
+                                    .get_raw_transaction(&input_txid, None)
                                     .unwrap()
+                                    .output
+                                    .get(input_vout as usize)
                                     .unwrap()
                                     .value
                                     .to_sat()
