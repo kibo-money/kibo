@@ -102,7 +102,7 @@ impl AddressToAddressIndex {
             Address::Unknown(key) => self.unknown.as_ref().unwrap().get(key),
             Address::OpReturn(key) => self.op_return.as_ref().unwrap().get(key),
             Address::PushOnly(key) => self.push_only.as_ref().unwrap().get(key),
-            Address::MultiSig(key) => self.push_only.as_ref().unwrap().get(key),
+            Address::MultiSig(key) => self.multisig.as_ref().unwrap().get(key),
             Address::P2PK((prefix, key)) => self.p2pk.get(prefix).unwrap().get(key),
             Address::P2PKH((prefix, key)) => self.p2pkh.get(prefix).unwrap().get(key),
             Address::P2SH((prefix, key)) => self.p2sh.get(prefix).unwrap().get(key),
