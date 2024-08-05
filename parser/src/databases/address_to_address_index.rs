@@ -5,16 +5,12 @@ use rayon::prelude::*;
 
 use crate::structs::{Address, Date, Height};
 
-use super::{
-    AnyDatabaseGroup, Database, Metadata, SizedDatabase, U8x19, U8x31,
-    UnsizedDatabase as _UnsizedDatabase,
-};
+use super::{AnyDatabaseGroup, Database, Metadata, U8x19, U8x31};
 
 type Value = u32;
-type U8x19Database = SizedDatabase<U8x19, Value>;
-type U8x31Database = SizedDatabase<U8x31, Value>;
-type U32Database = SizedDatabase<u32, Value>;
-type UnsizedDatabase = _UnsizedDatabase<Box<[u8]>, [u8], Value>;
+type U8x19Database = Database<U8x19, Value>;
+type U8x31Database = Database<U8x31, Value>;
+type U32Database = Database<u32, Value>;
 
 type P2PKDatabase = U8x19Database;
 type P2PKHDatabase = U8x19Database;
@@ -26,7 +22,7 @@ type UnknownDatabase = U32Database;
 type OpReturnDatabase = U32Database;
 type PushOnlyDatabase = U32Database;
 type EmptyDatabase = U32Database;
-type MultisigDatabase = UnsizedDatabase;
+type MultisigDatabase = U32Database;
 
 #[derive(Allocative)]
 pub struct AddressToAddressIndex {
@@ -106,7 +102,7 @@ impl AddressToAddressIndex {
             Address::Unknown(key) => self.unknown.as_ref().unwrap().get(key),
             Address::OpReturn(key) => self.op_return.as_ref().unwrap().get(key),
             Address::PushOnly(key) => self.push_only.as_ref().unwrap().get(key),
-            Address::MultiSig(key) => self.multisig.as_ref().unwrap().get(key),
+            Address::MultiSig(key) => self.push_only.as_ref().unwrap().get(key),
             Address::P2PK((prefix, key)) => self.p2pk.get(prefix).unwrap().get(key),
             Address::P2PKH((prefix, key)) => self.p2pkh.get(prefix).unwrap().get(key),
             Address::P2SH((prefix, key)) => self.p2sh.get(prefix).unwrap().get(key),
@@ -155,7 +151,6 @@ impl AddressToAddressIndex {
             Database::open(
                 &format!("{}/{}", Self::folder(), "p2pk"),
                 &prefix.to_string(),
-                |key| key,
             )
             .unwrap()
         })
@@ -166,7 +161,6 @@ impl AddressToAddressIndex {
             Database::open(
                 &format!("{}/{}", Self::folder(), "p2pkh"),
                 &prefix.to_string(),
-                |key| key,
             )
             .unwrap()
         })
@@ -177,7 +171,6 @@ impl AddressToAddressIndex {
             Database::open(
                 &format!("{}/{}", Self::folder(), "p2sh"),
                 &prefix.to_string(),
-                |key| key,
             )
             .unwrap()
         })
@@ -188,7 +181,6 @@ impl AddressToAddressIndex {
             Database::open(
                 &format!("{}/{}", Self::folder(), "p2wpkh"),
                 &prefix.to_string(),
-                |key| key,
             )
             .unwrap()
         })
@@ -199,7 +191,6 @@ impl AddressToAddressIndex {
             Database::open(
                 &format!("{}/{}", Self::folder(), "p2wsh"),
                 &prefix.to_string(),
-                |key| key,
             )
             .unwrap()
         })
@@ -210,7 +201,6 @@ impl AddressToAddressIndex {
             Database::open(
                 &format!("{}/{}", Self::folder(), "p2tr"),
                 &prefix.to_string(),
-                |key| key,
             )
             .unwrap()
         })
@@ -218,28 +208,27 @@ impl AddressToAddressIndex {
 
     pub fn open_unknown(&mut self) -> &mut UnknownDatabase {
         self.unknown
-            .get_or_insert_with(|| Database::open(Self::folder(), "unknown", |key| key).unwrap())
+            .get_or_insert_with(|| Database::open(Self::folder(), "unknown").unwrap())
     }
 
     pub fn open_op_return(&mut self) -> &mut UnknownDatabase {
         self.op_return
-            .get_or_insert_with(|| Database::open(Self::folder(), "op_return", |key| key).unwrap())
+            .get_or_insert_with(|| Database::open(Self::folder(), "op_return").unwrap())
     }
 
     pub fn open_push_only(&mut self) -> &mut UnknownDatabase {
         self.push_only
-            .get_or_insert_with(|| Database::open(Self::folder(), "push_only", |key| key).unwrap())
+            .get_or_insert_with(|| Database::open(Self::folder(), "push_only").unwrap())
     }
 
     pub fn open_empty(&mut self) -> &mut UnknownDatabase {
         self.empty
-            .get_or_insert_with(|| Database::open(Self::folder(), "empty", |key| key).unwrap())
+            .get_or_insert_with(|| Database::open(Self::folder(), "empty").unwrap())
     }
 
     pub fn open_multisig(&mut self) -> &mut MultisigDatabase {
-        self.multisig.get_or_insert_with(|| {
-            Database::open(Self::folder(), "multisig", |key| key as &[u8]).unwrap()
-        })
+        self.multisig
+            .get_or_insert_with(|| Database::open(Self::folder(), "multisig").unwrap())
     }
 }
 

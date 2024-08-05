@@ -15,53 +15,37 @@ use derive_deref::{Deref, DerefMut};
 //
 // Possible compression: https://pijul.org/posts/sanakirja-zstd/
 use sanakirja::{
-    btree::{self, page, page_unsized, BTreeMutPage, Db_},
+    btree::{self, page, Db_},
     direct_repr, Commit, Env, Error, MutTxn, RootDb, Storable, UnsizedStorable,
 };
 
 use crate::io::OUTPUTS_FOLDER_PATH;
 
-pub type SizedDatabase<Key, Value> = Database<Key, Key, Value, page::Page<Key, Value>>;
-
-pub type UnsizedDatabase<KeyTree, KeyDB, Value> =
-    Database<KeyTree, KeyDB, Value, page_unsized::Page<KeyDB, Value>>;
-
 #[derive(Allocative)]
-#[allocative(bound = "KeyTree: Allocative, KeyDB, Value: Allocative, Page")]
+#[allocative(bound = "Key: Allocative, Value: Allocative")]
 /// There is no `cached_gets` since it's much cheaper and faster to do a parallel search first using `unsafe_get` than caching gets along the way.
-pub struct Database<KeyTree, KeyDB, Value, Page>
+pub struct Database<Key, Value>
 where
-    KeyTree: Ord + Clone + Debug,
-    KeyDB: Ord + ?Sized + Storable,
+    Key: Ord + Clone + Debug + ?Sized + Storable,
     Value: Storable + PartialEq,
-    Page: BTreeMutPage<KeyDB, Value>,
 {
-    pub cached_puts: BTreeMap<KeyTree, Value>,
-    pub cached_dels: BTreeSet<KeyTree>,
+    pub cached_puts: BTreeMap<Key, Value>,
+    pub cached_dels: BTreeSet<Key>,
     #[allocative(skip)]
-    db: Db_<KeyDB, Value, Page>,
+    db: Db_<Key, Value, page::Page<Key, Value>>,
     #[allocative(skip)]
     txn: MutTxn<Env, ()>,
-    #[allocative(skip)]
-    key_tree_to_key_db: fn(&KeyTree) -> &KeyDB,
 }
 
-pub const SANAKIRJA_MAX_KEY_SIZE: usize = 510;
 const ROOT_DB: usize = 0;
 const PAGE_SIZE: u64 = 4096 * 256; // 1mo - Must be a multiplier of 4096
 
-impl<KeyDB, KeyTree, Value, Page> Database<KeyTree, KeyDB, Value, Page>
+impl<Key, Value> Database<Key, Value>
 where
-    KeyTree: Ord + Clone + Debug,
-    KeyDB: Ord + ?Sized + Storable,
+    Key: Ord + Clone + Debug + ?Sized + Storable,
     Value: Storable + PartialEq,
-    Page: BTreeMutPage<KeyDB, Value>,
 {
-    pub fn open(
-        folder: &str,
-        file: &str,
-        key_tree_to_key_db: fn(&KeyTree) -> &KeyDB,
-    ) -> color_eyre::Result<Self> {
+    pub fn open(folder: &str, file: &str) -> color_eyre::Result<Self> {
         let mut txn = Self::init_txn(folder, file)?;
 
         let db = txn
@@ -73,20 +57,19 @@ where
             cached_dels: BTreeSet::default(),
             db,
             txn,
-            key_tree_to_key_db,
         })
     }
 
     pub fn iter<F>(&self, callback: &mut F)
     where
-        F: FnMut((&KeyDB, &Value)),
+        F: FnMut((&Key, &Value)),
     {
         btree::iter(&self.txn, &self.db, None)
             .unwrap()
             .for_each(|entry| callback(entry.unwrap()));
     }
 
-    pub fn get(&self, key: &KeyTree) -> Option<&Value> {
+    pub fn get(&self, key: &Key) -> Option<&Value> {
         if let Some(cached_put) = self.get_from_puts(key) {
             return Some(cached_put);
         }
@@ -94,13 +77,11 @@ where
         self.db_get(key)
     }
 
-    pub fn db_get(&self, key: &KeyTree) -> Option<&Value> {
-        let k = (self.key_tree_to_key_db)(key);
+    pub fn db_get(&self, key: &Key) -> Option<&Value> {
+        let option = btree::get(&self.txn, &self.db, key, None).unwrap();
 
-        let option = btree::get(&self.txn, &self.db, k, None).unwrap();
-
-        if let Some((k_found, v)) = option {
-            if k == k_found {
+        if let Some((key_found, v)) = option {
+            if key == key_found {
                 return Some(v);
             }
         }
@@ -109,17 +90,17 @@ where
     }
 
     #[inline(always)]
-    pub fn get_from_puts(&self, key: &KeyTree) -> Option<&Value> {
+    pub fn get_from_puts(&self, key: &Key) -> Option<&Value> {
         self.cached_puts.get(key)
     }
 
     #[inline(always)]
-    pub fn get_mut_from_puts(&mut self, key: &KeyTree) -> Option<&mut Value> {
+    pub fn get_mut_from_puts(&mut self, key: &Key) -> Option<&mut Value> {
         self.cached_puts.get_mut(key)
     }
 
     #[inline(always)]
-    pub fn remove(&mut self, key: &KeyTree) -> Option<Value> {
+    pub fn remove(&mut self, key: &Key) -> Option<Value> {
         self.remove_from_puts(key).or_else(|| {
             self.db_remove(key);
 
@@ -128,30 +109,30 @@ where
     }
 
     #[inline(always)]
-    pub fn db_remove(&mut self, key: &KeyTree) {
+    pub fn db_remove(&mut self, key: &Key) {
         self.cached_dels.insert(key.clone());
     }
 
-    pub fn update(&mut self, key: KeyTree, value: Value) -> Option<Value> {
+    pub fn update(&mut self, key: Key, value: Value) -> Option<Value> {
         self.cached_dels.insert(key.clone());
 
         self.cached_puts.insert(key, value)
     }
 
     #[inline(always)]
-    pub fn remove_from_puts(&mut self, key: &KeyTree) -> Option<Value> {
+    pub fn remove_from_puts(&mut self, key: &Key) -> Option<Value> {
         self.cached_puts.remove(key)
     }
 
     #[inline(always)]
-    pub fn insert(&mut self, key: KeyTree, value: Value) -> Option<Value> {
+    pub fn insert(&mut self, key: Key, value: Value) -> Option<Value> {
         self.cached_dels.remove(&key);
 
         self.unsafe_insert(key, value)
     }
 
     #[inline(always)]
-    pub fn unsafe_insert(&mut self, key: KeyTree, value: Value) -> Option<Value> {
+    pub fn unsafe_insert(&mut self, key: Key, value: Value) -> Option<Value> {
         self.cached_puts.insert(key, value)
     }
 
@@ -175,12 +156,7 @@ where
         self.cached_dels
             .into_iter()
             .try_for_each(|key| -> Result<(), Error> {
-                btree::del(
-                    &mut self.txn,
-                    &mut self.db,
-                    (self.key_tree_to_key_db)(&key),
-                    None,
-                )?;
+                btree::del(&mut self.txn, &mut self.db, &key, None)?;
 
                 Ok(())
             })?;
@@ -188,12 +164,7 @@ where
         self.cached_puts
             .into_iter()
             .try_for_each(|(key, value)| -> Result<(), Error> {
-                btree::put(
-                    &mut self.txn,
-                    &mut self.db,
-                    (self.key_tree_to_key_db)(&key),
-                    &value,
-                )?;
+                btree::put(&mut self.txn, &mut self.db, &key, &value)?;
 
                 Ok(())
             })?;

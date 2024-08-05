@@ -2,6 +2,7 @@ use std::{fmt::Debug, fs, path::Path};
 
 use allocative::Allocative;
 use bincode::{Decode, Encode};
+use color_eyre::eyre::eyre;
 use serde::{de::DeserializeOwned, Serialize};
 
 use crate::io::{Binary, Json};
@@ -61,7 +62,7 @@ impl Serialization {
                         return Binary::import(compressed_bin_path);
                     }
 
-                    panic!("Wrong path")
+                    Err(eyre!("Wrong path or no file"))
                 }
             }
             Serialization::Json => {
@@ -76,7 +77,7 @@ impl Serialization {
                         return Json::import(json_path);
                     }
 
-                    panic!("Wrong path")
+                    Err(eyre!("Wrong path or no file"))
                 }
             }
         }

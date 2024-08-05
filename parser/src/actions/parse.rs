@@ -129,6 +129,7 @@ pub fn parse(
             let mut txouts_parsing_results = pre_process_outputs(
                 &block,
                 compute_addresses,
+                &mut states.address_counters.multisig_addresses,
                 &mut states.address_counters.op_return_addresses,
                 &mut states.address_counters.push_only_addresses,
                 &mut states.address_counters.unknown_addresses,
@@ -341,8 +342,10 @@ pub fn parse(
                         if input_tx_data.is_none() {
                             if !enable_check_if_txout_value_is_zero_in_db
                                 || rpc
-                                    .get_tx_out(&input_txid, input_vout, None)
+                                    .get_raw_transaction(&input_txid, None)
                                     .unwrap()
+                                    .output
+                                    .get(input_vout as usize)
                                     .unwrap()
                                     .value
                                     .to_sat()
@@ -774,9 +777,11 @@ pub struct TxoutsParsingResults {
     op_returns: usize,
 }
 
+#[allow(clippy::too_many_arguments)]
 fn pre_process_outputs(
     block: &Block,
     compute_addresses: bool,
+    multisig_addresses: &mut Counter,
     op_return_addresses: &mut Counter,
     push_only_addresses: &mut Counter,
     unknown_addresses: &mut Counter,
@@ -821,6 +826,7 @@ fn pre_process_outputs(
             let address_opt = compute_addresses.then(|| {
                 let address = Address::from(
                     txout,
+                    multisig_addresses,
                     op_return_addresses,
                     push_only_addresses,
                     unknown_addresses,

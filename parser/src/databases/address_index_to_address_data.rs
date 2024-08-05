@@ -12,11 +12,11 @@ use crate::{
     utils::time,
 };
 
-use super::{AnyDatabaseGroup, Metadata, SizedDatabase};
+use super::{AnyDatabaseGroup, Database as _Database, Metadata};
 
 type Key = u32;
 type Value = AddressData;
-type Database = SizedDatabase<Key, Value>;
+type Database = _Database<Key, Value>;
 
 #[derive(Allocative)]
 pub struct AddressIndexToAddressData {
@@ -78,7 +78,7 @@ impl AddressIndexToAddressData {
                 (db_index + 1) * DB_MAX_SIZE
             );
 
-            SizedDatabase::open(Self::folder(), &db_name, |key| key).unwrap()
+            Database::open(Self::folder(), &db_name).unwrap()
         })
     }
 

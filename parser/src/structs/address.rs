@@ -1,11 +1,7 @@
 use bitcoin_hashes::{hash160, Hash};
 use biter::bitcoin::TxOut;
-use itertools::Itertools;
 
-use crate::{
-    databases::{U8x19, U8x31, SANAKIRJA_MAX_KEY_SIZE},
-    utils::multisig_addresses,
-};
+use crate::databases::{U8x19, U8x31};
 
 use super::{AddressType, Counter};
 
@@ -17,7 +13,7 @@ pub enum Address {
     PushOnly(u32),
     Unknown(u32),
     // https://mempool.space/tx/274f8be3b7b9b1a220285f5f71f61e2691dd04df9d69bb02a8b3b85f91fb1857
-    MultiSig(Box<[u8]>),
+    MultiSig(u32),
     P2PK((u16, U8x19)),
     P2PKH((u16, U8x19)),
     P2SH((u16, U8x19)),
@@ -45,6 +41,7 @@ impl Address {
 
     pub fn from(
         txout: &TxOut,
+        multisig_addresses: &mut Counter,
         op_return_addresses: &mut Counter,
         push_only_addresses: &mut Counter,
         unknown_addresses: &mut Counter,
@@ -92,22 +89,11 @@ impl Address {
 
             Self::OpReturn(index)
         } else if script.is_multisig() {
-            let vec = multisig_addresses(script);
+            let index = multisig_addresses.inner();
 
-            if vec.is_empty() {
-                dbg!(txout);
-                panic!("Multisig addresses cannot be empty !");
-            }
+            multisig_addresses.increment();
 
-            let mut vec = vec.into_iter().sorted_unstable().concat();
-
-            // TODO: Terrible! Store everything instead of only the 510 first bytes but how
-            // Sanakirja key limit is [u8; 510] and some multisig transactions have 999 keys
-            if vec.len() > SANAKIRJA_MAX_KEY_SIZE {
-                vec = vec.drain(..SANAKIRJA_MAX_KEY_SIZE).collect_vec();
-            }
-
-            Self::MultiSig(vec.into())
+            Self::MultiSig(index)
         } else if script.is_push_only() {
             let index = push_only_addresses.inner();
 

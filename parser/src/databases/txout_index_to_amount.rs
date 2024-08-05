@@ -9,11 +9,11 @@ use rayon::prelude::*;
 
 use crate::structs::{Amount, Date, Height, TxoutIndex};
 
-use super::{AnyDatabaseGroup, Metadata, SizedDatabase};
+use super::{AnyDatabaseGroup, Database as _Database, Metadata};
 
 type Key = TxoutIndex;
 type Value = Amount;
-type Database = SizedDatabase<Key, Value>;
+type Database = _Database<Key, Value>;
 
 #[derive(Allocative)]
 pub struct TxoutIndexToAmount {
@@ -77,7 +77,7 @@ impl TxoutIndexToAmount {
                 (db_index + 1) * DB_MAX_SIZE
             );
 
-            SizedDatabase::open(Self::folder(), &db_name, |key| key).unwrap()
+            Database::open(Self::folder(), &db_name).unwrap()
         })
     }
 

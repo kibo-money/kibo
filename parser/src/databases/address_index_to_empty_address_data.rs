@@ -9,11 +9,11 @@ use rayon::prelude::*;
 
 use crate::structs::{Date, EmptyAddressData, Height};
 
-use super::{AnyDatabaseGroup, Metadata, SizedDatabase};
+use super::{AnyDatabaseGroup, Database as _Database, Metadata};
 
 type Key = u32;
 type Value = EmptyAddressData;
-type Database = SizedDatabase<Key, Value>;
+type Database = _Database<Key, Value>;
 
 #[derive(Allocative)]
 pub struct AddressIndexToEmptyAddressData {
@@ -44,12 +44,6 @@ impl AddressIndexToEmptyAddressData {
 
         self.open_db(&key).unsafe_insert(key, value)
     }
-
-    // pub fn undo_insert(&mut self, key: &Key) -> Option<Value> {
-    //     self.metadata.called_remove();
-
-    //     self.open_db(key).remove_from_puts(key)
-    // }
 
     pub fn remove(&mut self, key: &Key) -> Option<Value> {
         self.metadata.called_remove();
@@ -86,7 +80,7 @@ impl AddressIndexToEmptyAddressData {
                 (db_index + 1) * DB_MAX_SIZE
             );
 
-            SizedDatabase::open(Self::folder(), &db_name, |key| key).unwrap()
+            Database::open(Self::folder(), &db_name).unwrap()
         })
     }
 

@@ -10,11 +10,11 @@ use rayon::prelude::*;
 
 use crate::structs::{Date, Height, TxData};
 
-use super::{AnyDatabaseGroup, Metadata, SizedDatabase, U8x31};
+use super::{AnyDatabaseGroup, Database as _Database, Metadata, U8x31};
 
 type Key = U8x31;
 type Value = TxData;
-type Database = SizedDatabase<Key, Value>;
+type Database = _Database<Key, Value>;
 
 #[derive(Allocative)]
 pub struct TxidToTxData {
@@ -105,9 +105,8 @@ impl TxidToTxData {
     pub fn open_db(&mut self, txid: &Txid) -> &mut Database {
         let db_index = Self::db_index(txid);
 
-        self.entry(db_index).or_insert_with(|| {
-            SizedDatabase::open(Self::folder(), &db_index.to_string(), |key| key).unwrap()
-        })
+        self.entry(db_index)
+            .or_insert_with(|| Database::open(Self::folder(), &db_index.to_string()).unwrap())
     }
 
     fn txid_to_key(txid: &Txid) -> U8x31 {
