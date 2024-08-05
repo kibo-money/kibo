@@ -530,7 +530,8 @@ How to fix this:
         previous_timestamp: Option<u32>,
     ) -> color_eyre::Result<OHLC> {
         if self.binance_har.is_none() {
-            self.binance_har.replace(Binance::read_har_file()?);
+            self.binance_har
+                .replace(Binance::read_har_file().unwrap_or_default());
         }
 
         Self::find_height_ohlc(
