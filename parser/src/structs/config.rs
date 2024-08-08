@@ -6,23 +6,23 @@ use serde::{Deserialize, Serialize};
 #[derive(Parser, Debug, Clone, Default, Serialize, Deserialize)]
 #[command(version, about, long_about = None)]
 pub struct Config {
-    /// Bitcoin data directory path
+    /// Bitcoin data directory path, saved
     #[arg(long, value_name = "DIR")]
     pub datadir: Option<String>,
 
-    /// Bitcoin RPC port, default: 8332
+    /// Bitcoin RPC port, default: 8332, saved
     #[arg(long, value_name = "PORT")]
     pub rpcport: Option<u16>,
 
-    /// Bitcoin RPC username
+    /// Bitcoin RPC username, saved
     #[arg(long, value_name = "USERNAME")]
     pub rpcuser: Option<String>,
 
-    /// Bitcoin RPC password
+    /// Bitcoin RPC password, saved
     #[arg(long, value_name = "PASSWORD")]
     pub rpcpassword: Option<String>,
 
-    /// Delay between runs, default: 0
+    /// Delay between runs, default: 0, saved
     #[arg(long, value_name = "SECONDS")]
     pub delay: Option<u64>,
 }

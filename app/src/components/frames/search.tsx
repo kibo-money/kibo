@@ -4,7 +4,7 @@ import { createVisibilityObserver } from "@solid-primitives/intersection-observe
 import { scrollIntoView } from "/src/scripts/utils/scroll";
 import { createRWS } from "/src/solid/rws";
 
-import { INPUT_PRESET_SEARCH_ID } from "../..";
+import { INPUT_PRESET_SEARCH_ID } from "../app";
 import { Box } from "./box";
 import { Button, ButtonRandomChart } from "./button";
 import { Line } from "./line";

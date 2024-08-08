@@ -25,6 +25,7 @@ export function createChart({
       fontFamily: "Lexend",
       background: { color: "transparent" },
       fontSize: 14,
+      attributionLogo: false,
     },
     grid: {
       vertLines: { visible: false },

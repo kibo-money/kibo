@@ -9,13 +9,20 @@
 - Changed the block iterator from a custom version of [bitcoin-explorer](https://crates.io/crates/bitcoin-explorer) to the homemade [biter](https://crates.io/crates/biter) which allows the parser to run alongside `bitcoind`
 - Added datasets compression thanks to [zstd](https://crates.io/crates/zstd) to reduce disk usage
 - Use the Bitcoin RPC server for various calls instead of running cli commands and then parsing the JSON from the output
-- Important database changes that will need a full rescan:
-  - Split txid_to_tx_data database in 4096 chunks (from 256)
+- **Important database changes that will need a full rescan**:
+  - Changed databases page size from 1MB to 4KB for improved disk usage
+  - Split txid_to_tx_data database in 4096 chunks (from 256) for improved disk usage
+  - Split address_index_to_X databases to chunks of 25_000 instead of 50_000
   - Removed local Multisig database
 - Updated the config, run with `-h` to see possible args
 - Moved outputs from `/target/outputs` to `/out` to allow to run commands like `cargo clean` without side effects
 - Various first run fixes
+- Added to `-h` which arguments are saved, which is all of them at the time of writing
 
+### App
+
+- Made the app runable without needing to run the server first to generate `types.d.ts`
+- Added Trading View attribution link to the settings frame and file in the lightweight charts folder
 
 ### Server
 

@@ -229,6 +229,23 @@ export function SettingsFrame({
         </div>
       </div>
 
+      <p class="p-4 text-center">
+        <span class="opacity-50">Charts are displayed via </span>{" "}
+        <a href="https://www.tradingview.com" target="_blank">
+          Trading View
+        </a>
+        <span class="opacity-50">'s</span>{" "}
+        <a
+          href="https://www.tradingview.com/lightweight-charts/"
+          target="_blank"
+        >
+          Lightweight Charts™
+        </a>{" "}
+        <span class="opacity-50">library</span>
+      </p>
+
+      <hr class="border-lighter -mx-4 border-t" />
+
       <p class="pb-[10vh] pt-4 text-center">
         <span class="opacity-50">Version:</span>{" "}
         <a

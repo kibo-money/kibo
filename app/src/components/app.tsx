@@ -3,7 +3,7 @@ import { createRWS } from "/src/solid/rws";
 import { standalone } from "../env";
 import { createDatasets } from "../scripts/datasets";
 import { createPresets } from "../scripts/presets";
-import { createSL } from "../scripts/utils/selectableList/static";
+import { createUserConfig } from "../scripts/user/config";
 import { sleep } from "../scripts/utils/sleep";
 import {
   readBooleanFromStorage,
@@ -12,16 +12,14 @@ import {
 import { readBooleanURLParam, writeURLParam } from "../scripts/utils/urlParams";
 import { webSockets } from "../scripts/ws";
 import { classPropToString } from "../solid/classes";
-import { createPreferredColorSchemeAccessor } from "../solid/prefferedColorScheme";
-import { Background } from "./components/background";
-import { ChartFrame } from "./components/frames/chart";
-import { FavoritesFrame } from "./components/frames/favorites";
-import { FoldersFrame } from "./components/frames/folders";
-import { HistoryFrame } from "./components/frames/history";
-import { SettingsFrame } from "./components/frames/settings";
-import { StripDesktop, StripMobile } from "./components/strip";
-import { Update } from "./components/update";
-import { createUserConfig } from "./scripts/user";
+import { Background } from "./background";
+import { ChartFrame } from "./frames/chart";
+import { FavoritesFrame } from "./frames/favorites";
+import { FoldersFrame } from "./frames/folders";
+import { HistoryFrame } from "./frames/history";
+import { SettingsFrame } from "./frames/settings";
+import { StripDesktop, StripMobile } from "./strip";
+import { Update } from "./update";
 
 const LOCAL_STORAGE_BAR_KEY = "bar-width";
 const LOCAL_STORAGE_FULLSCREEN = "fullscrenn";
@@ -149,13 +147,13 @@ export function App() {
   onCleanup(() => document.removeEventListener("keydown", documentOnKeyDown));
 
   const SearchFrame = lazy(() =>
-    import("./components/frames/search").then((d) => ({
+    import("./frames/search").then((d) => ({
       default: d.SearchFrame,
     })),
   );
 
   const Qrcode = lazy(() =>
-    import("./components/qrcode").then((d) => ({
+    import("./qrcode").then((d) => ({
       default: d.Qrcode,
     })),
   );
