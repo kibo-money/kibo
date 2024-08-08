@@ -9,9 +9,13 @@
 - Changed the block iterator from a custom version of [bitcoin-explorer](https://crates.io/crates/bitcoin-explorer) to the homemade [biter](https://crates.io/crates/biter) which allows the parser to run alongside `bitcoind`
 - Added datasets compression thanks to [zstd](https://crates.io/crates/zstd) to reduce disk usage
 - Use the Bitcoin RPC server for various calls instead of running cli commands and then parsing the JSON from the output
+- Important database changes that will need a full rescan:
+  - Split txid_to_tx_data database in 4096 chunks (from 256)
+  - Removed local Multisig database
 - Updated the config, run with `-h` to see possible args
 - Moved outputs from `/target/outputs` to `/out` to allow to run commands like `cargo clean` without side effects
 - Various first run fixes
+
 
 ### Server
 

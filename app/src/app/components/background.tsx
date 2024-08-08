@@ -7,6 +7,7 @@ const texts = [
   "satonomics",
   "satonomics",
   "satonomics",
+  "satonomics",
 
   "stay humble, stack sats",
   "21 million",
@@ -44,6 +45,9 @@ const texts = [
   "ride or die",
   "cypherpunk",
   "we like the coin",
+  "money for enemies",
+  "trustless money",
+  "sustainable money",
 ];
 
 export function Background({
