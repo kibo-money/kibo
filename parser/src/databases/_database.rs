@@ -38,7 +38,7 @@ where
 }
 
 const ROOT_DB: usize = 0;
-const PAGE_SIZE: u64 = 4096 * 256; // 1mo - Must be a multiplier of 4096
+const PAGE_SIZE: u64 = 4096;
 
 impl<Key, Value> Database<Key, Value>
 where

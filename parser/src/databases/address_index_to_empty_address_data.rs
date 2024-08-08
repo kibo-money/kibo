@@ -9,7 +9,7 @@ use rayon::prelude::*;
 
 use crate::structs::{Date, EmptyAddressData, Height};
 
-use super::{AnyDatabaseGroup, Database as _Database, Metadata};
+use super::{AnyDatabaseGroup, Database as _Database, Metadata, ADDRESS_INDEX_DB_MAX_SIZE};
 
 type Key = u32;
 type Value = EmptyAddressData;
@@ -35,8 +35,6 @@ impl DerefMut for AddressIndexToEmptyAddressData {
         &mut self.map
     }
 }
-
-const DB_MAX_SIZE: usize = 500_000;
 
 impl AddressIndexToEmptyAddressData {
     pub fn unsafe_insert(&mut self, key: Key, value: Value) -> Option<Value> {
@@ -76,8 +74,8 @@ impl AddressIndexToEmptyAddressData {
         self.entry(db_index).or_insert_with(|| {
             let db_name = format!(
                 "{}..{}",
-                db_index * DB_MAX_SIZE,
-                (db_index + 1) * DB_MAX_SIZE
+                db_index * ADDRESS_INDEX_DB_MAX_SIZE,
+                (db_index + 1) * ADDRESS_INDEX_DB_MAX_SIZE
             );
 
             Database::open(Self::folder(), &db_name).unwrap()
@@ -85,7 +83,7 @@ impl AddressIndexToEmptyAddressData {
     }
 
     fn db_index(key: &Key) -> usize {
-        *key as usize / DB_MAX_SIZE
+        *key as usize / ADDRESS_INDEX_DB_MAX_SIZE
     }
 }
 

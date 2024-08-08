@@ -39,7 +39,7 @@ impl DerefMut for AddressIndexToAddressData {
     }
 }
 
-const DB_MAX_SIZE: usize = 500_000;
+pub const ADDRESS_INDEX_DB_MAX_SIZE: usize = 250_000;
 
 impl AddressIndexToAddressData {
     pub fn unsafe_insert(&mut self, key: Key, value: Value) -> Option<Value> {
@@ -74,8 +74,8 @@ impl AddressIndexToAddressData {
         self.entry(db_index).or_insert_with(|| {
             let db_name = format!(
                 "{}..{}",
-                db_index * DB_MAX_SIZE,
-                (db_index + 1) * DB_MAX_SIZE
+                db_index * ADDRESS_INDEX_DB_MAX_SIZE,
+                (db_index + 1) * ADDRESS_INDEX_DB_MAX_SIZE
             );
 
             Database::open(Self::folder(), &db_name).unwrap()
@@ -120,7 +120,7 @@ impl AddressIndexToAddressData {
     }
 
     fn db_index(key: &Key) -> usize {
-        *key as usize / DB_MAX_SIZE
+        *key as usize / ADDRESS_INDEX_DB_MAX_SIZE
     }
 }
 

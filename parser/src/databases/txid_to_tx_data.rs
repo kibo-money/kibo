@@ -20,11 +20,11 @@ type Database = _Database<Key, Value>;
 pub struct TxidToTxData {
     pub metadata: Metadata,
 
-    map: BTreeMap<u8, Database>,
+    map: BTreeMap<u16, Database>,
 }
 
 impl Deref for TxidToTxData {
-    type Target = BTreeMap<u8, Database>;
+    type Target = BTreeMap<u16, Database>;
 
     fn deref(&self) -> &Self::Target {
         &self.map
@@ -113,8 +113,8 @@ impl TxidToTxData {
         U8x31::from(&txid[1..])
     }
 
-    fn db_index(txid: &Txid) -> u8 {
-        txid[0]
+    fn db_index(txid: &Txid) -> u16 {
+        ((txid[0] as u16) << 4) + ((txid[1] as u16) >> 4)
     }
 }
 
