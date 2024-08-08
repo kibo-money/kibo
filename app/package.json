@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "($npm_execpath outdated || read -p \"Press enter to ignore...\") && vite --host",
-    "build": "vite build",
     "check": "tsc --noEmit --skipLibCheck --pretty",
+    "build": "$npm_execpath run check && vite build",
     "check-watch": "$npm_execpath check --watch",
     "format": "prettier --write './src'",
     "prod": "$npm_execpath run build && vite preview --host",

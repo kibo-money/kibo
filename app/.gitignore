@@ -7,4 +7,3 @@ visualizer
 # Local Netlify folder
 .netlify
 .wrangler
-paths.d.ts

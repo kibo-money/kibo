@@ -25,7 +25,7 @@ export function createPresets(scale: ResourceScale) {
         bottom: [
           {
             title: "Market Cap.",
-            datasetPath: `/${scale}-to-market-cap`,
+            datasetPath: `${scale}-to-market-cap`,
             color: colors.bitcoin,
           },
         ],

@@ -19,13 +19,13 @@ export function createResourceDataset<
 
   const baseURL = `${
     USE_LOCAL_URL && location.hostname === "localhost" ? LOCAL_URL : WEB_URL
-  }${path}`;
+  }/${path}`;
 
   const backupURL = `${
     USE_LOCAL_URL && location.hostname === "localhost"
       ? LOCAL_URL
       : BACKUP_WEB_URL
-  }${path}`;
+  }/${path}`;
 
   return createRoot((dispose) => {
     const fetchedJSONs = new Array(

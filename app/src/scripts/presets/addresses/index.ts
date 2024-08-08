@@ -21,7 +21,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
           {
             title: `Total Non Empty Address`,
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-address-count`,
+            datasetPath: `${scale}-to-address-count`,
           },
         ],
       },
@@ -36,7 +36,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
           {
             title: `New Addresses`,
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-new-addresses`,
+            datasetPath: `${scale}-to-new-addresses`,
           },
         ],
       },
@@ -51,7 +51,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
           {
             title: `Total Addresses Created`,
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-created-addresses`,
+            datasetPath: `${scale}-to-created-addresses`,
           },
         ],
       },
@@ -66,7 +66,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
           {
             title: `Total Empty Addresses`,
             color: colors.darkWhite,
-            datasetPath: `/${scale}-to-empty-addresses`,
+            datasetPath: `${scale}-to-empty-addresses`,
           },
         ],
       },
@@ -174,7 +174,7 @@ export function createAddressCountPreset({
   const addressCount: SeriesConfig = {
     title: "Address Count",
     color,
-    datasetPath: `/${scale}-to-${datasetId}-address-count`,
+    datasetPath: `${scale}-to-${datasetId}-address-count`,
   };
 
   return {

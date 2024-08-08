@@ -15,17 +15,17 @@ export function createPresets(scale: ResourceScale) {
           {
             title: "1M SMA",
             color: colors.momentumYellow,
-            datasetPath: `/${scale}-to-transaction-count-1m-sma`,
+            datasetPath: `${scale}-to-transaction-count-1m-sma`,
           },
           {
             title: "1W SMA",
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-transaction-count-1w-sma`,
+            datasetPath: `${scale}-to-transaction-count-1w-sma`,
           },
           {
             title: "Raw",
             color: colors.darkBitcoin,
-            datasetPath: `/${scale}-to-transaction-count`,
+            datasetPath: `${scale}-to-transaction-count`,
           },
         ],
       },
@@ -44,17 +44,17 @@ export function createPresets(scale: ResourceScale) {
               {
                 title: "1M SMA",
                 color: colors.momentumYellow,
-                datasetPath: `/${scale}-to-transaction-volume-1m-sma`,
+                datasetPath: `${scale}-to-transaction-volume-1m-sma`,
               },
               {
                 title: "1W SMA",
                 color: colors.bitcoin,
-                datasetPath: `/${scale}-to-transaction-volume-1w-sma`,
+                datasetPath: `${scale}-to-transaction-volume-1w-sma`,
               },
               {
                 title: "Raw",
                 color: colors.darkBitcoin,
-                datasetPath: `/${scale}-to-transaction-volume`,
+                datasetPath: `${scale}-to-transaction-volume`,
               },
             ],
           },
@@ -69,17 +69,17 @@ export function createPresets(scale: ResourceScale) {
               {
                 title: "1M SMA",
                 color: colors.lightDollars,
-                datasetPath: `/${scale}-to-transaction-volume-in-dollars-1m-sma`,
+                datasetPath: `${scale}-to-transaction-volume-in-dollars-1m-sma`,
               },
               {
                 title: "1W SMA",
                 color: colors.dollars,
-                datasetPath: `/${scale}-to-transaction-volume-in-dollars-1w-sma`,
+                datasetPath: `${scale}-to-transaction-volume-in-dollars-1w-sma`,
               },
               {
                 title: "Raw",
                 color: colors.darkDollars,
-                datasetPath: `/${scale}-to-transaction-volume-in-dollars`,
+                datasetPath: `${scale}-to-transaction-volume-in-dollars`,
               },
             ],
           },
@@ -100,7 +100,7 @@ export function createPresets(scale: ResourceScale) {
               {
                 title: "Volume",
                 color: colors.bitcoin,
-                datasetPath: `/${scale}-to-annualized-transaction-volume`,
+                datasetPath: `${scale}-to-annualized-transaction-volume`,
               },
             ],
           },
@@ -115,7 +115,7 @@ export function createPresets(scale: ResourceScale) {
               {
                 title: "Volume",
                 color: colors.dollars,
-                datasetPath: `/${scale}-to-annualized-transaction-volume-in-dollars`,
+                datasetPath: `${scale}-to-annualized-transaction-volume-in-dollars`,
               },
             ],
           },
@@ -132,7 +132,7 @@ export function createPresets(scale: ResourceScale) {
           {
             title: "Transactions Velocity",
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-transaction-velocity`,
+            datasetPath: `${scale}-to-transaction-velocity`,
           },
         ],
       },
@@ -147,17 +147,17 @@ export function createPresets(scale: ResourceScale) {
           {
             title: "1M SMA",
             color: colors.lightBitcoin,
-            datasetPath: `/${scale}-to-transactions-per-second-1m-sma`,
+            datasetPath: `${scale}-to-transactions-per-second-1m-sma`,
           },
           {
             title: "1W SMA",
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-transactions-per-second-1w-sma`,
+            datasetPath: `${scale}-to-transactions-per-second-1w-sma`,
           },
           {
             title: "Raw",
             color: colors.darkBitcoin,
-            datasetPath: `/${scale}-to-transactions-per-second`,
+            datasetPath: `${scale}-to-transactions-per-second`,
           },
         ],
       },

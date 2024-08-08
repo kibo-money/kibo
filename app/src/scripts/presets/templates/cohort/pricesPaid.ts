@@ -27,7 +27,7 @@ export function createCohortPresetPricesPaidFolder({
           {
             title: "Average",
             color,
-            datasetPath: `/${scale as ResourceScale}-to-${datasetIdToPrefix(datasetId)}realized-price`,
+            datasetPath: `${scale as ResourceScale}-to-${datasetIdToPrefix(datasetId)}realized-price`,
           },
         ],
       },
@@ -78,5 +78,5 @@ function generatePath(
 ): AnyDatasetPath {
   const datasetPrefix = datasetIdToPrefix(cohortId);
 
-  return `/${scale}-to-${datasetPrefix}${id}` as const;
+  return `${scale}-to-${datasetPrefix}${id}` as const;
 }

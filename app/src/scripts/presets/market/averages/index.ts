@@ -17,7 +17,7 @@ export function createPresets(scale: ResourceScale): PartialPresetFolder {
         top: averages.map((average) => ({
           title: average.key.toUpperCase(),
           color: colors[`_${average.key}`],
-          datasetPath: `/${scale}-to-price-${average.key}-sma`,
+          datasetPath: `${scale}-to-price-${average.key}-sma`,
         })),
       },
       ...averages.map(({ name, key }) =>
@@ -60,15 +60,15 @@ function createPresetFolder({
           {
             title: `SMA`,
             color,
-            datasetPath: `/${scale}-to-price-${key}-sma`,
+            datasetPath: `${scale}-to-price-${key}-sma`,
           },
         ],
       },
       createRatioFolder({
         scale,
         color,
-        ratioDatasetPath: `/${scale}-to-market-price-to-price-${key}-sma-ratio`,
-        valueDatasetPath: `/${scale}-to-price-${key}-sma`,
+        ratioDatasetPath: `${scale}-to-market-price-to-price-${key}-sma-ratio`,
+        valueDatasetPath: `${scale}-to-price-${key}-sma`,
         title,
       }),
     ],

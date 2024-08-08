@@ -29,7 +29,7 @@ export function createCohortPresetUnrealizedFolder({
         bottom: [
           {
             title: "Profit",
-            datasetPath: `/${scale}-to-${datasetPrefix}unrealized-profit`,
+            datasetPath: `${scale}-to-${datasetPrefix}unrealized-profit`,
             color: colors.profit,
           },
         ],
@@ -44,7 +44,7 @@ export function createCohortPresetUnrealizedFolder({
         bottom: [
           {
             title: "Loss",
-            datasetPath: `/${scale}-to-${datasetPrefix}unrealized-loss`,
+            datasetPath: `${scale}-to-${datasetPrefix}unrealized-loss`,
             color: colors.loss,
           },
         ],
@@ -60,13 +60,13 @@ export function createCohortPresetUnrealizedFolder({
           {
             title: "Profit",
             color: colors.profit,
-            datasetPath: `/${scale}-to-${datasetPrefix}unrealized-profit`,
+            datasetPath: `${scale}-to-${datasetPrefix}unrealized-profit`,
             seriesType: SeriesType.Based,
           },
           {
             title: "Loss",
             color: colors.loss,
-            datasetPath: `/${scale}-to-${datasetPrefix}negative-unrealized-loss`,
+            datasetPath: `${scale}-to-${datasetPrefix}negative-unrealized-loss`,
             seriesType: SeriesType.Based,
           },
         ],
@@ -81,7 +81,7 @@ export function createCohortPresetUnrealizedFolder({
         bottom: [
           {
             title: "Net Unrealized PNL",
-            datasetPath: `/${scale}-to-${datasetPrefix}net-unrealized-profit-and-loss`,
+            datasetPath: `${scale}-to-${datasetPrefix}net-unrealized-profit-and-loss`,
             seriesType: SeriesType.Based,
           },
         ],
@@ -96,7 +96,7 @@ export function createCohortPresetUnrealizedFolder({
         bottom: [
           {
             title: "Relative Net Unrealized PNL",
-            datasetPath: `/${scale}-to-${datasetPrefix}net-unrealized-profit-and-loss-to-market-cap-ratio`,
+            datasetPath: `${scale}-to-${datasetPrefix}net-unrealized-profit-and-loss-to-market-cap-ratio`,
             seriesType: SeriesType.Based,
           },
         ],

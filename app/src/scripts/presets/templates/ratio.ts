@@ -43,7 +43,7 @@ export function createRatioFolder({
           {
             title: `Even`,
             color: colors.white,
-            datasetPath: `/${scale}-to-1`,
+            datasetPath: `${scale}-to-1`,
             options: {
               lineStyle: 3,
               lastValueVisible: false,
@@ -89,7 +89,7 @@ export function createRatioFolder({
           {
             title: `Even`,
             color: colors.gray,
-            datasetPath: `/${scale}-to-1`,
+            datasetPath: `${scale}-to-1`,
             options: {
               lineStyle: 3,
               lastValueVisible: false,
@@ -121,7 +121,7 @@ export function createRatioFolder({
           {
             title: `Base`,
             color: colors.white,
-            datasetPath: `/${scale}-to-0`,
+            datasetPath: `${scale}-to-0`,
             options: {
               lineStyle: 3,
               lastValueVisible: false,

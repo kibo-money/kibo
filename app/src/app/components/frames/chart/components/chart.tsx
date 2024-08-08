@@ -155,7 +155,7 @@ export function Chart({
       createEffect(on([exactRange, dark], debouncedSetMinMaxMarkers));
 
       if (chartIndex === 0) {
-        const datasetPath: AnyDatasetPath = `/${scale}-to-price`;
+        const datasetPath: AnyDatasetPath = `${scale}-to-price`;
 
         const dataset = datasets.getOrImport(scale, datasetPath);
 

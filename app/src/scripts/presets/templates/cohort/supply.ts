@@ -32,22 +32,22 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "In Profit",
                 color: colors.profit,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-profit`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit`,
               },
               {
                 title: "In Loss",
                 color: colors.loss,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-loss`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss`,
               },
               {
                 title: "Total",
                 color: colors.white,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply`,
               },
               {
                 title: "Halved Total",
                 color: colors.gray,
-                datasetPath: `/${scale}-to-${datasetPrefix}halved-supply`,
+                datasetPath: `${scale}-to-${datasetPrefix}halved-supply`,
                 options: {
                   lineStyle: 4,
                 },
@@ -65,7 +65,7 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "Supply",
                 color,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply`,
               },
             ],
           },
@@ -80,7 +80,7 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "Supply",
                 color: colors.profit,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-profit`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit`,
               },
             ],
           },
@@ -95,7 +95,7 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "Supply",
                 color: colors.loss,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-loss`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss`,
               },
             ],
           },
@@ -115,22 +115,22 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "In Profit",
                 color: colors.profit,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-profit-to-circulating-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit-to-circulating-supply-ratio`,
               },
               {
                 title: "In Loss",
                 color: colors.loss,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-loss-to-circulating-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss-to-circulating-supply-ratio`,
               },
               {
                 title: "100%",
                 color: colors.white,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-to-circulating-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-to-circulating-supply-ratio`,
               },
               {
                 title: "50%",
                 color: colors.gray,
-                datasetPath: `/${scale}-to-${datasetPrefix}halved-supply-to-circulating-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}halved-supply-to-circulating-supply-ratio`,
                 options: {
                   lineStyle: 4,
                 },
@@ -148,7 +148,7 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "Supply",
                 color,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-to-circulating-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-to-circulating-supply-ratio`,
               },
             ],
           },
@@ -163,7 +163,7 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "Supply",
                 color: colors.profit,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-profit-to-circulating-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit-to-circulating-supply-ratio`,
               },
             ],
           },
@@ -178,7 +178,7 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "Supply",
                 color: colors.loss,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-loss-to-circulating-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss-to-circulating-supply-ratio`,
               },
             ],
           },
@@ -198,17 +198,17 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "In Profit",
                 color: colors.profit,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-profit-to-own-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit-to-own-supply-ratio`,
               },
               {
                 title: "In Loss",
                 color: colors.loss,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-loss-to-own-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss-to-own-supply-ratio`,
               },
               {
                 title: "100%",
                 color: colors.white,
-                datasetPath: `/${scale}-to-100`,
+                datasetPath: `${scale}-to-100`,
                 options: {
                   lastValueVisible: false,
                 },
@@ -216,7 +216,7 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "50%",
                 color: colors.gray,
-                datasetPath: `/${scale}-to-50`,
+                datasetPath: `${scale}-to-50`,
                 options: {
                   lineStyle: 4,
                   lastValueVisible: false,
@@ -235,7 +235,7 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "Supply",
                 color: colors.profit,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-profit-to-own-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit-to-own-supply-ratio`,
               },
             ],
           },
@@ -250,7 +250,7 @@ export function createCohortPresetSupplyFolder({
               {
                 title: "Supply",
                 color: colors.loss,
-                datasetPath: `/${scale}-to-${datasetPrefix}supply-in-loss-to-own-supply-ratio`,
+                datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss-to-own-supply-ratio`,
               },
             ],
           },

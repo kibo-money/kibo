@@ -27,7 +27,7 @@ export function createCohortPresetUTXOFolder({
           {
             title: "Count",
             color,
-            datasetPath: `/${scale}-to-${datasetPrefix}utxo-count`,
+            datasetPath: `${scale}-to-${datasetPrefix}utxo-count`,
           },
         ],
       },

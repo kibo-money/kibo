@@ -24,7 +24,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Last",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-last-coinbase`,
+                          datasetPath: `${scale}-to-last-coinbase`,
                         },
                       ],
                     },
@@ -39,7 +39,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Last",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-last-coinbase-in-dollars`,
+                          datasetPath: `${scale}-to-last-coinbase-in-dollars`,
                         },
                       ],
                     },
@@ -60,7 +60,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-coinbase`,
+                          datasetPath: `${scale}-to-coinbase`,
                         },
                       ],
                     },
@@ -75,7 +75,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-coinbase-in-dollars`,
+                          datasetPath: `${scale}-to-coinbase-in-dollars`,
                         },
                       ],
                     },
@@ -96,7 +96,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-coinbase-1y-sum`,
+                          datasetPath: `${scale}-to-coinbase-1y-sum`,
                         },
                       ],
                     },
@@ -111,7 +111,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-coinbase-in-dollars-1y-sum`,
+                          datasetPath: `${scale}-to-coinbase-in-dollars-1y-sum`,
                         },
                       ],
                     },
@@ -132,7 +132,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Coinbases",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-cumulative-coinbase`,
+                          datasetPath: `${scale}-to-cumulative-coinbase`,
                         },
                       ],
                     },
@@ -147,7 +147,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Coinbases",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-cumulative-coinbase-in-dollars`,
+                          datasetPath: `${scale}-to-cumulative-coinbase-in-dollars`,
                         },
                       ],
                     },
@@ -177,7 +177,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Last",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-last-subsidy`,
+                          datasetPath: `${scale}-to-last-subsidy`,
                         },
                       ],
                     },
@@ -192,7 +192,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Last",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-last-subsidy-in-dollars`,
+                          datasetPath: `${scale}-to-last-subsidy-in-dollars`,
                         },
                       ],
                     },
@@ -213,7 +213,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-subsidy`,
+                          datasetPath: `${scale}-to-subsidy`,
                         },
                       ],
                     },
@@ -228,7 +228,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-subsidy-in-dollars`,
+                          datasetPath: `${scale}-to-subsidy-in-dollars`,
                         },
                       ],
                     },
@@ -249,7 +249,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-subsidy-1y-sum`,
+                          datasetPath: `${scale}-to-subsidy-1y-sum`,
                         },
                       ],
                     },
@@ -264,7 +264,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-subsidy-in-dollars-1y-sum`,
+                          datasetPath: `${scale}-to-subsidy-in-dollars-1y-sum`,
                         },
                       ],
                     },
@@ -285,7 +285,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Subsidies",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-cumulative-subsidy`,
+                          datasetPath: `${scale}-to-cumulative-subsidy`,
                         },
                       ],
                     },
@@ -300,7 +300,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Subsidies",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-cumulative-subsidy-in-dollars`,
+                          datasetPath: `${scale}-to-cumulative-subsidy-in-dollars`,
                         },
                       ],
                     },
@@ -330,7 +330,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Last",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-last-fees`,
+                          datasetPath: `${scale}-to-last-fees`,
                         },
                       ],
                     },
@@ -345,7 +345,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Last",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-last-fees-in-dollars`,
+                          datasetPath: `${scale}-to-last-fees-in-dollars`,
                         },
                       ],
                     },
@@ -366,7 +366,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-fees`,
+                          datasetPath: `${scale}-to-fees`,
                         },
                       ],
                     },
@@ -381,7 +381,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-fees-in-dollars`,
+                          datasetPath: `${scale}-to-fees-in-dollars`,
                         },
                       ],
                     },
@@ -402,7 +402,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-fees-1y-sum`,
+                          datasetPath: `${scale}-to-fees-1y-sum`,
                         },
                       ],
                     },
@@ -417,7 +417,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Sum",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-fees-in-dollars-1y-sum`,
+                          datasetPath: `${scale}-to-fees-in-dollars-1y-sum`,
                         },
                       ],
                     },
@@ -438,7 +438,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Fees",
                           color: colors.bitcoin,
-                          datasetPath: `/${scale}-to-cumulative-fees`,
+                          datasetPath: `${scale}-to-cumulative-fees`,
                         },
                       ],
                     },
@@ -453,7 +453,7 @@ export function createPresets(scale: ResourceScale) {
                         {
                           title: "Fees",
                           color: colors.dollars,
-                          datasetPath: `/${scale}-to-cumulative-fees-in-dollars`,
+                          datasetPath: `${scale}-to-cumulative-fees-in-dollars`,
                         },
                       ],
                     },
@@ -475,12 +475,12 @@ export function createPresets(scale: ResourceScale) {
           {
             title: "Subsidy",
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-subsidy-to-coinbase-ratio`,
+            datasetPath: `${scale}-to-subsidy-to-coinbase-ratio`,
           },
           {
             title: "Fees",
             color: colors.darkBitcoin,
-            datasetPath: `/${scale}-to-fees-to-coinbase-ratio`,
+            datasetPath: `${scale}-to-fees-to-coinbase-ratio`,
           },
         ],
       },
@@ -498,7 +498,7 @@ export function createPresets(scale: ResourceScale) {
                 {
                   title: "Multiple",
                   color: colors.bitcoin,
-                  datasetPath: `/date-to-puell-multiple`,
+                  datasetPath: `date-to-puell-multiple`,
                 },
               ],
             },
@@ -514,17 +514,17 @@ export function createPresets(scale: ResourceScale) {
                 {
                   title: "1M SMA",
                   color: colors.momentumYellow,
-                  datasetPath: `/date-to-hash-rate-1m-sma`,
+                  datasetPath: `date-to-hash-rate-1m-sma`,
                 },
                 {
                   title: "1W SMA",
                   color: colors.bitcoin,
-                  datasetPath: `/date-to-hash-rate-1w-sma`,
+                  datasetPath: `date-to-hash-rate-1w-sma`,
                 },
                 {
                   title: "Rate",
                   color: colors.darkBitcoin,
-                  datasetPath: `/date-to-hash-rate`,
+                  datasetPath: `date-to-hash-rate`,
                 },
               ],
             },
@@ -539,12 +539,12 @@ export function createPresets(scale: ResourceScale) {
                 {
                   title: "1M SMA",
                   color: colors.profit,
-                  datasetPath: `/date-to-hash-rate-1m-sma`,
+                  datasetPath: `date-to-hash-rate-1m-sma`,
                 },
                 {
                   title: "2M SMA",
                   color: colors.loss,
-                  datasetPath: `/date-to-hash-rate-2m-sma`,
+                  datasetPath: `date-to-hash-rate-2m-sma`,
                 },
               ],
             },
@@ -559,7 +559,7 @@ export function createPresets(scale: ResourceScale) {
                 {
                   title: "Price",
                   color: colors.dollars,
-                  datasetPath: `/date-to-hash-price`,
+                  datasetPath: `date-to-hash-price`,
                 },
               ],
             },
@@ -577,7 +577,7 @@ export function createPresets(scale: ResourceScale) {
           {
             title: "Difficulty",
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-difficulty`,
+            datasetPath: `${scale}-to-difficulty`,
           },
         ],
       },
@@ -595,7 +595,7 @@ export function createPresets(scale: ResourceScale) {
                 {
                   title: "Adjustment",
                   seriesType: SeriesType.Based,
-                  datasetPath: `/${scale}-to-difficulty-adjustment`,
+                  datasetPath: `${scale}-to-difficulty-adjustment`,
                 },
               ],
             },
@@ -613,7 +613,7 @@ export function createPresets(scale: ResourceScale) {
           {
             title: "Issuance",
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-annualized-issuance`,
+            datasetPath: `${scale}-to-annualized-issuance`,
           },
         ],
       },
@@ -629,7 +629,7 @@ export function createPresets(scale: ResourceScale) {
           {
             title: "Rate",
             color: colors.bitcoin,
-            datasetPath: `/${scale}-to-yearly-inflation-rate`,
+            datasetPath: `${scale}-to-yearly-inflation-rate`,
           },
         ],
       },

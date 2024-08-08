@@ -61,7 +61,7 @@ function createPreset({
       {
         title: `Return`,
         seriesType: SeriesType.Based,
-        datasetPath: `/date-to-price-${key}-return`,
+        datasetPath: `date-to-price-${key}-return`,
       },
     ],
   };

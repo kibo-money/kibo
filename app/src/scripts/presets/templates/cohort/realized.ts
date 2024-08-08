@@ -31,15 +31,15 @@ export function createCohortPresetRealizedFolder({
           {
             title: "Realized Price",
             color,
-            datasetPath: `/${scale}-to-${datasetPrefix}realized-price`,
+            datasetPath: `${scale}-to-${datasetPrefix}realized-price`,
           },
         ],
       },
       createRatioFolder({
         scale,
         color,
-        ratioDatasetPath: `/${scale}-to-market-price-to-${datasetPrefix}realized-price-ratio`,
-        valueDatasetPath: `/${scale}-to-${datasetPrefix}realized-price`,
+        ratioDatasetPath: `${scale}-to-market-price-to-${datasetPrefix}realized-price-ratio`,
+        valueDatasetPath: `${scale}-to-${datasetPrefix}realized-price`,
         title: `${title} Realized Price`,
       }),
       {
@@ -53,14 +53,14 @@ export function createCohortPresetRealizedFolder({
           {
             title: `${name} Realized Cap.`,
             color,
-            datasetPath: `/${scale}-to-${datasetPrefix}realized-cap`,
+            datasetPath: `${scale}-to-${datasetPrefix}realized-cap`,
           },
           ...(datasetId
             ? ([
                 {
                   title: "Realized Cap.",
                   color: colors.bitcoin,
-                  datasetPath: `/${scale}-to-realized-cap`,
+                  datasetPath: `${scale}-to-realized-cap`,
                   defaultVisible: false,
                 },
               ] as const)
@@ -78,7 +78,7 @@ export function createCohortPresetRealizedFolder({
           {
             title: `Net Change`,
             seriesType: SeriesType.Based,
-            datasetPath: `/${scale}-to-${datasetPrefix}realized-cap-1m-net-change`,
+            datasetPath: `${scale}-to-${datasetPrefix}realized-cap-1m-net-change`,
           },
         ],
       },
@@ -92,7 +92,7 @@ export function createCohortPresetRealizedFolder({
         bottom: [
           {
             title: "Realized Profit",
-            datasetPath: `/${scale}-to-${datasetPrefix}realized-profit`,
+            datasetPath: `${scale}-to-${datasetPrefix}realized-profit`,
             color: colors.profit,
           },
         ],
@@ -107,7 +107,7 @@ export function createCohortPresetRealizedFolder({
         bottom: [
           {
             title: "Realized Loss",
-            datasetPath: `/${scale}-to-${datasetPrefix}realized-loss`,
+            datasetPath: `${scale}-to-${datasetPrefix}realized-loss`,
             color: colors.loss,
           },
         ],
@@ -123,13 +123,13 @@ export function createCohortPresetRealizedFolder({
           {
             title: "Profit",
             color: colors.profit,
-            datasetPath: `/${scale}-to-${datasetPrefix}realized-profit`,
+            datasetPath: `${scale}-to-${datasetPrefix}realized-profit`,
             seriesType: SeriesType.Based,
           },
           {
             title: "Loss",
             color: colors.loss,
-            datasetPath: `/${scale}-to-${datasetPrefix}negative-realized-loss`,
+            datasetPath: `${scale}-to-${datasetPrefix}negative-realized-loss`,
             seriesType: SeriesType.Based,
           },
         ],
@@ -145,7 +145,7 @@ export function createCohortPresetRealizedFolder({
           {
             title: "Net PNL",
             seriesType: SeriesType.Based,
-            datasetPath: `/${scale}-to-${datasetPrefix}net-realized-profit-and-loss`,
+            datasetPath: `${scale}-to-${datasetPrefix}net-realized-profit-and-loss`,
           },
         ],
       },
@@ -160,7 +160,7 @@ export function createCohortPresetRealizedFolder({
           {
             title: "Net",
             seriesType: SeriesType.Based,
-            datasetPath: `/${scale}-to-${datasetPrefix}net-realized-profit-and-loss-to-market-cap-ratio`,
+            datasetPath: `${scale}-to-${datasetPrefix}net-realized-profit-and-loss-to-market-cap-ratio`,
           },
         ],
       },
@@ -175,7 +175,7 @@ export function createCohortPresetRealizedFolder({
           {
             title: "Cumulative Realized Profit",
             color: colors.profit,
-            datasetPath: `/${scale}-to-${datasetPrefix}cumulative-realized-profit`,
+            datasetPath: `${scale}-to-${datasetPrefix}cumulative-realized-profit`,
           },
         ],
       },
@@ -190,7 +190,7 @@ export function createCohortPresetRealizedFolder({
           {
             title: "Cumulative Realized Loss",
             color: colors.loss,
-            datasetPath: `/${scale}-to-${datasetPrefix}cumulative-realized-loss`,
+            datasetPath: `${scale}-to-${datasetPrefix}cumulative-realized-loss`,
           },
         ],
       },
@@ -205,7 +205,7 @@ export function createCohortPresetRealizedFolder({
           {
             title: "Cumulative Net Realized PNL",
             seriesType: SeriesType.Based,
-            datasetPath: `/${scale}-to-${datasetPrefix}cumulative-net-realized-profit-and-loss`,
+            datasetPath: `${scale}-to-${datasetPrefix}cumulative-net-realized-profit-and-loss`,
           },
         ],
       },
@@ -219,7 +219,7 @@ export function createCohortPresetRealizedFolder({
         bottom: [
           {
             title: "Cumulative Net Realized PNL 30d Change",
-            datasetPath: `/${scale}-to-${datasetPrefix}cumulative-net-realized-profit-and-loss-1m-net-change`,
+            datasetPath: `${scale}-to-${datasetPrefix}cumulative-net-realized-profit-and-loss-1m-net-change`,
             seriesType: SeriesType.Based,
           },
         ],
@@ -235,7 +235,7 @@ export function createCohortPresetRealizedFolder({
           {
             title: "Value",
             color: colors.profit,
-            datasetPath: `/${scale}-to-${datasetPrefix}value-created`,
+            datasetPath: `${scale}-to-${datasetPrefix}value-created`,
           },
         ],
       },
@@ -250,7 +250,7 @@ export function createCohortPresetRealizedFolder({
           {
             title: "Value",
             color: colors.loss,
-            datasetPath: `/${scale}-to-${datasetPrefix}value-destroyed`,
+            datasetPath: `${scale}-to-${datasetPrefix}value-destroyed`,
           },
         ],
       },
@@ -264,7 +264,7 @@ export function createCohortPresetRealizedFolder({
         bottom: [
           {
             title: "SOPR",
-            datasetPath: `/${scale}-to-${datasetPrefix}spent-output-profit-ratio`,
+            datasetPath: `${scale}-to-${datasetPrefix}spent-output-profit-ratio`,
             seriesType: SeriesType.Based,
             options: {
               base: 1,
