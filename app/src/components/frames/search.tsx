@@ -124,13 +124,13 @@ export function SearchFrame({
 
   return (
     <div
-      class="relative flex size-full flex-1 flex-col"
+      class="frame relative flex size-full flex-1 flex-col"
       style={{
         display: selectedFrame() !== "Search" ? "none" : undefined,
       }}
     >
-      <div class="flex-1 space-y-1 overflow-y-auto p-4 pt-16">
-        <p class="py-2 text-orange-100/75">
+      <div class="flex-1 space-y-1 overflow-y-auto pt-16">
+        <p class="py-1.5 text-orange-100/75">
           <Show
             when={search()}
             fallback={
@@ -149,7 +149,7 @@ export function SearchFrame({
         </p>
 
         <Show when={search()}>
-          <div class="border-lighter -mx-4 border-t" />
+          <div class="border-lighter border-t" />
 
           <div
             class="py-1"
@@ -176,9 +176,9 @@ export function SearchFrame({
         </Show>
       </div>
 
-      <Box absolute="top" padded={false}>
+      <Box absolute="top" padded={false} classes="mx-6">
         <div
-          class="relative flex w-full cursor-text items-center space-x-0.5 px-3 py-2 hover:bg-orange-200/5"
+          class="relative flex w-full cursor-text items-center space-x-0.5 px-3 py-1.5"
           onClick={() => inputRef()?.focus()}
         >
           <IconTablerSearch />

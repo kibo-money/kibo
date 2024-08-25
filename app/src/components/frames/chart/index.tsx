@@ -42,53 +42,37 @@ export function ChartFrame({
   return (
     <div
       class={classPropToString([
-        standalone &&
-          "border-lighter rounded-2xl border bg-gradient-to-b from-white/15 to-white/30 to-80% shadow-md dark:from-orange-100/5 dark:to-black/10",
-        "flex size-full min-h-0 flex-1 flex-col overflow-hidden",
+        "frame flex size-full min-h-0 flex-1 flex-col",
       ])}
       style={{
         display: (hide ? hide() : false) ? "none" : undefined,
       }}
     >
-      <Box
-        flex={false}
-        dark
-        padded={false}
-        spaced={false}
-        classes="short:hidden"
-      >
-        <Title presets={presets} />
+      <Title presets={presets} />
 
-        <div class="border-lighter border-t" />
+      <div class="border-t" />
 
-        <div class="flex">
-          <Legend
-            legend={legend}
-            scale={scale}
-            activeIds={activeIds}
-            dark={dark}
-          />
+      <Legend legend={legend} scale={scale} activeIds={activeIds} dark={dark} />
 
-          <div class="border-lighter border-l" />
-
-          <Actions presets={presets} qrcode={qrcode} fullscreen={fullscreen} />
+      <div class="!mt-4 flex min-h-0 flex-1 flex-col">
+        <div class="relative -ml-6 -mr-8 flex min-h-0 flex-1 flex-col pb-2">
+          <div class="pointer-events-none absolute inset-x-0 top-0 z-10 h-6 w-full flex-none bg-gradient-to-t from-transparent to-[var(--background-color)]" />
+          <Show when={wasIdle()}>
+            <Charts
+              firstChartSetter={firstChart.set}
+              datasets={datasets}
+              legendSetter={legend.set}
+              preset={presets.selected}
+              dark={dark}
+              activeIds={activeIds}
+            />
+          </Show>
+          <div class="pointer-events-none absolute bottom-9 right-0 z-10 h-6 w-[80px] flex-none bg-gradient-to-b from-transparent to-[var(--background-color)]" />
+          <div class="pointer-events-none absolute inset-y-0 left-0 z-10 h-full w-6 flex-none bg-gradient-to-r from-[var(--background-color)] from-5% to-transparent" />
         </div>
-      </Box>
 
-      <div class="-mr-2 -mt-2 flex min-h-0 flex-1 flex-col">
-        <Show when={wasIdle()}>
-          <Charts
-            firstChartSetter={firstChart.set}
-            datasets={datasets}
-            legendSetter={legend.set}
-            preset={presets.selected}
-            dark={dark}
-            activeIds={activeIds}
-          />
-        </Show>
+        <TimeScale firstChart={firstChart} scale={scale} />
       </div>
-
-      <TimeScale firstChart={firstChart} scale={scale} />
     </div>
   );
 }

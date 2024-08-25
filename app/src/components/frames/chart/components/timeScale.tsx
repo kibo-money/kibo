@@ -61,7 +61,7 @@ export function TimeScale({
   onCleanup(() => clearInterval(interval));
 
   return (
-    <Box dark padded={false} spaced={false} classes="short:hidden">
+    <Box padded={false} spaced={false} classes="short:hidden text-sm">
       <div class="flex items-center p-1.5">
         <Button
           square
@@ -73,14 +73,23 @@ export function TimeScale({
         >
           <Show
             when={scrollDirection() === LEFT}
-            fallback={<IconTablerPlayerTrackPrevFilled />}
+            fallback={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="size-5"
+              >
+                <path d="M8.5 4.75a.75.75 0 0 0-1.107-.66l-6 3.25a.75.75 0 0 0 0 1.32l6 3.25a.75.75 0 0 0 1.107-.66V8.988l5.393 2.921A.75.75 0 0 0 15 11.25v-6.5a.75.75 0 0 0-1.107-.66L8.5 7.013V4.75Z" />
+              </svg>
+            }
           >
-            <IconTablerPlayerPauseFilled />
+            <IconTablerPlayerPauseFilled class="size-5" />
           </Show>
         </Button>
       </div>
-      <div class="border-lighter border-l" />
-      <Scrollable classes="p-1.5 space-x-2">
+      <div class="mr-2 border-l" />
+      <Scrollable classes="space-x-2">
         <Switch>
           <Match when={scale() === "date"}>
             <Button
@@ -235,7 +244,7 @@ export function TimeScale({
           </Match>
         </Switch>
       </Scrollable>
-      <div class="border-lighter border-l" />
+      <div class="ml-2 border-l" />
       <div class="flex items-center p-1.5">
         <Button
           square
@@ -247,9 +256,18 @@ export function TimeScale({
         >
           <Show
             when={scrollDirection() === RIGHT}
-            fallback={<IconTablerPlayerTrackNextFilled />}
+            fallback={
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 16 16"
+                fill="currentColor"
+                class="size-5"
+              >
+                <path d="M2.53 3.956A1 1 0 0 0 1 4.804v6.392a1 1 0 0 0 1.53.848l5.113-3.196c.16-.1.279-.233.357-.383v2.73a1 1 0 0 0 1.53.849l5.113-3.196a1 1 0 0 0 0-1.696L9.53 3.956A1 1 0 0 0 8 4.804v2.731a.992.992 0 0 0-.357-.383L2.53 3.956Z" />
+              </svg>
+            }
           >
-            <IconTablerPlayerPauseFilled />
+            <IconTablerPlayerPauseFilled class="size-5" />
           </Show>
         </Button>
       </div>
@@ -273,11 +291,8 @@ function Button({
     <button
       class={classPropToString([
         minWidth && "min-w-20",
-        square ? "p-2" : "px-2 py-1.5",
-        disabled?.()
-          ? "text-low-contrast"
-          : "hover:bg-orange-50/20 active:scale-95",
-        "flex-shrink-0 flex-grow whitespace-nowrap rounded-lg",
+        !disabled?.() && "active:scale-95",
+        "flex-shrink-0 flex-grow whitespace-nowrap p-1.5 font-medium",
       ])}
       onClick={onClick}
       disabled={disabled?.()}

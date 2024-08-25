@@ -22,9 +22,8 @@ export function createChart({
   const options: DeepPartialChartOptions = {
     autoSize: true,
     layout: {
-      fontFamily: "Lexend",
+      fontFamily: "Satoshi Chart",
       background: { color: "transparent" },
-      fontSize: 14,
       attributionLogo: false,
     },
     grid: {
@@ -64,7 +63,7 @@ export function createChart({
   chart.priceScale("right").applyOptions({
     scaleMargins: {
       top: 0.075,
-      bottom: 0.075,
+      bottom: 0.05,
     },
     minimumWidth: 78,
   });
@@ -72,27 +71,29 @@ export function createChart({
   createEffect(() => {
     const { white } = colors;
 
-    const textColor = white(dark);
-    const borderColor = dark() ? "#332F24" : "#F1E4E0";
+    const color = white(dark);
+    // const borderColor = dark() ? "#332F24" : "#F1E4E0";
 
     chart.applyOptions({
       layout: {
-        textColor,
+        textColor: "#666666",
       },
       rightPriceScale: {
-        borderColor,
+        borderVisible: false,
+        // borderColor,
       },
       timeScale: {
-        borderColor,
+        borderVisible: false,
+        // borderColor,
       },
       crosshair: {
         horzLine: {
-          color: textColor,
-          labelBackgroundColor: textColor,
+          color: color,
+          labelBackgroundColor: color,
         },
         vertLine: {
-          color: textColor,
-          labelBackgroundColor: textColor,
+          color: color,
+          labelBackgroundColor: color,
         },
       },
     });

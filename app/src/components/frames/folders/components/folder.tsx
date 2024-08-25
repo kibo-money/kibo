@@ -26,12 +26,9 @@ export function Folder({
       name={name}
       icon={icon}
       onClick={onClick}
-      classes={() => (open() ? "opacity-60" : "")}
       tail={() => (
         <Show when={!open()}>
-          <span class="rounded-full bg-orange-50/10 px-2 py-0.5 text-xs text-neutral-400">
-            {children}
-          </span>
+          <span class="off rounded-full py-0.5 pl-2 text-xs">{children}</span>
         </Show>
       )}
     ></Line>

@@ -50,14 +50,13 @@ export function Scrollable({
   createEffect(on(children, checkScrollable));
 
   return (
-    <div class="relative min-w-0 flex-1">
+    <div class="relative flex min-w-0 flex-grow-0 items-center">
       <For
         each={[
           {
             showArrow: showLeftArrow,
             side: "left-0",
             order: "",
-            buttonPadding: "pl-2",
             iconPadding: "pr-0.5",
             scrollMultiplier: -1,
             chevronIcon: IconTablerChevronLeft,
@@ -67,7 +66,6 @@ export function Scrollable({
             showArrow: showRightArrow,
             side: "right-0",
             order: "order-2",
-            buttonPadding: "pr-2",
             iconPadding: "pl-0.5",
             scrollMultiplier: 1,
             chevronIcon: IconTablerChevronRight,
@@ -87,9 +85,11 @@ export function Scrollable({
                 <div
                   class={[
                     obj.order,
-                    obj.buttonPadding,
-                    "pointer-events-auto flex h-full items-center bg-stone-100/75 dark:bg-stone-900/75",
+                    "pointer-events-auto flex h-full items-center",
                   ].join(" ")}
+                  style={{
+                    "background-color": "var(--background-color)",
+                  }}
                 >
                   <button
                     onClick={() => {
@@ -102,7 +102,10 @@ export function Scrollable({
                         behavior: "smooth",
                       });
                     }}
-                    class="border-light rounded-full border bg-stone-100 p-0.5 shadow transition hover:scale-110 active:scale-100 dark:bg-stone-900"
+                    class="rounded-full border p-0.5 transition hover:scale-110 active:scale-100"
+                    style={{
+                      "background-color": "var(--background-color)",
+                    }}
                   >
                     <Dynamic
                       component={obj.chevronIcon}
@@ -112,10 +115,10 @@ export function Scrollable({
                 </div>
               </Show>
               <div
-                class={[
+                class={classPropToString([
                   obj.gradientDirection,
-                  "h-full w-8 from-stone-100/75 to-transparent dark:from-stone-900/75",
-                ].join(" ")}
+                  "h-full w-8 from-[var(--background-color)] to-transparent",
+                ])}
               />
             </div>
           </Show>

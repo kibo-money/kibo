@@ -41,6 +41,8 @@ type FilePath = {
   name: string;
 }[];
 
+type PartialPresetTree = (PartialPreset | PartialPresetFolder)[];
+
 interface PartialPresetFolder {
   name: string;
   tree: PartialPresetTree;
@@ -51,7 +53,6 @@ interface PresetFolder extends PartialPresetFolder {
   tree: PresetTree;
 }
 
-type PartialPresetTree = (PartialPreset | PartialPresetFolder)[];
 type PresetTree = (Preset | PresetFolder)[];
 
 type PresetsHistory = { date: Date; preset: Preset }[];

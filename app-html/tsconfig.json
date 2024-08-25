@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+    "checkJs": true,
+    "strict": true,
+    "target": "ESNext",
+    "module": "ESNext"
+  },
+  "exclude": ["assets", "libraries"]
+}

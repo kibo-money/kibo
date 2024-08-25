@@ -19,13 +19,10 @@ export function Box({
   return (
     <div
       class={classPropToString([
-        "p-2",
         absolute
           ? [
               "absolute inset-x-0",
-              absolute === "top"
-                ? "top-0"
-                : "pointer-events-none bottom-0 bg-gradient-to-b from-transparent to-orange-100 dark:to-black",
+              absolute === "top" ? "top-0" : "pointer-events-none bottom-0",
             ]
           : "relative",
         classes,
@@ -33,11 +30,11 @@ export function Box({
     >
       <div
         class={classPropToString([
-          "border-lighter pointer-events-auto relative overflow-hidden rounded-xl border shadow-md",
-          dark
-            ? "bg-white/40 backdrop-blur-sm dark:bg-orange-100/5"
-            : "bg-white/60 backdrop-blur-md dark:bg-orange-200/10",
+          "pointer-events-auto relative overflow-hidden rounded-full border shadow-md",
         ])}
+        style={{
+          "background-color": "var(--background-color)",
+        }}
       >
         <div
           class={classPropToString([

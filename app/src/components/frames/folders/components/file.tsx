@@ -21,11 +21,11 @@ export function File({
 }) {
   const tail = createMemo(() =>
     favorite() ? (
-      <span class="rounded-full bg-yellow-950 p-1">
-        <IconTablerStarFilled class="size-3 text-amber-500" />
-      </span>
-    ) : !visited() ? (
-      <span class="mx-1.5 rounded-full bg-orange-500/50 p-1 text-transparent" />
+      // <span class="p-1">
+      <IconTablerStarFilled class="orange size-3" />
+    ) : // </span>
+    !visited() ? (
+      <span class="ml-1.5 rounded-full bg-orange-500 p-[3px] text-transparent" />
     ) : undefined,
   );
 
@@ -40,8 +40,4 @@ export function File({
       tail={tail}
     />
   );
-}
-
-function randomDegree(min = 0, max = 360) {
-  return Math.floor(Math.random() * (max - min + 1)) + min;
 }

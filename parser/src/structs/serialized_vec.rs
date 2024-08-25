@@ -19,6 +19,7 @@ where
     Key: MapKey<ChunkId>,
     Value: MapValue,
 {
+    #[inline(always)]
     fn new(version: u32) -> Self {
         Self {
             version,
@@ -30,14 +31,17 @@ where
         Some(Key::from_usize(chunk_id.to_usize() + self.map.len()))
     }
 
+    #[inline(always)]
     fn version(&self) -> u32 {
         self.version
     }
 
+    #[inline(always)]
     fn get(&self, serialized_key: &Key) -> Option<&Value> {
         self.map.get(serialized_key.to_usize())
     }
 
+    #[inline(always)]
     fn last(&self) -> Option<&Value> {
         self.map.last()
     }

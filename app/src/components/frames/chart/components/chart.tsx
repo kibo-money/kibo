@@ -332,30 +332,27 @@ export function Chart({
     <div
       style={{
         height: isLastDrawn() ? "100%" : "calc(100% - 62px)",
-        "margin-bottom": isLastDrawn() ? "" : "-2px",
       }}
       class={classPropToString([
         isDrawn()
-          ? ["max-h-full", !isLastDrawn() ? "border-b" : "mb-[-2px]"]
+          ? [
+              "max-h-full",
+              // isLastDrawn() ? "mb-[-2px]"
+            ]
           : "max-h-0",
-        "border-lighter relative h-full min-h-0 w-full cursor-crosshair",
+        "relative h-full min-h-0 w-full cursor-crosshair",
       ])}
     >
       <div ref={div.set} class="size-full" />
 
       <Show when={isDrawn()}>
-        <div class="text-low-contrast absolute left-0 top-0 px-2 py-1.5 text-xs">
-          {chartIndex === 0
-            ? ("US Dollars" satisfies Unit)
-            : presetAccessor().unit}
-        </div>
-        <div
-          style={{
-            bottom: `${isLastDrawn() ? 32 : 0}px`,
-            right: `77px`,
-          }}
-          class="text-low-contrast absolute z-10 px-3 py-0.5"
-        >
+        <div class="pointer-events-none absolute left-0 top-0 z-10 flex items-center space-x-2 px-6 text-xs">
+          <span>
+            {chartIndex === 0
+              ? ("US Dollars" satisfies Unit)
+              : presetAccessor().unit}
+          </span>
+          <span class="off">—</span>
           <RadioGroup size="xs" title={chartPriceModeKey} sl={chartPriceMode} />
         </div>
       </Show>

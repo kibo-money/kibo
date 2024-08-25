@@ -1,4 +1,4 @@
-import { phone, touchScreen } from "/src/env";
+import { touchScreen } from "/src/env";
 import { createRWS } from "/src/solid/rws";
 
 const texts = [
@@ -46,8 +46,9 @@ const texts = [
   "cypherpunk",
   "we like the coin",
   "money for enemies",
-  "trustless money",
-  "sustainable money",
+  "trustless",
+  "sustainable",
+  "discriminationless",
 ];
 
 export function Background({
@@ -91,12 +92,17 @@ export function Background({
           <Line mode={mode} focused={focused} />
           <Line mode={mode} focused={focused} />
           <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
+          <Line mode={mode} focused={focused} />
         </div>
       </div>
-      <div class="absolute h-full w-full opacity-10 mix-blend-multiply">
+      {/* <div class="absolute h-full w-full opacity-15 mix-blend-multiply">
         <Noise />
-      </div>
-      <div class="absolute h-full w-full opacity-10 mix-blend-hard-light">
+      </div> */}
+      <div class="absolute h-full w-full opacity-15 mix-blend-hard-light">
         <Noise />
       </div>
     </>
@@ -110,7 +116,7 @@ function Line({
   mode: SL<"Scroll" | "Static">;
   focused: Accessor<boolean>;
 }) {
-  const shuffled = shuffle(texts).slice(0, 10);
+  const shuffled = shuffle(texts).slice(0, 21);
   const joined = shuffled.join(". ");
 
   return (
@@ -144,14 +150,14 @@ function TextWrapper({
   // Bug in Safari iOS, not sure where else, works perfectly on Mac OS though
   if (!touchScreen) {
     onMount(() => {
-      seconds.set(Math.round(p()!.clientWidth / 20));
+      seconds.set(Math.round(p()!.clientWidth / 15));
     });
   }
 
   return (
     <p
       ref={p.set}
-      class="inline-block px-2 text-[5dvh] font-black uppercase leading-none"
+      class="inline-block px-2 text-[4dvh] font-black uppercase leading-none"
       style={{
         ...(wasOnceOn()
           ? {
@@ -184,15 +190,15 @@ function Noise() {
   return (
     <svg
       class="size-full"
-      viewBox="0 0 200 200"
+      viewBox="0 0 210 210"
       preserveAspectRatio="none"
       xmlns="http://www.w3.org/2000/svg"
     >
       <filter id="noiseFilter">
         <feTurbulence
           type="fractalNoise"
-          baseFrequency="3"
-          numOctaves="3"
+          baseFrequency="4"
+          numOctaves="6"
           stitchTiles="stitch"
         />
       </filter>

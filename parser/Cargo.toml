@@ -14,7 +14,7 @@ bincode = { git = "https://github.com/bincode-org/bincode.git" }
 biter = "0.1.0"
 bitcoin_hashes = { version = "0.14.0" }
 chrono = { version = "0.4.38", features = ["serde"] }
-clap = { version = "4.5.13", features = ["derive"] }
+clap = { version = "4.5.16", features = ["derive"] }
 color-eyre = "0.6.3"
 derive_deref = "1.1.1"
 inferno = "0.11.21"
@@ -22,9 +22,9 @@ itertools = "0.13.0"
 memory-stats = "1.2.0"
 ordered-float = "4.2.2"
 rayon = "1.10.0"
-reqwest = { version = "0.12.5", features = ["blocking", "json"] }
+reqwest = { version = "0.12.7", features = ["blocking", "json"] }
 sanakirja = "1.4.2"
-serde = { version = "1.0.204", features = ["derive"] }
-serde_json = "1.0.122"
+serde = { version = "1.0.208", features = ["derive"] }
+serde_json = "1.0.125"
 toml = "0.8.19"
 zstd = "0.13.2"

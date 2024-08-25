@@ -31,10 +31,8 @@ export function Line({
     <button
       id={id}
       class={classPropToString([
-        active?.()
-          ? "bg-orange-500/30 backdrop-blur-sm hover:bg-orange-500/50"
-          : "hover:bg-orange-500/15",
-        "relative -mx-2 flex w-[calc(100%+1rem)] items-center whitespace-nowrap rounded-lg px-2 hover:backdrop-blur-sm",
+        active?.() && "orange",
+        "relative -mx-2 flex w-[calc(100%+1rem)] items-center whitespace-nowrap rounded-lg px-2 text-sm font-medium hover:text-[var(--orange)]",
         classes?.(),
       ])}
       ref={ref.set}
@@ -45,7 +43,7 @@ export function Line({
       title={name}
     >
       <For each={new Array(depth)}>
-        {() => <span class="border-lighter ml-1 h-8 w-3 flex-none border-l" />}
+        {() => <span class="ml-1 h-8 w-3 flex-none border-l" />}
       </For>
       <Show when={icon}>
         {(icon) => (
@@ -61,17 +59,16 @@ export function Line({
       </Show>
       <span
         class={classPropToString([
-          !icon && "px-1",
           "inline-flex w-full flex-col -space-y-1 truncate py-1 text-left",
         ])}
       >
         <Show when={header}>
-          <span class="truncate text-xs opacity-50" innerHTML={header} />
+          <span class="off truncate text-xs" innerHTML={header} />
         </Show>
         <span class="space-x-1 truncate">
           <span innerHTML={name} />
           <Show when={nameRest.length}>
-            <span innerHTML={" - " + nameRest.join(" - ")} class="opacity-50" />
+            <span innerHTML={" — " + nameRest.join(" — ")} class="off" />
           </Show>
         </span>
       </span>

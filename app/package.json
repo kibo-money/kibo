@@ -1,7 +1,7 @@
 {
   "name": "satonomics",
   "description": "A better, FOSS, Bitcoin-only, self-hostable Glassnode",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -13,7 +13,7 @@
     "prod": "$npm_execpath run build && vite preview --host",
     "pages-prod": "pnpm build && pnpm wrangler pages deploy ./dist",
     "pages-dev": "pnpm build && pnpm wrangler pages deploy --branch dev ./dist",
-    "assets": "pnpm pwa-asset-generator ./public/logo/white.svg ./public/assets --index ./index.html --manifest ./public/manifest.webmanifest --icon-only --favicon --background \"linear-gradient(to right bottom, rgb(249, 115, 22), rgb(154, 52, 18))\" --padding \"min(15vh, 15vw)\" --path-override \"/assets\" && pnpm pwa-asset-generator ./public/logo/white.svg ./public/assets --index ./index.html --splash-only --background \"linear-gradient(to right bottom, rgb(249, 115, 22), rgb(154, 52, 18))\" --padding \"min(33vh, 33vw)\" --path-override \"/assets\" && pnpm pwa-asset-generator ./public/logo/white.svg ./public/assets --index ./index.html --splash-only --dark-mode --background \"#0c0a09\" --padding \"min(33vh, 33vw)\" --path-override \"/assets\""
+    "assets": "pnpm pwa-asset-generator ../assets/logo-icon.svg ./public/assets --index ./index.html --manifest ./public/manifest.webmanifest --icon-only --favicon --background #ffffe3 --padding \"min(15vh, 15vw)\" --path-override \"/assets\" && pnpm pwa-asset-generator ../assets/logo-icon.svg ./public/assets --index ./index.html --splash-only --background #10100e --padding \"min(33vh, 33vw)\" --path-override \"/assets\" && pnpm pwa-asset-generator ../assets/logo-icon.svg ./public/assets --index ./index.html --splash-only --dark-mode --background #10100e --padding \"min(33vh, 33vw)\" --path-override \"/assets\""
   },
   "dependencies": {
     "@leeoniya/ufuzzy": "^1.0.14",
@@ -22,26 +22,26 @@
     "@solid-primitives/resize-observer": "^2.0.26",
     "lean-qr": "^2.3.4",
     "lightweight-charts": "^4.2.0",
-    "solid-js": "^1.8.19"
+    "solid-js": "^1.8.21"
   },
   "devDependencies": {
     "@ianvs/prettier-plugin-sort-imports": "^4.3.1",
-    "@iconify-json/tabler": "^1.1.119",
+    "@iconify-json/tabler": "^1.1.120",
     "@tailwindcss/container-queries": "^0.1.1",
     "autoprefixer": "^10.4.20",
     "postcss": "^8.4.41",
     "prettier": "^3.3.3",
-    "prettier-plugin-tailwindcss": "^0.6.5",
+    "prettier-plugin-tailwindcss": "^0.6.6",
     "pwa-asset-generator": "^6.3.1",
     "rollup-plugin-visualizer": "^5.12.0",
-    "tailwindcss": "^3.4.8",
+    "tailwindcss": "^3.4.10",
     "typescript": "^5.5.4",
     "unplugin-auto-import": "^0.18.2",
     "unplugin-icons": "^0.19.2",
-    "vite": "^5.4.0",
+    "vite": "^5.4.1",
     "vite-plugin-pwa": "^0.20.1",
     "vite-plugin-solid": "^2.10.2",
     "workbox-window": "^7.1.0",
-    "wrangler": "^3.69.1"
+    "wrangler": "^3.71.0"
   }
 }

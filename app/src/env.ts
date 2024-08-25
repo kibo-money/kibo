@@ -9,6 +9,7 @@ export const touchScreen =
 export const requestIdleCallbackPossible = "requestIdleCallback" in window;
 
 console.log(navigator.userAgent);
+
 export const macOS = navigator.userAgent.toLowerCase().includes("mac os");
 
 export const iphone = navigator.userAgent.toLowerCase().includes("iphone");

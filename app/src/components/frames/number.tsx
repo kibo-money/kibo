@@ -1,7 +1,5 @@
 export function Number({ number }: { number: () => number }) {
   return (
-    <span class="font-medium text-orange-400/75">
-      {number().toLocaleString("en-us")}
-    </span>
+    <span class="orange font-medium">{number().toLocaleString("en-us")}</span>
   );
 }

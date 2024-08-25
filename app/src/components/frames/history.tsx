@@ -14,12 +14,12 @@ export function HistoryFrame({
 }) {
   return (
     <div
-      class="flex-1 overflow-y-auto overflow-x-hidden"
+      class="frame"
       style={{
         display: selectedFrame() !== "History" ? "none" : undefined,
       }}
     >
-      <div class="flex max-h-full min-h-0 flex-1 flex-col p-4">
+      <div class="flex max-h-full min-h-0 flex-1 flex-col">
         <Header title="History">List of previously visited charts.</Header>
 
         <div class="space-y-0.5 pt-4">
@@ -43,41 +43,55 @@ export function HistoryFrame({
                   <Show
                     when={
                       index() === 0 ||
-                      presets.history()[index()].date.toJSON().split("T")[0] !==
+                      presets
+                        .history()
+                        [index()].date.toLocaleString()
+                        .split(",")[0] !==
                         presets
                           .history()
-                          [index() - 1].date.toJSON()
-                          .split("T")[0]
+                          [index() - 1].date.toLocaleString()
+                          .split(",")[0]
                     }
                   >
-                    <div class="sticky top-[calc(-0.5rem-1px)] z-10 -mx-4 py-2">
-                      <div class="border-lighter border-y bg-[#F4EAE3] p-2 dark:bg-[rgb(25,15,15)]">
-                        <p class="ml-2">
-                          <Switch fallback={date.toLocaleDateString()}>
-                            <Match
-                              when={
-                                new Date().toJSON().split("T")[0] ===
-                                date.toJSON().split("T")[0]
-                              }
-                            >
-                              Today
-                            </Match>
-                            <Match
-                              when={
-                                run(() => {
-                                  const d = new Date();
-                                  d.setDate(d.getDate() - 1);
-                                  return d;
-                                })
-                                  .toJSON()
-                                  .split("T")[0] === date.toJSON().split("T")[0]
-                              }
-                            >
-                              Yesterday
-                            </Match>
-                          </Switch>
-                        </p>
-                      </div>
+                    <div class="sticky top-[calc(-2.0rem-1px)] z-10 py-2">
+                      <p
+                        class="border-y pb-2 pt-7"
+                        style={{
+                          background: "var(--background-color)",
+                        }}
+                      >
+                        <Switch
+                          fallback={date.toLocaleDateString(undefined, {
+                            weekday: "long",
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          })}
+                        >
+                          <Match
+                            when={
+                              new Date().toLocaleString().split(",")[0] ===
+                              date.toLocaleString().split(",")[0]
+                            }
+                          >
+                            Today
+                          </Match>
+                          <Match
+                            when={
+                              run(() => {
+                                const d = new Date();
+                                d.setUTCDate(d.getUTCDate() - 1);
+                                return d;
+                              })
+                                .toLocaleString()
+                                .split(",")[0] ===
+                              date.toLocaleString().split(",")[0]
+                            }
+                          >
+                            Yesterday
+                          </Match>
+                        </Switch>
+                      </p>
                     </div>
                   </Show>
                   <Line

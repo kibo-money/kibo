@@ -59,6 +59,7 @@ impl AddressData {
         self.outputs_len -= 1;
 
         let previous_sent_dollar_value = previous_price * amount;
+
         self.realized_cap -= previous_sent_dollar_value;
 
         Ok(())

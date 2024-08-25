@@ -15,11 +15,3 @@ impl BlockPath {
         }
     }
 }
-
-impl std::hash::Hash for BlockPath {
-    fn hash<H: std::hash::Hasher>(&self, hasher: &mut H) {
-        hasher.write_u32(((self.date_index as u32) << 16_u32) + self.block_index as u32)
-    }
-}
-
-// impl nohash::IsEnabled for BlockPath {}

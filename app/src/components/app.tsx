@@ -12,9 +12,7 @@ import {
 import { readBooleanURLParam, writeURLParam } from "../scripts/utils/urlParams";
 import { webSockets } from "../scripts/ws";
 import { classPropToString } from "../solid/classes";
-import { Background } from "./background";
 import { ChartFrame } from "./frames/chart";
-import { FavoritesFrame } from "./frames/favorites";
 import { FoldersFrame } from "./frames/folders";
 import { HistoryFrame } from "./frames/history";
 import { SettingsFrame } from "./frames/settings";
@@ -160,14 +158,8 @@ export function App() {
 
   return (
     <>
-      <Background
-        focused={tabFocused}
-        mode={userConfig.settings.background.mode}
-        opacity={userConfig.settings.background.opacity}
-      />
-
       <div
-        class="relative h-dvh selection:bg-orange-800"
+        class="relative h-dvh"
         style={{
           "user-select": resizingBarStart() !== undefined ? "none" : undefined,
         }}
@@ -197,22 +189,22 @@ export function App() {
 
         <Update />
 
-        <div class="flex size-full flex-col md:flex-row md:p-3 md:short:p-0">
+        <div class="flex size-full flex-col md:flex-row">
           <Show when={!windowSizeIsAtLeastMedium() || !fullscreen()}>
             <div
               class={classPropToString([
                 standalone && "border-t md:border-t-0",
-                "border-lighter flex h-full flex-col overflow-hidden bg-gradient-to-b from-orange-300/15 to-orange-400/15 dark:from-orange-500/10 dark:to-orange-950/10 md:flex-row md:rounded-2xl md:border md:shadow-md md:short:hidden",
+                "flex h-full flex-col overflow-hidden md:flex-row md:shadow-md md:short:hidden",
               ])}
             >
-              <div class="border-lighter hidden flex-col gap-2 border-r bg-orange-300/30 p-3 backdrop-blur-sm dark:bg-black/30 md:flex">
+              <div class="hidden flex-col gap-2 border-r px-3 py-4 backdrop-blur-sm md:flex">
                 <StripDesktop
                   selected={selectedFrame}
                   setSelected={_selectedFrame.set}
                 />
               </div>
               <div
-                class="flex h-full min-h-0"
+                class="relative flex h-full min-h-0"
                 style={{
                   ...(windowSizeIsAtLeastMedium()
                     ? {
@@ -235,10 +227,6 @@ export function App() {
                 </Show>
 
                 <FoldersFrame presets={presets} selectedFrame={selectedFrame} />
-                <FavoritesFrame
-                  presets={presets}
-                  selectedFrame={selectedFrame}
-                />
                 <SearchFrame presets={presets} selectedFrame={selectedFrame} />
                 <HistoryFrame presets={presets} selectedFrame={selectedFrame} />
                 <SettingsFrame
@@ -247,12 +235,14 @@ export function App() {
                   backgroundMode={userConfig.settings.background.mode}
                   backgroundOpacity={userConfig.settings.background.opacity}
                 />
+
+                <div class="absolute bottom-0 left-0 right-0 z-10 h-6 w-full bg-gradient-to-b from-transparent to-[var(--background-color)]" />
               </div>
 
               <div
                 class={classPropToString([
                   standalone && "pb-6",
-                  "border-lighter flex justify-between gap-3 border-t bg-black/30 p-2 backdrop-blur-sm sm:justify-around md:hidden short:hidden",
+                  "flex justify-between gap-3 border-t p-2 sm:justify-around md:hidden short:hidden",
                 ])}
               >
                 <StripMobile
@@ -263,9 +253,9 @@ export function App() {
             </div>
           </Show>
 
-          <Show when={!fullscreen()}>
+          {/* <Show when={!fullscreen()}>
             <div
-              class="mx-[3px] my-8 hidden w-[6px] cursor-col-resize items-center justify-center rounded-full bg-orange-900 opacity-0 hover:opacity-50 dark:bg-orange-100 md:block short:hidden"
+              class="mx-[3px] my-8 hidden w-[6px] cursor-col-resize items-center justify-center rounded-full opacity-0 hover:opacity-50 md:block short:hidden"
               onMouseDown={(event) => {
                 if (resizingBarStart() === undefined) {
                   resizingBarStart.set(event.clientX);
@@ -282,10 +272,10 @@ export function App() {
                 barWidth.set(0);
               }}
             />
-          </Show>
+          </Show> */}
 
           <Show when={windowSizeIsAtLeastMedium()}>
-            <div class="flex min-w-0 flex-1">
+            <div class="flex min-w-0 flex-1 border-l">
               <ChartFrame
                 standalone={true}
                 presets={presets}

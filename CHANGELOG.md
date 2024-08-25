@@ -4,6 +4,10 @@
 
 ![Image of the Satonomics Web App version 0.X.Y](./assets/v0.X.Y.jpg)
 
+## v. 0.4.0 | WIP
+
+![Image of the Satonomics Web App version 0.4.0](./assets/v0.4.0.jpg)
+
 ### Parser
 
 - Changed the block iterator from a custom version of [bitcoin-explorer](https://crates.io/crates/bitcoin-explorer) to the homemade [biter](https://crates.io/crates/biter) which allows the parser to run alongside `bitcoind`

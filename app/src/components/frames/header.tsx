@@ -1,8 +1,8 @@
 export function Header({ title, children }: { title: string } & ParentProps) {
   return (
-    <div>
+    <div class="pt-1">
       <h3 class="text-lg font-bold md:text-xl">{title}</h3>
-      <p class="text-orange-950/60 dark:text-orange-100/75">{children}</p>
+      <p class="off">{children}</p>
     </div>
   );
 }

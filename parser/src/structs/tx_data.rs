@@ -12,6 +12,7 @@ pub struct TxData {
 direct_repr!(TxData);
 
 impl TxData {
+    #[inline(always)]
     pub fn new(index: u32, block_path: BlockPath, utxos: u16) -> Self {
         Self {
             index,

@@ -23,19 +23,19 @@ export function createUserConfig({ dark }: { dark: RWS<boolean> }) {
           [
             {
               text: "Strong",
-              value: 0.0444,
+              value: 0.035,
             },
             {
               text: "Normal",
-              value: 0.0333,
+              value: 0.03,
             },
             {
               text: "Light",
-              value: 0.0222,
+              value: 0.025,
             },
             {
               text: "Subtle",
-              value: 0.0111,
+              value: 0.02,
             },
           ] as const,
           {
