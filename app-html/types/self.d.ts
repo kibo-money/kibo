@@ -1,5 +1,6 @@
 type Scale = "date" | "height";
 
+import { Accessor, Setter } from "../libraries/solid-signals/types/signals";
 import {
   DeepPartial,
   BaselineStyleOptions,
@@ -10,33 +11,54 @@ import {
   Time,
   SingleValueData,
   CandlestickData,
+  SeriesType,
+  IChartApi,
+  ISeriesApi,
 } from "../libraries/lightweight-charts/types";
+import { DatePath, HeightPath } from "./paths";
+
+type Signal<T> = Accessor<T> & { set: Setter<T> };
 
 type TimeRange = Range<Time | number>;
 
+type DatasetPath<S extends Scale> = S extends "date" ? DatePath : HeightPath;
+
 type AnyDatasetPath = import("./paths").DatePath | import("./paths").HeightPath;
 
-type Color = string;
+type Color = () => string;
 
-type SeriesConfig = {
+interface BaselineSpecificSeriesBlueprint {
+  type: "Baseline";
+  color?: Color;
+  options?: DeepPartial<BaselineStyleOptions & SeriesOptionsCommon>;
+}
+
+interface CandlestickSpecificSeriesBlueprint {
+  type: "Candlestick";
+  color?: undefined;
+  options?: DeepPartial<CandlestickStyleOptions & SeriesOptionsCommon>;
+}
+
+interface LineSpecificSeriesBlueprint {
+  type?: "Line";
+  color: Color;
+  options?: DeepPartial<LineStyleOptions & SeriesOptionsCommon>;
+}
+
+type AnySpecificSeriesBlueprint =
+  | BaselineSpecificSeriesBlueprint
+  | CandlestickSpecificSeriesBlueprint
+  | LineSpecificSeriesBlueprint;
+
+type SpecificSeriesBlueprintWithChart<A extends AnySpecificSeriesBlueprint> = {
+  chart: IChartApi;
+} & Omit<A, "type">;
+
+type SeriesBlueprint = {
   datasetPath: AnyDatasetPath;
   title: string;
-  defaultVisible?: boolean;
-} & (
-  | {
-      color?: Color;
-      seriesType: "Based";
-      options?: DeepPartial<BaselineStyleOptions & SeriesOptionsCommon>;
-    }
-  | {
-      seriesType: "Candlestick";
-      options?: DeepPartial<CandlestickStyleOptions & SeriesOptionsCommon>;
-    }
-  | {
-      seriesType?: "Line";
-      options?: DeepPartial<LineStyleOptions & SeriesOptionsCommon>;
-    }
-);
+  defaultActive?: boolean;
+} & AnySpecificSeriesBlueprint;
 
 type Unit =
   | "US Dollars"
@@ -55,19 +77,19 @@ type Unit =
   | "Dollars / (PetaHash / Second)"
   | "";
 
-interface PresetParams {
-  top?: SeriesConfig[];
-  bottom?: SeriesConfig[];
+interface PresetBlueprint {
+  top?: SeriesBlueprint[];
+  bottom?: SeriesBlueprint[];
 }
 
-type PartialPreset = {
+interface PartialPreset extends PresetBlueprint {
   scale: Scale;
   icon: string;
   name: string;
   unit: Unit;
   title: string;
   description: string;
-} & PresetParams;
+}
 
 interface PartialPresetFolder {
   name: string;
@@ -107,13 +129,13 @@ interface OHLC {
 
 interface ResourceDataset<
   S extends Scale,
-  Type extends OHLC | number = number
+  Type extends OHLC | number = number,
 > {
   scale: S;
   url: string;
   fetch: (id: number) => void;
   fetchedJSONs: FetchedResult<S, Type>[];
-  drop: VoidFunction;
+  // drop: VoidFunction;
 }
 
 type ValuedCandlestickData = CandlestickData & Valued;
@@ -125,7 +147,7 @@ interface FetchedResult<
     SingleValueData | ValuedCandlestickData
   > = DatasetValue<
     Type extends number ? SingleValueData : ValuedCandlestickData
-  >
+  >,
 > {
   at: Date | null;
   json: Signal<FetchedJSON<S, Type> | null>;
@@ -155,7 +177,7 @@ interface FetchedChunk {
 
 type FetchedDataset<
   S extends Scale,
-  Type extends number | OHLC
+  Type extends number | OHLC,
 > = S extends "date" ? FetchedDateDataset<Type> : FetchedHeightDataset<Type>;
 
 interface Versioned {
@@ -168,4 +190,28 @@ interface FetchedDateDataset<Type> extends Versioned {
 
 interface FetchedHeightDataset<Type> extends Versioned {
   map: Type[];
+}
+
+type PriceSeriesType = "Candlestick" | "Line";
+
+interface Series {
+  id: string;
+  title: string;
+  chunks: Array<Accessor<ISeriesApi<SeriesType> | undefined>>;
+  color: Color | Color[];
+  disabled: Accessor<boolean>;
+  active: Signal<boolean>;
+  visible: Accessor<boolean>;
+  dataset: ResourceDataset<Scale, number>;
+}
+
+interface Marker {
+  weight: number;
+  time: Time;
+  value: number;
+  seriesChunk: ISeriesApi<any>;
+}
+
+interface Weighted {
+  weight: number;
 }

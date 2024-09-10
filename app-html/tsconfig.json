@@ -3,7 +3,8 @@
     "checkJs": true,
     "strict": true,
     "target": "ESNext",
-    "module": "ESNext"
+    "module": "ESNext",
+    "outDir": "/tmp/kibo"
   },
-  "exclude": ["assets", "libraries"]
+  "exclude": ["assets", "libraries", "ignore"]
 }

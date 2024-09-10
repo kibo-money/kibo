@@ -1,6 +1,6 @@
 {
-  "name": "Satonomics",
-  "short_name": "Satonomics",
+  "name": "kibō",
+  "short_name": "kibō",
   "description": "A better, FOSS, Bitcoin-only, self-hostable Glassnode",
   "start_url": "/",
   "display": "standalone",

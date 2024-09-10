@@ -155,16 +155,16 @@ export function Chart({
       createEffect(on([exactRange, dark], debouncedSetMinMaxMarkers));
 
       if (chartIndex === 0) {
-        const datasetPath: AnyDatasetPath = `${scale}-to-price`;
-
-        const dataset = datasets.getOrImport(scale, datasetPath);
-
-        // Don't trigger reactivity by design
-        activeDatasets().push(dataset);
-
-        const title = "Price";
-
         function createPriceSeries(seriesType: PriceSeriesType) {
+          const datasetPath: AnyDatasetPath = `${scale}-to-price`;
+
+          const dataset = datasets.getOrImport(scale, datasetPath);
+
+          // Don't trigger reactivity by design
+          activeDatasets().push(dataset);
+
+          const title = "Price";
+
           let seriesConfig: SeriesConfig;
 
           if (seriesType === "Candlestick") {
