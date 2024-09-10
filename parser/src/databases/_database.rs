@@ -26,7 +26,7 @@ use crate::io::OUTPUTS_FOLDER_PATH;
 /// There is no `cached_gets` since it's much cheaper and faster to do a parallel search first using `unsafe_get` than caching gets along the way.
 pub struct Database<Key, Value>
 where
-    Key: Ord + Clone + Debug + ?Sized + Storable,
+    Key: Ord + Clone + Debug + Storable,
     Value: Storable + PartialEq,
 {
     pub cached_puts: BTreeMap<Key, Value>,
@@ -42,7 +42,7 @@ const PAGE_SIZE: u64 = 4096;
 
 impl<Key, Value> Database<Key, Value>
 where
-    Key: Ord + Clone + Debug + ?Sized + Storable,
+    Key: Ord + Clone + Debug + Storable,
     Value: Storable + PartialEq,
 {
     pub fn open(folder: &str, file: &str) -> color_eyre::Result<Self> {

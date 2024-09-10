@@ -12,8 +12,10 @@ use serde::Deserialize;
 use parser::{log, Date, DateMap, Height, HeightMap, MapChunkId, HEIGHT_MAP_CHUNK_SIZE, OHLC};
 
 use crate::{
-    chunk::Chunk, headers::add_cors_to_headers, kind::Kind, response::typed_value_to_response,
-    routes::Route, AppState,
+    api::structs::{Chunk, Kind, Route},
+    header_map::HeaderMapUtils,
+    response::typed_value_to_response,
+    AppState,
 };
 
 #[derive(Deserialize)]
@@ -21,26 +23,26 @@ pub struct Params {
     chunk: Option<usize>,
 }
 
-pub async fn file_handler(
+pub async fn dataset_handler(
     headers: HeaderMap,
     path: Path<String>,
     query: Query<Params>,
     State(app_state): State<AppState>,
 ) -> Response {
-    match _file_handler(headers, path, query, app_state) {
+    match _dataset_handler(headers, path, query, app_state) {
         Ok(response) => response,
         Err(error) => {
             let mut response =
                 (StatusCode::INTERNAL_SERVER_ERROR, error.to_string()).into_response();
 
-            add_cors_to_headers(response.headers_mut());
+            response.headers_mut().insert_cors();
 
             response
         }
     }
 }
 
-fn _file_handler(
+fn _dataset_handler(
     headers: HeaderMap,
     Path(path): Path<String>,
     query: Query<Params>,

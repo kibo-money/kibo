@@ -4,7 +4,7 @@
 
 ## Description
 
-Satonomics is a better, FOSS, Bitcoin-only, self-hostable Glassnode.
+kibō (hope) is a better, FOSS, Bitcoin-only, self-hostable Glassnode.
 
 While [mempool.space](https://mempool.space) gives a very micro view of the network where you can follow the journey of any address, this tool is the exact opposite and very complimentary by giving you a much more global/macro view of the flow and various dynamics of the network via thousands of charts.
 
@@ -38,6 +38,34 @@ API:
 - `parser`: The backbone of the project, it does most of the work by parsing and then computing datasets from the timechain.
 - `server`: A small server which automatically creates routes to access through an API all created datasets.
 - `app`: A web app which displays the generated datasets in various charts and dashboards.
+
+## How to run
+
+### Requirements
+
+- `rustup`
+
+### Parser
+
+```bash
+./run.sh --datadir=$HOME/Developer/bitcoin
+```
+
+### Server
+
+```bash
+# Install rustup
+# Update ./run.sh if needed
+./run.sh
+```
+
+Then the easiest to let others access your server is with `cloudflared` which will also cache requests.
+
+
+## Limitations
+
+- Needs to stop the node to parse the files (at least for now)
+- Needs a **LOT** a disk space for databases (~700 GB for data from 2009 to mid 2024)
 
 ## Goals / Philosophy
 

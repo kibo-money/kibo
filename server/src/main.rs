@@ -1,23 +1,17 @@
 use std::sync::Arc;
 
-use axum::{extract::State, http::HeaderMap, response::Response, routing::get, serve, Router};
+use api::{structs::Routes, ApiRoutes};
+use axum::{serve, Router};
 use parser::{log, reset_logs};
-use reqwest::header::HOST;
-use response::generic_to_reponse;
-use routes::Routes;
 use serde::Serialize;
 use tokio::net::TcpListener;
 use tower_http::compression::CompressionLayer;
+use website::WebsiteRoutes;
 
-mod chunk;
-mod handler;
-mod headers;
-mod kind;
-mod paths;
+mod api;
+mod header_map;
 mod response;
-mod routes;
-
-use handler::file_handler;
+mod website;
 
 #[derive(Clone, Debug, Default, Serialize)]
 pub struct Grouped<T> {
@@ -52,28 +46,26 @@ async fn main() -> color_eyre::Result<()> {
         .zstd(true);
 
     let router = Router::new()
-        .route("/*path", get(file_handler))
-        .route("/", get(fallback))
+        .add_api_routes()
+        .add_website_routes()
         .with_state(state)
         .layer(compression_layer);
 
-    let port = 3110;
+    let mut port = 3110;
+
+    let mut listener;
+    loop {
+        listener = TcpListener::bind(format!("0.0.0.0:{port}")).await;
+        if listener.is_ok() {
+            break;
+        }
+        port += 1;
+    }
 
     log(&format!("Starting server on port {port}..."));
-
-    let listener = TcpListener::bind(format!("0.0.0.0:{port}")).await?;
+    let listener = listener.unwrap();
 
     serve(listener, router).await?;
 
     Ok(())
-}
-
-pub async fn fallback(headers: HeaderMap, State(app_state): State<AppState>) -> Response {
-    generic_to_reponse(
-        app_state
-            .routes
-            .to_full_paths(headers[HOST].to_str().unwrap().to_string()),
-        None,
-        60,
-    )
 }

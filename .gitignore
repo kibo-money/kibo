@@ -1,16 +1,46 @@
+# Mac OS
 .DS_Store
 
-/app-next
-/datasets
-/datasets2
-/datasets_*
-
+# To do
+/charts
 TODO.md
 
-.stfolder
-/charts
-/price
-*\ copy*
-/dist
+# Builds
+dist
+target
 
+# I/O
+in
+out
+.log
+/datasets
+/price
+
+# Sync
+.stfolder
+
+# Copies
+*\ copy*
+
+# Ignored
+ignore
+
+# Scripts
 /start-node.sh
+
+# Editors
+.vscode
+.zed
+
+# Configs
+config.toml
+
+# Flamegraph
+flamegraph/
+flamegraph.svg
+
+# Benchmarks
+benches
+
+# Snapshots
+snapshots*/

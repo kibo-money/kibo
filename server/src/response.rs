@@ -7,10 +7,8 @@ use serde::de::DeserializeOwned;
 use serde::Serialize;
 
 use crate::{
-    chunk::Chunk,
-    headers::{add_cache_control_to_headers, add_cors_to_headers, add_json_type_to_headers},
-    kind::Kind,
-    routes::Route,
+    api::structs::{Chunk, Kind, Route},
+    header_map::HeaderMapUtils,
 };
 
 #[derive(Serialize)]
@@ -88,9 +86,9 @@ where
     let max_age = cache_time;
     let stale_while_revalidate = 2 * max_age;
 
-    add_cors_to_headers(headers);
-    add_json_type_to_headers(headers);
-    add_cache_control_to_headers(headers, max_age, stale_while_revalidate);
+    headers.insert_cors();
+    headers.insert_content_type_application_json();
+    headers.insert_cache_control(max_age, stale_while_revalidate);
 
     response
 }

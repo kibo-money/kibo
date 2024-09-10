@@ -8,7 +8,9 @@ use derive_deref::{Deref, DerefMut};
 use itertools::Itertools;
 use parser::{Json, Serialization};
 
-use crate::{paths::Paths, Grouped};
+use crate::Grouped;
+
+use super::Paths;
 
 #[derive(Clone, Debug)]
 pub struct Route {
