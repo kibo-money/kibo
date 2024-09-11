@@ -1,9 +1,0 @@
-node_modules
-charts
-dist
-dev-dist
-.DS_Store
-visualizer
-# Local Netlify folder
-.netlify
-.wrangler

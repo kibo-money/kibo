@@ -11,8 +11,13 @@ pub trait HeaderMapUtils {
     fn insert_cache_control(&mut self, max_age: u64, stale_while_revalidate: u64);
 
     fn insert_content_type(&mut self, path: &Path);
+    fn insert_content_type_image_icon(&mut self);
+    fn insert_content_type_image_jpeg(&mut self);
+    fn insert_content_type_image_png(&mut self);
     fn insert_content_type_application_javascript(&mut self);
     fn insert_content_type_application_json(&mut self);
+    fn insert_content_type_application_manifest_json(&mut self);
+    fn insert_content_type_text_css(&mut self);
     fn insert_content_type_text_html(&mut self);
     fn insert_content_type_text_plain(&mut self);
     fn insert_content_type_font_woff2(&mut self);
@@ -40,13 +45,39 @@ impl HeaderMapUtils for HeaderMap {
             "js" => self.insert_content_type_application_javascript(),
             "json" => self.insert_content_type_application_json(),
             "html" => self.insert_content_type_text_html(),
+            "css" => self.insert_content_type_text_css(),
             "txt" => self.insert_content_type_text_plain(),
             "woff2" => self.insert_content_type_font_woff2(),
+            "ico" => self.insert_content_type_image_icon(),
+            "jpg" | "jpeg" => self.insert_content_type_image_jpeg(),
+            "png" => self.insert_content_type_image_png(),
+            "webmanifest" => self.insert_content_type_application_manifest_json(),
             extension => {
                 log(&format!("Extension unsupported: {extension}"));
                 panic!()
             }
         }
+    }
+
+    fn insert_content_type_image_icon(&mut self) {
+        self.insert(
+            header::CONTENT_TYPE,
+            "image/x-icon".parse().unwrap(),
+        );
+    }
+
+    fn insert_content_type_image_jpeg(&mut self) {
+        self.insert(
+            header::CONTENT_TYPE,
+            "image/jpeg".parse().unwrap(),
+        );
+    }
+
+    fn insert_content_type_image_png(&mut self) {
+        self.insert(
+            header::CONTENT_TYPE,
+            "image/png".parse().unwrap(),
+        );
     }
 
     fn insert_content_type_application_javascript(&mut self) {
@@ -58,6 +89,14 @@ impl HeaderMapUtils for HeaderMap {
 
     fn insert_content_type_application_json(&mut self) {
         self.insert(header::CONTENT_TYPE, "application/json".parse().unwrap());
+    }
+
+    fn insert_content_type_application_manifest_json(&mut self) {
+        self.insert(header::CONTENT_TYPE, "application/manifest+json".parse().unwrap());
+    }
+
+    fn insert_content_type_text_css(&mut self) {
+        self.insert(header::CONTENT_TYPE, "text/css".parse().unwrap());
     }
 
     fn insert_content_type_text_html(&mut self) {

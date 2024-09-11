@@ -1,9 +1,6 @@
 [package]
 name = "parser"
-description = "A better, FOSS, Bitcoin-only, self-hostable Glassnode"
-homepage = "https://satonomics.xyz"
-version = "0.3.0"
-repository = "https://github.com/satonomics-org/satonomics"
+version = "0.4.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

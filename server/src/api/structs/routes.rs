@@ -24,7 +24,7 @@ pub struct Route {
 pub struct Routes(pub Grouped<HashMap<String, Route>>);
 
 const INPUTS_PATH: &str = "./in";
-const APP_TYPES_PATH: &str = "../app/src/types";
+const WEBSITE_TYPES_PATH: &str = "../website/types";
 
 impl Routes {
     pub fn build() -> Self {
@@ -111,7 +111,7 @@ impl Routes {
         let last_type = map_to_type("Last", &self.last);
 
         fs::write(
-            format!("{APP_TYPES_PATH}/paths.d.ts"),
+            format!("{WEBSITE_TYPES_PATH}/paths.d.ts"),
             format!("{date_type}\n{height_type}\n{last_type}"),
         )
         .unwrap();

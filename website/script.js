@@ -1618,6 +1618,7 @@ function initEverythingRelatedToPresets() {
             autoSize: true,
             layout: {
               fontFamily: "Satoshi Chart",
+              fontSize: 13,
               background: { color: "transparent" },
               attributionLogo: false,
             },
@@ -1899,9 +1900,9 @@ function initEverythingRelatedToPresets() {
           const height = new Map();
 
           const USE_LOCAL_URL = true;
-          const LOCAL_URL = "http://localhost:3110";
-          const WEB_URL = "https://api.satonomics.xyz";
-          const BACKUP_WEB_URL = "https://api-bkp.satonomics.xyz";
+          const LOCAL_URL = "/api";
+          const WEB_URL = "https://kibo.money/api";
+          const BACKUP_WEB_URL = "https://backup.kibo.money/api";
 
           const datasetsOwner = getOwner();
 

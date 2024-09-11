@@ -2,12 +2,17 @@
   "name": "kibō",
   "short_name": "kibō",
   "description": "A better, FOSS, Bitcoin-only, self-hostable Glassnode",
+  "categories": [
+    "bitcoin",
+    "on-chain",
+    "data"
+  ],
   "start_url": "/",
-  "display": "standalone",
-  "theme_color": "#0c0a09",
-  "background_color": "#0c0a09",
-  "lang": "en",
   "scope": "/",
+  "display": "standalone",
+  "theme_color": "#f26610",
+  "background_color": "#f26610",
+  "lang": "en",
   "icons": [
     {
       "src": "/assets/manifest-icon-192.maskable.png",

@@ -3,8 +3,14 @@ use std::{
     path::{Path, PathBuf},
 };
 
-use axum::{extract, http::HeaderMap, response::Response};
+use axum::{
+    body::Body,
+    extract,
+    http::HeaderMap,
+    response::{IntoResponse, Response},
+};
 use parser::log;
+use reqwest::StatusCode;
 
 use crate::header_map::HeaderMapUtils;
 
@@ -15,8 +21,21 @@ const WEBSITE_PATH: &str = "../website";
 pub async fn file_handler(headers: HeaderMap, path: extract::Path<String>) -> Response {
     let path = path.0.replace("..", "").replace("\\", "");
     let mut path = str_to_path(&path);
-    if path.extension().is_none() && !path.exists() {
-        path = str_to_path("index.html");
+
+    if !path.exists() {
+        if path.extension().is_some() {
+            let mut response: Response<Body> = (
+                StatusCode::INTERNAL_SERVER_ERROR,
+                "File doesn't exist".to_string(),
+            )
+                .into_response();
+
+            response.headers_mut().insert_cors();
+
+            return response;
+        } else {
+            path = str_to_path("index.html");
+        }
     }
 
     path_to_response(&path)
