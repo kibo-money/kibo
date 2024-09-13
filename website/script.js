@@ -1733,7 +1733,7 @@ function initEverythingRelatedToPresets() {
           tree: [
             {
               scale,
-              icon: "~",
+              icon: "🌊",
               name: "All",
               title: "All Moving Averages",
               description: "",

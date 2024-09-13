@@ -24,11 +24,13 @@ To promote even more transparency and trust in the network, this project is comm
 
 This project was started as an answer to the outrageous pricing from Glassnode (and their third tier starting at $833.33/month !).
 
-But it is a lot of work and has been worked on _**full-time since November of 2023**_ and has also been operational since then without any ads.
+But it is a lot of work and has been worked on **full-time since November of 2023** and has also been operational since then without any ads.
 
-_**At the time of writing (2024-09-12), this project has made around 2,200,000 sats, which is around $1300 or $120/month. It's unsustainable.**_
+**At the time of writing (2024-09-12), this project has made around 2,200,000 sats, which is around $1300 or $120/month. While I'm very grateful for all donations, it's sadly unsustainable.**
 
 So if you find this project useful, [please send some sats](https://geyser.fund/project/satonomics/), it would be really appreciated.
+
+If you're a potential sponsor, feel free to contact me in Nostr !
 
 [Geyser Fund](https://geyser.fund/project/satonomics/)
 
@@ -45,7 +47,7 @@ This project is in a very early stage. Until more people look at the code and ch
 
 - `parser`: The backbone of the project, it does most of the work by parsing and then computing datasets from the timechain.
 - `website`: A web app which displays the generated datasets in various charts and dashboards.
-- `server`: A small server which will serve the
+- `server`: A small server which will serve both their resources
 
 ## Setup
 
@@ -60,9 +62,7 @@ Coming soon
 
 ### Manual
 
-#### Hardware
-
-#### 1. Rust
+#### Prepare
 
 ```bash
 # https://www.rust-lang.org/tools/install
@@ -71,7 +71,7 @@ curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 cargo install cargo-watch --locked
 ```
 
-#### 2. Parser
+#### Parser
 
 ```bash
 # The first run needs several information about your bitcoin-core config
