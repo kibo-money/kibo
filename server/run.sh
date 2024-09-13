@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 if cargo watch --help &> /dev/null; then
     TRIGGER="./in/datasets_len.txt"
 

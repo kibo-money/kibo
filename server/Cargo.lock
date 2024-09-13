@@ -2482,6 +2482,7 @@ version = "0.4.0"
 dependencies = [
  "axum",
  "bincode",
+ "chrono",
  "color-eyre",
  "derive_deref",
  "itertools",
@@ -2492,7 +2493,6 @@ dependencies = [
  "serde_json",
  "swc",
  "swc_common",
- "swc_ecma_minifier",
  "tokio",
  "tower-http",
 ]

@@ -9,6 +9,7 @@ use axum::{
     http::HeaderMap,
     response::{IntoResponse, Response},
 };
+use chrono::{DateTime, Utc};
 use parser::log;
 use reqwest::StatusCode;
 
@@ -38,17 +39,22 @@ pub async fn file_handler(headers: HeaderMap, path: extract::Path<String>) -> Re
         }
     }
 
-    path_to_response(&path)
+    path_to_response(headers, &path)
 }
 
 pub async fn index_handler(headers: HeaderMap) -> Response {
-    path_to_response(&str_to_path("index.html"))
+    path_to_response(headers, &str_to_path("index.html"))
 }
 
-fn path_to_response(path: &Path) -> Response {
+fn path_to_response(headers: HeaderMap, path: &Path) -> Response {
     let mut response;
 
-    if path.extension().unwrap() == "js" {
+    let time = path.metadata().unwrap().modified().unwrap();
+    let date: DateTime<Utc> = time.into();
+
+    let is_localhost = headers.check_if_host_is_localhost();
+
+    if !is_localhost && path.extension().unwrap() == "js" {
         let content = minify_js(path);
 
         response = Response::new(content.into());
@@ -66,6 +72,12 @@ fn path_to_response(path: &Path) -> Response {
     let headers = response.headers_mut();
     headers.insert_cors();
     headers.insert_content_type(path);
+
+    if !is_localhost {
+        headers.insert_cache_control(10, 50);
+    }
+
+    headers.insert_last_modified(date);
 
     response
 }

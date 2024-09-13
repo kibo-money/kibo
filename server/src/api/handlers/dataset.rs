@@ -6,7 +6,7 @@ use axum::{
     response::{IntoResponse, Response},
 };
 use color_eyre::{eyre::eyre, owo_colors::OwoColorize};
-use reqwest::{header::HOST, StatusCode};
+use reqwest::StatusCode;
 use serde::Deserialize;
 
 use parser::{log, Date, DateMap, Height, HeightMap, MapChunkId, HEIGHT_MAP_CHUNK_SIZE, OHLC};
@@ -14,9 +14,10 @@ use parser::{log, Date, DateMap, Height, HeightMap, MapChunkId, HEIGHT_MAP_CHUNK
 use crate::{
     api::structs::{Chunk, Kind, Route},
     header_map::HeaderMapUtils,
-    response::typed_value_to_response,
     AppState,
 };
+
+use super::response::typed_value_to_response;
 
 #[derive(Deserialize)]
 pub struct Params {
@@ -168,13 +169,8 @@ where
 
     let offsetted_to_url = |offseted| {
         datasets.get(&ChunkId::from_usize(offseted)).map(|_| {
-            let host = headers[HOST].to_str().unwrap();
-            let scheme = if host.contains("0.0.0.0") || host.contains("localhost") {
-                "http"
-            } else {
-                "https"
-            };
-
+            let scheme = headers.get_scheme();
+            let host = headers.get_host();
             format!("{scheme}://{host}{}?chunk={offseted}", route.url_path)
         })
     };

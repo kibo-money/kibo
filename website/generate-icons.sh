@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 pwa-asset-generator "../assets/logo-dove-orange.svg" "./assets" \
     --index "./assets/index.html" \
     --manifest "./manifest.webmanifest" \

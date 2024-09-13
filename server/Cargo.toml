@@ -5,17 +5,17 @@ edition = "2021"
 
 [dependencies]
 axum = "0.7.5"
-color-eyre = "0.6.3"
-itertools = "0.13.0"
-regex = "1.10.6"
 bincode = { git = "https://github.com/bincode-org/bincode.git" }
+chrono = "0.4.38"
+color-eyre = "0.6.3"
+derive_deref = "1.1.1"
+itertools = "0.13.0"
+parser = { path = "../parser" }
+regex = "1.10.6"
 reqwest = { version = "0.12.7", features = ["json"] }
 serde = { version = "1.0.210", features = ["derive"] }
 serde_json = { version = "1.0.128" }
-tokio = { version = "1.40.0", features = ["full"] }
-tower-http = { version = "0.5.2", features = ["compression-full"] }
-parser = { path = "../parser" }
-derive_deref = "1.1.1"
 swc = "0.286.0"
 swc_common = "0.37.5"
-swc_ecma_minifier = "0.205.2"
+tokio = { version = "1.40.0", features = ["full"] }
+tower-http = { version = "0.5.2", features = ["compression-full"] }

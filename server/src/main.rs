@@ -10,7 +10,6 @@ use website::WebsiteRoutes;
 
 mod api;
 mod header_map;
-mod response;
 mod website;
 
 #[derive(Clone, Debug, Default, Serialize)]

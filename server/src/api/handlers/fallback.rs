@@ -1,7 +1,9 @@
 use axum::{extract::State, http::HeaderMap, response::Response};
 use reqwest::header::HOST;
 
-use crate::{response::generic_to_reponse, AppState};
+use crate::AppState;
+
+use super::response::generic_to_reponse;
 
 pub async fn fallback(headers: HeaderMap, State(app_state): State<AppState>) -> Response {
     generic_to_reponse(

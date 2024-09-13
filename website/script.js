@@ -1,9 +1,7 @@
 // @ts-check
 
-// Lightweight Charts download link: https://unpkg.com/browse/lightweight-charts@4.2.0/dist/
-
 /**
- * @import { FilePath, PartialPreset, PartialPresetFolder, PartialPresetTree, Preset, PresetFolder, Series, PriceSeriesType, ResourceDataset, Scale, SerializedPresetsHistory, TimeRange, Unit, Marker, Weighted, DatasetPath, OHLC, FetchedJSON, DatasetValue, FetchedResult, AnyDatasetPath, SeriesBlueprint, BaselineSpecificSeriesBlueprint, CandlestickSpecificSeriesBlueprint, LineSpecificSeriesBlueprint, SpecificSeriesBlueprintWithChart, Signal, Color } from "./types/self"
+ * @import { FilePath, PartialPreset, PartialPresetFolder, PartialPresetTree, Preset, PresetFolder, Series, PriceSeriesType, ResourceDataset, Scale, SerializedPresetsHistory, TimeRange, Unit, Marker, Weighted, DatasetPath, OHLC, FetchedJSON, DatasetValue, FetchedResult, AnyDatasetPath, SeriesBlueprint, BaselineSpecificSeriesBlueprint, CandlestickSpecificSeriesBlueprint, LineSpecificSeriesBlueprint, SpecificSeriesBlueprintWithChart, Signal, Color, SettingsTheme } from "./types/self"
  * @import * as _ from "./libraries/ufuzzy/types"
  * @import { DeepPartial, ChartOptions, IChartApi, IHorzScaleBehavior, WhitespaceData, SingleValueData, ISeriesApi, Time, LogicalRange, SeriesMarker, CandlestickData, SeriesType, BaselineStyleOptions, SeriesOptionsCommon } from "./libraries/lightweight-charts/types"
  * @import { DatePath, HeightPath } from "./types/paths";
@@ -104,7 +102,7 @@ function dateToString(date) {
  */
 function getNumberOfDaysBetweenTwoDates(oldest, youngest) {
   return Math.round(
-    Math.abs((youngest.getTime() - oldest.getTime()) / ONE_DAY_IN_MS),
+    Math.abs((youngest.getTime() - oldest.getTime()) / ONE_DAY_IN_MS)
   );
 }
 
@@ -147,7 +145,7 @@ const urlParamsHelpers = {
     window.history.replaceState(
       null,
       "",
-      `${pathname}?${urlParams.toString()}`,
+      `${pathname}?${urlParams.toString()}`
     );
   },
   /**
@@ -241,6 +239,48 @@ const utils = {
   },
 };
 
+const dom = {
+  head: window.document.getElementsByTagName("head")[0],
+  /**
+   * @param {string} name
+   */
+  queryOrCreateMetaElement(name) {
+    let meta = /** @type {HTMLMetaElement | null} */ (
+      window.document.querySelector(`meta[name="${name}"]`)
+    );
+
+    if (!meta) {
+      meta = window.document.createElement("meta");
+      meta.name = name;
+      this.head.appendChild(meta);
+    }
+    return meta;
+  },
+};
+
+const env = (function initEnv() {
+  const standalone =
+    "standalone" in window.navigator && !!window.navigator.standalone;
+  const userAgent = navigator.userAgent.toLowerCase();
+  const isChrome = userAgent.includes("chrome");
+  const safari = userAgent.includes("safari");
+  const safariOnly = safari && !isChrome;
+  const macOS = userAgent.includes("mac os");
+  const iphone = userAgent.includes("iphone");
+  const ipad = userAgent.includes("ipad");
+
+  return {
+    standalone,
+    userAgent,
+    isChrome,
+    safari,
+    safariOnly,
+    macOS,
+    iphone,
+    ipad,
+  };
+})();
+
 const ONE_SECOND_IN_MS = 1_000;
 const FIVE_SECOND_IN_MS = 5 * ONE_SECOND_IN_MS;
 const TEN_SECOND_IN_MS = 2 * FIVE_SECOND_IN_MS;
@@ -268,16 +308,18 @@ const presetTitle = getElementById("preset-title");
 const presetDescription = getElementById("preset-description");
 const foldersFilterAllCount = getElementById("folders-filter-all-count");
 const foldersFilterFavoritesCount = getElementById(
-  "folders-filter-favorites-count",
+  "folders-filter-favorites-count"
 );
 const foldersFilterNewCount = getElementById("folders-filter-new-count");
 const chartListElement = getElementById("chart-list");
 const legendElement = getElementById("legend");
-const bodyStyle = getComputedStyle(document.body);
+const bodyStyle = getComputedStyle(window.document.documentElement);
 const buttonFavorite = getElementById("button-favorite");
 const buttonShare = getElementById("button-share");
 const timeScaleDateButtons = getElementById("timescale-date-buttons");
 const timeScaleHeightButtons = getElementById("timescale-height-buttons");
+
+const dark = createSignal(true);
 
 function initFrames() {
   const localStorageKey = "checked-frame-selector-label";
@@ -357,7 +399,7 @@ function initFrames() {
     }
   }).observe(chartLabel);
 
-  document.addEventListener("keydown", (event) => {
+  window.document.addEventListener("keydown", (event) => {
     switch (event.key) {
       case "Escape": {
         event.stopPropagation();
@@ -380,8 +422,6 @@ function initFrames() {
   });
 }
 initFrames();
-
-const dark = createSignal(true);
 
 function createColors() {
   function lightRed() {
@@ -634,60 +674,4390 @@ function initEverythingRelatedToPresets() {
   const firstTime = !savedSelectedId;
 
   /**
-   * @param {Scale} scale
-   * @returns {PartialPresetFolder}
+   * @returns {PartialPresetTree}
    */
-  function createMarketPresets(scale) {
-    return {
-      name: "Market",
-      tree: [
+  function createPartialTree() {
+    function initConsts() {
+      const xth = /** @type {const} */ ([
         {
-          scale,
-          icon: "💵",
-          name: "Price",
-          title: "Market Price",
-          description: "",
-          unit: "US Dollars",
+          id: "sth",
+          key: "sth",
+          name: "Short Term Holders",
+          legend: "STH",
         },
         {
-          scale,
-          icon: "♾️",
-          name: "Capitalization",
-          title: "Market Capitalization",
-          description: "",
-          unit: "US Dollars",
-          bottom: [
+          id: "lth",
+          key: "lth",
+          name: "Long Term Holders",
+          legend: "LTH",
+        },
+      ]);
+
+      const upTo = /** @type {const} */ ([
+        { id: "up-to-1d", key: "up_to_1d", name: "Up To 1 Day", legend: "1D" },
+        { id: "up-to-1w", key: "up_to_1w", name: "Up To 1 Week", legend: "1W" },
+        {
+          id: "up-to-1m",
+          key: "up_to_1m",
+          name: "Up To 1 Month",
+          legend: "1M",
+        },
+        {
+          id: "up-to-2m",
+          key: "up_to_2m",
+          name: "Up To 2 Months",
+          legend: "2M",
+        },
+        {
+          id: "up-to-3m",
+          key: "up_to_3m",
+          name: "Up To 3 Months",
+          legend: "3M",
+        },
+        {
+          id: "up-to-4m",
+          key: "up_to_4m",
+          name: "Up To 4 Months",
+          legend: "4M",
+        },
+        {
+          id: "up-to-5m",
+          key: "up_to_5m",
+          name: "Up To 5 Months",
+          legend: "5M",
+        },
+        {
+          id: "up-to-6m",
+          key: "up_to_6m",
+          name: "Up To 6 Months",
+          legend: "6M",
+        },
+        { id: "up-to-1y", key: "up_to_1y", name: "Up To 1 Year", legend: "1Y" },
+        {
+          id: "up-to-2y",
+          key: "up_to_2y",
+          name: "Up To 2 Years",
+          legend: "2Y",
+        },
+        {
+          id: "up-to-3y",
+          key: "up_to_3y",
+          name: "Up To 3 Years",
+          legend: "3Y",
+        },
+        {
+          id: "up-to-5y",
+          key: "up_to_5y",
+          name: "Up To 5 Years",
+          legend: "5Y",
+        },
+        {
+          id: "up-to-7y",
+          key: "up_to_7y",
+          name: "Up To 7 Years",
+          legend: "7Y",
+        },
+        {
+          id: "up-to-10y",
+          key: "up_to_10y",
+          name: "Up To 10 Years",
+          legend: "10Y",
+        },
+        {
+          id: "up-to-15y",
+          key: "up_to_15y",
+          name: "Up To 15 Years",
+          legend: "15Y",
+        },
+      ]);
+
+      const fromXToY = /** @type {const} */ ([
+        {
+          id: "from-1d-to-1w",
+          key: "from_1d_to_1w",
+          name: "From 1 Day To 1 Week",
+          legend: "1D - 1W",
+        },
+        {
+          id: "from-1w-to-1m",
+          key: "from_1w_to_1m",
+          name: "From 1 Week To 1 Month",
+          legend: "1W - 1M",
+        },
+        {
+          id: "from-1m-to-3m",
+          key: "from_1m_to_3m",
+          name: "From 1 Month To 3 Months",
+          legend: "1M - 3M",
+        },
+        {
+          id: "from-3m-to-6m",
+          key: "from_3m_to_6m",
+          name: "From 3 Months To 6 Months",
+          legend: "3M - 6M",
+        },
+        {
+          id: "from-6m-to-1y",
+          key: "from_6m_to_1y",
+          name: "From 6 Months To 1 Year",
+          legend: "6M - 1Y",
+        },
+        {
+          id: "from-1y-to-2y",
+          key: "from_1y_to_2y",
+          name: "From 1 Year To 2 Years",
+          legend: "1Y - 2Y",
+        },
+        {
+          id: "from-2y-to-3y",
+          key: "from_2y_to_3y",
+          name: "From 2 Years To 3 Years",
+          legend: "2Y - 3Y",
+        },
+        {
+          id: "from-3y-to-5y",
+          key: "from_3y_to_5y",
+          name: "From 3 Years To 5 Years",
+          legend: "3Y - 5Y",
+        },
+        {
+          id: "from-5y-to-7y",
+          key: "from_5y_to_7y",
+          name: "From 5 Years To 7 Years",
+          legend: "5Y - 7Y",
+        },
+        {
+          id: "from-7y-to-10y",
+          key: "from_7y_to_10y",
+          name: "From 7 Years To 10 Years",
+          legend: "7Y - 10Y",
+        },
+        {
+          id: "from-10y-to-15y",
+          key: "from_10y_to_15y",
+          name: "From 10 Years To 15 Years",
+          legend: "10Y - 15Y",
+        },
+      ]);
+
+      const fromX = /** @type {const} */ ([
+        {
+          id: "from-1y",
+          key: "from_1y",
+          name: "From 1 Year",
+          legend: "1Y+",
+        },
+        {
+          id: "from-2y",
+          key: "from_2y",
+          name: "From 2 Years",
+          legend: "2Y+",
+        },
+        {
+          id: "from-4y",
+          key: "from_4y",
+          name: "From 4 Years",
+          legend: "4Y+",
+        },
+        {
+          id: "from-10y",
+          key: "from_10y",
+          name: "From 10 Years",
+          legend: "10Y+",
+        },
+        {
+          id: "from-15y",
+          key: "from_15y",
+          name: "From 15 Years",
+          legend: "15Y+",
+        },
+      ]);
+
+      const year = /** @type {const} */ ([
+        { id: "year-2009", key: "year_2009", name: "2009" },
+        { id: "year-2010", key: "year_2010", name: "2010" },
+        { id: "year-2011", key: "year_2011", name: "2011" },
+        { id: "year-2012", key: "year_2012", name: "2012" },
+        { id: "year-2013", key: "year_2013", name: "2013" },
+        { id: "year-2014", key: "year_2014", name: "2014" },
+        { id: "year-2015", key: "year_2015", name: "2015" },
+        { id: "year-2016", key: "year_2016", name: "2016" },
+        { id: "year-2017", key: "year_2017", name: "2017" },
+        { id: "year-2018", key: "year_2018", name: "2018" },
+        { id: "year-2019", key: "year_2019", name: "2019" },
+        { id: "year-2020", key: "year_2020", name: "2020" },
+        { id: "year-2021", key: "year_2021", name: "2021" },
+        { id: "year-2022", key: "year_2022", name: "2022" },
+        { id: "year-2023", key: "year_2023", name: "2023" },
+        { id: "year-2024", key: "year_2024", name: "2024" },
+      ]);
+
+      const age = /** @type {const} */ ([
+        {
+          key: "",
+          id: "",
+          name: "",
+        },
+        ...xth,
+        ...upTo,
+        ...fromXToY,
+        ...fromX,
+        ...year,
+      ]);
+
+      const size = /** @type {const} */ ([
+        {
+          key: "plankton",
+          name: "Plankton",
+          size: "1 sat to 0.1 BTC",
+        },
+        {
+          key: "shrimp",
+          name: "Shrimp",
+          size: "0.1 sat to 1 BTC",
+        },
+        { key: "crab", name: "Crab", size: "1 BTC to 10 BTC" },
+        { key: "fish", name: "Fish", size: "10 BTC to 100 BTC" },
+        { key: "shark", name: "Shark", size: "100 BTC to 1000 BTC" },
+        { key: "whale", name: "Whale", size: "1000 BTC to 10 000 BTC" },
+        {
+          key: "humpback",
+          name: "Humpback",
+          size: "10 000 BTC to 100 000 BTC",
+        },
+        { key: "megalodon", name: "Megalodon", size: "More than 100 000 BTC" },
+      ]);
+
+      const type = /** @type {const} */ ([
+        { key: "p2pk", name: "P2PK" },
+        { key: "p2pkh", name: "P2PKH" },
+        { key: "p2sh", name: "P2SH" },
+        { key: "p2wpkh", name: "P2WPKH" },
+        { key: "p2wsh", name: "P2WSH" },
+        { key: "p2tr", name: "P2TR" },
+      ]);
+
+      const address = /** @type {const} */ ([...size, ...type]);
+
+      const liquidities = /** @type {const} */ ([
+        {
+          key: "illiquid",
+          id: "illiquid",
+          name: "Illiquid",
+        },
+        { key: "liquid", id: "liquid", name: "Liquid" },
+        {
+          key: "highly_liquid",
+          id: "highly-liquid",
+          name: "Highly Liquid",
+        },
+      ]);
+
+      const averages = /** @type {const} */ ([
+        { name: "1 Week", key: "1w", days: 7 },
+        { name: "8 Days", key: "8d", days: 8 },
+        { name: "13 Days", key: "13d", days: 13 },
+        { name: "21 Days", key: "21d", days: 21 },
+        { name: "1 Month", key: "1m", days: 30 },
+        { name: "34 Days", key: "34d", days: 34 },
+        { name: "55 Days", key: "55d", days: 55 },
+        { name: "89 Days", key: "89d", days: 89 },
+        { name: "144 Days", key: "144d", days: 144 },
+        { name: "1 Year", key: "1y", days: 365 },
+        { name: "2 Years", key: "2y", days: 2 * 365 },
+        { name: "200 Weeks", key: "200w", days: 200 * 7 },
+        { name: "4 Years", key: "4y", days: 4 * 365 },
+      ]);
+
+      const totalReturns = /** @type {const} */ ([
+        { name: "1 Day", key: "1d" },
+        { name: "1 Month", key: "1m" },
+        { name: "6 Months", key: "6m" },
+        { name: "1 Year", key: "1y" },
+        { name: "2 Years", key: "2y" },
+        { name: "3 Years", key: "3y" },
+        { name: "4 Years", key: "4y" },
+        { name: "6 Years", key: "6y" },
+        { name: "8 Years", key: "8y" },
+        { name: "10 Years", key: "10y" },
+      ]);
+
+      const compoundReturns = /** @type {const} */ ([
+        { name: "4 Years", key: "4y" },
+      ]);
+
+      const percentiles = /** @type {const} */ ([
+        {
+          key: "median_price_paid",
+          id: "median-price-paid",
+          name: "Median",
+          title: "Median Paid",
+          value: 50,
+        },
+        {
+          key: "95p_price_paid",
+          id: "95p-price-paid",
+          name: `95%`,
+          title: `95th Percentile Paid`,
+          value: 95,
+        },
+        {
+          key: "90p_price_paid",
+          id: "90p-price-paid",
+          name: `90%`,
+          title: `90th Percentile Paid`,
+          value: 90,
+        },
+        {
+          key: "85p_price_paid",
+          id: "85p-price-paid",
+          name: `85%`,
+          title: `85th Percentile Paid`,
+          value: 85,
+        },
+        {
+          key: "80p_price_paid",
+          id: "80p-price-paid",
+          name: `80%`,
+          title: `80th Percentile Paid`,
+          value: 80,
+        },
+        {
+          key: "75p_price_paid",
+          id: "75p-price-paid",
+          name: `75%`,
+          title: `75th Percentile Paid`,
+          value: 75,
+        },
+        {
+          key: "70p_price_paid",
+          id: "70p-price-paid",
+          name: `70%`,
+          title: `70th Percentile Paid`,
+          value: 70,
+        },
+        {
+          key: "65p_price_paid",
+          id: "65p-price-paid",
+          name: `65%`,
+          title: `65th Percentile Paid`,
+          value: 65,
+        },
+        {
+          key: "60p_price_paid",
+          id: "60p-price-paid",
+          name: `60%`,
+          title: `60th Percentile Paid`,
+          value: 60,
+        },
+        {
+          key: "55p_price_paid",
+          id: "55p-price-paid",
+          name: `55%`,
+          title: `55th Percentile Paid`,
+          value: 55,
+        },
+        {
+          key: "45p_price_paid",
+          id: "45p-price-paid",
+          name: `45%`,
+          title: `45th Percentile Paid`,
+          value: 45,
+        },
+        {
+          key: "40p_price_paid",
+          id: "40p-price-paid",
+          name: `40%`,
+          title: `40th Percentile Paid`,
+          value: 40,
+        },
+        {
+          key: "35p_price_paid",
+          id: "35p-price-paid",
+          name: `35%`,
+          title: `35th Percentile Paid`,
+          value: 35,
+        },
+        {
+          key: "30p_price_paid",
+          id: "30p-price-paid",
+          name: `30%`,
+          title: `30th Percentile Paid`,
+          value: 30,
+        },
+        {
+          key: "25p_price_paid",
+          id: "25p-price-paid",
+          name: `25%`,
+          title: `25th Percentile Paid`,
+          value: 25,
+        },
+        {
+          key: "20p_price_paid",
+          id: "20p-price-paid",
+          name: `20%`,
+          title: `20th Percentile Paid`,
+          value: 20,
+        },
+        {
+          key: "15p_price_paid",
+          id: "15p-price-paid",
+          name: `15%`,
+          title: `15th Percentile Paid`,
+          value: 15,
+        },
+        {
+          key: "10p_price_paid",
+          id: "10p-price-paid",
+          name: `10%`,
+          title: `10th Percentile Paid`,
+          value: 10,
+        },
+        {
+          key: "05p_price_paid",
+          id: "05p-price-paid",
+          name: `5%`,
+          title: `5th Percentile Paid`,
+          value: 5,
+        },
+      ]);
+
+      return {
+        xth,
+        upTo,
+        fromX,
+        fromXToY,
+        year,
+        age,
+        type,
+        size,
+        address,
+        liquidities,
+        averages,
+        totalReturns,
+        compoundReturns,
+        percentiles,
+      };
+    }
+    const consts = initConsts();
+    /**
+     * @typedef {(typeof consts.age)[number]["id"]} AgeCohortId
+     * @typedef {Exclude<AgeCohortId, "">} AgeCohortIdSub
+     * @typedef {(typeof consts.address)[number]["key"]} AddressCohortId
+     * @typedef {(typeof consts.liquidities[number]["id"])} LiquidityId
+     * @typedef {`${LiquidityId}-${AddressCohortId}`} AddressCohortIdSplitByLiquidity
+     * @typedef {AgeCohortId | AddressCohortId} AnyCohortId
+     * @typedef {AnyCohortId | AddressCohortIdSplitByLiquidity | LiquidityId} AnyPossibleCohortId
+     * @typedef {'' | `${AgeCohortIdSub | AddressCohortId | AddressCohortIdSplitByLiquidity | LiquidityId}-`} AnyDatasetPrefix
+     * @typedef {(typeof consts.averages)[number]["key"]} AverageName
+     * @typedef {(typeof consts.totalReturns)[number]["key"]} TotalReturnKey
+     * @typedef {(typeof consts.compoundReturns)[number]["key"]} CompoundReturnKey
+     * @typedef {(typeof consts.percentiles)[number]["id"]} PercentileId
+     */
+
+    /**
+     * @param {AnyPossibleCohortId} datasetId
+     * @returns {AnyDatasetPrefix}
+     */
+    function datasetIdToPrefix(datasetId) {
+      return datasetId
+        ? /** @type {const} */ (`${datasetId}-`)
+        : /** @type {const} */ ("");
+    }
+
+    /**
+     *
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {string} args.title
+     * @param {Color} args.color
+     * @param {Unit} args.unit
+     * @param {AnyDatasetPath} [args.keySum]
+     * @param {AnyDatasetPath} [args.keyAverage]
+     * @param {AnyDatasetPath} [args.keyMax]
+     * @param {AnyDatasetPath} [args.key90p]
+     * @param {AnyDatasetPath} [args.key75p]
+     * @param {AnyDatasetPath} [args.keyMedian]
+     * @param {AnyDatasetPath} [args.key25p]
+     * @param {AnyDatasetPath} [args.key10p]
+     * @param {AnyDatasetPath} [args.keyMin]
+     * @returns {PartialPreset[]}
+     */
+    function createRecapPresets({
+      scale,
+      unit,
+      title,
+      keyAverage,
+      color,
+      keySum,
+      keyMax,
+      key90p,
+      key75p,
+      keyMedian,
+      key25p,
+      key10p,
+      keyMin,
+    }) {
+      return [
+        ...(keySum
+          ? [
+              {
+                scale,
+                icon: "➕",
+                name: "Daily Sum",
+                title: `${title} Daily Sum`,
+                description: "",
+                unit,
+                bottom: [
+                  {
+                    title: "Sum",
+                    color,
+                    datasetPath: keySum,
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...(keyAverage
+          ? [
+              {
+                scale,
+                icon: "🌊",
+                name: "Daily Average",
+                title: `${title} Daily Average`,
+                description: "",
+                unit,
+                bottom: [
+                  {
+                    title: "Average",
+                    color,
+                    datasetPath: keyAverage,
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...(keyMax ||
+        key90p ||
+        key75p ||
+        keyMedian ||
+        key25p ||
+        key10p ||
+        keyMin
+          ? [
+              {
+                scale,
+                icon: "%",
+                name: "Daily Percentiles",
+                title: `${title} Daily Percentiles`,
+                description: "",
+                unit,
+                bottom: [
+                  ...(keyMax
+                    ? [
+                        {
+                          title: "Max",
+                          color,
+                          datasetPath: keyMax,
+                        },
+                      ]
+                    : []),
+                  ...(key90p
+                    ? [
+                        {
+                          title: "90%",
+                          color,
+                          datasetPath: key90p,
+                        },
+                      ]
+                    : []),
+                  ...(key75p
+                    ? [
+                        {
+                          title: "75%",
+                          color,
+                          datasetPath: key75p,
+                        },
+                      ]
+                    : []),
+                  ...(keyMedian
+                    ? [
+                        {
+                          title: "Median",
+                          color,
+                          datasetPath: keyMedian,
+                        },
+                      ]
+                    : []),
+                  ...(key25p
+                    ? [
+                        {
+                          title: "25%",
+                          color,
+                          datasetPath: key25p,
+                        },
+                      ]
+                    : []),
+                  ...(key10p
+                    ? [
+                        {
+                          title: "10%",
+                          color,
+                          datasetPath: key10p,
+                        },
+                      ]
+                    : []),
+                  ...(keyMin
+                    ? [
+                        {
+                          title: "Min",
+                          color,
+                          datasetPath: keyMin,
+                        },
+                      ]
+                    : []),
+                ],
+              },
+            ]
+          : []),
+        ...(keyMax
+          ? [
+              {
+                scale,
+                icon: "⬆️",
+                name: "Daily Max",
+                title: `${title} Daily Max`,
+                description: "",
+                unit,
+                bottom: [
+                  {
+                    title: "Max",
+                    color,
+                    datasetPath: keyMax,
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...(key90p
+          ? [
+              {
+                scale,
+                icon: "9️⃣",
+                name: "Daily 90th Percentile",
+                title: `${title} Daily 90th Percentile`,
+                description: "",
+                unit,
+                bottom: [
+                  {
+                    title: "90%",
+                    color,
+                    datasetPath: key90p,
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...(key75p
+          ? [
+              {
+                scale,
+                icon: "7️⃣",
+                name: "Daily 75th Percentile",
+                title: `${title} Size 75th Percentile`,
+                description: "",
+                unit,
+                bottom: [
+                  {
+                    title: "75%",
+                    color,
+                    datasetPath: key75p,
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...(keyMedian
+          ? [
+              {
+                scale,
+                icon: "5️⃣",
+                name: "Daily Median",
+                title: `${title} Daily Median`,
+                description: "",
+                unit,
+                bottom: [
+                  {
+                    title: "Median",
+                    color,
+                    datasetPath: keyMedian,
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...(key25p
+          ? [
+              {
+                scale,
+                icon: "2️⃣",
+                name: "Daily 25th Percentile",
+                title: `${title} Daily 25th Percentile`,
+                description: "",
+                unit,
+                bottom: [
+                  {
+                    title: "25%",
+                    color,
+                    datasetPath: key25p,
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...(key10p
+          ? [
+              {
+                scale,
+                icon: "1️⃣",
+                name: "Daily 10th Percentile",
+                title: `${title} Daily 10th Percentile`,
+                description: "",
+                unit,
+                bottom: [
+                  {
+                    title: "10%",
+                    color,
+                    datasetPath: key10p,
+                  },
+                ],
+              },
+            ]
+          : []),
+        ...(keyMin
+          ? [
+              {
+                scale,
+                icon: "⬇️",
+                name: "Daily Min",
+                title: `${title} Daily Min`,
+                description: "",
+                unit,
+                bottom: [
+                  {
+                    title: "Min",
+                    color,
+                    datasetPath: keyMin,
+                  },
+                ],
+              },
+            ]
+          : []),
+      ];
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {Color} args.color
+     * @param {AnyDatasetPath} args.valueDatasetPath
+     * @param {AnyDatasetPath} args.ratioDatasetPath
+     * @param {string} args.title
+     * @returns {PartialPresetFolder}
+     */
+    function createRatioFolder({
+      scale,
+      color,
+      valueDatasetPath,
+      ratioDatasetPath,
+      title,
+    }) {
+      return {
+        name: "Ratio",
+        tree: [
+          {
+            scale,
+            name: "Basic",
+            icon: "➗",
+            title: `Market Price To ${title} Ratio`,
+            unit: "Ratio",
+            description: "",
+            top: [
+              {
+                title: `SMA`,
+                color,
+                datasetPath: valueDatasetPath,
+              },
+            ],
+            bottom: [
+              {
+                title: `Ratio`,
+                type: "Baseline",
+                datasetPath: ratioDatasetPath,
+                options: {
+                  baseValue: {
+                    price: 1,
+                  },
+                },
+              },
+              {
+                title: `Even`,
+                color: colors.white,
+                datasetPath: `${scale}-to-1`,
+                options: {
+                  lineStyle: 3,
+                  lastValueVisible: false,
+                },
+              },
+            ],
+          },
+          {
+            scale,
+            name: "Averages",
+            description: "",
+            icon: "〰️",
+            unit: "Ratio",
+            title: `Market Price To ${title} Ratio Averages`,
+            top: [
+              {
+                title: `SMA`,
+                color,
+                datasetPath: valueDatasetPath,
+              },
+            ],
+            bottom: [
+              {
+                title: `1Y`,
+                color: colors._1y,
+                datasetPath: /** @type {any} */ (`${ratioDatasetPath}-1y-sma`),
+              },
+              {
+                title: `1M`,
+                color: colors._1m,
+                datasetPath: `${ratioDatasetPath}-1m-sma`,
+              },
+              {
+                title: `1W`,
+                color: colors._1w,
+                datasetPath: `${ratioDatasetPath}-1w-sma`,
+              },
+              {
+                title: `Raw`,
+                color: colors.white,
+                datasetPath: ratioDatasetPath,
+              },
+              {
+                title: `Even`,
+                color: colors.gray,
+                datasetPath: `${scale}-to-1`,
+                options: {
+                  lineStyle: 3,
+                  lastValueVisible: false,
+                },
+              },
+            ],
+          },
+          {
+            scale,
+            name: "Momentum Oscillator",
+            title: `Market Price To ${title} Ratio 1Y SMA Momentum Oscillator`,
+            description: "",
+            unit: "Ratio",
+            icon: "🔀",
+            top: [
+              {
+                title: `SMA`,
+                color,
+                datasetPath: valueDatasetPath,
+              },
+            ],
+            bottom: [
+              {
+                title: `Momentum`,
+                type: "Baseline",
+                datasetPath: /** @type {any} */ (
+                  `${ratioDatasetPath}-1y-sma-momentum-oscillator`
+                ),
+              },
+              {
+                title: `Base`,
+                color: colors.white,
+                datasetPath: `${scale}-to-0`,
+                options: {
+                  lineStyle: 3,
+                  lastValueVisible: false,
+                },
+              },
+            ],
+          },
+          {
+            scale,
+            name: "Top Percentiles",
+            icon: "✈️",
+            title: `Market Price To ${title} Ratio Top Percentiles`,
+            description: "",
+            unit: "Ratio",
+            top: [
+              {
+                title: `SMA`,
+                color,
+                datasetPath: valueDatasetPath,
+              },
+            ],
+            bottom: [
+              {
+                title: `99.9%`,
+                color: colors.probability0_1p,
+                datasetPath: /** @type {any} */ (`${ratioDatasetPath}-99-9p`),
+              },
+              {
+                title: `99.5%`,
+                color: colors.probability0_5p,
+                datasetPath: `${ratioDatasetPath}-99-5p`,
+              },
+              {
+                title: `99%`,
+                color: colors.probability1p,
+                datasetPath: `${ratioDatasetPath}-99p`,
+              },
+              {
+                title: `Raw`,
+                color: colors.white,
+                datasetPath: ratioDatasetPath,
+              },
+            ],
+          },
+          {
+            scale,
+            name: "Bottom Percentiles",
+            icon: "🤿",
+            title: `Market Price To ${title} Ratio Bottom Percentiles`,
+            description: "",
+            unit: "Ratio",
+            top: [
+              {
+                title: `SMA`,
+                color,
+                datasetPath: valueDatasetPath,
+              },
+            ],
+            bottom: [
+              {
+                title: `1%`,
+                color: colors.probability1p,
+                datasetPath: /** @type {any} */ (`${ratioDatasetPath}-1p`),
+              },
+              {
+                title: `0.5%`,
+                color: colors.probability0_5p,
+                datasetPath: `${ratioDatasetPath}-0-5p`,
+              },
+              {
+                title: `0.1%`,
+                color: colors.probability0_1p,
+                datasetPath: `${ratioDatasetPath}-0-1p`,
+              },
+              {
+                title: `Raw`,
+                color: colors.white,
+                datasetPath: ratioDatasetPath,
+              },
+            ],
+          },
+          {
+            scale,
+            name: "Top Probabilities",
+            icon: "🚀",
+            title: `${title} Top Probabilities`,
+            description: "",
+            unit: "US Dollars",
+            top: [
+              {
+                title: `0.1%`,
+                color: colors.probability0_1p,
+                datasetPath: /** @type {any} */ (`${valueDatasetPath}-99-9p`),
+              },
+              {
+                title: `0.5%`,
+                color: colors.probability0_5p,
+                datasetPath: `${valueDatasetPath}-99-5p`,
+              },
+              {
+                title: `1%`,
+                color: colors.probability1p,
+                datasetPath: `${valueDatasetPath}-99p`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: "Bottom Probabilities",
+            icon: "🚇",
+            title: `${title} Bottom Probabilities`,
+            description: "",
+            unit: "US Dollars",
+            top: [
+              {
+                title: `0.1%`,
+                color: colors.probability0_1p,
+                datasetPath: `${valueDatasetPath}-0-1p`,
+              },
+              {
+                title: `0.5%`,
+                color: colors.probability0_5p,
+                datasetPath: `${valueDatasetPath}-0-5p`,
+              },
+              {
+                title: `1%`,
+                color: colors.probability1p,
+                datasetPath: `${valueDatasetPath}-1p`,
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    /**
+     * @param {Scale} scale
+     * @returns {PartialPresetFolder}
+     */
+    function createMarketPresets(scale) {
+      /**
+       * @param {Scale} scale
+       * @returns {PartialPresetFolder}
+       */
+      function createAveragesPresets(scale) {
+        return {
+          name: "Averages",
+          tree: [
             {
-              title: "Capitalization",
-              datasetPath: `${scale}-to-market-cap`,
-              color: colors.bitcoin,
+              scale,
+              icon: "~",
+              name: "All",
+              title: "All Moving Averages",
+              description: "",
+              unit: "US Dollars",
+              top: consts.averages.map((average) => ({
+                title: average.key.toUpperCase(),
+                color: colors[`_${average.key}`],
+                datasetPath: `${scale}-to-price-${average.key}-sma`,
+              })),
+            },
+            ...consts.averages.map(({ name, key }) =>
+              createAveragePresetFolder({
+                scale,
+                color: colors[`_${key}`],
+                name,
+                title: `${name} Market Price Moving Average`,
+                key,
+              })
+            ),
+          ],
+        };
+      }
+
+      /**
+       *
+       * @param {Object} args
+       * @param {Scale} args.scale
+       * @param {Color} args.color
+       * @param {string} args.name
+       * @param {string} args.title
+       * @param {AverageName} args.key
+       * @returns {PartialPresetFolder}
+       */
+      function createAveragePresetFolder({ scale, color, name, title, key }) {
+        return {
+          name,
+          tree: [
+            {
+              scale,
+              name: "Average",
+              title,
+              description: "",
+              unit: "US Dollars",
+              icon: "~",
+              top: [
+                {
+                  title: `SMA`,
+                  color,
+                  datasetPath: `${scale}-to-price-${key}-sma`,
+                },
+              ],
+            },
+            createRatioFolder({
+              scale,
+              color,
+              ratioDatasetPath: `${scale}-to-market-price-to-price-${key}-sma-ratio`,
+              valueDatasetPath: `${scale}-to-price-${key}-sma`,
+              title,
+            }),
+          ],
+        };
+      }
+
+      /**
+       * @returns {PartialPresetFolder}
+       */
+      function createReturnsPresets() {
+        return {
+          name: "Returns",
+          tree: [
+            {
+              name: "Total",
+              tree: [
+                ...consts.totalReturns.map(({ name, key }) =>
+                  createReturnsPreset({
+                    scale: "date",
+                    name,
+                    title: `${name} Total`,
+                    key: `${key}-total`,
+                  })
+                ),
+              ],
+            },
+            {
+              name: "Compound",
+              tree: [
+                ...consts.compoundReturns.map(({ name, key }) =>
+                  createReturnsPreset({
+                    scale: "date",
+                    name,
+                    title: `${name} Compound`,
+                    key: `${key}-compound`,
+                  })
+                ),
+              ],
             },
           ],
-        },
-      ],
-    };
+        };
+      }
+
+      /**
+       * @param {Object} args
+       * @param {Scale} args.scale
+       * @param {string} args.name
+       * @param {string} args.title
+       * @param {`${TotalReturnKey}-total` | `${CompoundReturnKey}-compound`} args.key
+       * @returns {PartialPreset}
+       */
+      function createReturnsPreset({ scale, name, title, key }) {
+        return {
+          scale,
+          name,
+          description: "",
+          icon: "🧾",
+          title: `${title} Return`,
+          unit: "Percentage",
+          bottom: [
+            {
+              title: `Return`,
+              type: "Baseline",
+              datasetPath: `date-to-price-${key}-return`,
+            },
+          ],
+        };
+      }
+
+      /**
+       * @returns {PartialPresetFolder}
+       */
+      function createIndicatorsPresets() {
+        return {
+          name: "Indicators",
+          tree: [],
+        };
+      }
+
+      return {
+        name: "Market",
+        tree: [
+          {
+            scale,
+            icon: "💵",
+            name: "Price",
+            title: "Market Price",
+            description: "",
+            unit: "US Dollars",
+          },
+          {
+            scale,
+            icon: "♾️",
+            name: "Capitalization",
+            title: "Market Capitalization",
+            description: "",
+            unit: "US Dollars",
+            bottom: [
+              {
+                title: "Capitalization",
+                datasetPath: `${scale}-to-market-cap`,
+                color: colors.bitcoin,
+              },
+            ],
+          },
+          createAveragesPresets(scale),
+          ...(scale === "date"
+            ? [createReturnsPresets(), createIndicatorsPresets()]
+            : []),
+        ],
+      };
+    }
+
+    /**
+     * @param {Scale} scale
+     * @returns {PartialPresetFolder}
+     */
+    function createBlocksPresets(scale) {
+      return {
+        name: "Blocks",
+        tree: [
+          ...(scale === "date"
+            ? /** @type {PartialPresetTree} */ ([
+                {
+                  scale,
+                  icon: "🧱",
+                  name: "Height",
+                  title: "Block Height",
+                  description: "",
+                  unit: "Height",
+                  bottom: [
+                    {
+                      title: "Height",
+                      color: colors.bitcoin,
+                      datasetPath: `date-to-last-height`,
+                    },
+                  ],
+                },
+                {
+                  scale,
+                  name: "Mined",
+                  tree: [
+                    {
+                      scale,
+                      icon: "D",
+                      name: "Daily Sum",
+                      title: "Daily Sum Of Blocks Mined",
+                      description: "",
+                      unit: "Count",
+                      bottom: [
+                        {
+                          title: "Target",
+                          color: colors.white,
+                          datasetPath: `date-to-blocks-mined-1d-target`,
+                          options: {
+                            lineStyle: 3,
+                          },
+                        },
+                        {
+                          title: "1W Avg.",
+                          color: colors.momentumYellow,
+                          datasetPath: `date-to-blocks-mined-1w-sma`,
+                          defaultActive: false,
+                        },
+                        {
+                          title: "1M Avg.",
+                          color: colors.bitcoin,
+                          datasetPath: `date-to-blocks-mined-1m-sma`,
+                        },
+                        {
+                          title: "Mined",
+                          color: colors.darkBitcoin,
+                          datasetPath: `date-to-blocks-mined`,
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      icon: "W",
+                      name: "Weekly Sum",
+                      title: "Weekly Sum Of Blocks Mined",
+                      description: "",
+                      unit: "Count",
+                      bottom: [
+                        {
+                          title: "Target",
+                          color: colors.white,
+                          datasetPath: `date-to-blocks-mined-1w-target`,
+                          options: {
+                            lineStyle: 3,
+                          },
+                        },
+                        {
+                          title: "Sum Mined",
+                          color: colors.bitcoin,
+                          datasetPath: `date-to-blocks-mined-1w-sum`,
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      icon: "M",
+                      name: "Monthly Sum",
+                      title: "Monthly Sum Of Blocks Mined",
+                      description: "",
+                      unit: "Count",
+                      bottom: [
+                        {
+                          title: "Target",
+                          color: colors.white,
+                          datasetPath: `date-to-blocks-mined-1m-target`,
+                          options: {
+                            lineStyle: 3,
+                          },
+                        },
+                        {
+                          title: "Sum Mined",
+                          color: colors.bitcoin,
+                          datasetPath: `date-to-blocks-mined-1m-sum`,
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      icon: "Y",
+                      name: "Yearly Sum",
+                      title: "Yearly Sum Of Blocks Mined",
+                      description: "",
+                      unit: "Count",
+                      bottom: [
+                        {
+                          title: "Target",
+                          color: colors.white,
+                          datasetPath: `date-to-blocks-mined-1y-target`,
+                          options: {
+                            lineStyle: 3,
+                          },
+                        },
+                        {
+                          title: "Sum Mined",
+                          color: colors.bitcoin,
+                          datasetPath: `date-to-blocks-mined-1y-sum`,
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      icon: "🧱",
+                      name: "Total",
+                      title: "Total Blocks Mined",
+                      description: "",
+                      unit: "Count",
+                      bottom: [
+                        {
+                          title: "Mined",
+                          color: colors.bitcoin,
+                          datasetPath: `date-to-total-blocks-mined`,
+                        },
+                      ],
+                    },
+                  ],
+                },
+                {
+                  scale,
+                  name: "Size",
+                  tree: createRecapPresets({
+                    scale,
+                    title: "Block Size",
+                    color: colors.darkWhite,
+                    unit: "Megabytes",
+                    keySum: "date-to-block-size-1d-sum",
+                    keyAverage: "date-to-block-size-1d-average",
+                    keyMax: "date-to-block-size-1d-max",
+                    key90p: "date-to-block-size-1d-90p",
+                    key75p: "date-to-block-size-1d-75p",
+                    keyMedian: "date-to-block-size-1d-median",
+                    key25p: "date-to-block-size-1d-25p",
+                    key10p: "date-to-block-size-1d-10p",
+                    keyMin: "date-to-block-size-1d-min",
+                  }),
+                },
+                {
+                  scale,
+                  name: "Weight",
+                  tree: createRecapPresets({
+                    scale,
+                    title: "Block Weight",
+                    color: colors.darkWhite,
+                    unit: "Weight",
+                    keyAverage: "date-to-block-weight-1d-average",
+                    keyMax: "date-to-block-weight-1d-max",
+                    key90p: "date-to-block-weight-1d-90p",
+                    key75p: "date-to-block-weight-1d-75p",
+                    keyMedian: "date-to-block-weight-1d-median",
+                    key25p: "date-to-block-weight-1d-25p",
+                    key10p: "date-to-block-weight-1d-10p",
+                    keyMin: "date-to-block-weight-1d-min",
+                  }),
+                },
+                {
+                  scale,
+                  name: "VBytes",
+                  tree: createRecapPresets({
+                    scale,
+                    title: "Block VBytes",
+                    color: colors.darkWhite,
+                    unit: "Virtual Bytes",
+                    keyAverage: "date-to-block-vbytes-1d-average",
+                    keyMax: "date-to-block-vbytes-1d-max",
+                    key90p: "date-to-block-vbytes-1d-90p",
+                    key75p: "date-to-block-vbytes-1d-75p",
+                    keyMedian: "date-to-block-vbytes-1d-median",
+                    key25p: "date-to-block-vbytes-1d-25p",
+                    key10p: "date-to-block-vbytes-1d-10p",
+                    keyMin: "date-to-block-vbytes-1d-min",
+                  }),
+                },
+                {
+                  scale,
+                  name: "Interval",
+                  tree: createRecapPresets({
+                    scale,
+                    title: "Block Interval",
+                    color: colors.darkWhite,
+                    unit: "Seconds",
+                    keyAverage: "date-to-block-interval-1d-average",
+                    keyMax: "date-to-block-interval-1d-max",
+                    key90p: "date-to-block-interval-1d-90p",
+                    key75p: "date-to-block-interval-1d-75p",
+                    keyMedian: "date-to-block-interval-1d-median",
+                    key25p: "date-to-block-interval-1d-25p",
+                    key10p: "date-to-block-interval-1d-10p",
+                    keyMin: "date-to-block-interval-1d-min",
+                  }),
+                },
+              ])
+            : /** @type {PartialPresetTree} */ ([
+                {
+                  scale,
+                  icon: "📏",
+                  name: "Size",
+                  title: "Block Size",
+                  description: "",
+                  unit: "Megabytes",
+                  bottom: [
+                    {
+                      title: "Size",
+                      color: colors.darkWhite,
+                      datasetPath: `height-to-block-size`,
+                    },
+                  ],
+                },
+                {
+                  scale,
+                  icon: "🏋️",
+                  name: "Weight",
+                  title: "Block Weight",
+                  description: "",
+                  unit: "Weight",
+                  bottom: [
+                    {
+                      title: "Weight",
+                      color: colors.darkWhite,
+                      datasetPath: `height-to-block-weight`,
+                    },
+                  ],
+                },
+                {
+                  scale,
+                  icon: "👾",
+                  name: "VBytes",
+                  title: "Block VBytes",
+                  description: "",
+                  unit: "Virtual Bytes",
+                  bottom: [
+                    {
+                      title: "VBytes",
+                      color: colors.darkWhite,
+                      datasetPath: `height-to-block-vbytes`,
+                    },
+                  ],
+                },
+                {
+                  scale,
+                  icon: "⏰",
+                  name: "Interval",
+                  title: "Block Interval",
+                  description: "",
+                  unit: "Seconds",
+                  bottom: [
+                    {
+                      title: "Interval",
+                      color: colors.darkWhite,
+                      datasetPath: `height-to-block-interval`,
+                    },
+                  ],
+                },
+              ])),
+          {
+            scale,
+            icon: "📏",
+            name: "Cumulative Size",
+            title: "Cumulative Block Size",
+            description: "",
+            unit: "Megabytes",
+            bottom: [
+              {
+                title: "Size",
+                color: colors.darkWhite,
+                datasetPath: `${scale}-to-cumulative-block-size`,
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    /**
+     * @param {Scale} scale
+     * @returns {PartialPresetFolder}
+     */
+    function createMinersPresets(scale) {
+      return {
+        name: "Miners",
+        tree: [
+          {
+            name: "Coinbases",
+            tree: [
+              ...(scale === "date"
+                ? /** @type {PartialPresetTree} */ ([
+                    {
+                      name: "Last",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Last Coinbase In Bitcoin",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Last",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-last-coinbase`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Last Coinbase In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Last",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-last-coinbase-in-dollars`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      name: "Daily Sum",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Daily Sum Of Coinbases In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-coinbase`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Daily Sum Of Coinbases In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-coinbase-in-dollars`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      name: "Yearly Sum",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Yearly Sum Of Coinbases In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-coinbase-1y-sum`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Yearly Sum Of Coinbases In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-coinbase-in-dollars-1y-sum`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      name: "Cumulative",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Cumulative Coinbases In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Coinbases",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-cumulative-coinbase`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Cumulative Coinbases In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Coinbases",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-cumulative-coinbase-in-dollars`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ])
+                : []),
+            ],
+          },
+
+          {
+            name: "Subsidies",
+            tree: [
+              ...(scale === "date"
+                ? /** @type {PartialPresetTree} */ ([
+                    {
+                      name: "Last",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Last Subsidy In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Last",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-last-subsidy`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Last Subsidy In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Last",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-last-subsidy-in-dollars`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      name: "Daily Sum",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Daily Sum Of Subsidies In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-subsidy`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Daily Sum Of Subsidies In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-subsidy-in-dollars`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      name: "Yearly Sum",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Yearly Sum Of Subsidies In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-subsidy-1y-sum`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Yearly Sum Of Subsidies In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-subsidy-in-dollars-1y-sum`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      name: "Cumulative",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Cumulative Subsidies In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Subsidies",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-cumulative-subsidy`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Cumulative Subsidies In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Subsidies",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-cumulative-subsidy-in-dollars`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ])
+                : []),
+            ],
+          },
+
+          {
+            name: "Fees",
+            tree: [
+              ...(scale === "date"
+                ? /** @type {PartialPresetTree} */ ([
+                    {
+                      name: "Last",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Last Fees In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Last",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-last-fees`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Last Fees In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Last",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-last-fees-in-dollars`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      name: "Daily Sum",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Daily Sum Of Fees In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-fees`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Daily Sum Of Fees In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-fees-in-dollars`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      name: "Yearly Sum",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Yearly Sum Of Fees In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-fees-1y-sum`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Yearly Sum Of Fees In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Sum",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-fees-in-dollars-1y-sum`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                    {
+                      scale,
+                      name: "Cumulative",
+                      tree: [
+                        {
+                          scale,
+                          icon: "🍊",
+                          name: "In Bitcoin",
+                          title: "Cumulative Fees In Bitcoin",
+                          description: "",
+                          unit: "Bitcoin",
+                          bottom: [
+                            {
+                              title: "Fees",
+                              color: colors.bitcoin,
+                              datasetPath: `${scale}-to-cumulative-fees`,
+                            },
+                          ],
+                        },
+                        {
+                          scale,
+                          icon: "💵",
+                          name: "In Dollars",
+                          title: "Cumulative Fees In Dollars",
+                          description: "",
+                          unit: "US Dollars",
+                          bottom: [
+                            {
+                              title: "Fees",
+                              color: colors.dollars,
+                              datasetPath: `${scale}-to-cumulative-fees-in-dollars`,
+                            },
+                          ],
+                        },
+                      ],
+                    },
+                  ])
+                : []),
+            ],
+          },
+
+          {
+            scale,
+            icon: "⚔️",
+            name: "Subsidy V. Fees",
+            title: "Subsidy V. Fees",
+            description: "",
+            unit: "Percentage",
+            bottom: [
+              {
+                title: "Subsidy",
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-subsidy-to-coinbase-ratio`,
+              },
+              {
+                title: "Fees",
+                color: colors.darkBitcoin,
+                datasetPath: `${scale}-to-fees-to-coinbase-ratio`,
+              },
+            ],
+          },
+
+          ...(scale === "date"
+            ? /** @type {PartialPresetTree} */ ([
+                {
+                  scale,
+                  icon: "🧮",
+                  name: "Puell Multiple",
+                  title: "Puell Multiple",
+                  description: "",
+                  unit: "",
+                  bottom: [
+                    {
+                      title: "Multiple",
+                      color: colors.bitcoin,
+                      datasetPath: `date-to-puell-multiple`,
+                    },
+                  ],
+                },
+
+                {
+                  scale,
+                  icon: "⛏️",
+                  name: "Hash Rate",
+                  title: "Hash Rate",
+                  description: "",
+                  unit: "ExaHash / Second",
+                  bottom: [
+                    {
+                      title: "1M SMA",
+                      color: colors.momentumYellow,
+                      datasetPath: `date-to-hash-rate-1m-sma`,
+                    },
+                    {
+                      title: "1W SMA",
+                      color: colors.bitcoin,
+                      datasetPath: `date-to-hash-rate-1w-sma`,
+                    },
+                    {
+                      title: "Rate",
+                      color: colors.darkBitcoin,
+                      datasetPath: `date-to-hash-rate`,
+                    },
+                  ],
+                },
+                {
+                  scale,
+                  icon: "🎗️",
+                  name: "Hash Ribbon",
+                  title: "Hash Ribbon",
+                  description: "",
+                  unit: "ExaHash / Second",
+                  bottom: [
+                    {
+                      title: "1M SMA",
+                      color: colors.profit,
+                      datasetPath: `date-to-hash-rate-1m-sma`,
+                    },
+                    {
+                      title: "2M SMA",
+                      color: colors.loss,
+                      datasetPath: `date-to-hash-rate-2m-sma`,
+                    },
+                  ],
+                },
+                {
+                  scale,
+                  icon: "🏷️",
+                  name: "Hash Price",
+                  title: "Hash Price",
+                  description: "",
+                  unit: "Dollars / (PetaHash / Second)",
+                  bottom: [
+                    {
+                      title: "Price",
+                      color: colors.dollars,
+                      datasetPath: `date-to-hash-price`,
+                    },
+                  ],
+                },
+              ])
+            : []),
+
+          {
+            scale,
+            icon: "🏋️",
+            name: "Difficulty",
+            title: "Difficulty",
+            description: "",
+            unit: "",
+            bottom: [
+              {
+                title: "Difficulty",
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-difficulty`,
+              },
+            ],
+          },
+
+          ...(scale === "date"
+            ? /** @type {PartialPresetTree} */ ([
+                {
+                  scale,
+                  icon: "📊",
+                  name: "Difficulty Adjustment",
+                  title: "Difficulty Adjustment",
+                  description: "",
+                  unit: "Percentage",
+                  bottom: [
+                    {
+                      title: "Adjustment",
+                      type: "Baseline",
+                      datasetPath: `${scale}-to-difficulty-adjustment`,
+                    },
+                  ],
+                },
+              ])
+            : []),
+
+          {
+            scale,
+            icon: "🏭",
+            name: "Annualized Issuance",
+            title: "Annualized Issuance",
+            description: "",
+            unit: "Bitcoin",
+            bottom: [
+              {
+                title: "Issuance",
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-annualized-issuance`,
+              },
+            ],
+          },
+
+          {
+            scale,
+            icon: "🏗️",
+            name: "Yearly Inflation Rate",
+            title: "Yearly Inflation Rate",
+            description: "",
+            unit: "Percentage",
+            bottom: [
+              {
+                title: "Rate",
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-yearly-inflation-rate`,
+              },
+            ],
+          },
+
+          // For scale === "height"
+          // block_size,
+          // block_weight,
+          // block_vbytes,
+          // block_interval,
+        ],
+      };
+    }
+
+    /**
+     * @param {Scale} scale
+     * @returns {PartialPresetFolder}
+     */
+    function createTransactionsPresets(scale) {
+      return {
+        name: "Transactions",
+        tree: [
+          {
+            scale,
+            icon: "🖐️",
+            name: "Count",
+            title: "Transaction Count",
+            description: "",
+            unit: "Count",
+            bottom: [
+              {
+                title: "1M SMA",
+                color: colors.momentumYellow,
+                datasetPath: `${scale}-to-transaction-count-1m-sma`,
+              },
+              {
+                title: "1W SMA",
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-transaction-count-1w-sma`,
+              },
+              {
+                title: "Raw",
+                color: colors.darkBitcoin,
+                datasetPath: `${scale}-to-transaction-count`,
+              },
+            ],
+          },
+
+          {
+            name: "Volume",
+            tree: [
+              {
+                scale,
+                icon: "🍊",
+                name: "In Bitcoin",
+                title: "Transaction Volume",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "1M SMA",
+                    color: colors.momentumYellow,
+                    datasetPath: `${scale}-to-transaction-volume-1m-sma`,
+                  },
+                  {
+                    title: "1W SMA",
+                    color: colors.bitcoin,
+                    datasetPath: `${scale}-to-transaction-volume-1w-sma`,
+                  },
+                  {
+                    title: "Raw",
+                    color: colors.darkBitcoin,
+                    datasetPath: `${scale}-to-transaction-volume`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "💵",
+                name: "In Dollars",
+                title: "Transaction Volume In Dollars",
+                description: "",
+                unit: "US Dollars",
+                bottom: [
+                  {
+                    title: "1M SMA",
+                    color: colors.lightDollars,
+                    datasetPath: `${scale}-to-transaction-volume-in-dollars-1m-sma`,
+                  },
+                  {
+                    title: "1W SMA",
+                    color: colors.dollars,
+                    datasetPath: `${scale}-to-transaction-volume-in-dollars-1w-sma`,
+                  },
+                  {
+                    title: "Raw",
+                    color: colors.darkDollars,
+                    datasetPath: `${scale}-to-transaction-volume-in-dollars`,
+                  },
+                ],
+              },
+            ],
+          },
+
+          {
+            name: "Annualized Volume",
+            tree: [
+              {
+                scale,
+                icon: "🍊",
+                name: "In Bitcoin",
+                title: "Annualized Transaction Volume",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Volume",
+                    color: colors.bitcoin,
+                    datasetPath: `${scale}-to-annualized-transaction-volume`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "💵",
+                name: "In Dollars",
+                title: "Annualized Transaction Volume In Dollars",
+                description: "",
+                unit: "US Dollars",
+                bottom: [
+                  {
+                    title: "Volume",
+                    color: colors.dollars,
+                    datasetPath: `${scale}-to-annualized-transaction-volume-in-dollars`,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            scale,
+            icon: "💨",
+            name: "Velocity",
+            title: "Transactions Velocity",
+            description: "",
+            unit: "",
+            bottom: [
+              {
+                title: "Transactions Velocity",
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-transaction-velocity`,
+              },
+            ],
+          },
+          {
+            scale,
+            icon: "⏰",
+            name: "Per Second",
+            title: "Transactions Per Second",
+            description: "",
+            unit: "Transactions",
+            bottom: [
+              {
+                title: "1M SMA",
+                color: colors.lightBitcoin,
+                datasetPath: `${scale}-to-transactions-per-second-1m-sma`,
+              },
+              {
+                title: "1W SMA",
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-transactions-per-second-1w-sma`,
+              },
+              {
+                title: "Raw",
+                color: colors.darkBitcoin,
+                datasetPath: `${scale}-to-transactions-per-second`,
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {AnyPossibleCohortId} args.datasetId
+     * @param {string} args.title
+     * @param {Color} args.color
+     * @returns {PartialPresetFolder}
+     */
+    function createCohortPresetUTXOFolder({ scale, color, datasetId, title }) {
+      const datasetPrefix = datasetIdToPrefix(datasetId);
+
+      return {
+        name: "UTXOs",
+        tree: [
+          {
+            scale,
+            name: `Count`,
+            title: `${title} Unspent Transaction Outputs Count`,
+            description: "",
+            unit: "Count",
+            icon: "🎫",
+            bottom: [
+              {
+                title: "Count",
+                color,
+                datasetPath: `${scale}-to-${datasetPrefix}utxo-count`,
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {AnyPossibleCohortId} args.datasetId
+     * @param {string} args.title
+     * @param {Color} args.color
+     * @returns {PartialPresetFolder}
+     */
+    function createCohortPresetRealizedFolder({
+      scale,
+      color,
+      datasetId,
+      title,
+    }) {
+      const datasetPrefix = datasetIdToPrefix(datasetId);
+
+      return {
+        name: "Realized",
+        tree: [
+          {
+            scale,
+            name: `Price`,
+            title: `${title} Realized Price`,
+            description: "",
+            unit: "US Dollars",
+            icon: "🏷️",
+            top: [
+              {
+                title: "Realized Price",
+                color,
+                datasetPath: `${scale}-to-${datasetPrefix}realized-price`,
+              },
+            ],
+          },
+          createRatioFolder({
+            scale,
+            color,
+            ratioDatasetPath: `${scale}-to-market-price-to-${datasetPrefix}realized-price-ratio`,
+            valueDatasetPath: `${scale}-to-${datasetPrefix}realized-price`,
+            title: `${title} Realized Price`,
+          }),
+          {
+            scale,
+            name: `Capitalization`,
+            title: `${title} Realized Capitalization`,
+            description: "",
+            unit: "US Dollars",
+            icon: "💰",
+            bottom: [
+              {
+                title: `${name} Realized Cap.`,
+                color,
+                datasetPath: `${scale}-to-${datasetPrefix}realized-cap`,
+              },
+              ...(datasetId
+                ? /** @type {const} */ ([
+                    {
+                      title: "Realized Cap.",
+                      color: colors.bitcoin,
+                      datasetPath: `${scale}-to-realized-cap`,
+                      defaultActive: false,
+                    },
+                  ])
+                : []),
+            ],
+          },
+          {
+            scale,
+            name: `Capitalization 1M Net Change`,
+            title: `${title} Realized Capitalization 1 Month Net Change`,
+            description: "",
+            unit: "US Dollars",
+            icon: "🔀",
+            bottom: [
+              {
+                title: `Net Change`,
+                type: "Baseline",
+                datasetPath: `${scale}-to-${datasetPrefix}realized-cap-1m-net-change`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Profit`,
+            title: `${title} Realized Profit`,
+            description: "",
+            unit: "US Dollars",
+            icon: "🎉",
+            bottom: [
+              {
+                title: "Realized Profit",
+                datasetPath: `${scale}-to-${datasetPrefix}realized-profit`,
+                color: colors.profit,
+              },
+            ],
+          },
+          {
+            scale,
+            name: "Loss",
+            title: `${title} Realized Loss`,
+            description: "",
+            unit: "US Dollars",
+            icon: "⚰️",
+            bottom: [
+              {
+                title: "Realized Loss",
+                datasetPath: `${scale}-to-${datasetPrefix}realized-loss`,
+                color: colors.loss,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `PNL`,
+            title: `${title} Realized Profit And Loss`,
+            description: "",
+            unit: "US Dollars",
+            icon: "⚖️",
+            bottom: [
+              {
+                title: "Profit",
+                color: colors.profit,
+                datasetPath: `${scale}-to-${datasetPrefix}realized-profit`,
+                type: "Baseline",
+              },
+              {
+                title: "Loss",
+                color: colors.loss,
+                datasetPath: `${scale}-to-${datasetPrefix}negative-realized-loss`,
+                type: "Baseline",
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Net PNL`,
+            title: `${title} Net Realized Profit And Loss`,
+            description: "",
+            unit: "US Dollars",
+            icon: "⚖️",
+            bottom: [
+              {
+                title: "Net PNL",
+                type: "Baseline",
+                datasetPath: `${scale}-to-${datasetPrefix}net-realized-profit-and-loss`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Net PNL Relative To Market Cap`,
+            title: `${title} Net Realized Profit And Loss Relative To Market Capitalization`,
+            description: "",
+            unit: "Percentage",
+            icon: "➗",
+            bottom: [
+              {
+                title: "Net",
+                type: "Baseline",
+                datasetPath: `${scale}-to-${datasetPrefix}net-realized-profit-and-loss-to-market-cap-ratio`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Cumulative Profit`,
+            title: `${title} Cumulative Realized Profit`,
+            description: "",
+            unit: "US Dollars",
+            icon: "🎊",
+            bottom: [
+              {
+                title: "Cumulative Realized Profit",
+                color: colors.profit,
+                datasetPath: `${scale}-to-${datasetPrefix}cumulative-realized-profit`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: "Cumulative Loss",
+            title: `${title} Cumulative Realized Loss`,
+            description: "",
+            unit: "US Dollars",
+            icon: "☠️",
+            bottom: [
+              {
+                title: "Cumulative Realized Loss",
+                color: colors.loss,
+                datasetPath: `${scale}-to-${datasetPrefix}cumulative-realized-loss`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Cumulative Net PNL`,
+            title: `${title} Cumulative Net Realized Profit And Loss`,
+            description: "",
+            unit: "US Dollars",
+            icon: "➕",
+            bottom: [
+              {
+                title: "Cumulative Net Realized PNL",
+                type: "Baseline",
+                datasetPath: `${scale}-to-${datasetPrefix}cumulative-net-realized-profit-and-loss`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Cumulative Net PNL 30 Day Change`,
+            title: `${title} Cumulative Net Realized Profit And Loss 30 Day Change`,
+            description: "",
+            unit: "US Dollars",
+            icon: "🗓️",
+            bottom: [
+              {
+                title: "Cumulative Net Realized PNL 30d Change",
+                datasetPath: `${scale}-to-${datasetPrefix}cumulative-net-realized-profit-and-loss-1m-net-change`,
+                type: "Baseline",
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Value Created`,
+            title: `${title} Value Created`,
+            description: "",
+            unit: "US Dollars",
+            icon: "➕",
+            bottom: [
+              {
+                title: "Value",
+                color: colors.profit,
+                datasetPath: `${scale}-to-${datasetPrefix}value-created`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Value Destroyed`,
+            title: `${title} Value Destroyed`,
+            description: "",
+            unit: "US Dollars",
+            icon: "☄️",
+            bottom: [
+              {
+                title: "Value",
+                color: colors.loss,
+                datasetPath: `${scale}-to-${datasetPrefix}value-destroyed`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Spent Output Profit Ratio - SOPR`,
+            title: `${title} Spent Output Profit Ratio`,
+            description: "",
+            unit: "Percentage",
+            icon: "➗",
+            bottom: [
+              {
+                title: "SOPR",
+                datasetPath: `${scale}-to-${datasetPrefix}spent-output-profit-ratio`,
+                type: "Baseline",
+                options: {
+                  baseValue: {
+                    price: 1,
+                  },
+                },
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {AnyPossibleCohortId} args.datasetId
+     * @param {string} args.title
+     * @param {Color} args.color
+     * @returns {PartialPresetFolder}
+     */
+    function createCohortPresetUnrealizedFolder({
+      scale,
+      color,
+      datasetId,
+      title,
+    }) {
+      const datasetPrefix = datasetIdToPrefix(datasetId);
+
+      return {
+        name: "Unrealized",
+        tree: [
+          {
+            scale,
+            name: `Profit`,
+            title: `${title} Unrealized Profit`,
+            description: "",
+            unit: "US Dollars",
+            icon: "🤑",
+            bottom: [
+              {
+                title: "Profit",
+                datasetPath: `${scale}-to-${datasetPrefix}unrealized-profit`,
+                color: colors.profit,
+              },
+            ],
+          },
+          {
+            scale,
+            name: "Loss",
+            title: `${title} Unrealized Loss`,
+            description: "",
+            unit: "US Dollars",
+            icon: "😭",
+            bottom: [
+              {
+                title: "Loss",
+                datasetPath: `${scale}-to-${datasetPrefix}unrealized-loss`,
+                color: colors.loss,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `PNL`,
+            title: `${title} Unrealized Profit And Loss`,
+            description: "",
+            unit: "US Dollars",
+            icon: "🤔",
+            bottom: [
+              {
+                title: "Profit",
+                color: colors.profit,
+                datasetPath: `${scale}-to-${datasetPrefix}unrealized-profit`,
+                type: "Baseline",
+              },
+              {
+                title: "Loss",
+                color: colors.loss,
+                datasetPath: `${scale}-to-${datasetPrefix}negative-unrealized-loss`,
+                type: "Baseline",
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Net PNL`,
+            title: `${title} Net Unrealized Profit And Loss`,
+            description: "",
+            unit: "US Dollars",
+            icon: "⚖️",
+            bottom: [
+              {
+                title: "Net Unrealized PNL",
+                datasetPath: `${scale}-to-${datasetPrefix}net-unrealized-profit-and-loss`,
+                type: "Baseline",
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Net PNL Relative To Market Cap`,
+            title: `${title} Net Unrealized Profit And Loss Relative To Total Market Capitalization`,
+            description: "",
+            unit: "Percentage",
+            icon: "➗",
+            bottom: [
+              {
+                title: "Relative Net Unrealized PNL",
+                datasetPath: `${scale}-to-${datasetPrefix}net-unrealized-profit-and-loss-to-market-cap-ratio`,
+                type: "Baseline",
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {AnyPossibleCohortId} args.datasetId
+     * @param {string} args.title
+     * @param {Color} args.color
+     * @returns {PartialPresetFolder}
+     */
+    function createCohortPresetSupplyFolder({
+      scale,
+      color,
+      datasetId,
+      title,
+    }) {
+      const datasetPrefix = datasetIdToPrefix(datasetId);
+
+      return {
+        name: "Supply",
+        tree: [
+          {
+            name: "Absolute",
+            tree: [
+              {
+                scale,
+                name: "All",
+                title: `${title} Profit And Loss`,
+                icon: "❌",
+                description: "",
+                unit: "US Dollars",
+                bottom: [
+                  {
+                    title: "In Profit",
+                    color: colors.profit,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit`,
+                  },
+                  {
+                    title: "In Loss",
+                    color: colors.loss,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss`,
+                  },
+                  {
+                    title: "Total",
+                    color: colors.white,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply`,
+                  },
+                  {
+                    title: "Halved Total",
+                    color: colors.gray,
+                    datasetPath: `${scale}-to-${datasetPrefix}halved-supply`,
+                    options: {
+                      lineStyle: 4,
+                    },
+                  },
+                ],
+              },
+              {
+                scale,
+                name: `Total`,
+                title: `${title} Total supply`,
+                icon: "∑",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Supply",
+                    color,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply`,
+                  },
+                ],
+              },
+              {
+                scale,
+                name: "In Profit",
+                title: `${title} Supply In Profit`,
+                description: "",
+                unit: "Bitcoin",
+                icon: "📈",
+                bottom: [
+                  {
+                    title: "Supply",
+                    color: colors.profit,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit`,
+                  },
+                ],
+              },
+              {
+                scale,
+                name: "In Loss",
+                title: `${title} Supply In Loss`,
+                description: "",
+                unit: "Bitcoin",
+                icon: "📉",
+                bottom: [
+                  {
+                    title: "Supply",
+                    color: colors.loss,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss`,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "Relative To Circulating",
+            tree: [
+              {
+                scale,
+                name: "All",
+                title: `${title} Profit And Loss Relative To Circulating Supply`,
+                description: "",
+                unit: "Percentage",
+                icon: "🔀",
+                bottom: [
+                  {
+                    title: "In Profit",
+                    color: colors.profit,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit-to-circulating-supply-ratio`,
+                  },
+                  {
+                    title: "In Loss",
+                    color: colors.loss,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss-to-circulating-supply-ratio`,
+                  },
+                  {
+                    title: "100%",
+                    color: colors.white,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-to-circulating-supply-ratio`,
+                  },
+                  {
+                    title: "50%",
+                    color: colors.gray,
+                    datasetPath: `${scale}-to-${datasetPrefix}halved-supply-to-circulating-supply-ratio`,
+                    options: {
+                      lineStyle: 4,
+                    },
+                  },
+                ],
+              },
+              {
+                scale,
+                name: `Total`,
+                title: `${title} Total supply Relative To Circulating Supply`,
+                description: "",
+                unit: "Percentage",
+                icon: "∑",
+                bottom: [
+                  {
+                    title: "Supply",
+                    color,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-to-circulating-supply-ratio`,
+                  },
+                ],
+              },
+              {
+                scale,
+                name: "In Profit",
+                title: `${title} Supply In Profit Relative To Circulating Supply`,
+                description: "",
+                unit: "Percentage",
+                icon: "📈",
+                bottom: [
+                  {
+                    title: "Supply",
+                    color: colors.profit,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit-to-circulating-supply-ratio`,
+                  },
+                ],
+              },
+              {
+                scale,
+                name: "In Loss",
+                title: `${title} Supply In Loss Relative To Circulating Supply`,
+                description: "",
+                unit: "Percentage",
+                icon: "📉",
+                bottom: [
+                  {
+                    title: "Supply",
+                    color: colors.loss,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss-to-circulating-supply-ratio`,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "Relative To Own",
+            tree: [
+              {
+                scale,
+                name: "All",
+                title: `${title} Supply In Profit And Loss Relative To Own Supply`,
+                description: "",
+                unit: "Percentage",
+                icon: "🔀",
+                bottom: [
+                  {
+                    title: "In Profit",
+                    color: colors.profit,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit-to-own-supply-ratio`,
+                  },
+                  {
+                    title: "In Loss",
+                    color: colors.loss,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss-to-own-supply-ratio`,
+                  },
+                  {
+                    title: "100%",
+                    color: colors.white,
+                    datasetPath: `${scale}-to-100`,
+                    options: {
+                      lastValueVisible: false,
+                    },
+                  },
+                  {
+                    title: "50%",
+                    color: colors.gray,
+                    datasetPath: `${scale}-to-50`,
+                    options: {
+                      lineStyle: 4,
+                      lastValueVisible: false,
+                    },
+                  },
+                ],
+              },
+              {
+                scale,
+                name: "In Profit",
+                title: `${title} Supply In Profit Relative To Own Supply`,
+                description: "",
+                unit: "Percentage",
+                icon: "📈",
+                bottom: [
+                  {
+                    title: "Supply",
+                    color: colors.profit,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-profit-to-own-supply-ratio`,
+                  },
+                ],
+              },
+              {
+                scale,
+                name: "In Loss",
+                title: `${title} Supply In Loss Relative To Own Supply`,
+                description: "",
+                unit: "Percentage",
+                icon: "📉",
+                bottom: [
+                  {
+                    title: "Supply",
+                    color: colors.loss,
+                    datasetPath: `${scale}-to-${datasetPrefix}supply-in-loss-to-own-supply-ratio`,
+                  },
+                ],
+              },
+            ],
+          },
+          // createMomentumPresetFolder({
+          //   datasets: datasets[scale],
+          //   scale,
+          //   id: `${scale}-${id}-supply-in-profit-and-loss-percentage-self`,
+          //   title: `${title} Supply In Profit And Loss (% Self)`,
+          //   datasetId: `${datasetId}SupplyPNL%Self`,
+          // }),
+        ],
+      };
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {AnyPossibleCohortId} args.datasetId
+     * @param {string} args.title
+     * @param {Color} args.color
+     * @returns {PartialPresetFolder}
+     */
+    function createCohortPresetPricesPaidFolder({
+      scale,
+      color,
+      datasetId,
+      title,
+    }) {
+      /**
+       * @param {Object} args
+       * @param {Scale} args.scale
+       * @param {AnyPossibleCohortId} args.cohortId
+       * @param {PercentileId} args.id
+       * @returns {AnyDatasetPath}
+       */
+      function generatePath({ scale, cohortId, id }) {
+        const datasetPrefix = datasetIdToPrefix(cohortId);
+        return /** @type {const} */ (`${scale}-to-${datasetPrefix}${id}`);
+      }
+
+      return {
+        name: "Prices Paid",
+        tree: [
+          {
+            scale,
+            name: `Average`,
+            title: `${title} Average Price Paid - Realized Price`,
+            description: "",
+            unit: "US Dollars",
+            icon: "~",
+            top: [
+              {
+                title: "Average",
+                color,
+                datasetPath: `${scale}-to-${datasetIdToPrefix(
+                  datasetId
+                )}realized-price`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Deciles`,
+            title: `${title} deciles`,
+            icon: "🌗",
+            description: "",
+            unit: "US Dollars",
+            top: consts.percentiles
+              .filter(({ value }) => Number(value) % 10 === 0)
+              .map(({ name, id }) => {
+                const datasetPath = generatePath({
+                  scale,
+                  cohortId: datasetId,
+                  id,
+                });
+
+                return {
+                  datasetPath,
+                  color,
+                  title: name,
+                };
+              }),
+          },
+          ...consts.percentiles.map((percentile) => {
+            /** @type {PartialPreset} */
+            const preset = {
+              scale,
+              name: percentile.name,
+              title: `${title} ${percentile.title}`,
+              description: "",
+              unit: "US Dollars",
+              icon: "🌓",
+              top: [
+                {
+                  title: percentile.name,
+                  color,
+                  datasetPath: generatePath({
+                    scale,
+                    cohortId: datasetId,
+                    id: percentile.id,
+                  }),
+                },
+              ],
+            };
+            return preset;
+          }),
+        ],
+      };
+    }
+
+    /**
+     * @param {Object} args
+     * @param {string} args.name
+     * @param {Scale} args.scale
+     * @param {AnyPossibleCohortId} args.datasetId
+     * @param {string} args.title
+     * @param {Color} args.color
+     * @returns {PartialPresetTree}
+     */
+    function createCohortPresetList({ name, scale, color, datasetId, title }) {
+      return [
+        createCohortPresetUTXOFolder({
+          color,
+          datasetId,
+          scale,
+          title,
+        }),
+        createCohortPresetRealizedFolder({
+          color,
+          datasetId,
+          scale,
+          title,
+        }),
+        createCohortPresetUnrealizedFolder({
+          color,
+          datasetId,
+          scale,
+          title,
+        }),
+        createCohortPresetSupplyFolder({
+          color,
+          datasetId,
+          scale,
+          title,
+        }),
+        createCohortPresetPricesPaidFolder({
+          color,
+          datasetId,
+          scale,
+          title,
+        }),
+      ];
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {string} args.name
+     * @param {AddressCohortId | ""} args.datasetId
+     * @param {Color} args.color
+     * @returns {PartialPresetFolder}
+     */
+    function createLiquidityFolder({ scale, color, name, datasetId }) {
+      return {
+        name: `Split By Liquidity`,
+        tree: consts.liquidities.map((liquidity) => {
+          /** @type {PartialPresetFolder} */
+          const folder = {
+            name: liquidity.name,
+            tree: createCohortPresetList({
+              title: `${liquidity.name} ${name}`,
+              name: `${liquidity.name} ${name}`,
+              scale,
+              color,
+              datasetId: !datasetId
+                ? liquidity.id
+                : `${liquidity.id}-${datasetId}`,
+            }),
+          };
+          return folder;
+        }),
+      };
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {string} args.name
+     * @param {AnyPossibleCohortId} args.datasetId
+     * @param {string} args.title
+     * @param {Color} args.color
+     * @returns {PartialPresetFolder}
+     */
+    function createCohortPresetFolder({
+      scale,
+      color,
+      name,
+      datasetId,
+      title,
+    }) {
+      return {
+        name,
+        tree: createCohortPresetList({
+          title,
+          name,
+          scale,
+          color,
+          datasetId: datasetId,
+        }),
+      };
+    }
+
+    /**
+     * @param {Scale} scale
+     * @returns {PartialPresetFolder}
+     */
+    function createHodlersPresets(scale) {
+      return {
+        name: "Hodlers",
+        tree: [
+          {
+            scale,
+            name: `Hodl Supply`,
+            title: `Hodl Supply`,
+            description: "",
+            icon: "🌊",
+            unit: "Percentage",
+            bottom: [
+              {
+                title: `24h`,
+                color: colors.up_to_1d,
+                datasetPath: `${scale}-to-up-to-1d-supply-to-circulating-supply-ratio`,
+              },
+
+              ...consts.fromXToY.map(({ key, id, name, legend }) => ({
+                title: legend,
+                color: colors[key],
+                datasetPath: /** @type {const} */ (
+                  `${scale}-to-${id}-supply-to-circulating-supply-ratio`
+                ),
+              })),
+
+              {
+                title: `15y+`,
+                color: colors.from_15y,
+                datasetPath: `${scale}-to-from-15y-supply-to-circulating-supply-ratio`,
+              },
+            ],
+          },
+          ...consts.xth.map(({ key, id, name, legend }) =>
+            createCohortPresetFolder({
+              scale,
+              color: colors[key],
+              name: legend,
+              datasetId: id,
+              title: name,
+            })
+          ),
+          {
+            name: "Up To X",
+            tree: consts.upTo.map(({ key, id, name }) =>
+              createCohortPresetFolder({
+                scale,
+                color: colors[key],
+                name,
+                datasetId: id,
+                title: name,
+              })
+            ),
+          },
+          {
+            name: "From X To Y",
+            tree: consts.fromXToY.map(({ key, id, name }) =>
+              createCohortPresetFolder({
+                scale,
+                color: colors[key],
+                name,
+                datasetId: id,
+                title: name,
+              })
+            ),
+          },
+          {
+            name: "From X",
+            tree: consts.fromX.map(({ key, id, name }) =>
+              createCohortPresetFolder({
+                scale,
+                color: colors[key],
+                name,
+                datasetId: id,
+                title: name,
+              })
+            ),
+          },
+          {
+            name: "Years",
+            tree: consts.year.map(({ key, id, name }) =>
+              createCohortPresetFolder({
+                scale,
+                color: colors[key],
+                name,
+                datasetId: id,
+                title: name,
+              })
+            ),
+          },
+        ],
+      };
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {string} args.name
+     * @param {AddressCohortId} args.datasetId
+     * @param {Color} args.color
+     * @returns {PartialPreset}
+     */
+    function createAddressCountPreset({ scale, color, name, datasetId }) {
+      return {
+        scale,
+        name: `Address Count`,
+        title: `${name} Address Count`,
+        description: "",
+        unit: "Count",
+        icon: "📕",
+        bottom: [
+          {
+            title: "Address Count",
+            color,
+            datasetPath: `${scale}-to-${datasetId}-address-count`,
+          },
+        ],
+      };
+    }
+
+    /**
+     * @param {Object} args
+     * @param {Scale} args.scale
+     * @param {string} args.name
+     * @param {AddressCohortId} args.datasetId
+     * @param {Color} args.color
+     * @param { string} [args.filenameAddon]
+     * @returns {PartialPresetFolder}
+     */
+    function createAddressPresetFolder({
+      scale,
+      color,
+      name,
+      filenameAddon,
+      datasetId,
+    }) {
+      return {
+        name: filenameAddon ? `${name} - ${filenameAddon}` : name,
+        tree: [
+          createAddressCountPreset({ scale, name, datasetId, color }),
+          ...createCohortPresetList({
+            title: name,
+            scale,
+            name,
+            color,
+            datasetId,
+          }),
+          createLiquidityFolder({
+            scale,
+            name,
+            datasetId,
+            color,
+          }),
+        ],
+      };
+    }
+
+    /**
+     * @param {Scale} scale
+     * @returns {PartialPresetFolder}
+     */
+    function createAddressesPresets(scale) {
+      return {
+        name: "Addresses",
+        tree: [
+          {
+            scale,
+            name: `Total Non Empty Addresses`,
+            title: `Total Non Empty Address`,
+            description: "",
+            unit: "Count",
+            icon: "💳",
+            bottom: [
+              {
+                title: `Total Non Empty Address`,
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-address-count`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `New Addresses`,
+            title: `New Addresses`,
+            description: "",
+            unit: "Count",
+            icon: "🏡",
+            bottom: [
+              {
+                title: `New Addresses`,
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-new-addresses`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Total Addresses Created`,
+            title: `Total Addresses Created`,
+            description: "",
+            unit: "Count",
+            icon: "🏠",
+            bottom: [
+              {
+                title: `Total Addresses Created`,
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-created-addresses`,
+              },
+            ],
+          },
+          {
+            scale,
+            name: `Total Empty Addresses`,
+            title: `Total Empty Addresses`,
+            description: "",
+            unit: "Count",
+            icon: "🗑️",
+            bottom: [
+              {
+                title: `Total Empty Addresses`,
+                color: colors.darkWhite,
+                datasetPath: `${scale}-to-empty-addresses`,
+              },
+            ],
+          },
+          {
+            name: "By Size",
+            tree: consts.size.map(({ key, name, size }) =>
+              createAddressPresetFolder({
+                scale,
+                color: colors[key],
+                name,
+                filenameAddon: size,
+                datasetId: key,
+              })
+            ),
+          },
+          {
+            scale,
+            name: "By Type",
+            tree: consts.type.map(({ key, name }) =>
+              createAddressPresetFolder({
+                scale,
+                color: colors[key],
+                name,
+                datasetId: key,
+              })
+            ),
+          },
+        ],
+      };
+    }
+
+    /**
+     * @param {Scale} scale
+     * @returns {PartialPresetFolder}
+     */
+    function createCointimePresets(scale) {
+      return {
+        name: "Cointime Economics",
+        tree: [
+          {
+            name: "Prices",
+            tree: [
+              {
+                scale,
+                icon: "🔀",
+                name: "All",
+                title: "All Cointime Prices",
+                description: "",
+                unit: "US Dollars",
+                top: [
+                  {
+                    title: "Vaulted Price",
+                    color: colors.vaultedness,
+                    datasetPath: `${scale}-to-vaulted-price`,
+                  },
+                  {
+                    title: "Active Price",
+                    color: colors.liveliness,
+                    datasetPath: `${scale}-to-active-price`,
+                  },
+                  {
+                    title: "True Market Mean",
+                    color: colors.trueMarketMeanPrice,
+                    datasetPath: `${scale}-to-true-market-mean`,
+                  },
+                  {
+                    title: "Realized Price",
+                    color: colors.bitcoin,
+                    datasetPath: `${scale}-to-realized-price`,
+                  },
+                  {
+                    title: "Cointime",
+                    color: colors.cointimePrice,
+                    datasetPath: `${scale}-to-cointime-price`,
+                  },
+                ],
+              },
+              {
+                name: "Active",
+                tree: [
+                  {
+                    scale,
+                    icon: "❤️",
+                    name: "Price",
+                    title: "Active Price",
+                    description: "",
+                    unit: "US Dollars",
+                    top: [
+                      {
+                        title: "Active Price",
+                        color: colors.liveliness,
+                        datasetPath: `${scale}-to-active-price`,
+                      },
+                    ],
+                  },
+                  createRatioFolder({
+                    color: colors.liveliness,
+                    ratioDatasetPath: `${scale}-to-market-price-to-active-price-ratio`,
+                    scale,
+                    title: "Active Price",
+                    valueDatasetPath: `${scale}-to-active-price`,
+                  }),
+                ],
+              },
+              {
+                name: "Vaulted",
+                tree: [
+                  {
+                    scale,
+                    icon: "🏦",
+                    name: "Price",
+                    title: "Vaulted Price",
+                    description: "",
+                    unit: "US Dollars",
+                    top: [
+                      {
+                        title: "Vaulted Price",
+                        color: colors.vaultedness,
+                        datasetPath: `${scale}-to-vaulted-price`,
+                      },
+                    ],
+                  },
+                  createRatioFolder({
+                    color: colors.vaultedness,
+                    ratioDatasetPath: `${scale}-to-market-price-to-vaulted-price-ratio`,
+                    scale,
+                    title: "Vaulted Price",
+                    valueDatasetPath: `${scale}-to-vaulted-price`,
+                  }),
+                ],
+              },
+              {
+                name: "True Market Mean",
+                tree: [
+                  {
+                    scale,
+                    icon: "〰️",
+                    name: "Price",
+                    title: "True Market Mean",
+                    description: "",
+                    unit: "US Dollars",
+                    top: [
+                      {
+                        title: "True Market Mean",
+                        color: colors.trueMarketMeanPrice,
+                        datasetPath: `${scale}-to-true-market-mean`,
+                      },
+                    ],
+                  },
+                  createRatioFolder({
+                    color: colors.liveliness,
+                    ratioDatasetPath: `${scale}-to-market-price-to-true-market-mean-ratio`,
+                    scale,
+                    title: "True Market Mean",
+                    valueDatasetPath: `${scale}-to-true-market-mean`,
+                  }),
+                ],
+              },
+              {
+                name: "Cointime Price",
+                tree: [
+                  {
+                    scale,
+                    icon: "⏱️",
+                    name: "Price",
+                    title: "Cointime Price",
+                    description: "",
+                    unit: "US Dollars",
+                    top: [
+                      {
+                        title: "Cointime",
+                        color: colors.cointimePrice,
+                        datasetPath: `${scale}-to-cointime-price`,
+                      },
+                    ],
+                  },
+                  createRatioFolder({
+                    color: colors.cointimePrice,
+                    ratioDatasetPath: `${scale}-to-market-price-to-cointime-price-ratio`,
+                    scale,
+                    title: "Cointime",
+                    valueDatasetPath: `${scale}-to-cointime-price`,
+                  }),
+                ],
+              },
+            ],
+          },
+          {
+            name: "Capitalizations",
+            tree: [
+              {
+                scale,
+                icon: "🔀",
+                name: "All",
+                title: "Cointime Capitalizations",
+                description: "",
+                unit: "US Dollars",
+                bottom: [
+                  {
+                    title: "Market Cap",
+                    color: colors.white,
+                    datasetPath: `${scale}-to-market-cap`,
+                  },
+                  {
+                    title: "Realized Cap",
+                    color: colors.realizedCap,
+                    datasetPath: `${scale}-to-realized-cap`,
+                  },
+                  {
+                    title: "Investor Cap",
+                    color: colors.investorCap,
+                    datasetPath: `${scale}-to-investor-cap`,
+                  },
+                  {
+                    title: "Thermo Cap",
+                    color: colors.thermoCap,
+                    datasetPath: `${scale}-to-thermo-cap`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "⛏️",
+                name: "Thermo Cap",
+                title: "Thermo Cap",
+                description: "",
+                unit: "US Dollars",
+                bottom: [
+                  {
+                    title: "Thermo Cap",
+                    color: colors.thermoCap,
+                    datasetPath: `${scale}-to-thermo-cap`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "🧑‍💼",
+                name: "Investor Cap",
+                title: "Investor Cap",
+                description: "",
+                unit: "US Dollars",
+                bottom: [
+                  {
+                    title: "Investor Cap",
+                    color: colors.investorCap,
+                    datasetPath: `${scale}-to-investor-cap`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "➗",
+                name: "Thermo Cap To Investor Cap Ratio",
+                title: "Thermo Cap To Investor Cap Ratio",
+                description: "",
+                unit: "Percentage",
+                bottom: [
+                  {
+                    title: "Ratio",
+                    color: colors.bitcoin,
+                    datasetPath: `${scale}-to-thermo-cap-to-investor-cap-ratio`,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "Coinblocks",
+            tree: [
+              {
+                scale,
+                icon: "🧱",
+                name: "All",
+                title: "All Coinblocks",
+                description: "",
+                unit: "Coinblocks",
+                bottom: [
+                  {
+                    title: "Coinblocks Created",
+                    color: colors.coinblocksCreated,
+                    datasetPath: `${scale}-to-coinblocks-created`,
+                  },
+                  {
+                    title: "Coinblocks Destroyed",
+                    color: colors.coinblocksDestroyed,
+                    datasetPath: `${scale}-to-coinblocks-destroyed`,
+                  },
+                  {
+                    title: "Coinblocks Stored",
+                    color: colors.coinblocksStored,
+                    datasetPath: `${scale}-to-coinblocks-stored`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "🧊",
+                name: "Created",
+                title: "Coinblocks Created",
+                description: "",
+                unit: "Coinblocks",
+                bottom: [
+                  {
+                    title: "Coinblocks Created",
+                    color: colors.coinblocksCreated,
+                    datasetPath: `${scale}-to-coinblocks-created`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "⛓️‍💥",
+                name: "Destroyed",
+                title: "Coinblocks Destroyed",
+                description: "",
+                unit: "Coinblocks",
+                bottom: [
+                  {
+                    title: "Coinblocks Destroyed",
+                    color: colors.coinblocksDestroyed,
+                    datasetPath: `${scale}-to-coinblocks-destroyed`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "🗄️",
+                name: "Stored",
+                title: "Coinblocks Stored",
+                description: "",
+                unit: "Coinblocks",
+                bottom: [
+                  {
+                    title: "Coinblocks Stored",
+                    color: colors.coinblocksStored,
+                    datasetPath: `${scale}-to-coinblocks-stored`,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "Cumulative Coinblocks",
+            tree: [
+              {
+                scale,
+                icon: "🔀",
+                name: "All",
+                title: "All Cumulative Coinblocks",
+                description: "",
+                unit: "Coinblocks",
+                bottom: [
+                  {
+                    title: "Cumulative Coinblocks Created",
+                    color: colors.coinblocksCreated,
+                    datasetPath: `${scale}-to-cumulative-coinblocks-created`,
+                  },
+                  {
+                    title: "Cumulative Coinblocks Destroyed",
+                    color: colors.coinblocksDestroyed,
+                    datasetPath: `${scale}-to-cumulative-coinblocks-destroyed`,
+                  },
+                  {
+                    title: "Cumulative Coinblocks Stored",
+                    color: colors.coinblocksStored,
+                    datasetPath: `${scale}-to-cumulative-coinblocks-stored`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "🧊",
+                name: "Created",
+                title: "Cumulative Coinblocks Created",
+                description: "",
+                unit: "Coinblocks",
+                bottom: [
+                  {
+                    title: "Cumulative Coinblocks Created",
+                    color: colors.coinblocksCreated,
+                    datasetPath: `${scale}-to-cumulative-coinblocks-created`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "⛓️‍💥",
+                name: "Destroyed",
+                title: "Cumulative Coinblocks Destroyed",
+                description: "",
+                unit: "Coinblocks",
+                bottom: [
+                  {
+                    title: "Cumulative Coinblocks Destroyed",
+                    color: colors.coinblocksDestroyed,
+                    datasetPath: `${scale}-to-cumulative-coinblocks-destroyed`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "🗄️",
+                name: "Stored",
+                title: "Cumulative Coinblocks Stored",
+                description: "",
+                unit: "Coinblocks",
+                bottom: [
+                  {
+                    title: "Cumulative Coinblocks Stored",
+                    color: colors.coinblocksStored,
+                    datasetPath: `${scale}-to-cumulative-coinblocks-stored`,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "Liveliness & Vaultedness",
+            tree: [
+              {
+                scale,
+                icon: "❤️",
+                name: "Liveliness - Activity",
+                title: "Liveliness (Activity)",
+                description: "",
+                unit: "",
+                bottom: [
+                  {
+                    title: "Liveliness",
+                    color: colors.liveliness,
+                    datasetPath: `${scale}-to-liveliness`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "🏦",
+                name: "Vaultedness",
+                title: "Vaultedness",
+                description: "",
+                unit: "",
+                bottom: [
+                  {
+                    title: "Vaultedness",
+                    color: colors.vaultedness,
+                    datasetPath: `${scale}-to-vaultedness`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "⚔️",
+                name: "Versus",
+                title: "Liveliness V. Vaultedness",
+                description: "",
+                unit: "",
+                bottom: [
+                  {
+                    title: "Liveliness",
+                    color: colors.liveliness,
+                    datasetPath: `${scale}-to-liveliness`,
+                  },
+                  {
+                    title: "Vaultedness",
+                    color: colors.vaultedness,
+                    datasetPath: `${scale}-to-vaultedness`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "➗",
+                name: "Activity To Vaultedness Ratio",
+                title: "Activity To Vaultedness Ratio",
+                description: "",
+                unit: "Percentage",
+                bottom: [
+                  {
+                    title: "Activity To Vaultedness Ratio",
+                    color: colors.activityToVaultednessRatio,
+                    datasetPath: `${scale}-to-activity-to-vaultedness-ratio`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "❤️",
+                name: "Concurrent Liveliness - Supply Adjusted Coindays Destroyed",
+                title:
+                  "Concurrent Liveliness - Supply Adjusted Coindays Destroyed",
+                description: "",
+                unit: "",
+                bottom: [
+                  {
+                    title: "Concurrent Liveliness 14d Median",
+                    color: colors.liveliness,
+                    datasetPath: `${scale}-to-concurrent-liveliness-2w-median`,
+                  },
+                  {
+                    title: "Concurrent Liveliness",
+                    color: colors.darkLiveliness,
+                    datasetPath: `${scale}-to-concurrent-liveliness`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "📊",
+                name: "Liveliness Incremental Change",
+                title: "Liveliness Incremental Change",
+                description: "",
+                unit: "",
+                bottom: [
+                  {
+                    title: "Liveliness Incremental Change",
+                    color: colors.darkLiveliness,
+                    type: "Baseline",
+                    datasetPath: `${scale}-to-liveliness-net-change`,
+                  },
+                  {
+                    title: "Liveliness Incremental Change 14 Day Median",
+                    color: colors.liveliness,
+                    type: "Baseline",
+                    datasetPath: `${scale}-to-liveliness-net-change-2w-median`,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            name: "Supply",
+            tree: [
+              {
+                scale,
+                icon: "🏦",
+                name: "Vaulted",
+                title: "Vaulted Supply",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Vaulted Supply",
+                    color: colors.vaultedness,
+                    datasetPath: `${scale}-to-vaulted-supply`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "❤️",
+                name: "Active",
+                title: "Active Supply",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Active Supply",
+                    color: colors.liveliness,
+                    datasetPath: `${scale}-to-active-supply`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "⚔️",
+                name: "Vaulted V. Active",
+                title: "Vaulted V. Active",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Circulating Supply",
+                    color: colors.coinblocksCreated,
+                    datasetPath: `${scale}-to-supply`,
+                  },
+                  {
+                    title: "Vaulted Supply",
+                    color: colors.vaultedness,
+                    datasetPath: `${scale}-to-vaulted-supply`,
+                  },
+                  {
+                    title: "Active Supply",
+                    color: colors.liveliness,
+                    datasetPath: `${scale}-to-active-supply`,
+                  },
+                ],
+              },
+              // TODO: Fix, Bad data
+              // {
+              //   id: 'asymptomatic-supply-regions',
+              //   icon: IconTablerDirections,
+              //   name: 'Asymptomatic Supply Regions',
+              //   title: 'Asymptomatic Supply Regions',
+              //   description: '',
+              //   applyPreset(params) {
+              //     return applyMultipleSeries({
+              //       ...params,
+              //       priceScaleOptions: {
+              //         halved: true,
+              //       },
+              //       list: [
+              //         {
+              //           id: 'min-vaulted',
+              //           title: 'Min Vaulted Supply',
+              //           color: colors.vaultedness,
+              //           dataset: params.`/${scale}-to-dateToMinVaultedSupply,
+              //         },
+              //         {
+              //           id: 'max-active',
+              //           title: 'Max Active Supply',
+              //           color: colors.liveliness,
+              //           dataset: params.`/${scale}-to-dateToMaxActiveSupply,
+              //         },
+              //       ],
+              //     })
+              //   },
+              // },
+              {
+                scale,
+                icon: "🏦",
+                name: "Vaulted Net Change",
+                title: "Vaulted Supply Net Change",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Vaulted Supply Net Change",
+                    color: colors.vaultedness,
+                    datasetPath: `${scale}-to-vaulted-supply-net-change`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "❤️",
+                name: "Active Net Change",
+                title: "Active Supply Net Change",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Active Supply Net Change",
+                    color: colors.liveliness,
+                    datasetPath: `${scale}-to-active-supply-net-change`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "⚔️",
+                name: "Active VS. Vaulted 90D Net Change",
+                title: "Active VS. Vaulted 90 Day Supply Net Change",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Active Supply Net Change",
+                    color: colors.liveliness,
+                    datasetPath: `${scale}-to-active-supply-3m-net-change`,
+                    type: "Baseline",
+                  },
+                  {
+                    title: "Vaulted Supply Net Change",
+                    color: colors.vaultedPrice,
+                    type: "Baseline",
+                    datasetPath: `${scale}-to-vaulted-supply-3m-net-change`,
+                  },
+                ],
+              },
+              // TODO: Fix, Bad data
+              // {
+              //   id: 'vaulted-supply-annualized-net-change',
+              //   icon: IconTablerBuildingBank,
+              //   name: 'Vaulted Annualized Net Change',
+              //   title: 'Vaulted Supply Annualized Net Change',
+              //   description: '',
+              //   applyPreset(params) {
+              //     return applyMultipleSeries({
+              //       ...params,
+              //       priceScaleOptions: {
+              //         halved: true,
+              //       },
+              //       list: [
+              //         {
+              //           id: 'vaulted-annualized-supply-net-change',
+              //           title: 'Vaulted Supply Annualized Net Change',
+              //           color: colors.vaultedness,
+              //           dataset:
+              //             `/${scale}-to-vaultedAnnualizedSupplyNetChange,
+              //         },
+              //       ],
+              //     })
+              //   },
+              // },
+
+              // TODO: Fix, Bad data
+              // {
+              //   id: 'vaulting-rate',
+              //   icon: IconTablerBuildingBank,
+              //   name: 'Vaulting Rate',
+              //   title: 'Vaulting Rate',
+              //   description: '',
+              //   applyPreset(params) {
+              //     return applyMultipleSeries({
+              //       ...params,
+              //       priceScaleOptions: {
+              //         halved: true,
+              //       },
+              //       list: [
+              //         {
+              //           id: 'vaulting-rate',
+              //           title: 'Vaulting Rate',
+              //           color: colors.vaultedness,
+              //           dataset: `${scale}-to-vaultingRate,
+              //         },
+              //         {
+              //           id: 'nominal-inflation-rate',
+              //           title: 'Nominal Inflation Rate',
+              //           color: colors.orange,
+              //           dataset: params.`/${scale}-to-dateToYearlyInflationRate,
+              //         },
+              //       ],
+              //     })
+              //   },
+              // },
+
+              // TODO: Fix, Bad data
+              // {
+              //   id: 'active-supply-net-change-decomposition',
+              //   icon: IconTablerArrowsCross,
+              //   name: 'Active Supply Net Change Decomposition (90D)',
+              //   title: 'Active Supply Net 90 Day Change Decomposition',
+              //   description: '',
+              //   applyPreset(params) {
+              //     return applyMultipleSeries({
+              //       ...params,
+              //       priceScaleOptions: {
+              //         halved: true,
+              //       },
+              //       list: [
+              //         {
+              //           id: 'issuance-change',
+              //           title: 'Change From Issuance',
+              //           color: colors.emerald,
+              //           dataset:
+              //             params.params.datasets[scale]
+              //               [scale].activeSupplyChangeFromIssuance90dChange,
+              //         },
+              //         {
+              //           id: 'transactions-change',
+              //           title: 'Change From Transactions',
+              //           color: colors.rose,
+              //           dataset:
+              //             params.params.datasets[scale]
+              //               [scale].activeSupplyChangeFromTransactions90dChange,
+              //         },
+              //         // {
+              //         //   id: 'active',
+              //         //   title: 'Active Supply',
+              //         //   color: colors.liveliness,
+              //         //   dataset: `${scale}-to-activeSupply,
+              //         // },
+              //       ],
+              //     })
+              //   },
+              // },
+
+              {
+                scale,
+                icon: "📈",
+                name: "In Profit",
+                title: "Cointime Supply In Profit",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Circulating Supply",
+                    color: colors.coinblocksCreated,
+                    datasetPath: `${scale}-to-supply`,
+                  },
+                  {
+                    title: "Vaulted Supply",
+                    color: colors.vaultedness,
+                    datasetPath: `${scale}-to-vaulted-supply`,
+                  },
+                  {
+                    title: "Supply in profit",
+                    color: colors.bitcoin,
+                    datasetPath: `${scale}-to-supply-in-profit`,
+                  },
+                ],
+              },
+              {
+                scale,
+                icon: "📉",
+                name: "In Loss",
+                title: "Cointime Supply In Loss",
+                description: "",
+                unit: "Bitcoin",
+                bottom: [
+                  {
+                    title: "Circulating Supply",
+                    color: colors.coinblocksCreated,
+                    datasetPath: `${scale}-to-supply`,
+                  },
+                  {
+                    title: "Active Supply",
+                    color: colors.liveliness,
+                    datasetPath: `${scale}-to-active-supply`,
+                  },
+                  {
+                    title: "Supply in Loss",
+                    color: colors.bitcoin,
+                    datasetPath: `${scale}-to-supply-in-loss`,
+                  },
+                ],
+              },
+            ],
+          },
+          {
+            scale,
+            icon: "🏭",
+            name: "Cointime Yearly Inflation Rate",
+            title: "Cointime-Adjusted Yearly Inflation Rate",
+            description: "",
+            unit: "Percentage",
+            bottom: [
+              {
+                title: "Cointime Adjusted",
+                color: colors.coinblocksCreated,
+                datasetPath: `${scale}-to-cointime-adjusted-yearly-inflation-rate`,
+              },
+              {
+                title: "Nominal",
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-yearly-inflation-rate`,
+              },
+            ],
+          },
+          {
+            scale,
+            icon: "💨",
+            name: "Cointime Velocity",
+            title: "Cointime-Adjusted Transactions Velocity",
+            description: "",
+            unit: "",
+            bottom: [
+              {
+                title: "Cointime Adjusted",
+                color: colors.coinblocksCreated,
+                datasetPath: `${scale}-to-cointime-adjusted-velocity`,
+              },
+              {
+                title: "Nominal",
+                color: colors.bitcoin,
+                datasetPath: `${scale}-to-transaction-velocity`,
+              },
+            ],
+          },
+        ],
+      };
+    }
+
+    return [
+      {
+        name: "Dashboards",
+        tree: [],
+      },
+      {
+        name: "Charts",
+        tree: [
+          {
+            name: "By Date",
+            tree: [
+              createMarketPresets("date"),
+              createBlocksPresets("date"),
+              createMinersPresets("date"),
+              createTransactionsPresets("date"),
+              ...createCohortPresetList({
+                scale: "date",
+                color: colors.bitcoin,
+                datasetId: "",
+                name: "",
+                title: "",
+              }),
+              createLiquidityFolder({
+                scale: "date",
+                color: colors.bitcoin,
+                datasetId: "",
+                name: "",
+              }),
+              createHodlersPresets("date"),
+              createAddressesPresets("date"),
+              createCointimePresets("date"),
+            ],
+          },
+          {
+            name: "By Height",
+            tree: [
+              createMarketPresets("height"),
+              createBlocksPresets("height"),
+              createMinersPresets("height"),
+              createTransactionsPresets("height"),
+              ...createCohortPresetList({
+                scale: "height",
+                color: colors.bitcoin,
+                datasetId: "",
+                name: "",
+                title: "",
+              }),
+              createLiquidityFolder({
+                scale: "height",
+                color: colors.bitcoin,
+                datasetId: "",
+                name: "",
+              }),
+              createHodlersPresets("height"),
+              createAddressesPresets("height"),
+              createCointimePresets("height"),
+            ],
+          },
+        ],
+      },
+    ];
   }
 
-  /** @type {PartialPresetTree} */
-  const partialTree = [
-    {
-      name: "Dashboards",
-      tree: [],
-    },
-    {
-      name: "Charts",
-      tree: [
-        {
-          name: "By Date",
-          tree: [createMarketPresets("date")],
-        },
-        {
-          name: "By Height - Desktop/Tablet Only",
-          tree: [createMarketPresets("height")],
-        },
-      ],
-    },
-  ];
+  const partialTree = createPartialTree();
 
   /** @type {string[]} */
   const presetsIds = [];
@@ -704,7 +5074,7 @@ function initEverythingRelatedToPresets() {
   const filter = createSignal(
     /** @type {FoldersFilter} */ (
       localStorage.getItem(foldersFilterLocalStorageKey) || "all"
-    ),
+    )
   );
 
   const favoritesCount = createSignal(0);
@@ -915,7 +5285,7 @@ function initEverythingRelatedToPresets() {
         const folderId = stringToId(
           `${(path || [])?.map(({ name }) => name).join(" ")} ${
             anyPartial.name
-          } folder`,
+          } folder`
         );
 
         /** @type {Omit<PresetFolder, keyof PartialPresetFolder>} */
@@ -957,15 +5327,6 @@ function initEverythingRelatedToPresets() {
           id: restFolder.id,
         };
 
-        function setHightlightDataAttribute() {
-          if (details.open) {
-            delete summary.dataset.highlight;
-          } else if (selected()?.path.includes(thisPath)) {
-            summary.dataset.highlight = "";
-          }
-        }
-        createEffect(setHightlightDataAttribute);
-
         details.addEventListener("toggle", () => {
           const open = details.open;
 
@@ -978,8 +5339,6 @@ function initEverythingRelatedToPresets() {
             spanMarker.innerHTML = "●";
             localStorage.removeItem(folderOpenLocalStorageKey);
           }
-
-          setHightlightDataAttribute();
         });
 
         const childPresetsCount = processPartialTree(anyPartial.tree, details, [
@@ -1023,10 +5382,10 @@ function initEverythingRelatedToPresets() {
         }
 
         preset.isFavorite.set(
-          !!localStorage.getItem(presetToFavoriteLocalStorageKey(preset)),
+          !!localStorage.getItem(presetToFavoriteLocalStorageKey(preset))
         );
         preset.visited.set(
-          !!localStorage.getItem(presetToVisitedLocalStorageKey(preset)),
+          !!localStorage.getItem(presetToVisitedLocalStorageKey(preset))
         );
 
         createCountersEffects(preset);
@@ -1105,7 +5464,7 @@ function initEverythingRelatedToPresets() {
       console.log(
         [...m.entries()]
           .filter(([_, value]) => value > 1)
-          .map(([key, _]) => key),
+          .map(([key, _]) => key)
       );
 
       throw Error("ID duplicate");
@@ -1273,8 +5632,8 @@ function initEverythingRelatedToPresets() {
             return /** @type {TimeRange | null} */ (
               JSON.parse(
                 localStorage.getItem(
-                  getVisibleTimeRangeLocalStorageKey(scale),
-                ) || "null",
+                  getVisibleTimeRangeLocalStorageKey(scale)
+                ) || "null"
               )
             );
           }
@@ -1334,10 +5693,10 @@ function initEverythingRelatedToPresets() {
           /** @type {Set<ResourceDataset<any, any>>} */ (new Set()),
           {
             equals: false,
-          },
+          }
         );
         const visibleTimeRange = createSignal(
-          getInitialVisibleTimeRange(scale()),
+          getInitialVisibleTimeRange(scale())
         );
         const visibleDatasetIds = createSignal(/** @type {number[]} */ ([]), {
           equals: false,
@@ -1347,7 +5706,7 @@ function initEverythingRelatedToPresets() {
           return last !== undefined ? chunkIdToIndex(scale(), last) : undefined;
         });
         const priceSeriesType = createSignal(
-          /** @type {PriceSeriesType} */ ("Candlestick"),
+          /** @type {PriceSeriesType} */ ("Candlestick")
         );
 
         function updateVisibleDatasetIds() {
@@ -1363,7 +5722,7 @@ function initEverythingRelatedToPresets() {
 
             ids = Array.from(
               { length: to - from + 1 },
-              (_, i) => i + from,
+              (_, i) => i + from
             ).filter((year) => year >= 2009 && year <= today.getUTCFullYear());
           } else {
             const from = Math.floor(Number(rawFrom) / HEIGHT_CHUNK_SIZE);
@@ -1373,7 +5732,7 @@ function initEverythingRelatedToPresets() {
 
             ids = Array.from(
               { length },
-              (_, i) => (from + i) * HEIGHT_CHUNK_SIZE,
+              (_, i) => (from + i) * HEIGHT_CHUNK_SIZE
             );
           }
 
@@ -1393,7 +5752,7 @@ function initEverythingRelatedToPresets() {
 
         const debouncedUpdateVisibleDatasetIds = debounce(
           updateVisibleDatasetIds,
-          100,
+          100
         );
 
         function saveVisibleRange() {
@@ -1401,17 +5760,17 @@ function initEverythingRelatedToPresets() {
 
           urlParamsHelpers.write(
             URL_PARAMS_TIME_RANGE_FROM_KEY,
-            String(range.from),
+            String(range.from)
           );
 
           urlParamsHelpers.write(
             URL_PARAMS_TIME_RANGE_TO_KEY,
-            String(range.to),
+            String(range.to)
           );
 
           localStorage.setItem(
             getVisibleTimeRangeLocalStorageKey(scale()),
-            JSON.stringify(range),
+            JSON.stringify(range)
           );
         }
         const debouncedSaveVisibleRange = debounce(saveVisibleRange, 250);
@@ -1471,17 +5830,17 @@ function initEverythingRelatedToPresets() {
           if (modulused === 0) {
             return `${numberToUSLocale(
               value / (1_000_000 * 1_000 ** letterIndex),
-              3,
+              3
             )}${letter}`;
           } else if (modulused === 1) {
             return `${numberToUSLocale(
               value / (1_000_000 * 1_000 ** letterIndex),
-              2,
+              2
             )}${letter}`;
           } else {
             return `${numberToUSLocale(
               value / (1_000_000 * 1_000 ** letterIndex),
-              1,
+              1
             )}${letter}`;
           }
         }
@@ -1558,7 +5917,7 @@ function initEverythingRelatedToPresets() {
               ++index
             ) {
               sortedTimePoints[index].timeWeight = this.computeHeightWeight(
-                sortedTimePoints[index].time,
+                sortedTimePoints[index].time
               );
             }
           }
@@ -1618,7 +5977,7 @@ function initEverythingRelatedToPresets() {
             autoSize: true,
             layout: {
               fontFamily: "Satoshi Chart",
-              fontSize: 13,
+              // fontSize: 13,
               background: { color: "transparent" },
               attributionLogo: false,
             },
@@ -1698,7 +6057,7 @@ function initEverythingRelatedToPresets() {
         function resetChartListElement() {
           while (
             chartListElement.lastElementChild?.classList.contains(
-              "chart-wrapper",
+              "chart-wrapper"
             )
           ) {
             chartListElement.lastElementChild?.remove();
@@ -1716,8 +6075,8 @@ function initEverythingRelatedToPresets() {
               new Array(
                 getNumberOfDaysBetweenTwoDates(
                   whitespaceStartDate,
-                  whitespaceEndDate,
-                ),
+                  whitespaceEndDate
+                )
               )
             );
           // Hack to be able to scroll freely
@@ -1726,7 +6085,7 @@ function initEverythingRelatedToPresets() {
             const date = new Date(
               whitespaceStartDateYear,
               whitespaceStartDateMonth,
-              whitespaceStartDateDate + i,
+              whitespaceStartDateDate + i
             );
 
             const time = dateToString(date);
@@ -1850,7 +6209,7 @@ function initEverythingRelatedToPresets() {
                 ratio =
                   getNumberOfDaysBetweenTwoDates(
                     dateFromTime(from),
-                    dateFromTime(to),
+                    dateFromTime(to)
                   ) / width;
               } else {
                 const to = /** @type {number} */ (visibleTimeRange.to);
@@ -1880,7 +6239,7 @@ function initEverythingRelatedToPresets() {
 
         const debouncedUpdateVisiblePriceSeriesType = debounce(
           updateVisiblePriceSeriesType,
-          50,
+          50
         );
 
         /**
@@ -1933,12 +6292,12 @@ function initEverythingRelatedToPresets() {
                   (new Date().getFullYear() -
                     new Date("2009-01-01").getFullYear() +
                     2) *
-                    (scale === "date" ? 1 : 6),
+                    (scale === "date" ? 1 : 6)
                 )
                   .fill(null)
                   .map(() => {
                     const json = createSignal(
-                      /** @type {FetchedJSON<S, T> | null} */ (null),
+                      /** @type {FetchedJSON<S, T> | null} */ (null)
                     );
 
                     /** @type {FetchedResult<S, T>} */
@@ -1998,7 +6357,7 @@ function initEverythingRelatedToPresets() {
                                           ? NaN
                                           : /** @type {number} */ (value),
                                     }),
-                              }),
+                              })
                           );
                         }
                       }),
@@ -2062,8 +6421,9 @@ function initEverythingRelatedToPresets() {
 
                       if (cachedResponse) {
                         /** @type {FetchedJSON<S, T> | null} */
-                        const json =
-                          await convertResponseToJSON(cachedResponse);
+                        const json = await convertResponseToJSON(
+                          cachedResponse
+                        );
 
                         if (json) {
                           console.log(`cache: ${path}?chunk=${id}`);
@@ -2097,7 +6457,7 @@ function initEverythingRelatedToPresets() {
                     try {
                       fetchedResponse = await fetch(
                         backupUrlWithQuery,
-                        fetchConfig,
+                        fetchConfig
                       );
                     } catch {
                       fetched.loading = false;
@@ -2135,7 +6495,7 @@ function initEverythingRelatedToPresets() {
 
                   if (previousLength && previousLength === newLength) {
                     const previousLastValue = Object.values(
-                      previousMap || [],
+                      previousMap || []
                     ).at(-1);
                     const newLastValue = Object.values(newMap).at(-1);
 
@@ -2242,12 +6602,12 @@ function initEverythingRelatedToPresets() {
             if (scale === "date") {
               date.set(
                 /** @type {DatePath} */ (path),
-                /** @type {any} */ (dataset),
+                /** @type {any} */ (dataset)
               );
             } else {
               height.set(
                 /** @type {HeightPath} */ (path),
-                /** @type {any} */ (dataset),
+                /** @type {any} */ (dataset)
               );
             }
 
@@ -2273,7 +6633,7 @@ function initEverythingRelatedToPresets() {
         /**
          * @param {SpecificSeriesBlueprintWithChart<BaselineSpecificSeriesBlueprint>} args
          */
-        function createBaseLineSeries({ chart, color, options }) {
+        function createBaseLineSeries({ chart, color, options, owner }) {
           const topLineColor = color || colors.profit;
           const bottomLineColor = color || colors.loss;
 
@@ -2300,8 +6660,10 @@ function initEverythingRelatedToPresets() {
 
           const series = chart.addBaselineSeries(seriesOptions);
 
-          createEffect(() => {
-            series.applyOptions(computeColors());
+          runWithOwner(owner, () => {
+            createEffect(() => {
+              series.applyOptions(computeColors());
+            });
           });
 
           return series;
@@ -2310,7 +6672,7 @@ function initEverythingRelatedToPresets() {
         /**
          * @param {SpecificSeriesBlueprintWithChart<CandlestickSpecificSeriesBlueprint>} args
          */
-        function createCandlesticksSeries({ chart, options }) {
+        function createCandlesticksSeries({ chart, options, owner }) {
           function computeColors() {
             const upColor = colors.profit();
             const downColor = colors.loss();
@@ -2335,8 +6697,10 @@ function initEverythingRelatedToPresets() {
             ...computeColors(),
           });
 
-          createEffect(() => {
-            candlestickSeries.applyOptions(computeColors());
+          runWithOwner(owner, () => {
+            createEffect(() => {
+              candlestickSeries.applyOptions(computeColors());
+            });
           });
 
           return candlestickSeries;
@@ -2345,7 +6709,7 @@ function initEverythingRelatedToPresets() {
         /**
          * @param {SpecificSeriesBlueprintWithChart<LineSpecificSeriesBlueprint>} args
          */
-        function createLineSeries({ chart, color, options }) {
+        function createLineSeries({ chart, color, options, owner }) {
           function computeColors() {
             return {
               color: color(),
@@ -2358,8 +6722,10 @@ function initEverythingRelatedToPresets() {
             ...computeColors(),
           });
 
-          createEffect(() => {
-            series.applyOptions(computeColors());
+          runWithOwner(owner, () => {
+            createEffect(() => {
+              series.applyOptions(computeColors());
+            });
           });
 
           return series;
@@ -2368,7 +6734,7 @@ function initEverythingRelatedToPresets() {
         const hoveredLegend = createSignal(
           /** @type {{label: HTMLLabelElement, series: Series} | undefined} */ (
             undefined
-          ),
+          )
         );
         const notHoveredLegendTransparency = "66";
         /**
@@ -2474,8 +6840,9 @@ function initEverythingRelatedToPresets() {
 
                       v = /** @type {string} */ (v).substring(0, 7);
                       initialColors[i][k] = v;
-                      darkenedColors[i][k] =
-                        `${v}${notHoveredLegendTransparency}`;
+                      darkenedColors[i][
+                        k
+                      ] = `${v}${notHoveredLegendTransparency}`;
                     } else if (k === "lastValueVisible" && v) {
                       initialColors[i][k] = true;
                       darkenedColors[i][k] = false;
@@ -2536,14 +6903,14 @@ function initEverythingRelatedToPresets() {
           const id = stringToId(title);
           const storageId = presetAndSeriesToLocalStorageKey(
             preset,
-            seriesBlueprint,
+            seriesBlueprint
           );
 
           const active = createSignal(
             urlParamsHelpers.readBool(id) ??
               localeStorageHelpers.readBool(storageId) ??
               defaultActive ??
-              true,
+              true
           );
 
           const disabled = createMemo(_disabled || (() => false));
@@ -2580,9 +6947,11 @@ function initEverythingRelatedToPresets() {
 
           chartSeries.push(series);
 
+          const owner = getOwner();
+
           dataset.fetchedJSONs.forEach((json, index) => {
             const chunk = createSignal(
-              /** @type {ISeriesApi<SeriesType> | undefined} */ (undefined),
+              /** @type {ISeriesApi<SeriesType> | undefined} */ (undefined)
             );
 
             chunks[index] = chunk;
@@ -2611,6 +6980,7 @@ function initEverythingRelatedToPresets() {
                         chart,
                         color,
                         options,
+                        owner,
                       });
                       break;
                     }
@@ -2618,6 +6988,7 @@ function initEverythingRelatedToPresets() {
                       s = createCandlesticksSeries({
                         chart,
                         options,
+                        owner,
                       });
                       break;
                     }
@@ -2634,6 +7005,7 @@ function initEverythingRelatedToPresets() {
                         chart,
                         color,
                         options,
+                        owner,
                       });
                       break;
                     }
@@ -2677,11 +7049,11 @@ function initEverythingRelatedToPresets() {
               if (visibleDatasetIds().length) {
                 const start = chunkIdToIndex(
                   scale(),
-                  /** @type {number} */ (visibleDatasetIds().at(0)),
+                  /** @type {number} */ (visibleDatasetIds().at(0))
                 );
                 const end = chunkIdToIndex(
                   scale(),
-                  /** @type {number} */ (visibleDatasetIds().at(-1)),
+                  /** @type {number} */ (visibleDatasetIds().at(-1))
                 );
 
                 if (index >= start && index <= end) {
@@ -2811,7 +7183,7 @@ function initEverythingRelatedToPresets() {
           const blueprintCount =
             1 + (preset.top?.length || 0) + (preset.bottom?.length || 0);
           const chartsBlueprints = [preset.top || [], preset.bottom].flatMap(
-            (list) => (list ? [list] : []),
+            (list) => (list ? [list] : [])
           );
 
           resetLegendElement();
@@ -2824,7 +7196,7 @@ function initEverythingRelatedToPresets() {
             const chartDiv = createChartDiv(
               chartListElement,
               chartIndex,
-              preset,
+              preset
             );
 
             const chart =
@@ -2960,7 +7332,7 @@ function initEverythingRelatedToPresets() {
                   maxMarker
                 ) {
                   min.seriesChunk.setMarkers(
-                    [minMarker, maxMarker].sort((a, b) => a.weight - b.weight),
+                    [minMarker, maxMarker].sort((a, b) => a.weight - b.weight)
                   );
                 } else {
                   if (min && minMarker) {
@@ -2979,7 +7351,7 @@ function initEverythingRelatedToPresets() {
                 () => {
                   setMinMaxMarkers();
                 },
-                blueprintCount * 10 + scale === "date" ? 50 : 100,
+                blueprintCount * 10 + scale === "date" ? 50 : 100
               );
 
             function createSetMinMaxMarkersWhenIdleEffect() {
@@ -3031,7 +7403,7 @@ function initEverythingRelatedToPresets() {
               .forEach((seriesBlueprint, index) => {
                 const dataset = datasets.getOrImport(
                   scale,
-                  seriesBlueprint.datasetPath,
+                  seriesBlueprint.datasetPath
                 );
 
                 // Don't trigger reactivity by design
@@ -3063,7 +7435,7 @@ function initEverythingRelatedToPresets() {
             });
 
             const chartVisible = createMemo(() =>
-              chartSeries.some((series) => series.visible()),
+              chartSeries.some((series) => series.visible())
             );
 
             function createChartVisibilityEffect() {
@@ -3140,7 +7512,7 @@ function initEverythingRelatedToPresets() {
                     otherChart.setCrosshairPosition(
                       NaN,
                       time,
-                      otherChart.whitespace,
+                      otherChart.whitespace
                     );
                   } else {
                     // No time when mouse goes outside the chart
@@ -3181,12 +7553,12 @@ function initEverythingRelatedToPresets() {
             const buttonBackward = getElementById("button-backward");
             const buttonBackwardIcon = getElementById("button-backward-icon");
             const buttonBackwardPauseIcon = getElementById(
-              "button-backward-pause-icon",
+              "button-backward-pause-icon"
             );
             const buttonForward = getElementById("button-forward");
             const buttonForwardIcon = getElementById("button-forward-icon");
             const buttonForwardPauseIcon = getElementById(
-              "button-forward-pause-icon",
+              "button-forward-pause-icon"
             );
 
             let interval = /** @type {number | undefined} */ (undefined);
@@ -3268,8 +7640,6 @@ function initEverythingRelatedToPresets() {
             if (!chart) return;
             const timeScale = chart.timeScale();
 
-            console.log(button);
-
             const year = button.dataset.year;
             let days = button.dataset.days;
             let toHeight = button.dataset.to;
@@ -3279,14 +7649,13 @@ function initEverythingRelatedToPresets() {
               let to = new Date();
               to.setUTCHours(0, 0, 0, 0);
 
-              if (button.dataset.yearToDate !== null) {
-                console.log("aaaa");
+              if (!days && typeof button.dataset.yearToDate === "string") {
                 days = String(
                   Math.ceil(
                     (to.getTime() -
                       new Date(`${to.getUTCFullYear()}-01-01`).getTime()) /
-                      ONE_DAY_IN_MS,
-                  ),
+                      ONE_DAY_IN_MS
+                  )
                 );
               }
 
@@ -3366,8 +7735,8 @@ function initEverythingRelatedToPresets() {
           });
         }
         initFavoriteButton();
-      },
-    ),
+      }
+    )
   );
 
   function initSearch() {
@@ -3390,7 +7759,7 @@ function initEverythingRelatedToPresets() {
 
     function initInput() {
       const haystack = presetsList.map(
-        (preset) => `${preset.title}\t${preset.serializedPath}`,
+        (preset) => `${preset.title}\t${preset.serializedPath}`
       );
 
       const searchSmallOgInnerHTML = searchSmall.innerHTML;
@@ -3413,7 +7782,7 @@ function initEverythingRelatedToPresets() {
           if (indexes?.length) {
             const maxIndex = Math.min(
               (order || indexes).length - 1,
-              minIndex + RESULTS_PER_PAGE - 1,
+              minIndex + RESULTS_PER_PAGE - 1
             );
 
             list = Array(maxIndex - minIndex + 1);
@@ -3505,7 +7874,7 @@ function initEverythingRelatedToPresets() {
               haystack,
               needle,
               undefined,
-              infoThresh,
+              infoThresh
             );
 
             if (!result?.[0]?.length || !result?.[1]) {
@@ -3513,7 +7882,7 @@ function initEverythingRelatedToPresets() {
                 haystack,
                 needle,
                 outOfOrder,
-                infoThresh,
+                infoThresh
               );
             }
 
@@ -3522,7 +7891,7 @@ function initEverythingRelatedToPresets() {
                 haystack,
                 needle,
                 outOfOrder,
-                infoThresh,
+                infoThresh
               );
             }
 
@@ -3531,7 +7900,7 @@ function initEverythingRelatedToPresets() {
                 haystack,
                 needle,
                 outOfOrder,
-                infoThresh,
+                infoThresh
               );
             }
 
@@ -3540,7 +7909,7 @@ function initEverythingRelatedToPresets() {
                 haystack,
                 needle,
                 undefined,
-                infoThresh,
+                infoThresh
               );
             }
 
@@ -3549,7 +7918,7 @@ function initEverythingRelatedToPresets() {
                 haystack,
                 needle,
                 outOfOrder,
-                infoThresh,
+                infoThresh
               );
             }
 
@@ -3664,7 +8033,7 @@ function initEverythingRelatedToPresets() {
               id: date.valueOf().toString(),
               top: date.toLocaleTimeString(),
               owner,
-            }),
+            })
           );
         });
       });
@@ -3702,7 +8071,7 @@ function initEverythingRelatedToPresets() {
           function updateHeading(id) {
             if (!id) return;
             getElementById(id).innerHTML = dateToDisplayedString(
-              grouped[id][0].date,
+              grouped[id][0].date
             );
           }
 
@@ -3740,7 +8109,7 @@ function initEverythingRelatedToPresets() {
 
           localStorage.setItem(
             LOCAL_STORAGE_HISTORY_KEY,
-            JSON.stringify(serializedHistory),
+            JSON.stringify(serializedHistory)
           );
         });
       });
@@ -3748,5 +8117,328 @@ function initEverythingRelatedToPresets() {
     createUpdateHistoryEffect();
   }
   initHistory();
+
+  function initSettings() {
+    function initTheme() {
+      const inputLight = /** @type {HTMLInputElement} */ (
+        getElementById("settings-theme-light-input")
+      );
+      const inputDark = /** @type {HTMLInputElement} */ (
+        getElementById("settings-theme-dark-input")
+      );
+      const inputSystem = /** @type {HTMLInputElement} */ (
+        getElementById("settings-theme-system-input")
+      );
+
+      const settingsThemeLocalStorageKey = "settings-theme";
+
+      let savedTheme = /** @type {SettingsTheme} */ (
+        localStorage.getItem(settingsThemeLocalStorageKey)
+      );
+
+      switch (savedTheme) {
+        case "dark": {
+          inputDark.checked = true;
+          break;
+        }
+        case "light": {
+          inputLight.checked = true;
+          break;
+        }
+        default:
+        case "system": {
+          inputSystem.checked = true;
+          savedTheme = "system";
+          break;
+        }
+      }
+
+      const theme = createSignal(savedTheme);
+
+      const preferredColorSchemeMatchMedia = window.matchMedia(
+        "(prefers-color-scheme: dark)"
+      );
+
+      /**
+       * @param {boolean} shouldBeDark
+       */
+      function updateTheme(shouldBeDark) {
+        dark.set(shouldBeDark);
+
+        if (shouldBeDark) {
+          window.document.documentElement.dataset.theme = "dark";
+        } else {
+          delete window.document.documentElement.dataset.theme;
+        }
+
+        const backgroundColor = getComputedStyle(
+          window.document.documentElement
+        ).getPropertyValue("--background-color");
+        const meta = dom.queryOrCreateMetaElement("theme-color");
+        meta.content = backgroundColor;
+      }
+
+      function createUpdateDataThemeEffect() {
+        createEffect(() => {
+          localStorage.setItem(settingsThemeLocalStorageKey, theme());
+          updateTheme(
+            theme() === "dark" ||
+              (theme() === "system" && preferredColorSchemeMatchMedia.matches)
+          );
+        });
+      }
+      createUpdateDataThemeEffect();
+
+      preferredColorSchemeMatchMedia.addEventListener("change", (media) => {
+        if (theme() === "system") {
+          updateTheme(media.matches);
+        }
+      });
+
+      getElementById("settings-theme-field").addEventListener(
+        "change",
+        (event) => {
+          const newTheme = /** @type {SettingsTheme | string} */ (
+            // @ts-ignore
+            event.target?.value
+          );
+          switch (newTheme) {
+            case "dark":
+            case "light":
+            case "system": {
+              theme.set(newTheme);
+              break;
+            }
+            default: {
+              throw "Bad theme";
+            }
+          }
+        }
+      );
+    }
+    initTheme();
+
+    function initLeaderboard() {
+      const leaderboard = getElementById("leaderboard");
+
+      const donations = [
+        {
+          name: "_Checkɱate",
+          // url: "https://xcancel.com/_Checkmatey_",
+          url: "https://primal.net/p/npub1qh5sal68c8swet6ut0w5evjmj6vnw29x3k967h7atn45unzjyeyq6ceh9r",
+          amount: 500_000,
+        },
+        {
+          name: "avvi |",
+          url: "https://primal.net/p/npub1md2q6fexrtmd5hx9gw2p5640vg662sjlpxyz3tdmu4j4g8hhkm6scn6hx3",
+          amount: 5_000,
+        },
+        {
+          name: "mutatrum",
+          url: "https://primal.net/p/npub1hklphk7fkfdgmzwclkhshcdqmnvr0wkfdy04j7yjjqa9lhvxuflsa23u2k",
+          amount: 5_000,
+        },
+        {
+          name: "Gunnar",
+          url: "https://primal.net/p/npub1rx9wg2d5lhah45xst3580sajcld44m0ll9u5dqhu2t74p6xwufaqwghtd4",
+          amount: 1_000,
+        },
+        {
+          name: "Blokchain Boog",
+          url: "https://xcancel.com/BlokchainB",
+          amount: 1_500 + 1590,
+        },
+        {
+          name: "Josh",
+          url: "https://primal.net/p/npub1pc57ls4rad5kvsp733suhzl2d4u9y7h4upt952a2pucnalc59teq33dmza",
+          amount: 1_000,
+        },
+        {
+          name: "Alp",
+          url: "https://primal.net/p/npub175nul9cvufswwsnpy99lvyhg7ad9nkccxhkhusznxfkr7e0zxthql9g6w0",
+          amount: 1_000,
+        },
+        {
+          name: "Ulysses",
+          url: "https://primal.net/p/npub1n7n3dssm90hfsfjtamwh2grpzwjlvd2yffae9pqgg99583lxdypsnn9gtv",
+          amount: 1_000,
+        },
+        {
+          name: "btcschellingpt",
+          url: "https://primal.net/p/npub1nvfgglea9zlcs58tcqlc6j26rt50ngkgdk7699wfq4txrx37aqcsz4e7zd",
+          amount: 1_000 + 1_000,
+        },
+        {
+          name: "Coinatra",
+          url: "https://primal.net/p/npub1eut9kcejweegwp9waq3a4g03pvprdzkzvjjvl8fvj2a2wlx030eswzfna8",
+          amount: 1_000,
+        },
+        {
+          name: "Printer Go Brrrr",
+          url: "https://primal.net/p/npub1l5pxvjzhw77h86tu0sml2gxg8jpwxch7fsj6d05n7vuqpq75v34syk4q0n",
+          amount: 1_000,
+        },
+        {
+          name: "b81776c32d7b",
+          url: "https://primal.net/p/npub1hqthdsed0wpg57sqsc5mtyqxxgrh3s7493ja5h49v23v2nhhds4qk4w0kz",
+          amount: 17_509,
+        },
+        {
+          name: "DerGigi",
+          url: "https://primal.net/p/npub1dergggklka99wwrs92yz8wdjs952h2ux2ha2ed598ngwu9w7a6fsh9xzpc",
+          amount: 6001,
+        },
+        {
+          name: "Adarnit",
+          url: "https://primal.net/p/npub17armdveqy42uhuuuwjc5m2dgjkz7t7epgvwpuccqw8jusm8m0g4sn86n3s",
+          amount: 17_726,
+        },
+        {
+          name: "Auburn Citadel",
+          url: "https://primal.net/p/npub1730y5k2s9u82w9snx3hl37r8gpsrmqetc2y3xyx9h65yfpf28rtq0y635y",
+          amount: 17_471,
+        },
+        {
+          name: "anon",
+          amount: 210_000,
+        },
+        {
+          name: "Daniel ∞/21M",
+          url: "https://twitter.com/DanielAngelovBG",
+          amount: 21_000,
+        },
+        {
+          name: "Ivo",
+          url: "https://primal.net/p/npub1mnwjn40hr042rsmzu64rsnwsw07uegg4tjkv620c94p6e797wkvq3qeujc",
+          amount: 5_000,
+        },
+        {
+          name: "lassdas",
+          url: "https://primal.net/p/npub1gmhctt2hmjqz8ay2x8h5f8fl3h4fpfcezwqneal3usu3u65qca4s8094ea",
+          amount: 210_000,
+        },
+        {
+          name: "anon",
+          amount: 21_000,
+        },
+        {
+          name: "xplbzx",
+          url: "https://primal.net/p/npub1e0f808a350rxrhppu4zylzljt3arfpvrrpqdg6ft78xy6u49kq5slf0g92",
+          amount: 12_110,
+        },
+        {
+          name: "SoundMoney=Prosperity4ALL",
+          url: "https://xcancel.com/SoundmoneyP",
+          amount: 420_000,
+        },
+        {
+          name: "Johan",
+          url: "https://primal.net/p/npub1a4sd4cprrucfkvkfq9zs99ur4xe7lxw3uhhgvuzx6nqxhnpa2yyqlsa26u",
+          amount: 500_000,
+        },
+        {
+          name: "highperfocused",
+          url: "https://primal.net/p/npub1fq8vrf63vsrqjrwqgtwlvauqauc0yme6se8g8dqhcpf6tfs3equqntmzut",
+          amount: 4620,
+        },
+        {
+          name: "ClearMined",
+          url: "https://primal.net/p/npub1dj8zwktp3eyktfhs5mjlw8v0v2838xlquxr7ddsanayhcw98fcks8ddrq9",
+          amount: 300_000,
+        },
+      ];
+
+      donations.sort((a, b) =>
+        b.amount !== a.amount
+          ? b.amount - a.amount
+          : a.name.localeCompare(b.name)
+      );
+
+      donations.slice(0, 21).forEach(({ name, url, amount }) => {
+        const li = window.document.createElement("li");
+        leaderboard.append(li);
+
+        const a = window.document.createElement("a");
+        a.href = url || "";
+        a.target = "_blank";
+        a.rel = "noopener noreferrer";
+        a.innerHTML = name;
+        li.append(a);
+
+        li.append(" — ");
+
+        const small = window.document.createElement("small");
+        small.classList.add("sats");
+        small.innerHTML = `${amount.toLocaleString("en-us")} sats`;
+        li.append(small);
+      });
+    }
+    initLeaderboard();
+
+    function initInstallInstructions() {
+      if (
+        !env.standalone &&
+        env.safariOnly &&
+        (env.macOS || env.ipad || env.iphone)
+      ) {
+        const installInstructionsElement = getElementById(
+          "settings-install-instructions"
+        );
+        installInstructionsElement.hidden = false;
+
+        const hr = window.document.createElement("hr");
+        installInstructionsElement.before(hr);
+
+        const heading = window.document.createElement("h4");
+        heading.innerHTML = "Install";
+        installInstructionsElement.append(heading);
+
+        const p = window.document.createElement("p");
+        installInstructionsElement.append(p);
+
+        if (env.macOS) {
+          p.innerHTML = `This app can be installed by clicking on the <strong>File</strong> tab on the menu bar and then on <strong>Add to dock</strong>.`;
+        } else {
+          p.innerHTML = `This app can be installed by tapping on the <strong>Share</strong> button tab of Safari and then on <strong>Add to Home Screen</strong>.`;
+        }
+      }
+    }
+    initInstallInstructions();
+
+    function initMobileNav() {
+      const anchorApi = /** @type {HTMLAnchorElement} */ (
+        getElementById("anchor-api").cloneNode(true)
+      );
+
+      const anchorGit = /** @type {HTMLAnchorElement} */ (
+        getElementById("anchor-git").cloneNode(true)
+      );
+
+      const anchorNostr = /** @type {HTMLAnchorElement} */ (
+        getElementById("anchor-nostr").cloneNode(true)
+      );
+
+      const anchorGeyser = /** @type {HTMLAnchorElement} */ (
+        getElementById("anchor-geyser").cloneNode(true)
+      );
+
+      if (!anchorApi || !anchorGit || !anchorNostr || !anchorGeyser)
+        throw "Anchors should exist by now";
+
+      anchorApi.id = "";
+      anchorGit.id = "";
+      anchorNostr.id = "";
+      anchorGeyser.id = "";
+
+      const nav = getElementById("settings-nav");
+
+      nav.append(anchorApi);
+      nav.append(anchorGit);
+      nav.append(anchorNostr);
+      nav.append(anchorGeyser);
+    }
+    initMobileNav();
+  }
+  initSettings();
 }
 initEverythingRelatedToPresets();

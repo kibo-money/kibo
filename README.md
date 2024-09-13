@@ -1,10 +1,18 @@
-# SATONOMICS
+<p align="center">
+  <a href="https://kibo.money" target="_blank">
+    <picture>
+      <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/satonomics-org/satonomics/main/assets/logo-full-dark.svg">
+      <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/satonomics-org/satonomics/main/assets/logo-full-light.svg">
+      <img alt="kibō" src="https://raw.githubusercontent.com/satonomics-org/satonomics/main/assets/logo-full-light.svg" width="300" height="auto" style="max-width: 100%;">
+    </picture>
+  </a>
+</p>
 
-![Image of the Satonomics Web App](./assets/latest.jpg)
+<p align="center">
+  A better, FOSS, Bitcoin-only, self-hostable Glassnode.
+</p>
 
 ## Description
-
-kibō (hope) is a better, FOSS, Bitcoin-only, self-hostable Glassnode.
 
 While [mempool.space](https://mempool.space) gives a very micro view of the network where you can follow the journey of any address, this tool is the exact opposite and very complimentary by giving you a much more global/macro view of the flow and various dynamics of the network via thousands of charts.
 
@@ -12,64 +20,76 @@ To promote even more transparency and trust in the network, this project is comm
 
 **Having anyone be able to easily do a health-check of the network is incredibly important and should be wanted by every single bitcoiner.**
 
-## Warning
-
-This project is in a very early stage. The web app will have bugs, the API might break and the data can definitely to be false or slightly false.
-
 ## Donations
 
-The project is a lot of work and being worked on full-time. It doesn't have any ads and solely relies on donations. If you find this project useful, any sat would really help make it even better and would be really appreciated.
+This project was started as an answer to the outrageous pricing from Glassnode (and their third tier starting at $833.33/month !).
 
-You can donate on the project's [Geyser Fund](https://geyser.fund/project/satonomics/).
+But it is a lot of work and has been worked on _**full-time since November of 2023**_ and has also been operational since then without any ads.
+
+_**At the time of writing (2024-09-12), this project has made around 2,200,000 sats, which is around $1300 or $120/month. It's unsustainable.**_
+
+So if you find this project useful, [please send some sats](https://geyser.fund/project/satonomics/), it would be really appreciated.
+
+[Geyser Fund](https://geyser.fund/project/satonomics/)
+
+## Warning
+
+This project is in a very early stage. Until more people look at the code and check the various computations, the datasets might be in the worst case completely false.
 
 ## Instances
 
-Web App:
-
-- [app.satonomics.xyz](https://app.satonomics.xyz)
-
-API:
-
-- [api.satonomics.xyz](https://api.satonomics.xyz)
-- [api-bkp.satonomics.xyz](https://api-bkp.satonomics.xyz)
+- [kibo.money](https://kibo.money)
+- [backup.kibo.money](https://backup.kibo.money)
 
 ## Structure
 
 - `parser`: The backbone of the project, it does most of the work by parsing and then computing datasets from the timechain.
-- `server`: A small server which automatically creates routes to access through an API all created datasets.
-- `app`: A web app which displays the generated datasets in various charts and dashboards.
+- `website`: A web app which displays the generated datasets in various charts and dashboards.
+- `server`: A small server which will serve the
 
-## How to run
+## Setup
 
 ### Requirements
 
-- `rustup`
+- 1 TB of free space (will use 60-80% of that)
+- A running instance of bitcoin-core with txindex=1 and rpc credentials
 
-### Parser
+### Docker
+
+Coming soon
+
+### Manual
+
+#### Hardware
+
+#### 1. Rust
 
 ```bash
-./run.sh --datadir=$HOME/Developer/bitcoin
+# https://www.rust-lang.org/tools/install
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
+# https://github.com/watchexec/cargo-watch?tab=readme-ov-file#install
+cargo install cargo-watch --locked
 ```
 
-### Server
+#### 2. Parser
 
 ```bash
-# Install rustup
-# Update ./run.sh if needed
+# The first run needs several information about your bitcoin-core config
+./run.sh --datadir=$HOME/Developer/bitcoin --rpcuser=satoshi --rpcpassword=nakamoto
+
+# Next time you can just do: ./run.sh
+# As everything is saved in
+```
+
+#### Server
+
+```bash
 ./run.sh
 ```
 
 Then the easiest to let others access your server is with `cloudflared` which will also cache requests.
 
-
-## Limitations
-
-- Needs to stop the node to parse the files (at least for now)
-- Needs a **LOT** a disk space for databases (~700 GB for data from 2009 to mid 2024)
-
-## Goals / Philosophy
-
-Adjectives that describe what this project is or strives to be, in no particular order:
+## Philosophy
 
 - **Best**: Replace Glassnode as the go to
 - **Diverse**: Have as many charts/datasets as possible and something for everyone
@@ -83,46 +103,25 @@ Adjectives that describe what this project is or strives to be, in no particular
 - **Versatile**: You can view the data in charts, you can download the data, you can fetch the data via an API
 - **Accessible**: Free Website and API with all the datasets for everyone
 
-## Milestones
+## Logo
 
-Big features that are planned, in no particular order:
+The dove (borrowed from [svgrepo](https://www.svgrepo.com/svg/351969/dove) for now) represents _**hope**_ (kibō in japanese).
 
-- **Homepage**: A landing page to explains the project and what it does
+The orange background represents Bitcoin and when in a circle, it also represents the sun, which means that while it's our hope for a better future, we still have to be careful with our collective goals and actions, to not end up like Icarus.
+
+## Roadmap
+
 - **More Datasets/Charts**: If a dataset can be computed, it should exist and have its related charts
 - **Dashboards**: For a quick and real-time view of the latest data of all the datasets
-- **NOSTR integration**: First to save preferences, later to add some social functionnality
-- **Datasets by block timestamp**: In addition to having datasets by block date and block height
+- **Nostr integration**: First to save preferences, later to add some social functionnality
+- **Datasets by block timestamp**: In addition to having datasets by date and height
 - **Descriptions**: Add text to describe all charts and what they mean
-- **Start9 Add-on**: By making the whole suite much easier to self-host, it's quite rough right now
+- **Start9 support**: By making the whole suite much easier to self-host, it's quite rough right now
 - **API Documentation**: Highly needed to explain what's what
 
-_Maybe_:
+## Iterations
 
-- A Desktop app
-- A mobile app
-
-## Brand
-
-- **Name**: Willing to change if someone thinks of something better !
-- **Logo**: Most likely a placeholder
-
-## Collaboration
-
-- Repositories:
-  - [Github](https://github.com/satonomics-org/satonomics)
-  - [Codeberg](https://codeberg.org/satonomics/satonomics)
-- Issues:
-  - [Github](https://github.com/satonomics-org/satonomics/issues)
-  - [NOSTR](https://gitworkshop.dev/r/naddr1qq99xct5dahx7mtfvdesz9thwden5te0wp6hyurvv4ex2mrp0yhxxmmdqgsfw5dacngjlahye34krvgz7u0yghhjgk7gxzl5ptm9v6n2y3sn03srqsqqqaueek2h03/issues)
-- Proposals:
-  - [Github](https://github.com/satonomics-org/satonomics/pulls)
-  - [NOSTR](https://gitworkshop.dev/r/naddr1qq99xct5dahx7mtfvdesz9thwden5te0wp6hyurvv4ex2mrp0yhxxmmdqgsfw5dacngjlahye34krvgz7u0yghhjgk7gxzl5ptm9v6n2y3sn03srqsqqqaueek2h03/proposals)
-
-## Proof of Work
-
-Aka: Previous iterations
-
-The initial idea was totally different yet morphed over time into what it is today: a fully FOSS self-hostable on-chain data generator.
+A list of all the previous versions and ideas:
 
 - https://github.com/drgarlic/satonomics
 - https://github.com/drgarlic/satonomics-parser

@@ -16,6 +16,9 @@ import {
   ISeriesApi,
 } from "../libraries/lightweight-charts/types";
 import { DatePath, HeightPath } from "./paths";
+import { Owner } from "../libraries/solid-signals/types/owner";
+
+type SettingsTheme = "system" | "dark" | "light";
 
 type Signal<T> = Accessor<T> & { set: Setter<T> };
 
@@ -52,6 +55,7 @@ type AnySpecificSeriesBlueprint =
 
 type SpecificSeriesBlueprintWithChart<A extends AnySpecificSeriesBlueprint> = {
   chart: IChartApi;
+  owner: Owner | null;
 } & Omit<A, "type">;
 
 type SeriesBlueprint = {
@@ -129,7 +133,7 @@ interface OHLC {
 
 interface ResourceDataset<
   S extends Scale,
-  Type extends OHLC | number = number,
+  Type extends OHLC | number = number
 > {
   scale: S;
   url: string;
@@ -147,7 +151,7 @@ interface FetchedResult<
     SingleValueData | ValuedCandlestickData
   > = DatasetValue<
     Type extends number ? SingleValueData : ValuedCandlestickData
-  >,
+  >
 > {
   at: Date | null;
   json: Signal<FetchedJSON<S, Type> | null>;
@@ -177,7 +181,7 @@ interface FetchedChunk {
 
 type FetchedDataset<
   S extends Scale,
-  Type extends number | OHLC,
+  Type extends number | OHLC
 > = S extends "date" ? FetchedDateDataset<Type> : FetchedHeightDataset<Type>;
 
 interface Versioned {
