@@ -5254,13 +5254,27 @@ function initEverythingRelatedToPresets() {
 
   /**
    * @param {PartialPresetTree} partialTree
-   * @param {HTMLElement} parent
+   * @param {HTMLDivElement | HTMLDetailsElement} parent
    * @param {FilePath | undefined} path
    * @returns {Accessor<number>}
    */
   function processPartialTree(partialTree, parent, path = undefined) {
     const ul = window.document.createElement("ul");
-    parent.appendChild(ul);
+
+    if ("open" in parent) {
+      const details = parent;
+      function addToDocumentIfNeeded() {
+        if (details.open) {
+          details.append(ul);
+        } else if (ul.parentElement) {
+          details.removeChild(ul);
+        }
+      }
+      addToDocumentIfNeeded();
+      details.addEventListener("toggle", addToDocumentIfNeeded);
+    } else {
+      parent.append(ul);
+    }
 
     /** @type {Accessor<number>[]} */
     const listForSum = [];
