@@ -506,31 +506,19 @@ function createColors() {
     return dark() ? tailwindRose900 : tailwindRose100;
   }
 
-  function darkWhite() {
+  function off() {
     const _ = dark();
     return bodyStyle.getPropertyValue("--off-color");
   }
 
-  function gray() {
-    const _ = dark();
-    return bodyStyle.getPropertyValue("--border-color");
-  }
-
-  function white() {
+  function textColor() {
     const _ = dark();
     return bodyStyle.getPropertyValue("--color");
   }
 
-  function black() {
-    const _ = dark();
-    return bodyStyle.getPropertyValue("--background-color");
-  }
-
   return {
-    white,
-    black,
-    darkWhite,
-    gray,
+    default: textColor,
+    off,
     lightBitcoin: yellow,
     bitcoin: orange,
     darkBitcoin: darkOrange,
@@ -596,7 +584,7 @@ function createColors() {
     ust: red,
     busd: yellow,
     usdd: emerald,
-    frax: gray,
+    frax: off,
     dai: amber,
     tusd: indigo,
     pyusd: blue,
@@ -1502,7 +1490,7 @@ function initEverythingRelatedToPresets() {
               },
               {
                 title: `Even`,
-                color: colors.white,
+                color: colors.off,
                 datasetPath: `${scale}-to-1`,
                 options: {
                   lineStyle: 3,
@@ -1543,12 +1531,12 @@ function initEverythingRelatedToPresets() {
               },
               {
                 title: `Raw`,
-                color: colors.white,
+                color: colors.default,
                 datasetPath: ratioDatasetPath,
               },
               {
                 title: `Even`,
-                color: colors.gray,
+                color: colors.off,
                 datasetPath: `${scale}-to-1`,
                 options: {
                   lineStyle: 3,
@@ -1581,7 +1569,7 @@ function initEverythingRelatedToPresets() {
               },
               {
                 title: `Base`,
-                color: colors.white,
+                color: colors.off,
                 datasetPath: `${scale}-to-0`,
                 options: {
                   lineStyle: 3,
@@ -1622,7 +1610,7 @@ function initEverythingRelatedToPresets() {
               },
               {
                 title: `Raw`,
-                color: colors.white,
+                color: colors.default,
                 datasetPath: ratioDatasetPath,
               },
             ],
@@ -1643,9 +1631,9 @@ function initEverythingRelatedToPresets() {
             ],
             bottom: [
               {
-                title: `1%`,
-                color: colors.probability1p,
-                datasetPath: /** @type {any} */ (`${ratioDatasetPath}-1p`),
+                title: `0.1%`,
+                color: colors.probability0_1p,
+                datasetPath: `${ratioDatasetPath}-0-1p`,
               },
               {
                 title: `0.5%`,
@@ -1653,13 +1641,13 @@ function initEverythingRelatedToPresets() {
                 datasetPath: `${ratioDatasetPath}-0-5p`,
               },
               {
-                title: `0.1%`,
-                color: colors.probability0_1p,
-                datasetPath: `${ratioDatasetPath}-0-1p`,
+                title: `1%`,
+                color: colors.probability1p,
+                datasetPath: /** @type {any} */ (`${ratioDatasetPath}-1p`),
               },
               {
                 title: `Raw`,
-                color: colors.white,
+                color: colors.default,
                 datasetPath: ratioDatasetPath,
               },
             ],
@@ -1673,17 +1661,17 @@ function initEverythingRelatedToPresets() {
             unit: "US Dollars",
             top: [
               {
-                title: `0.1%`,
+                title: `99.9%`,
                 color: colors.probability0_1p,
                 datasetPath: /** @type {any} */ (`${valueDatasetPath}-99-9p`),
               },
               {
-                title: `0.5%`,
+                title: `99.5%`,
                 color: colors.probability0_5p,
                 datasetPath: `${valueDatasetPath}-99-5p`,
               },
               {
-                title: `1%`,
+                title: `99%`,
                 color: colors.probability1p,
                 datasetPath: `${valueDatasetPath}-99p`,
               },
@@ -1698,17 +1686,17 @@ function initEverythingRelatedToPresets() {
             unit: "US Dollars",
             top: [
               {
-                title: `0.1%`,
+                title: `99.9%`,
                 color: colors.probability0_1p,
                 datasetPath: `${valueDatasetPath}-0-1p`,
               },
               {
-                title: `0.5%`,
+                title: `99.5%`,
                 color: colors.probability0_5p,
                 datasetPath: `${valueDatasetPath}-0-5p`,
               },
               {
-                title: `1%`,
+                title: `99%`,
                 color: colors.probability1p,
                 datasetPath: `${valueDatasetPath}-1p`,
               },
@@ -1943,7 +1931,7 @@ function initEverythingRelatedToPresets() {
                       bottom: [
                         {
                           title: "Target",
-                          color: colors.white,
+                          color: colors.off,
                           datasetPath: `date-to-blocks-mined-1d-target`,
                           options: {
                             lineStyle: 3,
@@ -1977,7 +1965,7 @@ function initEverythingRelatedToPresets() {
                       bottom: [
                         {
                           title: "Target",
-                          color: colors.white,
+                          color: colors.off,
                           datasetPath: `date-to-blocks-mined-1w-target`,
                           options: {
                             lineStyle: 3,
@@ -2000,7 +1988,7 @@ function initEverythingRelatedToPresets() {
                       bottom: [
                         {
                           title: "Target",
-                          color: colors.white,
+                          color: colors.off,
                           datasetPath: `date-to-blocks-mined-1m-target`,
                           options: {
                             lineStyle: 3,
@@ -2023,7 +2011,7 @@ function initEverythingRelatedToPresets() {
                       bottom: [
                         {
                           title: "Target",
-                          color: colors.white,
+                          color: colors.off,
                           datasetPath: `date-to-blocks-mined-1y-target`,
                           options: {
                             lineStyle: 3,
@@ -2059,7 +2047,7 @@ function initEverythingRelatedToPresets() {
                   tree: createRecapPresets({
                     scale,
                     title: "Block Size",
-                    color: colors.darkWhite,
+                    color: colors.off,
                     unit: "Megabytes",
                     keySum: "date-to-block-size-1d-sum",
                     keyAverage: "date-to-block-size-1d-average",
@@ -2078,7 +2066,7 @@ function initEverythingRelatedToPresets() {
                   tree: createRecapPresets({
                     scale,
                     title: "Block Weight",
-                    color: colors.darkWhite,
+                    color: colors.off,
                     unit: "Weight",
                     keyAverage: "date-to-block-weight-1d-average",
                     keyMax: "date-to-block-weight-1d-max",
@@ -2096,7 +2084,7 @@ function initEverythingRelatedToPresets() {
                   tree: createRecapPresets({
                     scale,
                     title: "Block VBytes",
-                    color: colors.darkWhite,
+                    color: colors.off,
                     unit: "Virtual Bytes",
                     keyAverage: "date-to-block-vbytes-1d-average",
                     keyMax: "date-to-block-vbytes-1d-max",
@@ -2114,7 +2102,7 @@ function initEverythingRelatedToPresets() {
                   tree: createRecapPresets({
                     scale,
                     title: "Block Interval",
-                    color: colors.darkWhite,
+                    color: colors.off,
                     unit: "Seconds",
                     keyAverage: "date-to-block-interval-1d-average",
                     keyMax: "date-to-block-interval-1d-max",
@@ -2138,7 +2126,7 @@ function initEverythingRelatedToPresets() {
                   bottom: [
                     {
                       title: "Size",
-                      color: colors.darkWhite,
+                      color: colors.off,
                       datasetPath: `height-to-block-size`,
                     },
                   ],
@@ -2153,7 +2141,7 @@ function initEverythingRelatedToPresets() {
                   bottom: [
                     {
                       title: "Weight",
-                      color: colors.darkWhite,
+                      color: colors.off,
                       datasetPath: `height-to-block-weight`,
                     },
                   ],
@@ -2168,7 +2156,7 @@ function initEverythingRelatedToPresets() {
                   bottom: [
                     {
                       title: "VBytes",
-                      color: colors.darkWhite,
+                      color: colors.off,
                       datasetPath: `height-to-block-vbytes`,
                     },
                   ],
@@ -2183,7 +2171,7 @@ function initEverythingRelatedToPresets() {
                   bottom: [
                     {
                       title: "Interval",
-                      color: colors.darkWhite,
+                      color: colors.off,
                       datasetPath: `height-to-block-interval`,
                     },
                   ],
@@ -2199,7 +2187,7 @@ function initEverythingRelatedToPresets() {
             bottom: [
               {
                 title: "Size",
-                color: colors.darkWhite,
+                color: colors.off,
                 datasetPath: `${scale}-to-cumulative-block-size`,
               },
             ],
@@ -3480,12 +3468,12 @@ function initEverythingRelatedToPresets() {
                   },
                   {
                     title: "Total",
-                    color: colors.white,
+                    color: colors.default,
                     datasetPath: `${scale}-to-${datasetPrefix}supply`,
                   },
                   {
                     title: "Halved Total",
-                    color: colors.gray,
+                    color: colors.off,
                     datasetPath: `${scale}-to-${datasetPrefix}halved-supply`,
                     options: {
                       lineStyle: 4,
@@ -3563,12 +3551,12 @@ function initEverythingRelatedToPresets() {
                   },
                   {
                     title: "100%",
-                    color: colors.white,
+                    color: colors.default,
                     datasetPath: `${scale}-to-${datasetPrefix}supply-to-circulating-supply-ratio`,
                   },
                   {
                     title: "50%",
-                    color: colors.gray,
+                    color: colors.off,
                     datasetPath: `${scale}-to-${datasetPrefix}halved-supply-to-circulating-supply-ratio`,
                     options: {
                       lineStyle: 4,
@@ -3646,7 +3634,7 @@ function initEverythingRelatedToPresets() {
                   },
                   {
                     title: "100%",
-                    color: colors.white,
+                    color: colors.default,
                     datasetPath: `${scale}-to-100`,
                     options: {
                       lastValueVisible: false,
@@ -3654,7 +3642,7 @@ function initEverythingRelatedToPresets() {
                   },
                   {
                     title: "50%",
-                    color: colors.gray,
+                    color: colors.off,
                     datasetPath: `${scale}-to-50`,
                     options: {
                       lineStyle: 4,
@@ -4128,7 +4116,7 @@ function initEverythingRelatedToPresets() {
             bottom: [
               {
                 title: `Total Empty Addresses`,
-                color: colors.darkWhite,
+                color: colors.off,
                 datasetPath: `${scale}-to-empty-addresses`,
               },
             ],
@@ -4330,7 +4318,7 @@ function initEverythingRelatedToPresets() {
                 bottom: [
                   {
                     title: "Market Cap",
-                    color: colors.white,
+                    color: colors.default,
                     datasetPath: `${scale}-to-market-cap`,
                   },
                   {
@@ -5300,11 +5288,12 @@ function initEverythingRelatedToPresets() {
         const details = window.document.createElement("details");
         const folderOpenLocalStorageKey = `${folderId}-open`;
         details.open = !!localStorage.getItem(folderOpenLocalStorageKey);
+        details.id = folderId;
         detailsList.push(details);
         li.appendChild(details);
 
         const summary = window.document.createElement("summary");
-        summary.id = folderId;
+        details.appendChild(summary);
 
         const spanMarker = window.document.createElement("span");
         spanMarker.classList.add("marker");
@@ -5319,8 +5308,6 @@ function initEverythingRelatedToPresets() {
         const smallCount = window.document.createElement("small");
         smallCount.hidden = details.open;
         summary.append(smallCount);
-
-        details.appendChild(summary);
 
         const thisPath = {
           name: anyPartial.name,
@@ -5539,14 +5526,8 @@ function initEverythingRelatedToPresets() {
     const selectedId = selected().id;
 
     selected().path.forEach(({ id }) => {
-      const summary = getElementById(id);
-      const details = /** @type {HTMLDetailsElement | undefined} */ (
-        summary.parentElement
-      );
-      if (!details) throw "Parent details should exist";
-      if (!details.open) {
-        summary.click();
-      }
+      const details = /** @type {HTMLDetailsElement} */ (getElementById(id));
+      details.open = true;
     });
 
     setTimeout(() => {
@@ -5556,10 +5537,14 @@ function initEverythingRelatedToPresets() {
       });
     }, 0);
   }
+  goToSelected();
 
-  if (firstTime) {
-    goToSelected();
+  async function initGoToSelectedButton() {
+    getElementById("button-go-to-selected").addEventListener("click", () => {
+      goToSelected();
+    });
   }
+  initGoToSelectedButton();
 
   function createUpdateSelectedHeaderEffect() {
     createEffect(() => {
@@ -5569,6 +5554,11 @@ function initEverythingRelatedToPresets() {
     });
   }
   createUpdateSelectedHeaderEffect();
+
+  function changeSeletedFrameDisplayToFlex() {
+    selectedFrame.style.display = "flex";
+  }
+  changeSeletedFrameDisplayToFlex();
 
   const LOCAL_STORAGE_TIME_RANGE_KEY = "chart-range";
   const URL_PARAMS_TIME_RANGE_FROM_KEY = "from";
@@ -6024,13 +6014,13 @@ function initEverythingRelatedToPresets() {
           });
 
           createEffect(() => {
-            const { white, darkWhite } = colors;
+            const { default: white, off: gray } = colors;
 
             const color = white();
 
             chart.applyOptions({
               layout: {
-                textColor: darkWhite(),
+                textColor: gray(),
               },
               rightPriceScale: {
                 borderVisible: false,
@@ -6621,7 +6611,8 @@ function initEverythingRelatedToPresets() {
 
         const datasets = createDatasets();
 
-        /** @type {DeepPartial<SeriesOptionsCommon>} */
+        /**
+         * @type {DeepPartial<SeriesOptionsCommon>} */
         const defaultSeriesOptions = {
           // @ts-ignore
           lineWidth: 1.5,
@@ -7129,7 +7120,7 @@ function initEverythingRelatedToPresets() {
             seriesBlueprint = {
               datasetPath,
               title,
-              color: colors.white,
+              color: colors.default,
             };
           }
 
@@ -7304,7 +7295,7 @@ function initEverythingRelatedToPresets() {
                   minMarker = {
                     weight: min.weight,
                     time: min.time,
-                    color: colors.white(),
+                    color: colors.default(),
                     position: "belowBar",
                     shape: "arrowUp",
                     size: 0,
@@ -7316,7 +7307,7 @@ function initEverythingRelatedToPresets() {
                   maxMarker = {
                     weight: max.weight,
                     time: max.time,
-                    color: colors.white(),
+                    color: colors.default(),
                     position: "aboveBar",
                     shape: "arrowDown",
                     size: 0,

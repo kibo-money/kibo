@@ -55,6 +55,7 @@ This project is in a very early stage. Until more people look at the code and ch
 
 - 1 TB of free space (will use 60-80% of that)
 - A running instance of bitcoin-core with txindex=1 and rpc credentials
+- Git
 
 ### Docker
 
@@ -62,28 +63,49 @@ Coming soon
 
 ### Manual
 
-#### Prepare
+#### 1. Dependencies
+
+First we need to install Rust
 
 ```bash
-# https://www.rust-lang.org/tools/install
+# Source: https://www.rust-lang.org/tools/install
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
-# https://github.com/watchexec/cargo-watch?tab=readme-ov-file#install
+```
+
+Then we need to `cargo-watch` for the server
+
+```bash
+# Source: https://github.com/watchexec/cargo-watch?tab=readme-ov-file#install
 cargo install cargo-watch --locked
 ```
 
-#### Parser
+#### 2. Git
 
 ```bash
+git clone https://github.com/satonomics-org/satonomics.git
+
+cd satonomics
+```
+
+#### 3. Parser
+
+```bash
+cd parser
+
 # The first run needs several information about your bitcoin-core config
 ./run.sh --datadir=$HOME/Developer/bitcoin --rpcuser=satoshi --rpcpassword=nakamoto
 
 # Next time you can just do: ./run.sh
 # As everything is saved in
+
+cd ..
 ```
 
 #### Server
 
 ```bash
+cd server
+
 ./run.sh
 ```
 
@@ -103,11 +125,17 @@ Then the easiest to let others access your server is with `cloudflared` which wi
 - **Versatile**: You can view the data in charts, you can download the data, you can fetch the data via an API
 - **Accessible**: Free Website and API with all the datasets for everyone
 
-## Logo
+## Brand
 
-The dove (borrowed from [svgrepo](https://www.svgrepo.com/svg/351969/dove) for now) represents _**hope**_ (kibō in japanese).
+### Name
 
-The orange background represents Bitcoin and when in a circle, it also represents the sun, which means that while it's our hope for a better future, we still have to be careful with our collective goals and actions, to not end up like Icarus.
+kibō means _**hope**_ in japanese which is what Bitcoin ultimately is for many, hope for a better future.
+
+### Logo
+
+The dove (borrowed from [svgrepo](https://www.svgrepo.com/svg/351969/dove) for now) is known to represent hope in many cultures.
+
+The orange background is a wink to Bitcoin and when in a circle, it also represents the sun, which means that while it's our hope for a better future, we still have to be careful with our collective goals and actions, to not end up like Icarus.
 
 ## Roadmap
 
