@@ -74,7 +74,13 @@ fn path_to_response(headers: HeaderMap, path: &Path) -> Response {
     headers.insert_content_type(path);
 
     if !is_localhost {
-        headers.insert_cache_control(10, 50);
+        let serialized_path = path.to_str().unwrap();
+
+        if serialized_path.contains("fonts/") || serialized_path.contains("assets/pwa/") || serialized_path.contains("packages/") {
+            headers.insert_cache_control_immutable();
+        } else {
+            headers.insert_cache_control_revalidate(10, 50);
+        }
     }
 
     headers.insert_last_modified(date);

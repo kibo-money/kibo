@@ -16,7 +16,8 @@ pub trait HeaderMapUtils {
 
     fn insert_cors(&mut self);
 
-    fn insert_cache_control(&mut self, max_age: u64, stale_while_revalidate: u64);
+    fn insert_cache_control_immutable(&mut self);
+    fn insert_cache_control_revalidate(&mut self, max_age: u64, stale_while_revalidate: u64);
     fn insert_last_modified(&mut self, date: DateTime<Utc>);
 
     fn insert_content_type(&mut self, path: &Path);
@@ -62,7 +63,16 @@ impl HeaderMapUtils for HeaderMap {
         self.insert(header::ACCESS_CONTROL_ALLOW_HEADERS, "*".parse().unwrap());
     }
 
-    fn insert_cache_control(&mut self, max_age: u64, stale_while_revalidate: u64) {
+    fn insert_cache_control_immutable(&mut self) {
+        self.insert(
+            header::CACHE_CONTROL,
+            format!("public, max-age=604800, immutable, stale-if-error={STALE_IF_ERROR}")
+                .parse()
+                .unwrap(),
+        );
+    }
+
+    fn insert_cache_control_revalidate(&mut self, max_age: u64, stale_while_revalidate: u64) {
         self.insert(
         header::CACHE_CONTROL,
         format!(

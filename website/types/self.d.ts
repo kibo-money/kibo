@@ -1,6 +1,9 @@
 type Scale = "date" | "height";
 
-import { Accessor, Setter } from "../libraries/solid-signals/types/signals";
+import {
+  Accessor,
+  Setter,
+} from "../packages/solid-signals/2024-04-17/types/signals";
 import {
   DeepPartial,
   BaselineStyleOptions,
@@ -14,9 +17,9 @@ import {
   SeriesType,
   IChartApi,
   ISeriesApi,
-} from "../libraries/lightweight-charts/types";
+} from "../packages/lightweight-charts/v4.2.0/types";
 import { DatePath, HeightPath } from "./paths";
-import { Owner } from "../libraries/solid-signals/types/owner";
+import { Owner } from "../packages/solid-signals/2024-04-17/types/owner";
 
 type SettingsTheme = "system" | "dark" | "light";
 
@@ -133,7 +136,7 @@ interface OHLC {
 
 interface ResourceDataset<
   S extends Scale,
-  Type extends OHLC | number = number
+  Type extends OHLC | number = number,
 > {
   scale: S;
   url: string;
@@ -151,7 +154,7 @@ interface FetchedResult<
     SingleValueData | ValuedCandlestickData
   > = DatasetValue<
     Type extends number ? SingleValueData : ValuedCandlestickData
-  >
+  >,
 > {
   at: Date | null;
   json: Signal<FetchedJSON<S, Type> | null>;
@@ -181,7 +184,7 @@ interface FetchedChunk {
 
 type FetchedDataset<
   S extends Scale,
-  Type extends number | OHLC
+  Type extends number | OHLC,
 > = S extends "date" ? FetchedDateDataset<Type> : FetchedHeightDataset<Type>;
 
 interface Versioned {
@@ -219,3 +222,5 @@ interface Marker {
 interface Weighted {
   weight: number;
 }
+
+type DatasetCandlestickData = DatasetValue<CandlestickData> & { year: number };

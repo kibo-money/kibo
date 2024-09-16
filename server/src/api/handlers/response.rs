@@ -88,7 +88,7 @@ where
 
     headers.insert_cors();
     headers.insert_content_type_application_json();
-    headers.insert_cache_control(max_age, stale_while_revalidate);
+    headers.insert_cache_control_revalidate(max_age, stale_while_revalidate);
 
     response
 }

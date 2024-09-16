@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -13,6 +13,7 @@
     />
     <link rel="manifest" href="/manifest.webmanifest" />
     <meta name="mobile-web-app-capable" content="yes" />
+    <script defer type="module" crossorigin src="./script.js"></script>
 
     <!-- Styles -->
 
@@ -238,16 +239,11 @@
         /* current: oklch(30% 0.01 44) */
         --darker-gray: #322c2a;
         /* before: #10100e */
-        /* current: oklch(17% 0.005 44) */
-        --black: #110f0e;
+        /* current: oklch(17.5% 0.005 44) */
+        --black: #12100f;
         /* before: #f26610 */
         /* current: oklch(67.64% 0.191 44.41) */
         --orange: #f26610;
-
-        --background-color: var(--white);
-        --color: var(--black);
-        --off-color: var(--light-gray);
-        --border-color: var(--lighter-gray);
 
         --font-size-2xs: 0.625rem; /* 10px */
         --line-height-2xs: 1rem; /* 16px */
@@ -266,6 +262,13 @@
         --font-weight-bold: 700;
 
         --transform-scale-active: scaleX(0.95) scaleY(0.9);
+
+        --default-main-width: 384px;
+
+        --background-color: var(--white);
+        --color: var(--black);
+        --off-color: var(--light-gray);
+        --border-color: var(--lighter-gray);
       }
 
       [data-theme="dark"] {
@@ -273,6 +276,10 @@
         --color: var(--white);
         --off-color: var(--dark-gray);
         --border-color: var(--darker-gray);
+      }
+
+      [data-resize] {
+        user-select: none;
       }
 
       /**
@@ -284,7 +291,7 @@
        */
       @font-face {
         font-family: "Satoshi";
-        src: url("./fonts/satoshi.var.woff2") format("woff2");
+        src: url("./fonts/satoshi/2024-09/font.var.woff2") format("woff2");
         font-weight: 100 900;
         font-display: block;
         font-style: normal;
@@ -292,7 +299,7 @@
 
       @font-face {
         font-family: "Satoshi Chart";
-        src: url("./fonts/satoshi.var.woff2") format("woff2");
+        src: url("./fonts/satoshi/2024-09/font.var.woff2") format("woff2");
         font-weight: 500 900;
         font-display: block;
         font-style: normal;
@@ -338,6 +345,10 @@
           order: 2;
           width: 100%;
           flex: 1;
+        }
+
+        > #selected-frame[hidden] {
+          display: flex !important;
         }
       }
 
@@ -387,8 +398,26 @@
           font-size: var(--font-size-sm);
           line-height: var(--line-height-sm);
 
+          fieldset[data-size="sm"] & {
+            font-size: var(--font-size-xs);
+            line-height: var(--line-height-xs);
+          }
+
+          > legend,
+          > div {
+            flex-shrink: 0;
+          }
+
+          > hr {
+            min-width: 1rem;
+          }
+
           > * + * {
             margin-left: 1.5rem;
+
+            fieldset[data-size="sm"] & {
+              margin-left: 0.5rem;
+            }
           }
 
           label {
@@ -401,6 +430,10 @@
 
             > * + * {
               margin-left: 1rem !important;
+
+              fieldset[data-size="sm"] & {
+                margin-left: 0rem !important;
+              }
             }
           }
         }
@@ -490,7 +523,7 @@
           color: var(--off-color);
         }
 
-        label > &[type="radio"] {
+        label > & {
           position: absolute;
           width: 1px;
           height: 1px;
@@ -508,7 +541,7 @@
           transform: scaleX(0.99) scaleY(0.9);
         }
 
-        &:has(input[type="radio"]) {
+        &:has(input) {
           cursor: pointer;
           display: flex;
           flex-direction: column;
@@ -516,6 +549,7 @@
           -webkit-user-select: none;
           color: var(--off-color);
           position: relative;
+          pointer-events: all;
 
           > span.main {
             display: flex;
@@ -579,14 +613,14 @@
             overflow: visible !important;
           }
 
-          > *:not(input[type="radio"]):not(svg) {
+          > *:not(input):not(svg) {
             width: 100%;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
           }
 
-          > *:not(input[type="radio"]) + * {
+          > *:not(input) + * {
             margin-top: -0.5rem /* -8px */;
           }
 
@@ -596,7 +630,7 @@
           }
         }
 
-        &:has(input[type="radio"]:checked) {
+        &:has(input:checked) {
           color: var(--color);
 
           .tree &,
@@ -615,14 +649,41 @@
       }
 
       main {
-        flex: 1;
         order: 1;
-        width: 100%;
         position: relative;
-        min-height: 0;
+
+        @media (max-width: 767px) {
+          flex: 1;
+          min-height: 0;
+          width: 100% !important;
+        }
 
         @media (min-width: 768px) {
-          max-width: 384px;
+          min-width: 300px;
+          width: var(--default-main-width);
+          max-width: 65dvw;
+        }
+
+        > #resize-bar {
+          display: none;
+          position: absolute;
+          right: 0;
+          top: 0;
+          bottom: 0;
+          width: 4px;
+          margin: 0 -2px;
+          z-index: 50;
+
+          html[data-resize] &,
+          &:hover {
+            border-right: 4px;
+            cursor: col-resize;
+            border-color: var(--off-color) !important;
+          }
+
+          @media (min-width: 768px) {
+            display: block;
+          }
         }
       }
 
@@ -777,7 +838,7 @@
             padding-left: 12px;
             border-left: 1px;
 
-            &:has(input:checked) {
+            &[data-highlight] {
               &::before {
                 border-color: var(--orange) !important;
               }
@@ -804,13 +865,13 @@
               border-radius: 0px 0px 0px 4px;
             }
 
-            &:has(input:checked) {
+            &:has(*[data-highlight]) {
               > details > summary::after {
                 border-color: var(--orange) !important;
               }
             }
 
-            &:has(~ li input:checked) {
+            &:has(~ *[data-highlight]) {
               border-color: var(--orange) !important;
 
               &::before {
@@ -912,9 +973,9 @@
       }
 
       #selected-frame {
-        /* display: flex; Set in script  */
         flex-direction: column;
-        display: none;
+        display: flex;
+        opacity: 0;
 
         > header {
           button {
@@ -950,8 +1011,8 @@
             display: flex;
             align-items: center;
             gap: 1.5rem;
-            margin: -0.75rem -1.5rem;
-            padding: 0.75rem 1.5rem;
+            margin: -1rem -1.5rem;
+            padding: 1rem 1.5rem;
             overflow-x: auto;
 
             > div {
@@ -1051,7 +1112,7 @@
           }
 
           > #timescale {
-            margin-top: 0.5rem;
+            margin-top: 1rem;
 
             border-radius: 9999px;
             display: flex;
@@ -1094,7 +1155,7 @@
 
       #share-div {
         padding: 1.5rem;
-        backdrop-filter: blur(8px);
+        backdrop-filter: blur(12px);
         position: absolute;
         top: 0;
         bottom: 0;
@@ -1102,6 +1163,51 @@
         right: 0;
         display: flex;
         z-index: 999;
+        justify-content: center;
+        align-items: center;
+
+        > #share-content-div {
+          display: flex;
+          flex-direction: column;
+          width: 100%;
+          max-width: 10rem; /* 576px */
+          background-color: var(--white);
+          padding: 1rem;
+          box-shadow: 0 0 2rem 1rem var(--border-color);
+          border-radius: 1px;
+
+          html[data-theme="dark"] & {
+            box-shadow: none;
+          }
+
+          a {
+            margin-top: 0.5rem;
+            display: block;
+            font-style: italic;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            color: var(--black);
+          }
+
+          img {
+            image-rendering: pixelated;
+          }
+        }
+      }
+
+      #search-frame {
+        > #search-no-input-text {
+          color: var(--off-color);
+
+          &:has(+ ul li) {
+            display: none;
+          }
+
+          > button {
+            color: var(--color);
+          }
+        }
       }
 
       .shadow-top {
@@ -1192,7 +1298,7 @@
         localStorage.getItem(settingsThemeLocalStorageKey)
       );
       const preferredColorSchemeMatchMedia = window.matchMedia(
-        "(prefers-color-scheme: dark)"
+        "(prefers-color-scheme: dark)",
       );
       if (
         theme === "dark" ||
@@ -1204,7 +1310,7 @@
       }
 
       const backgroundColor = getComputedStyle(
-        window.document.documentElement
+        window.document.documentElement,
       ).getPropertyValue("--background-color");
       const meta = window.document.createElement("meta");
       meta.name = "theme-color";
@@ -1219,183 +1325,186 @@
     <!-- Icons -->
 
     <link
+      rel="icon"
+      type="image/png"
+      sizes="196x196"
+      href="/assets/pwa/2024-09-16_10:57:54/favicon-196.png"
+    />
+    <link
+      rel="apple-touch-icon"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-icon-180.png"
+    />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2048-2732.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2048-2732.jpg"
       media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2732-2048.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2732-2048.jpg"
       media="(device-width: 1024px) and (device-height: 1366px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1668-2388.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1668-2388.jpg"
       media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2388-1668.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2388-1668.jpg"
       media="(device-width: 834px) and (device-height: 1194px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1536-2048.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1536-2048.jpg"
       media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2048-1536.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2048-1536.jpg"
       media="(device-width: 768px) and (device-height: 1024px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1488-2266.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1488-2266.jpg"
       media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2266-1488.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2266-1488.jpg"
       media="(device-width: 744px) and (device-height: 1133px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1640-2360.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1640-2360.jpg"
       media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2360-1640.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2360-1640.jpg"
       media="(device-width: 820px) and (device-height: 1180px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1668-2224.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1668-2224.jpg"
       media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2224-1668.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2224-1668.jpg"
       media="(device-width: 834px) and (device-height: 1112px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1620-2160.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1620-2160.jpg"
       media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2160-1620.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2160-1620.jpg"
       media="(device-width: 810px) and (device-height: 1080px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1290-2796.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1290-2796.jpg"
       media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2796-1290.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2796-1290.jpg"
       media="(device-width: 430px) and (device-height: 932px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1179-2556.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1179-2556.jpg"
       media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2556-1179.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2556-1179.jpg"
       media="(device-width: 393px) and (device-height: 852px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1284-2778.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1284-2778.jpg"
       media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2778-1284.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2778-1284.jpg"
       media="(device-width: 428px) and (device-height: 926px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1170-2532.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1170-2532.jpg"
       media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2532-1170.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2532-1170.jpg"
       media="(device-width: 390px) and (device-height: 844px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1125-2436.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1125-2436.jpg"
       media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2436-1125.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2436-1125.jpg"
       media="(device-width: 375px) and (device-height: 812px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1242-2688.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1242-2688.jpg"
       media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2688-1242.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2688-1242.jpg"
       media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-828-1792.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-828-1792.jpg"
       media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1792-828.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1792-828.jpg"
       media="(device-width: 414px) and (device-height: 896px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1242-2208.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1242-2208.jpg"
       media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-2208-1242.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-2208-1242.jpg"
       media="(device-width: 414px) and (device-height: 736px) and (-webkit-device-pixel-ratio: 3) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-750-1334.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-750-1334.jpg"
       media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1334-750.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1334-750.jpg"
       media="(device-width: 375px) and (device-height: 667px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-640-1136.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-640-1136.jpg"
       media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: portrait)"
     />
     <link
       rel="apple-touch-startup-image"
-      href="/assets/apple-splash-1136-640.jpg"
+      href="/assets/pwa/2024-09-16_10:57:54/apple-splash-1136-640.jpg"
       media="(device-width: 320px) and (device-height: 568px) and (-webkit-device-pixel-ratio: 2) and (orientation: landscape)"
     />
-    <link
-      rel="icon"
-      type="image/png"
-      sizes="196x196"
-      href="/assets/favicon-196.png"
-    />
-    <link rel="apple-touch-icon" href="/assets/apple-icon-180.png" />
-    <meta name="apple-mobile-web-app-capable" content="yes" />
   </head>
   <body>
     <nav>
@@ -1431,10 +1540,10 @@
             id="selected-frame-selector"
             value="chart"
           />
-          <svg viewBox="0 0 24 24">
+          <svg viewBox="0 0 20 20">
             <path
-              d="M20 18a1 1 0 0 1 .117 1.993L20 20H4a1 1 0 0 1-.117-1.993L4 18zM15.22 5.375a1 1 0 0 1 1.393-.165l.094.083l4 4a1 1 0 0 1 .284.576L21 10v5a1 1 0 0 1-.883.993L20 16H3.978l-.11-.009l-.11-.02l-.107-.034l-.105-.046l-.1-.059l-.094-.07l-.06-.055l-.072-.082l-.064-.089l-.054-.096l-.016-.035l-.04-.103l-.027-.106l-.015-.108l-.004-.11l.009-.11l.019-.105q.015-.06.035-.112l.046-.105l.059-.1l4-6a1 1 0 0 1 1.165-.39l.114.05l3.277 1.638z"
-            ></path>
+              d="M4.25 2A2.25 2.25 0 0 0 2 4.25v2a.75.75 0 0 0 1.5 0v-2a.75.75 0 0 1 .75-.75h2a.75.75 0 0 0 0-1.5h-2ZM13.75 2a.75.75 0 0 0 0 1.5h2a.75.75 0 0 1 .75.75v2a.75.75 0 0 0 1.5 0v-2A2.25 2.25 0 0 0 15.75 2h-2ZM3.5 13.75a.75.75 0 0 0-1.5 0v2A2.25 2.25 0 0 0 4.25 18h2a.75.75 0 0 0 0-1.5h-2a.75.75 0 0 1-.75-.75v-2ZM18 13.75a.75.75 0 0 0-1.5 0v2a.75.75 0 0 1-.75.75h-2a.75.75 0 0 0 0 1.5h2A2.25 2.25 0 0 0 18 15.75v-2ZM7 10a3 3 0 1 1 6 0 3 3 0 0 1-6 0Z"
+            />
           </svg>
         </label>
 
@@ -1593,11 +1702,20 @@
       </a>
     </nav>
 
-    <main id="frames">
+    <main id="main">
+      <script>
+        const savedWidth = localStorage.getItem("bar-width");
+        if (savedWidth) {
+          const mainFrames = window.document.getElementById("frames");
+          if (!mainFrames) throw "Should exist";
+          mainFrames.style.width = `${savedWidth}px`;
+        }
+      </script>
       <div class="shadow-top"></div>
       <div class="shadow-bottom"></div>
       <div class="shadow-left"></div>
       <div class="shadow-right"></div>
+      <div id="resize-bar"></div>
 
       <section id="folders-frame" hidden>
         <header>
@@ -1691,6 +1809,10 @@
           </div>
         </header>
         <hr />
+        <p id="search-no-input-text">
+          If you can't think of anything, you might want to try to
+          <button>open a random chart</button>
+        </p>
         <ul id="search-results" class="list" style="overflow-y: auto"></ul>
         <footer class="absolute">
           <button id="reset-search" title="Reset">
@@ -1884,11 +2006,11 @@
         </footer>
       </section>
     </main>
-    <aside>
+    <aside id="aside">
       <div class="shadow-left"></div>
       <div class="shadow-right"></div>
 
-      <section id="selected-frame">
+      <section id="selected-frame" hidden>
         <header>
           <div>
             <div style="display: flex; align-items: center">
@@ -1917,7 +2039,7 @@
         </header>
         <hr />
         <div id="charts">
-          <div id="legend"></div>
+          <fieldset id="legend"></fieldset>
           <div id="chart-list">
             <div class="shadow-top"></div>
             <div class="shadow-bottom"></div>
@@ -2008,11 +2130,10 @@
       </section>
     </aside>
     <div id="share-div" hidden>
-      <div>
-        <h3>Share</h3>
+      <div id="share-content-div">
+        <img id="share-img" src="" />
+        <a id="share-anchor" href="/"></a>
       </div>
     </div>
   </body>
-
-  <script type="module" crossorigin src="./script.js"></script>
 </html>
