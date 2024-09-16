@@ -61,7 +61,7 @@ function dateToString(date) {
  */
 function getNumberOfDaysBetweenTwoDates(oldest, youngest) {
   return Math.round(
-    Math.abs((youngest.getTime() - oldest.getTime()) / ONE_DAY_IN_MS),
+    Math.abs((youngest.getTime() - oldest.getTime()) / ONE_DAY_IN_MS)
   );
 }
 
@@ -104,7 +104,7 @@ const urlParamsHelpers = {
     window.history.replaceState(
       null,
       "",
-      `${pathname}?${urlParams.toString()}`,
+      `${pathname}?${urlParams.toString()}`
     );
   },
   /**
@@ -304,7 +304,7 @@ const presetTitle = dom.getElementById("preset-title");
 const presetDescription = dom.getElementById("preset-description");
 const foldersFilterAllCount = dom.getElementById("folders-filter-all-count");
 const foldersFilterFavoritesCount = dom.getElementById(
-  "folders-filter-favorites-count",
+  "folders-filter-favorites-count"
 );
 const foldersFilterNewCount = dom.getElementById("folders-filter-new-count");
 const chartListElement = dom.getElementById("chart-list");
@@ -1793,7 +1793,7 @@ lazySignals.then((importedSignals) => {
                 name,
                 title: `${name} Market Price Moving Average`,
                 key,
-              }),
+              })
             ),
           ],
         };
@@ -1855,7 +1855,7 @@ lazySignals.then((importedSignals) => {
                     name,
                     title: `${name} Total`,
                     key: `${key}-total`,
-                  }),
+                  })
                 ),
               ],
             },
@@ -1868,7 +1868,7 @@ lazySignals.then((importedSignals) => {
                     name,
                     title: `${name} Compound`,
                     key: `${key}-compound`,
-                  }),
+                  })
                 ),
               ],
             },
@@ -3789,7 +3789,7 @@ lazySignals.then((importedSignals) => {
                 title: "Average",
                 color,
                 datasetPath: `${scale}-to-${datasetIdToPrefix(
-                  datasetId,
+                  datasetId
                 )}realized-price`,
               },
             ],
@@ -3990,7 +3990,7 @@ lazySignals.then((importedSignals) => {
               name: legend,
               datasetId: id,
               title: name,
-            }),
+            })
           ),
           {
             name: "Up To X",
@@ -4001,7 +4001,7 @@ lazySignals.then((importedSignals) => {
                 name,
                 datasetId: id,
                 title: name,
-              }),
+              })
             ),
           },
           {
@@ -4013,7 +4013,7 @@ lazySignals.then((importedSignals) => {
                 name,
                 datasetId: id,
                 title: name,
-              }),
+              })
             ),
           },
           {
@@ -4025,7 +4025,7 @@ lazySignals.then((importedSignals) => {
                 name,
                 datasetId: id,
                 title: name,
-              }),
+              })
             ),
           },
           {
@@ -4037,7 +4037,7 @@ lazySignals.then((importedSignals) => {
                 name,
                 datasetId: id,
                 title: name,
-              }),
+              })
             ),
           },
         ],
@@ -4184,7 +4184,7 @@ lazySignals.then((importedSignals) => {
                 name,
                 filenameAddon: size,
                 datasetId: key,
-              }),
+              })
             ),
           },
           {
@@ -4196,7 +4196,7 @@ lazySignals.then((importedSignals) => {
                 color: colors[key],
                 name,
                 datasetId: key,
-              }),
+              })
             ),
           },
         ],
@@ -5115,7 +5115,7 @@ lazySignals.then((importedSignals) => {
   const filter = signals.createSignal(
     /** @type {FoldersFilter} */ (
       localStorage.getItem(foldersFilterLocalStorageKey) || "all"
-    ),
+    )
   );
 
   const favoritesCount = signals.createSignal(0);
@@ -5318,7 +5318,7 @@ lazySignals.then((importedSignals) => {
 
           return isFavorite;
         },
-        false,
+        false
       );
     }
 
@@ -5430,7 +5430,7 @@ lazySignals.then((importedSignals) => {
           return null;
         }
       },
-      null,
+      null
     );
 
     partialTree.forEach((anyPartial, partialIndex) => {
@@ -5452,14 +5452,14 @@ lazySignals.then((importedSignals) => {
             return null;
           }
         },
-        undefined,
+        undefined
       );
 
       if ("tree" in anyPartial) {
         const folderId = stringToId(
           `${(path || [])?.map(({ name }) => name).join(" ")} ${
             anyPartial.name
-          } folder`,
+          } folder`
         );
 
         /** @type {Omit<PresetFolder, keyof PartialPresetFolder>} */
@@ -5477,13 +5477,13 @@ lazySignals.then((importedSignals) => {
         };
 
         const passedDetails = signals.createSignal(
-          /** @type {HTMLDivElement | HTMLDetailsElement | null} */ (null),
+          /** @type {HTMLDivElement | HTMLDetailsElement | null} */ (null)
         );
 
         const childPresetsCount = processPartialTree(
           anyPartial.tree,
           passedDetails,
-          [...(path || []), thisPath],
+          [...(path || []), thisPath]
         );
 
         listForSum.push(childPresetsCount);
@@ -5577,10 +5577,10 @@ lazySignals.then((importedSignals) => {
         }
 
         preset.isFavorite.set(
-          !!localStorage.getItem(presetToFavoriteLocalStorageKey(preset)),
+          !!localStorage.getItem(presetToFavoriteLocalStorageKey(preset))
         );
         preset.visited.set(
-          !!localStorage.getItem(presetToVisitedLocalStorageKey(preset)),
+          !!localStorage.getItem(presetToVisitedLocalStorageKey(preset))
         );
 
         createCountersEffects(preset);
@@ -5647,7 +5647,7 @@ lazySignals.then((importedSignals) => {
     });
 
     return signals.createMemo(() =>
-      listForSum.reduce((acc, s) => acc + s(), 0),
+      listForSum.reduce((acc, s) => acc + s(), 0)
     );
   }
 
@@ -5668,7 +5668,7 @@ lazySignals.then((importedSignals) => {
       console.log(
         [...m.entries()]
           .filter(([_, value]) => value > 1)
-          .map(([key, _]) => key),
+          .map(([key, _]) => key)
       );
 
       throw Error("ID duplicate");
@@ -5856,8 +5856,8 @@ lazySignals.then((importedSignals) => {
             return /** @type {TimeRange | null} */ (
               JSON.parse(
                 localStorage.getItem(
-                  getVisibleTimeRangeLocalStorageKey(scale),
-                ) || "null",
+                  getVisibleTimeRangeLocalStorageKey(scale)
+                ) || "null"
               )
             );
           }
@@ -5917,23 +5917,23 @@ lazySignals.then((importedSignals) => {
           /** @type {Set<ResourceDataset<any, any>>} */ (new Set()),
           {
             equals: false,
-          },
+          }
         );
         const visibleTimeRange = signals.createSignal(
-          getInitialVisibleTimeRange(scale()),
+          getInitialVisibleTimeRange(scale())
         );
         const visibleDatasetIds = signals.createSignal(
           /** @type {number[]} */ ([]),
           {
             equals: false,
-          },
+          }
         );
         const lastVisibleDatasetIndex = signals.createMemo(() => {
           const last = visibleDatasetIds().at(-1);
           return last !== undefined ? chunkIdToIndex(scale(), last) : undefined;
         });
         const priceSeriesType = signals.createSignal(
-          /** @type {PriceSeriesType} */ ("Candlestick"),
+          /** @type {PriceSeriesType} */ ("Candlestick")
         );
 
         function updateVisibleDatasetIds() {
@@ -5949,7 +5949,7 @@ lazySignals.then((importedSignals) => {
 
             ids = Array.from(
               { length: to - from + 1 },
-              (_, i) => i + from,
+              (_, i) => i + from
             ).filter((year) => year >= 2009 && year <= today.getUTCFullYear());
           } else {
             const from = Math.floor(Number(rawFrom) / HEIGHT_CHUNK_SIZE);
@@ -5959,7 +5959,7 @@ lazySignals.then((importedSignals) => {
 
             ids = Array.from(
               { length },
-              (_, i) => (from + i) * HEIGHT_CHUNK_SIZE,
+              (_, i) => (from + i) * HEIGHT_CHUNK_SIZE
             );
           }
 
@@ -5979,7 +5979,7 @@ lazySignals.then((importedSignals) => {
 
         const debouncedUpdateVisibleDatasetIds = debounce(
           updateVisibleDatasetIds,
-          100,
+          100
         );
 
         function saveVisibleRange() {
@@ -5987,17 +5987,17 @@ lazySignals.then((importedSignals) => {
 
           urlParamsHelpers.write(
             URL_PARAMS_TIME_RANGE_FROM_KEY,
-            String(range.from),
+            String(range.from)
           );
 
           urlParamsHelpers.write(
             URL_PARAMS_TIME_RANGE_TO_KEY,
-            String(range.to),
+            String(range.to)
           );
 
           localStorage.setItem(
             getVisibleTimeRangeLocalStorageKey(scale()),
-            JSON.stringify(range),
+            JSON.stringify(range)
           );
         }
         const debouncedSaveVisibleRange = debounce(saveVisibleRange, 250);
@@ -6057,17 +6057,17 @@ lazySignals.then((importedSignals) => {
           if (modulused === 0) {
             return `${numberToUSLocale(
               value / (1_000_000 * 1_000 ** letterIndex),
-              3,
+              3
             )}${letter}`;
           } else if (modulused === 1) {
             return `${numberToUSLocale(
               value / (1_000_000 * 1_000 ** letterIndex),
-              2,
+              2
             )}${letter}`;
           } else {
             return `${numberToUSLocale(
               value / (1_000_000 * 1_000 ** letterIndex),
-              1,
+              1
             )}${letter}`;
           }
         }
@@ -6144,7 +6144,7 @@ lazySignals.then((importedSignals) => {
               ++index
             ) {
               sortedTimePoints[index].timeWeight = this.computeHeightWeight(
-                sortedTimePoints[index].time,
+                sortedTimePoints[index].time
               );
             }
           }
@@ -6284,7 +6284,7 @@ lazySignals.then((importedSignals) => {
         function resetChartListElement() {
           while (
             chartListElement.lastElementChild?.classList.contains(
-              "chart-wrapper",
+              "chart-wrapper"
             )
           ) {
             chartListElement.lastElementChild?.remove();
@@ -6302,8 +6302,8 @@ lazySignals.then((importedSignals) => {
               new Array(
                 getNumberOfDaysBetweenTwoDates(
                   whitespaceStartDate,
-                  whitespaceEndDate,
-                ),
+                  whitespaceEndDate
+                )
               )
             );
           // Hack to be able to scroll freely
@@ -6312,7 +6312,7 @@ lazySignals.then((importedSignals) => {
             const date = new Date(
               whitespaceStartDateYear,
               whitespaceStartDateMonth,
-              whitespaceStartDateDate + i,
+              whitespaceStartDateDate + i
             );
 
             const time = dateToString(date);
@@ -6395,7 +6395,7 @@ lazySignals.then((importedSignals) => {
               /** @type {Lowercase<typeof chartModes[number]>} */ (
                 localStorage.getItem(id) ||
                   chartModes[chartIndex ? 0 : 1].toLowerCase()
-              ),
+              )
             );
 
             const field = createField({
@@ -6460,7 +6460,7 @@ lazySignals.then((importedSignals) => {
                 ratio =
                   getNumberOfDaysBetweenTwoDates(
                     dateFromTime(from),
-                    dateFromTime(to),
+                    dateFromTime(to)
                   ) / width;
               } else {
                 const to = /** @type {number} */ (visibleTimeRange.to);
@@ -6490,7 +6490,7 @@ lazySignals.then((importedSignals) => {
 
         const debouncedUpdateVisiblePriceSeriesType = debounce(
           updateVisiblePriceSeriesType,
-          50,
+          50
         );
 
         /**
@@ -6543,12 +6543,12 @@ lazySignals.then((importedSignals) => {
                   (new Date().getFullYear() -
                     new Date("2009-01-01").getFullYear() +
                     2) *
-                    (scale === "date" ? 1 : 6),
+                    (scale === "date" ? 1 : 6)
                 )
                   .fill(null)
                   .map(() => {
                     const json = signals.createSignal(
-                      /** @type {FetchedJSON<S, T> | null} */ (null),
+                      /** @type {FetchedJSON<S, T> | null} */ (null)
                     );
 
                     /** @type {FetchedResult<S, T>} */
@@ -6608,7 +6608,7 @@ lazySignals.then((importedSignals) => {
                                           ? NaN
                                           : /** @type {number} */ (value),
                                     }),
-                              }),
+                              })
                           );
                         }
                       }),
@@ -6672,8 +6672,9 @@ lazySignals.then((importedSignals) => {
 
                       if (cachedResponse) {
                         /** @type {FetchedJSON<S, T> | null} */
-                        const json =
-                          await convertResponseToJSON(cachedResponse);
+                        const json = await convertResponseToJSON(
+                          cachedResponse
+                        );
 
                         if (json) {
                           console.log(`cache: ${path}?chunk=${id}`);
@@ -6707,7 +6708,7 @@ lazySignals.then((importedSignals) => {
                     try {
                       fetchedResponse = await fetch(
                         backupUrlWithQuery,
-                        fetchConfig,
+                        fetchConfig
                       );
                     } catch {
                       fetched.loading = false;
@@ -6745,7 +6746,7 @@ lazySignals.then((importedSignals) => {
 
                   if (previousLength && previousLength === newLength) {
                     const previousLastValue = Object.values(
-                      previousMap || [],
+                      previousMap || []
                     ).at(-1);
                     const newLastValue = Object.values(newMap).at(-1);
 
@@ -6852,12 +6853,12 @@ lazySignals.then((importedSignals) => {
             if (scale === "date") {
               date.set(
                 /** @type {DatePath} */ (path),
-                /** @type {any} */ (dataset),
+                /** @type {any} */ (dataset)
               );
             } else {
               height.set(
                 /** @type {HeightPath} */ (path),
-                /** @type {any} */ (dataset),
+                /** @type {any} */ (dataset)
               );
             }
 
@@ -6985,7 +6986,7 @@ lazySignals.then((importedSignals) => {
         const hoveredLegend = signals.createSignal(
           /** @type {{label: HTMLLabelElement, series: Series} | undefined} */ (
             undefined
-          ),
+          )
         );
         const notHoveredLegendTransparency = "66";
         /**
@@ -7094,8 +7095,9 @@ lazySignals.then((importedSignals) => {
 
                         v = /** @type {string} */ (v).substring(0, 7);
                         initialColors[i][k] = v;
-                        darkenedColors[i][k] =
-                          `${v}${notHoveredLegendTransparency}`;
+                        darkenedColors[i][
+                          k
+                        ] = `${v}${notHoveredLegendTransparency}`;
                       } else if (k === "lastValueVisible" && v) {
                         initialColors[i][k] = true;
                         darkenedColors[i][k] = false;
@@ -7112,7 +7114,7 @@ lazySignals.then((importedSignals) => {
 
                 return hovered;
               },
-              undefined,
+              undefined
             );
           }
           createHoverEffect();
@@ -7158,14 +7160,14 @@ lazySignals.then((importedSignals) => {
           const id = stringToId(title);
           const storageId = presetAndSeriesToLocalStorageKey(
             preset,
-            seriesBlueprint,
+            seriesBlueprint
           );
 
           const active = signals.createSignal(
             urlParamsHelpers.readBool(id) ??
               localeStorageHelpers.readBool(storageId) ??
               defaultActive ??
-              true,
+              true
           );
 
           const disabled = signals.createMemo(_disabled || (() => false));
@@ -7206,7 +7208,7 @@ lazySignals.then((importedSignals) => {
 
           dataset.fetchedJSONs.forEach((json, index) => {
             const chunk = signals.createSignal(
-              /** @type {ISeriesApi<SeriesType> | undefined} */ (undefined),
+              /** @type {ISeriesApi<SeriesType> | undefined} */ (undefined)
             );
 
             chunks[index] = chunk;
@@ -7304,11 +7306,11 @@ lazySignals.then((importedSignals) => {
               if (visibleDatasetIds().length) {
                 const start = chunkIdToIndex(
                   scale(),
-                  /** @type {number} */ (visibleDatasetIds().at(0)),
+                  /** @type {number} */ (visibleDatasetIds().at(0))
                 );
                 const end = chunkIdToIndex(
                   scale(),
-                  /** @type {number} */ (visibleDatasetIds().at(-1)),
+                  /** @type {number} */ (visibleDatasetIds().at(-1))
                 );
 
                 if (index >= start && index <= end) {
@@ -7441,7 +7443,7 @@ lazySignals.then((importedSignals) => {
           const blueprintCount =
             1 + (preset.top?.length || 0) + (preset.bottom?.length || 0);
           const chartsBlueprints = [preset.top || [], preset.bottom].flatMap(
-            (list) => (list ? [list] : []),
+            (list) => (list ? [list] : [])
           );
 
           resetLegendElement();
@@ -7453,7 +7455,7 @@ lazySignals.then((importedSignals) => {
           charts = chartsBlueprints.map((seriesBlueprints, chartIndex) => {
             const { chartDiv, unitName, chartMode } = createChartDiv(
               chartListElement,
-              chartIndex,
+              chartIndex
             );
 
             const chart =
@@ -7589,7 +7591,7 @@ lazySignals.then((importedSignals) => {
                   maxMarker
                 ) {
                   min.seriesChunk.setMarkers(
-                    [minMarker, maxMarker].sort((a, b) => a.weight - b.weight),
+                    [minMarker, maxMarker].sort((a, b) => a.weight - b.weight)
                   );
                 } else {
                   if (min && minMarker) {
@@ -7608,7 +7610,7 @@ lazySignals.then((importedSignals) => {
                 () => {
                   setMinMaxMarkers();
                 },
-                blueprintCount * 10 + scale === "date" ? 50 : 100,
+                blueprintCount * 10 + scale === "date" ? 50 : 100
               );
 
             function createSetMinMaxMarkersWhenIdleEffect() {
@@ -7666,7 +7668,7 @@ lazySignals.then((importedSignals) => {
               .forEach((seriesBlueprint, index) => {
                 const dataset = datasets.getOrImport(
                   scale,
-                  seriesBlueprint.datasetPath,
+                  seriesBlueprint.datasetPath
                 );
 
                 // Don't trigger reactivity by design
@@ -7698,7 +7700,7 @@ lazySignals.then((importedSignals) => {
             });
 
             const chartVisible = signals.createMemo(() =>
-              chartSeries.some((series) => series.visible()),
+              chartSeries.some((series) => series.visible())
             );
 
             function createChartVisibilityEffect() {
@@ -7730,7 +7732,7 @@ lazySignals.then((importedSignals) => {
             signals.createEffect(() =>
               chart.priceScale("right").applyOptions({
                 mode: chartMode() === "linear" ? 0 : 1,
-              }),
+              })
             );
 
             chart
@@ -7775,7 +7777,7 @@ lazySignals.then((importedSignals) => {
                     otherChart.setCrosshairPosition(
                       NaN,
                       time,
-                      otherChart.whitespace,
+                      otherChart.whitespace
                     );
                   } else {
                     // No time when mouse goes outside the chart
@@ -7809,7 +7811,7 @@ lazySignals.then((importedSignals) => {
 
               return preset;
             },
-            undefined,
+            undefined
           );
         }
         createSelectedEffect();
@@ -7818,15 +7820,15 @@ lazySignals.then((importedSignals) => {
           function initScrollButtons() {
             const buttonBackward = dom.getElementById("button-backward");
             const buttonBackwardIcon = dom.getElementById(
-              "button-backward-icon",
+              "button-backward-icon"
             );
             const buttonBackwardPauseIcon = dom.getElementById(
-              "button-backward-pause-icon",
+              "button-backward-pause-icon"
             );
             const buttonForward = dom.getElementById("button-forward");
             const buttonForwardIcon = dom.getElementById("button-forward-icon");
             const buttonForwardPauseIcon = dom.getElementById(
-              "button-forward-pause-icon",
+              "button-forward-pause-icon"
             );
 
             let interval = /** @type {number | undefined} */ (undefined);
@@ -7922,8 +7924,8 @@ lazySignals.then((importedSignals) => {
                   Math.ceil(
                     (to.getTime() -
                       new Date(`${to.getUTCFullYear()}-01-01`).getTime()) /
-                      ONE_DAY_IN_MS,
-                  ),
+                      ONE_DAY_IN_MS
+                  )
                 );
               }
 
@@ -8031,7 +8033,7 @@ lazySignals.then((importedSignals) => {
 
             dom.getElementById("button-share").addEventListener("click", () => {
               const qrcode = generate(
-                /** @type {any} */ (window.document.location.href),
+                /** @type {any} */ (window.document.location.href)
               )?.toDataURL({
                 // @ts-ignore
                 padX: 0,
@@ -8044,8 +8046,8 @@ lazySignals.then((importedSignals) => {
           });
         }
         initShareButton();
-      },
-    ),
+      }
+    )
   );
 
   function initResizeBar() {
@@ -8065,7 +8067,7 @@ lazySignals.then((importedSignals) => {
         localStorage.setItem(barWidthLocalStorageKey, String(width));
       } else {
         mainElement.style.width = bodyStyle.getPropertyValue(
-          "--default-main-width",
+          "--default-main-width"
         );
         localStorage.removeItem(barWidthLocalStorageKey);
       }
@@ -8122,7 +8124,7 @@ lazySignals.then((importedSignals) => {
 
     function initInput() {
       const haystack = presetsList.map(
-        (preset) => `${preset.title}\t${preset.serializedPath}`,
+        (preset) => `${preset.title}\t${preset.serializedPath}`
       );
 
       const searchSmallOgInnerHTML = searchSmall.innerHTML;
@@ -8146,7 +8148,7 @@ lazySignals.then((importedSignals) => {
             if (indexes?.length) {
               const maxIndex = Math.min(
                 (order || indexes).length - 1,
-                minIndex + RESULTS_PER_PAGE - 1,
+                minIndex + RESULTS_PER_PAGE - 1
               );
 
               list = Array(maxIndex - minIndex + 1);
@@ -8158,7 +8160,7 @@ lazySignals.then((importedSignals) => {
                   const [title, path] = ufuzzy
                     .highlight(
                       haystack[info.idx[infoIdx]],
-                      info.ranges[infoIdx],
+                      info.ranges[infoIdx]
                     )
                     .split("\t");
 
@@ -8243,7 +8245,7 @@ lazySignals.then((importedSignals) => {
                 haystack,
                 needle,
                 undefined,
-                infoThresh,
+                infoThresh
               );
 
               if (!result?.[0]?.length || !result?.[1]) {
@@ -8251,7 +8253,7 @@ lazySignals.then((importedSignals) => {
                   haystack,
                   needle,
                   outOfOrder,
-                  infoThresh,
+                  infoThresh
                 );
               }
 
@@ -8260,7 +8262,7 @@ lazySignals.then((importedSignals) => {
                   haystack,
                   needle,
                   outOfOrder,
-                  infoThresh,
+                  infoThresh
                 );
               }
 
@@ -8269,7 +8271,7 @@ lazySignals.then((importedSignals) => {
                   haystack,
                   needle,
                   outOfOrder,
-                  infoThresh,
+                  infoThresh
                 );
               }
 
@@ -8278,7 +8280,7 @@ lazySignals.then((importedSignals) => {
                   haystack,
                   needle,
                   undefined,
-                  infoThresh,
+                  infoThresh
                 );
               }
 
@@ -8287,7 +8289,7 @@ lazySignals.then((importedSignals) => {
                   haystack,
                   needle,
                   outOfOrder,
-                  infoThresh,
+                  infoThresh
                 );
               }
 
@@ -8319,7 +8321,7 @@ lazySignals.then((importedSignals) => {
           }
 
           searchInput.addEventListener("input", inputEvent);
-        },
+        }
       );
     }
 
@@ -8412,7 +8414,7 @@ lazySignals.then((importedSignals) => {
               id: date.valueOf().toString(),
               top: date.toLocaleTimeString(),
               owner,
-            }),
+            })
           );
         });
       });
@@ -8450,7 +8452,7 @@ lazySignals.then((importedSignals) => {
           function updateHeading(id) {
             if (!id) return;
             dom.getElementById(id).innerHTML = dateToDisplayedString(
-              grouped[id][0].date,
+              grouped[id][0].date
             );
           }
 
@@ -8488,7 +8490,7 @@ lazySignals.then((importedSignals) => {
 
           localStorage.setItem(
             LOCAL_STORAGE_HISTORY_KEY,
-            JSON.stringify(serializedHistory),
+            JSON.stringify(serializedHistory)
           );
         });
       });
@@ -8535,7 +8537,7 @@ lazySignals.then((importedSignals) => {
       const theme = signals.createSignal(savedTheme);
 
       const preferredColorSchemeMatchMedia = window.matchMedia(
-        "(prefers-color-scheme: dark)",
+        "(prefers-color-scheme: dark)"
       );
 
       /**
@@ -8551,7 +8553,7 @@ lazySignals.then((importedSignals) => {
         }
 
         const backgroundColor = getComputedStyle(
-          window.document.documentElement,
+          window.document.documentElement
         ).getPropertyValue("--background-color");
         const meta = dom.queryOrCreateMetaElement("theme-color");
         meta.content = backgroundColor;
@@ -8562,7 +8564,7 @@ lazySignals.then((importedSignals) => {
           localStorage.setItem(settingsThemeLocalStorageKey, theme());
           updateTheme(
             theme() === "dark" ||
-              (theme() === "system" && preferredColorSchemeMatchMedia.matches),
+              (theme() === "system" && preferredColorSchemeMatchMedia.matches)
           );
         });
       }
@@ -8729,7 +8731,7 @@ lazySignals.then((importedSignals) => {
       donations.sort((a, b) =>
         b.amount !== a.amount
           ? b.amount - a.amount
-          : a.name.localeCompare(b.name),
+          : a.name.localeCompare(b.name)
       );
 
       donations.slice(0, 21).forEach(({ name, url, amount }) => {
@@ -8760,7 +8762,7 @@ lazySignals.then((importedSignals) => {
         (env.macOS || env.ipad || env.iphone)
       ) {
         const installInstructionsElement = dom.getElementById(
-          "settings-install-instructions",
+          "settings-install-instructions"
         );
         installInstructionsElement.hidden = false;
 
@@ -8859,7 +8861,7 @@ lazySignals.then((importedSignals) => {
 
           window.document.addEventListener(
             "visibilitychange",
-            reinitWebSocketIfDocumentNotHidden,
+            reinitWebSocketIfDocumentNotHidden
           );
 
           window.document.addEventListener("online", reinitWebSocket);
@@ -8868,7 +8870,7 @@ lazySignals.then((importedSignals) => {
           ws?.close();
           window.document.removeEventListener(
             "visibilitychange",
-            reinitWebSocketIfDocumentNotHidden,
+            reinitWebSocketIfDocumentNotHidden
           );
           window.document.removeEventListener("online", reinitWebSocket);
           live.set(false);
@@ -8895,7 +8897,7 @@ lazySignals.then((importedSignals) => {
               name: "ohlc",
               interval: 1440,
             },
-          }),
+          })
         );
       });
 
@@ -8940,7 +8942,7 @@ lazySignals.then((importedSignals) => {
           console.log("close:", close);
 
           window.document.title = `${latest.close.toLocaleString(
-            "en-us",
+            "en-us"
           )} | kibō`;
         }
       });

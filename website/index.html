@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -1298,7 +1298,7 @@
         localStorage.getItem(settingsThemeLocalStorageKey)
       );
       const preferredColorSchemeMatchMedia = window.matchMedia(
-        "(prefers-color-scheme: dark)",
+        "(prefers-color-scheme: dark)"
       );
       if (
         theme === "dark" ||
@@ -1310,7 +1310,7 @@
       }
 
       const backgroundColor = getComputedStyle(
-        window.document.documentElement,
+        window.document.documentElement
       ).getPropertyValue("--background-color");
       const meta = window.document.createElement("meta");
       meta.name = "theme-color";
@@ -1319,6 +1319,10 @@
 
       if ("standalone" in window.navigator && !!window.navigator.standalone) {
         window.document.documentElement.dataset.display = "standalone";
+      }
+
+      if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register("/service-worker.js");
       }
     </script>
 
