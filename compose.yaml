@@ -1,0 +1,16 @@
+services:
+  kibo-parser:
+    build:
+      context: .
+      dockerfile: Dockerfile.parser
+    image: kibo-parser
+    container_name: kibo-parser
+    volumes:
+      - ./bitcoin:/bitcoin # Change the left side to the path of the directory containing the bitcoin data on your local machine
+  kibo-server:
+    build:
+      context: .
+      dockerfile: Dockerfile.server
+    image: kibo-server
+    container_name: kibo-server
+    
