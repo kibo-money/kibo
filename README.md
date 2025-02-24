@@ -1,8 +1,18 @@
+# Moved to [bitcoinresearchkit/brk](https://github.com/bitcoinresearchkit/brk)
+
+After an important rework of the backend of this codebase, the scope of the project was getting too large to all be under the `kibō.money` brand, thus it has been moved [bitcoinresearchkit/brk](https://github.com/bitcoinresearchkit/brk).
+
+`kibo.money` will live on but as **a part** of the whole project instead, as a website only and **one of** the possible front-ends (and the first at the beginning, to showcase the project and its potential).
+
+The idea behind all of this was first to make the libraries and backend of the project feel more like a common good similar to `Bitcoin Dev Kit - bdk` and secondly to allow for more showcases than just [kibo.money](https://kibo.money) and see what others can come up with
+
+---
+
 <a href="https://kibo.money" target="_blank">
   <picture>
     <source media="(prefers-color-scheme: dark)" srcset="https://raw.githubusercontent.com/kibo-money/kibo/main/assets/logo-long-text-dark.svg">
     <source media="(prefers-color-scheme: light)" srcset="https://raw.githubusercontent.com/kibo-money/kibo/main/assets/logo-long-text-light.svg">
-    <img alt="kibō" src="https://raw.githubusercontent.com/kibo-money/kibo/main/assets/logo-long-text-light.svg" width="210" height="auto">
+    <img alt="kibō" src="https://raw.githubusercontent.com/kibo-money/kibo/main/assets/logo-long-text-light.svg" width="110" height="auto">
   </picture>
 </a>
 
